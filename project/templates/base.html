@@ -47,7 +47,7 @@
               </li>
             </ul>
         </div>
-
+        <a class="nav-link" href="{{ url_for('main.create')}}">Neuer Eintrag</a>
         <!-- in the right corner of the nav bar -->
         <div class="topnav-right">
             {% if current_user.is_authenticated %}
