@@ -1,11 +1,12 @@
 # main.py
 
-from flask import Blueprint, render_template, request, flash
+from flask import Blueprint, render_template, request, flash, redirect
 from flask_login import login_required, current_user
 
 from .models import Blog_Entry
 from . import db
 from datetime import datetime
+import csv
 
 
 
@@ -13,7 +14,10 @@ main = Blueprint('main', __name__)
 
 @main.route('/')
 def index():
-    return render_template('index.html')
+    # get the data in a dict structur
+    posts_data = Blog_Entry.query.all()
+
+    return render_template('index.html', posts=posts_data)
 
 @main.route('/about')
 def about():
@@ -22,6 +26,7 @@ def about():
 # erstelle einen neuen Blog Eintrag --> db Eintrag
 # erstellt eine /create-Route -> d.h. 'contact.kaizn.io/create'
 @main.route('/create', methods=('GET', 'POST'))
+@login_required
 def create():
     
     if request.method == 'POST':
@@ -41,6 +46,41 @@ def create():
 
             
     return render_template('create.html')
+
+# write the db changes to the audittrail file
+def audit_trail(id):
+
+    # transform the query results to a dict
+    queryDict = Blog_Entry.query.filter_by(id=id).first().__dict__
+
+    # utc time 
+    queryDict['time'] = datetime.utcnow()
+
+    #NOTE: semi good solution for the extra data from sql alchemy
+    queryDict.pop('_sa_instance_state', None)
+
+    with open('audit_trail.csv', 'a', newline='') as csvfile:
+        fieldnames = ['id', 'created', 'time' , 'title', 'content']
+        
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+    
+        writer.writeheader()
+        writer.writerow(queryDict)
+
+    return "added to audit trail"
+
+@main.route('/delete/<int:id>')
+@login_required
+def delete(id):
+    # add the data to the audit trail
+    audit_trail(id)
+
+
+    # delete the row from the table of the Blog_Entry model
+    Blog_Entry.query.filter_by(id=id).delete()  
+    db.session.commit()
+
+    return redirect('/')
 
 @main.route('/profile')
 @login_required

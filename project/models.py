@@ -11,7 +11,8 @@ class User(UserMixin, db.Model):
     name = db.Column(db.String(1000))
 
 class Blog_Entry(UserMixin, db.Model):
-    # overwrite the standard table name
+
+    #! overwrite the standard table name with 'posts', where you will commit the data to
     __tablename__ = 'posts'
 
     id = db.Column(db.Integer, primary_key=True)

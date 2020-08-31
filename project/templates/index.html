@@ -8,8 +8,20 @@
 
 {% block content %}
 
-<h1 class="title">
-  Flask Login Example
-</h1>
+  <h1 class="title">
+    Flask Login Example
+  </h1>
+  {% for post in posts %}
+  <a href="/blog/{{post.id}}">
+      <h2>{{ post.title }}</h2>
+  </a>
+  <span class="badge badge-primary">{{ post.created }}</span>
+  {{post.content}}
+  ID: {{post.id}}
+  {% if current_user.is_authenticated %}
+  <a href="/delete/{{post.id}}">delete</a>
+  {% endif %}
+  <hr>
+  {% endfor %}
 
 {% endblock %}
