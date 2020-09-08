@@ -1,5 +1,3 @@
-# auth.py
-
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, logout_user, login_required
@@ -38,8 +36,10 @@ def signup():
 def signup_post():
 
     email = request.form.get('email')
-    name = request.form.get('name')
+    name = request.form.get('first_name')
+    last_name = request.form.get('last_name')
     password = request.form.get('password')
+    password = request.form.get('role')
 
     user = User.query.filter_by(email=email).first() # if this returns a user, then the email already exists in database
 
