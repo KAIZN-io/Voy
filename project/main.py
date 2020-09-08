@@ -3,7 +3,7 @@
 from flask import Blueprint, render_template, request, flash, redirect
 from flask_login import login_required, current_user
 
-from .models import Blog_Entry#, QC_Check
+from .models import QC_Check
 from .models import User
 from . import db
 from datetime import datetime
@@ -16,8 +16,8 @@ main = Blueprint('main', __name__)
 @main.route('/')
 def index():
     # get the data in a dict structur
-    posts_data = Blog_Entry.query.all()
-
+    # posts_data = QC_Check.query.all()
+    posts_data = QC_Check.query.filter_by(responsible=current_user.name).all()
     return render_template('index.html', posts=posts_data)#, name=current_user.name)
 
 @main.route('/about')
@@ -36,10 +36,15 @@ def create():
 
         todo_name = request.form['name']
         title = request.form['title']
-        content = request.form['content']
-
-        blog_entry = Blog_Entry(title=title, content=content, created=datetime.utcnow())
-        # blog_entry = QC_Check(procedure=title, description=content, created=datetime.utcnow())
+        description = request.form['description']
+        page = request.form['page']
+        visit = request.form['visit']
+        scr_no = request.form['scr_no']
+        study_id = request.form['study_id']
+        # type = request.form['type']
+        # print(type)
+        
+        blog_entry = QC_Check(procedure=title, description=description, checker=current_user.name, created=datetime.utcnow(), visit=visit, page=page, scr_no=scr_no, study_id=study_id, responsible=todo_name)
 
         if not title:
             flash('Title is required!')
@@ -56,7 +61,7 @@ def create():
 def audit_trail(id):
 
     # transform the query results to a dict
-    queryDict = Blog_Entry.query.filter_by(id=id).first().__dict__
+    queryDict = QC_Check.query.filter_by(id=id).first().__dict__
 
     # utc time 
     queryDict['time'] = datetime.utcnow()
@@ -64,13 +69,13 @@ def audit_trail(id):
     #NOTE: semi good solution for the extra data from sql alchemy
     queryDict.pop('_sa_instance_state', None)
 
-    with open('audit_trail.csv', 'a', newline='') as csvfile:
-        fieldnames = ['id', 'created', 'time' , 'title', 'content']
+    # with open('audit_trail.csv', 'a', newline='') as csvfile:
+    #     fieldnames = ['id', 'created', 'time' , 'title', 'content']
         
-        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+    #     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
     
-        writer.writeheader()
-        writer.writerow(queryDict)
+    #     writer.writeheader()
+    #     writer.writerow(queryDict)
 
     return "added to audit trail"
 
@@ -81,8 +86,8 @@ def delete(id):
     audit_trail(id)
 
 
-    # delete the row from the table of the Blog_Entry model
-    Blog_Entry.query.filter_by(id=id).delete()  
+    # delete the row from the table of the QC Check model
+    QC_Check.query.filter_by(id=id).delete()  
     db.session.commit()
 
     return redirect('/')

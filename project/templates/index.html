@@ -1,16 +1,18 @@
 <!-- templates/index.html -->
 
 {% extends "base.html" %} {% block title %} QC-Datenbank {% endblock %} {% block
-content %}
-
-{% if current_user.is_authenticated %}
+content %} {% if current_user.is_authenticated %}
 <h1 class="title">QC-Datenbank</h1>
-<br>
+<br />
 
 <table class="table">
   <thead class="thead-light">
     <tr>
-      <th scope="col">ID</th>
+      <th scope="col">Study ID</th>
+      <th scope="col">Scr No</th>
+      <th scope="col">Type</th>
+      <th scope="col">Visit</th>
+      <th scope="col">Page</th>
       <th scope="col">Procedure</th>
       <th scope="col">Description</th>
       <th scope="col">Created</th>
@@ -20,9 +22,13 @@ content %}
   <tbody>
     {% for post in posts %}
     <tr>
-      <td>{{post.id}}</td>
-      <td>{{post.title}}</td>
-      <td>{{post.content}}</td>
+      <td>{{ post.study_id }}</td>
+      <td>{{ post.scr_no }}</td>
+      <td>{{ post.type }}</td>
+      <td>{{ post.visit }}</td>
+      <td>{{ post.page }}</td>
+      <td>{{post.procedure}}</td>
+      <td>{{post.description}}</td>
       <td>
         <span class="badge badge-primary">{{ post.created }}</span>
       </td>
@@ -33,6 +39,4 @@ content %}
     {% endfor %}
   </tbody>
 </table>
-{% endif %}
-
-{% endblock %}
+{% endif %} {% endblock %}

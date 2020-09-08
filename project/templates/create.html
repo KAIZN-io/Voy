@@ -20,8 +20,8 @@
       <div class="form-group col-md-4">
         <label for="document">Document-Type :</label>
         <select name="document" class="form-control">
-          <option value="">Source</option>
-          <option value="1">ICF</option>
+          <option value="{{ request.form['type'] }}" SELECTED>Source</option>
+          <option value="{{ request.form['type'] }}" >ICF</option>
         </select>
       </div>
 
@@ -79,8 +79,8 @@
           </td>
           <td>
             <div class="form-group">
-              <textarea name="content" placeholder="Please describe your finding"
-                        class="form-control">{{ request.form['content'] }}</textarea>
+              <textarea name="description" placeholder="Please describe your finding"
+                        class="form-control">{{ request.form['description'] }}</textarea>
              </div>
 
           </td>
@@ -100,9 +100,6 @@
   <div class="form-group">
     <button type="submit" class="btn btn-primary">Submit</button>
   </div>
-  <!-- <div class="form-group">
-    <button class="btn btn-primary" style="float: right;">Add row</button>
-  </div> -->
 </form>
 
 {% endblock %}
