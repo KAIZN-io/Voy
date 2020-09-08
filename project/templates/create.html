@@ -1,27 +1,108 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    Neuer Blogeintrag
+    add data 
 {% endblock %}
 
 {% block content %}
 <h1>Create a New Post</h1>
 
 <form method="post">
-    <div class="form-group">
-        <label for="title">Title</label>
-        <input type="text" name="title"
-               placeholder="Post title" class="form-control"
-               value="{{ request.form['title'] }}"></input>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="study_id">Study ID</label>
+        <input type="text" name="study_id"
+              placeholder="Welche Studie?"
+              class="form-control"
+              value="{{ request.form['study_id'] }}"></input>
+      </div>
+
+      <div class="form-group col-md-4">
+        <label for="document">Document-Type :</label>
+        <select name="document" class="form-control">
+          <option value="">Source</option>
+          <option value="1">ICF</option>
+        </select>
+      </div>
+
+      <div class="form-group col-md-2">
+        <label for="scr_no">Scr No</label>
+        <input type="text" name="scr_no"
+              placeholder="Welcher Proband?" 
+              value="{{ request.form['scr_no'] }}"></input>
+      </div>
     </div>
 
-    <div class="form-group">
-        <label for="content">Content</label>
-        <textarea name="content" placeholder="Post content"
-                  class="form-control">{{ request.form['content'] }}</textarea>
+    <div class="field">
+      <label class="checkbox">
+          <input type="checkbox">
+          Save configuration 
+      </label>
     </div>
-    <div class="form-group">
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </div>
+
+    <br>  
+
+    <table class="table">
+      <thead class="thead-light">
+        <tr>
+          <th scope="col">Visit</th>
+          <th scope="col">Page</th>
+          <th scope="col">Procedure</th>
+          <th scope="col">Description</th>
+          <th scope="col">Responsible</th>
+
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <div class="form-group">
+              <input type="text" name="visit"
+                      placeholder="which visit?" class="form-control"
+                      value="{{ request.form['visit'] }}"></input>
+            </div>
+          </td>
+          
+          <td>
+            <div class="form-group">
+              <input type="text" name="page"
+                      placeholder="which page?" class="form-control"
+                      value="{{ request.form['page'] }}"></input>
+            </div>
+          </td>
+          <td>
+            <div class="form-group">
+              <input type="text" name="title"
+                     placeholder="Post title" class="form-control"
+                     value="{{ request.form['title'] }}"></input>
+            </div>
+          </td>
+          <td>
+            <div class="form-group">
+              <textarea name="content" placeholder="Please describe your finding"
+                        class="form-control">{{ request.form['content'] }}</textarea>
+             </div>
+
+          </td>
+          <td>    
+            <div class="form-group">
+            <select name="name" width="300px">
+              {% for user in Users %}
+              <option value="{{ user.name }}" SELECTED>{{ user.name }}</option>
+          
+              {% endfor %}
+            </select> 
+        </div>
+      </td>
+        </tr>
+      
+    </table>
+  <div class="form-group">
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </div>
+  <!-- <div class="form-group">
+    <button class="btn btn-primary" style="float: right;">Add row</button>
+  </div> -->
 </form>
+
 {% endblock %}
