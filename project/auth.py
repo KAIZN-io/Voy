@@ -64,8 +64,6 @@ def signup_post():
     db.session.add(new_user)
     db.session.commit()
 
-    flash('The User was successfully added', 'info')
-
     return redirect(url_for('auth.signup'))
 
 

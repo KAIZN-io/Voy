@@ -32,6 +32,8 @@ def about():
 
 # erstelle einen neuen Blog Eintrag --> db Eintrag
 # erstellt eine /create-Route -> d.h. 'contact.kaizn.io/create'
+
+
 @main.route('/create', methods=('GET', 'POST'))
 @login_required
 def create():
@@ -74,6 +76,17 @@ def delete(id):
     return redirect('/')
 
 
+@main.route('/requery/<int:id>')
+@login_required
+def requery_query(id):
+    # requery the row from the table of the QC Check model
+    QC_Check.query.filter_by(id=id).update({"corrected": 1})
+
+    db.session.commit()
+
+    return redirect('/')
+
+
 @main.route('/close/<int:id>')
 @login_required
 def close_query(id):
@@ -90,3 +103,35 @@ def close_query(id):
 def profile():
     return render_template('profile.html', name=current_user.abbrev)
 
+
+@main.route('/edit', methods=('GET', 'POST'))
+@login_required
+def edit():
+    old_data = QC_Check.query.filter_by(id=46).all()[0].__dict__
+    User_data = DB_User.query.filter_by(role="MedOps").all()
+
+    if request.method == 'POST':
+
+        # get whole data as an dict
+        new_data = request.form.to_dict()
+
+        # NOTE TODO: new_data hat whitespace in den values, weshalb es immer '!=' ausfällt --> whitespace entfernen
+        for key, value in new_data.items():
+            print(old_data[key])
+            print(new_data[key])
+
+            if old_data[key] != new_data[key]:
+                pass
+
+        # blog_entry = QC_Check(procedure=title, type=type, corrected=1, close=1, description=description, checker=current_user.abbrev,
+        #                     created=datetime.utcnow(), visit=visit, page=page, scr_no=scr_no, study_id=study_id, responsible=todo_name)
+
+        # if not title:
+        #     flash('Title is required!')
+        # else:
+        #     db.session.add(blog_entry)
+        #     db.session.commit()
+
+        return index()
+
+    return render_template('edit.html', data=old_data, Users=User_data)

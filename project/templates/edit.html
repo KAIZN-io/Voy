@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Edit Data
+{% endblock %}
+
+{% block content %}
+<h1>Edit Data</h1>
+
+{{ data.corrected }}
+{{ data.study_id }}
+{{ data.scr_no }}
+{{ data.type }}
+{{ data.visit }}
+{{ data.page }}
+{{ data.description }}
+{{ data.responsible }}
+
+<form method="post">
+    <div class="form-row">
+      <!-- <div class="form-group col-md-6">
+        <label for="study_id">Study ID</label>
+        <input type="text" name="study_id"
+              placeholder="Welche Studie?"
+              class="form-control"
+              value="{{ request.form['study_id'] }}"></input>
+      </div> -->
+      <!-- <div class="form-group col-md-4">
+        <label for="type">Document-Type :</label>
+        <select name="type" class="form-control">
+          {% for type in source_type %}
+          <option value="{{ type }}" SELECTED>{{ type }}</option>
+      
+          {% endfor %}
+        </select> 
+      </div> -->
+
+      <!-- <div class="form-group col-md-2">
+        <label for="scr_no">Scr No</label>
+        <input type="text" name="scr_no"
+              placeholder="Welcher Proband?" 
+              value="{{ request.form['scr_no'] }}"></input>
+      </div> -->
+    </div>
+    <table class="table">
+      <thead class="thead-light">
+        <tr>
+          <th scope="col">Visit</th>
+          <th scope="col">Page</th>
+          <th scope="col">Procedure</th>
+          <th scope="col">Description</th>
+          <th scope="col">Responsible</th>
+
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <!-- <div class="form-group">
+              <input type="text" name="visit"
+                      placeholder="which visit?" class="form-control"
+                      value="{{ request.form['visit'] }}"></input>
+            </div> -->
+          </td>
+          
+          <td>
+            <div class="form-group">
+                <textarea name="page" 
+                          class="form-control" required> {{ data.page }}
+                        </textarea>
+               </div>
+          </td>
+          <td>
+            <div class="form-group">
+                <textarea name="procedure" 
+                          class="form-control" required> {{ data.procedure }}
+                        </textarea>
+               </div>
+          </td>
+          <td>
+            <div class="form-group">
+              <textarea name="description" 
+                        class="form-control" required> {{ data.description }} </textarea>
+             </div>
+
+          </td>
+          <td>    
+            <div class="form-group">
+            <select name="responsible" width="300px">
+              {% for user in Users %}
+              <option value="{{ user.abbrev }}" SELECTED>{{ user.abbrev }}</option>
+          
+              {% endfor %}
+            </select> 
+        </div>
+      </td>
+        </tr>
+      
+    </table>
+  <div class="form-group">
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </div>
+</form>
+
+{% endblock %}

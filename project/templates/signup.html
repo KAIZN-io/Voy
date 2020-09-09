@@ -3,12 +3,12 @@
 {% extends "base.html" %} {% block title %} Nutzer anlegen {% endblock %} {%
 block content %}
 <div class="column is-4 is-offset-4">
-  <h3 class="title">Nutzer anlegen</h3>
+  <h1 class="title">Nutzer anlegen</h1>
+
   <div class="box">
     {% with messages = get_flashed_messages() %} {% if messages %}
-    <div class="notification is-danger">
-      {{ messages[0] }}. Go to
-      <a href="{{ url_for('auth.login') }}">login page</a>.
+    <div class="alert alert-success">
+      {{ messages[0] }}
     </div>
     {% endif %} {% endwith %}
     <form method="POST" action="/signup">

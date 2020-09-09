@@ -1,12 +1,16 @@
 {% extends "base.html" %} {% block title %} QC-Datenbank {% endblock %} {% block
 content %} {% if current_user.is_authenticated %}
-<h1 class="title">QC-Datenbank</h1>
+<h1 class="title">QUERIES</h1>
 <br />
 {% if posts|length > 0 %}
 
 <table class="table">
   <thead class="thead-light">
     <tr>
+      <!-- MedOps is not allowed to see the status of the query -->
+      {% if not current_user.role == "MedOps" %}
+      <th scope="col">Status</th>
+      {% endif %}
       <th scope="col">Study ID</th>
       <th scope="col">Scr No</th>
       <th scope="col">Type</th>
@@ -22,6 +26,23 @@ content %} {% if current_user.is_authenticated %}
   <tbody>
     {% for post in posts %}
     <tr>
+      <!-- MedOps is not allowed to see the status of the query -->
+      {% if not current_user.role == "MedOps" %}
+      {% if post.corrected == 0 %}
+      <td>
+        <span class="badge badge-warning">
+          Requery
+        </span>
+      </td>
+      {% else %}
+      <td>
+        <span class="badge badge-danger">
+          Open
+        </span>
+      </td>
+      {% endif %}
+
+      {% endif %}
       <td>{{ post.study_id }}</td>
       <td>{{ post.scr_no }}</td>
       <td>{{ post.type }}</td>
@@ -33,11 +54,15 @@ content %} {% if current_user.is_authenticated %}
         <span class="badge badge-primary">{{ post.created }}</span>
       </td>
       <td>
+        {% if current_user.role == "MedOps" %}
         <a href="/delete/{{post.id}}">done</a>
+        {% endif %}
+
       </td>
       <td>
         <!-- close the query if you have the right role permission -->
         {% if current_user.role == "Admin" %}
+        <a href="/requery/{{post.id}}">requery</a>
         <a href="/close/{{post.id}}">close</a>
         {% endif %}
       </td>
