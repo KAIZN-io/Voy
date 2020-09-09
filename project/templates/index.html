@@ -1,10 +1,8 @@
-<!-- templates/index.html -->
-
 {% extends "base.html" %} {% block title %} QC-Datenbank {% endblock %} {% block
 content %} {% if current_user.is_authenticated %}
 <h1 class="title">QC-Datenbank</h1>
 <br />
-{% if posts|length > 0 %} 
+{% if posts|length > 0 %}
 
 <table class="table">
   <thead class="thead-light">
@@ -19,7 +17,6 @@ content %} {% if current_user.is_authenticated %}
       <th scope="col">Created</th>
       <th scope="col"></th>
       <th scope="col"></th>
-
     </tr>
   </thead>
   <tbody>
@@ -30,8 +27,8 @@ content %} {% if current_user.is_authenticated %}
       <td>{{ post.type }}</td>
       <td>{{ post.visit }}</td>
       <td>{{ post.page }}</td>
-      <td>{{post.procedure}}</td>
-      <td>{{post.description}}</td>
+      <td>{{ post.procedure }}</td>
+      <td>{{ post.description }}</td>
       <td>
         <span class="badge badge-primary">{{ post.created }}</span>
       </td>
@@ -39,13 +36,14 @@ content %} {% if current_user.is_authenticated %}
         <a href="/delete/{{post.id}}">done</a>
       </td>
       <td>
+        <!-- close the query if you have the right role permission -->
+        {% if current_user.role == "Admin" %}
         <a href="/close/{{post.id}}">close</a>
+        {% endif %}
       </td>
     </tr>
     {% endfor %}
   </tbody>
 </table>
-{% else %}
-  Du bist grandios! Alles erledigt!!! Und hier deshalb ein schöne Bild einfügen (-->TODO an mich)
-{% endif %}
-{% endif %} {% endblock %}
+{% else %} Du bist grandios! Alles erledigt!!! Und hier deshalb ein schöne Bild
+einfügen (-->TODO an mich) {% endif %} {% endif %} {% endblock %}

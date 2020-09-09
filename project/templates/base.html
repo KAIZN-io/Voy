@@ -52,20 +52,21 @@
         {% endif %}
         <!-- in the right corner of the nav bar -->
         <div class="topnav-right">
-            {% if current_user.is_authenticated %}
-            <a href="{{ url_for('main.profile') }}" class="navbar-item">
-                Profile
-            </a>
-            
-            {% endif %} {% if not current_user.is_authenticated %}
+            {% if not current_user.is_authenticated %}
             <a href="{{ url_for('auth.login') }}" class="navbar-item">
                 Login
             </a>
-
+            {% endif %}
+            <!-- if user is admin -->
+            {% if (current_user.is_authenticated) and (current_user.role == 'Admin' or current_user.role == 'Data Manager') %}
             <a href="{{ url_for('auth.signup') }}" class="navbar-item">
-                Sign Up
+              add user 
             </a>
-            {% endif %} {% if current_user.is_authenticated %}
+            {% endif %}
+            {% if current_user.is_authenticated %}
+            <a href="{{ url_for('main.profile') }}" class="navbar-item">
+              Profile   
+            </a>  
             <a href="{{ url_for('auth.logout') }}" class="navbar-item">
                 Logout
             </a>

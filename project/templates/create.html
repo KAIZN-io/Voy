@@ -16,13 +16,14 @@
               class="form-control"
               value="{{ request.form['study_id'] }}"></input>
       </div>
-
       <div class="form-group col-md-4">
-        <label for="document">Document-Type :</label>
-        <select name="document" class="form-control">
-          <option value="{{ request.form['type'] }}" SELECTED>Source</option>
-          <option value="{{ request.form['type'] }}" >ICF</option>
-        </select>
+        <label for="type">Document-Type :</label>
+        <select name="type" class="form-control">
+          {% for type in source_type %}
+          <option value="{{ type }}" SELECTED>{{ type }}</option>
+      
+          {% endfor %}
+        </select> 
       </div>
 
       <div class="form-group col-md-2">
@@ -80,7 +81,7 @@
           <td>
             <div class="form-group">
               <textarea name="description" placeholder="Please describe your finding"
-                        class="form-control">{{ request.form['description'] }}</textarea>
+                        class="form-control" required>{{ request.form['description'] }}</textarea>
              </div>
 
           </td>
@@ -88,7 +89,7 @@
             <div class="form-group">
             <select name="name" width="300px">
               {% for user in Users %}
-              <option value="{{ user.name }}" SELECTED>{{ user.name }}</option>
+              <option value="{{ user.abbrev }}" SELECTED>{{ user.abbrev }}</option>
           
               {% endfor %}
             </select> 
