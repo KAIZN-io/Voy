@@ -63,6 +63,8 @@ content %} {% if current_user.is_authenticated %}
         <!-- close the query if you have the right role permission -->
         {% if current_user.role == "Admin" %}
         <a href="/requery/{{post.id}}">requery</a>
+        <!-- overgive the edit page the id -->
+        <a href="{{ url_for('main.edit', id=post.id) }}">edit</a>
         <a href="/close/{{post.id}}">close</a>
         {% endif %}
       </td>

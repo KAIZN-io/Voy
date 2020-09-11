@@ -137,11 +137,12 @@ def audit_trail(todo, id, category, old_value, new_value):
 
     return "added to audit trail"
 
-
 @main.route('/edit', methods=('GET', 'POST'))
 @login_required
 def edit():
-    id = 46
+    # get the id of the query you want to edit
+    id = request.args.get('id', None)
+
     old_data = QC_Check.query.filter_by(id=id).first().__dict__
     User_data = DB_User.query.filter_by(role="MedOps").all()
 
@@ -150,19 +151,18 @@ def edit():
         # get whole data as an dict
         new_data = request.form.to_dict()
 
-        for key, new_value in new_data.items():
+        for category, new_value in new_data.items():
       
             # compare the data from the DB with the from the request.form
-            if (old_data[key] != new_data[key]):
+            if (old_data[category] != new_data[category]):
 
                 # add the data to the audit trail
-                audit_trail("edit", id, key, old_data[key], new_value)
+                audit_trail("edit", id, category, old_data[category], new_value)
 
-        # if not title:
-        #     flash('Title is required!')
-        # else:
-        #     db.session.add(blog_entry)
-        #     db.session.commit()
+                # add new data to the data base
+                QC_Check.query.filter_by(id=id).update({category: new_value})
+                db.session.commit()
+  
 
         return index()
 
