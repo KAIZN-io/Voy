@@ -2,13 +2,23 @@ from flask import Blueprint, render_template, request, flash, redirect
 from flask_login import login_required, current_user
 
 from .models import QC_Check
-from .models import User, DB_User
+from .models import User, DB_User, QC_Audit
 from . import db
 from datetime import datetime
 import csv
-
+import string
+import os
 
 main = Blueprint('main', __name__)
+
+# NOTE: TODO: (s1=neuer s2= neu er) --> True, da whitespace entfernt wurde .
+
+
+def compare(s1, s2):
+    # remove whitespace
+    remove = string.whitespace
+    # compare the strings while ignoring whitespace
+    return s1.translate(str.maketrans('', '', remove)) == s2.translate(str.maketrans('', '', remove))
 
 
 @main.route('/')
@@ -104,10 +114,45 @@ def profile():
     return render_template('profile.html', name=current_user.abbrev)
 
 
+# write the db changes to the audittrail file
+def audit_trail(todo, id, category, old_value, new_value):
+    # the audit trail file
+    path_to_file = os.getcwd()+'/project/.log_files/data_log_qc.csv'
+
+    # metadata
+    user = current_user.abbrev
+
+    # the data in the model in form of a dict structure
+    audit_data = QC_Audit(id=id, category=category, date_time=datetime.strptime(
+        str(datetime.now()), '%Y-%m-%d %H:%M:%S.%f'),
+        user=user, old_value=old_value, new_value=new_value).__dict__
+
+    # NOTE: semi good solution for the extra data from sql alchemy
+    audit_data.pop('_sa_instance_state', None)
+
+    if todo == "edit":
+        # write to file
+        with open(path_to_file, 'a', newline='') as csvfile:
+            # csv file header
+            fieldnames = ['id', 'category', 'date_time',
+                          'user', 'old_value', 'new_value']
+
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+            # initiate the file
+            if os.path.getsize(path_to_file) == 0:
+                writer.writeheader()
+
+            writer.writerow(audit_data)
+
+    return "added to audit trail"
+
+
 @main.route('/edit', methods=('GET', 'POST'))
 @login_required
 def edit():
-    old_data = QC_Check.query.filter_by(id=46).all()[0].__dict__
+    id = 46
+    old_data = QC_Check.query.filter_by(id=id).first().__dict__
     User_data = DB_User.query.filter_by(role="MedOps").all()
 
     if request.method == 'POST':
@@ -115,16 +160,12 @@ def edit():
         # get whole data as an dict
         new_data = request.form.to_dict()
 
-        # NOTE TODO: new_data hat whitespace in den values, weshalb es immer '!=' ausfällt --> whitespace entfernen
-        for key, value in new_data.items():
-            print(old_data[key])
-            print(new_data[key])
+        for key, new_value in new_data.items():
+            # compare the data from the DB with the from the request.form
+            if compare(old_data[key], new_data[key]) == False:
 
-            if old_data[key] != new_data[key]:
-                pass
-
-        # blog_entry = QC_Check(procedure=title, type=type, corrected=1, close=1, description=description, checker=current_user.abbrev,
-        #                     created=datetime.utcnow(), visit=visit, page=page, scr_no=scr_no, study_id=study_id, responsible=todo_name)
+                # add the data to the audit trail
+                audit_trail("edit", id, key, old_data[key], new_value)
 
         # if not title:
         #     flash('Title is required!')

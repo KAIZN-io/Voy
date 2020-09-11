@@ -2,13 +2,19 @@
 
 from flask_login import UserMixin
 from . import db
+from sqlalchemy import DateTime
+from datetime import datetime
 
 # SQLAlchemy maps Python classes to database tables
+
+
 class User(UserMixin, db.Model):
-    id = db.Column(db.Integer, primary_key=True) # primary keys are required by SQLAlchemy
+    # primary keys are required by SQLAlchemy
+    id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(100))
     name = db.Column(db.String(1000))
+
 
 class QC_Check(UserMixin, db.Model):
 
@@ -29,8 +35,21 @@ class QC_Check(UserMixin, db.Model):
     corrected = db.Column(db.Integer)
     close = db.Column(db.Integer)
 
+
+class QC_Audit(UserMixin, db.Model):
+
+    __tablename__ = 'qc_audit'
+
+    id = db.Column(db.Integer, primary_key=True)
+    category = db.Column(db.Text)
+    date_time = db.Column(DateTime, default=datetime.strptime(str(datetime.now()), '%Y-%m-%d %H:%M:%S.%f'))
+    user = db.Column(db.Text)
+    old_value = db.Column(db.String(100))
+    new_value = db.Column(db.String(100))
+
+
 class DB_User(UserMixin, db.Model):
-    
+
     __tablename__ = 'db_user'
 
     id = db.Column(db.Integer, primary_key=True)
