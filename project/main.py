@@ -11,16 +11,6 @@ import os
 
 main = Blueprint('main', __name__)
 
-# NOTE: TODO: (s1=neuer s2= neu er) --> True, da whitespace entfernt wurde .
-
-
-def compare(s1, s2):
-    # remove whitespace
-    remove = string.whitespace
-    # compare the strings while ignoring whitespace
-    return s1.translate(str.maketrans('', '', remove)) == s2.translate(str.maketrans('', '', remove))
-
-
 @main.route('/')
 @login_required
 def index():
@@ -161,8 +151,9 @@ def edit():
         new_data = request.form.to_dict()
 
         for key, new_value in new_data.items():
+      
             # compare the data from the DB with the from the request.form
-            if compare(old_data[key], new_data[key]) == False:
+            if (old_data[key] != new_data[key]):
 
                 # add the data to the audit trail
                 audit_trail("edit", id, key, old_data[key], new_value)
