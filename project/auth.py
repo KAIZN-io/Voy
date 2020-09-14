@@ -1,8 +1,9 @@
-from flask import Blueprint, render_template, redirect, url_for, request, flash
+from flask import Blueprint, render_template, redirect, url_for, request, flash, current_app
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, logout_user, login_required, current_user
 from .models import DB_User, User_Management
 from . import db
+
 
 auth = Blueprint('auth', __name__)
 
@@ -24,13 +25,15 @@ def login_post():
 
     # take the user supplied password, hash it, and compare it to the hashed password in database
     if not user or not check_password_hash(user.password, password):
-        print("error code line nun drin")
         flash('Please check your login details and try again.')
         # if user doesn't exist or password is wrong, reload the page
         return redirect(url_for('auth.login'))
 
     # if the above check passes, then we know the user has the right credentials
     login_user(user, remember=remember)
+
+    current_app.logger.info('%s logged in successfully', abbrev)
+
     return redirect(url_for('main.index'))
 
 
@@ -47,6 +50,7 @@ def user_management():
 def delete_user(id):
     DB_User.query.filter_by(id=id).delete()
     db.session.commit()
+    current_app.logger.warning('%s deleted a user', current_user.abbrev)
 
     return redirect(url_for('auth.user_management'))
 

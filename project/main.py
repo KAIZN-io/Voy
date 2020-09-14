@@ -31,7 +31,7 @@ def about():
     return render_template('about.html')
 
 # erstelle einen neuen Blog Eintrag --> db Eintrag
-# erstellt eine /create-Route -> d.h. 'contact.kaizn.io/create'
+# erstellt eine /create-Route -> d.h. 'kaizn.io/create'
 
 
 @main.route('/create', methods=('GET', 'POST'))
@@ -106,6 +106,7 @@ def profile():
 
 # write the db changes to the audittrail file
 def audit_trail(todo, id, category, old_value, new_value):
+    
     # the audit trail file
     path_to_file = os.getcwd()+'/project/.log_files/data_log_qc.csv'
 
