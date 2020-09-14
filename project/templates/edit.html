@@ -7,24 +7,17 @@ Edit Data
 {% block content %}
 <h1>Edit Data</h1>
 
-{{ data.corrected }}
-{{ data.study_id }}
-{{ data.scr_no }}
-{{ data.type }}
-{{ data.visit }}
-{{ data.page }}
-{{ data.description }}
-{{ data.responsible }}
-
 <form method="post">
     <div class="form-row">
-      <!-- <div class="form-group col-md-6">
+      <div class="form-group col-md-6">
         <label for="study_id">Study ID</label>
-        <input type="text" name="study_id"
-              placeholder="Welche Studie?"
-              class="form-control"
-              value="{{ request.form['study_id'] }}"></input>
-      </div> -->
+        <div class="form-group">
+          <input type="text" name="study_id"
+                  class="form-control"
+                  value="{{ data.study_id }}"
+                  required>
+        </div>
+      </div>
       <!-- <div class="form-group col-md-4">
         <label for="type">Document-Type :</label>
         <select name="type" class="form-control">
@@ -35,12 +28,14 @@ Edit Data
         </select> 
       </div> -->
 
-      <!-- <div class="form-group col-md-2">
+      <div class="form-group col-md-2">
         <label for="scr_no">Scr No</label>
-        <input type="text" name="scr_no"
-              placeholder="Welcher Proband?" 
-              value="{{ request.form['scr_no'] }}"></input>
-      </div> -->
+        <div class="form-group">
+          <input type="text" name="scr_no"
+                  class="form-control"
+                  value="{{ data.scr_no }}"
+                  required>
+      </div>
     </div>
     <table class="table">
       <thead class="thead-light">
@@ -56,11 +51,12 @@ Edit Data
       <tbody>
         <tr>
           <td>
-            <!-- <div class="form-group">
+            <div class="form-group">
               <input type="text" name="visit"
-                      placeholder="which visit?" class="form-control"
-                      value="{{ request.form['visit'] }}"></input>
-            </div> -->
+                      class="form-control"
+                      value="{{ data.visit }}"
+                      required>
+            </div>
           </td>
           
           <td>

@@ -1,0 +1,31 @@
+{% extends "base.html" %} {% block title %} User Managment {% endblock %} {%
+block content %} {% if current_user.is_authenticated %}
+<h1 class="title">User Managment</h1>
+<br />
+<a href="/signup">add User</a>
+<table class="table">
+  <thead class="thead-light">
+    <tr>
+      <th scope="col">User</th>
+      <th scope="col">Role</th>
+      <th scope="col">Permission</th>
+      <th scope="col">Delete</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for user in Users %}
+    <tr>
+      <td>{{ user.abbrev }}</td>
+      <td>{{ user.role }}</td>
+      <td>
+        <!-- overgive the edit page the id -->
+        <!-- <a href="{{ url_for('auth.permissions', id=user.id) }}">edit</a> -->
+      </td>
+      <td>
+        <a href="/delete_user/{{user.id}}">delete</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %} {% endblock %}

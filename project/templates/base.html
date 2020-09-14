@@ -41,14 +41,13 @@
         
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
-              <li class="nav-item active">
-                <!-- change the url if you want -->
+              <!-- <li class="nav-item active">
                 <a class="nav-link" href="{{ url_for('main.about')}}">About</a>
-              </li>
+              </li> -->
             </ul>
         </div>
         {% if current_user.is_authenticated %}
-        <a class="nav-link" href="{{ url_for('main.create')}}">add data</a>
+        <a class="nav-link" href="{{ url_for('main.create')}}">Data Entry</a>
         {% endif %}
         <!-- in the right corner of the nav bar -->
         <div class="topnav-right">
@@ -57,12 +56,12 @@
                 Login
             </a>
             {% endif %}
-            <!-- if user is admin -->
             {% if (current_user.is_authenticated) and (current_user.role == 'Admin' or current_user.role == 'Data Manager') %}
-            <a href="{{ url_for('auth.signup') }}" class="navbar-item">
-              add user 
+            <a href="{{ url_for('auth.user_management') }}" class="navbar-item">
+              User Management
             </a>
             {% endif %}
+
             {% if current_user.is_authenticated %}
             <a href="{{ url_for('main.profile') }}" class="navbar-item">
               Profile   

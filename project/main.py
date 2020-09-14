@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, flash, redirect
 from flask_login import login_required, current_user
 
 from .models import QC_Check
-from .models import User, DB_User, QC_Audit
+from .models import DB_User, QC_Audit
 from . import db
 from datetime import datetime
 import csv

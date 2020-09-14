@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, logout_user, login_required, current_user
-from .models import User, DB_User
+from .models import DB_User, User_Management
 from . import db
 
 auth = Blueprint('auth', __name__)
@@ -34,6 +34,31 @@ def login_post():
     return redirect(url_for('main.index'))
 
 
+@auth.route('/user_management')
+def user_management():
+    # filter all user except for the admin
+    User_data = DB_User.query.filter(DB_User.role != "Admin").all()
+
+    return render_template('user_management.html', Users=User_data)
+
+
+@auth.route('/delete_user/<int:id>')
+@login_required
+def delete_user(id):
+    DB_User.query.filter_by(id=id).delete()
+    db.session.commit()
+
+    return redirect(url_for('auth.user_management'))
+
+
+@auth.route('/permissions', methods=('GET', 'POST'))
+def permissions():
+    # get the id of the query you want to edit
+    id = request.args.get('id', None)
+
+    return render_template('permissions.html')
+
+
 @auth.route('/signup')
 def signup():
     # define the job roles
@@ -64,7 +89,15 @@ def signup_post():
     db.session.add(new_user)
     db.session.commit()
 
-    return redirect(url_for('auth.signup'))
+    # add the change to the user_management db
+    user_management = User_Management(
+        email=email, abbrev=abbreviation, role=role, change_by=current_user.abbrev, action="added")
+
+    # add the new user to the database
+    db.session.add(user_management)
+    db.session.commit()
+
+    return redirect(url_for('auth.user_management'))
 
 
 @auth.route('/logout')
@@ -94,7 +127,7 @@ def change_password():
         flash('You made a mistake with you old password')
         return redirect(url_for('auth.profile'))
 
-    else: 
+    else:
         if password1 != password2:
             flash('Passwords are not the same')
             return redirect(url_for('auth.profile'))
