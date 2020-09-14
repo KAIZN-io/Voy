@@ -5,6 +5,9 @@ class Config(object):
     SECRET_KEY = '9OLWxND4o83j4K4iuopO'
     SQLALCHEMY_DATABASE_URI = 'sqlite:///db.sqlite'
     
+    # set it false, if you dont use the Flask-SQLAlchemy event system 
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+
     # SQLALCHEMY_DATABASE_URI = 'sqlite:///database.db'
 
 # class ProductionConfig(Config):
@@ -16,6 +19,7 @@ class DevelopmentConfig(Config):
     DB_SERVER = 'localhost'
     # hot reload mit 'DEBUG=True'
     DEBUG = True
+
     # zur Sicherungen von Sitzungen 
 
 
