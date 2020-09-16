@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from flask_login import login_required, current_user
 
-from project.database.models import QC_Check, DB_User, QC_Audit
-from project import db
+from server.database.models import QC_Check, DB_User, QC_Audit
+from server import db
 from datetime import datetime
 import csv
 import string
