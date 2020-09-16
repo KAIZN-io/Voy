@@ -1,1 +1,4 @@
-# this is my training repos for flask 
+# How to use this project
+1. terminal: 'make'
+2. terminal: 'flask run'
+

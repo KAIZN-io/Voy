@@ -26,6 +26,7 @@ def index():
         posts_data = QC_Check.query.filter_by(close=1).all()
 
     print(post(posts_data).data)
+    from flask import current_app, g
 
     return render_template('index.html', posts=posts_data)
 
