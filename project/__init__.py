@@ -23,7 +23,8 @@ def create_app():
     log = logging.getLogger('werkzeug')
     log.disabled = True
 
-    from .models import DB_User
+    from project.database.models import DB_User
+
 
     @login_manager.user_loader
     def load_user(user_id):

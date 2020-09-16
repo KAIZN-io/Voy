@@ -1,13 +1,15 @@
-from flask import Blueprint, render_template, request, flash, redirect
+from flask import Blueprint, render_template, request, flash, redirect, url_for
 from flask_login import login_required, current_user
 
-from .models import QC_Check
-from .models import DB_User, QC_Audit
-from . import db
+from project.database.models import QC_Check, DB_User, QC_Audit
+from project import db
 from datetime import datetime
 import csv
 import string
 import os
+from werkzeug.wrappers import Response
+from io import StringIO
+
 
 main = Blueprint('main', __name__)
 
@@ -23,16 +25,44 @@ def index():
         # what DM / Admin sees
         posts_data = QC_Check.query.filter_by(close=1).all()
 
+    print(post(posts_data).data)
+
     return render_template('index.html', posts=posts_data)
+
+
+from flask import make_response
+
+@main.route('/download')
+def post(data):
+    csvList = ["ich", "bin", "Berliners"]
+    si = StringIO()
+    cw = csv.writer(si)
+    cw.writerows(csvList)
+
+    # 'output' type: <class 'flask.wrappers.Response'>
+    output = make_response(si.getvalue())
+    output.headers["Content-Disposition"] = "attachment; filename=export.csv"
+    output.headers["Content-type"] = "text/csv"
+
+    return output
+
 
 
 @main.route('/about')
 def about():
     return render_template('about.html')
 
+
+# get the last time the user was activ
+# TODO: calculate the time until auto-lockout 
+@main.before_request
+def update_last_active():
+    current_user.last_active = datetime.utcnow()
+    db.session.commit()
+
+
 # erstelle einen neuen Blog Eintrag --> db Eintrag
 # erstellt eine /create-Route -> d.h. 'kaizn.io/create'
-
 
 @main.route('/create', methods=('GET', 'POST'))
 @login_required
@@ -60,7 +90,7 @@ def create():
             db.session.add(blog_entry)
             db.session.commit()
 
-            return index()
+            return redirect(url_for('main.create'))
 
     return render_template('create.html', Users=User_data, source_type=Source_type)
 

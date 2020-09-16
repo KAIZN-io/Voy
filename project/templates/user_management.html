@@ -3,7 +3,38 @@ block content %} {% if current_user.is_authenticated %}
 <h1 class="title">User Managment</h1>
 <br />
 <a href="/signup">add User</a>
+<br /><br />
+<h4>MedOps</h4>
+<table class="table table-hover">
+  <thead class="thead-light">
+    <tr>
+      <th scope="col">User</th>
+      <th scope="col">Role</th>
+      <!-- <th scope="col">Permission</th> -->
+      <th scope="col">Delete</th>
+    </tr>
+  </thead>
+  <tbody>
 
+    {% for user in Users %}
+    {% if user.role == "MedOps" %}
+
+    <tr>
+      <td>{{ user.abbrev }}</td>
+      <td>{{ user.role }}</td>
+      <!-- <td>
+        <a href="{{ url_for('auth.permissions', id=user.id) }}">edit</a>
+      </td> -->
+      <td>
+        <a href="/delete_user/{{user.id}}">delete</a>
+      </td>
+    </tr>
+    {% endif %}
+    {% endfor %}
+  </tbody>
+</table>
+<br>
+<h4>DM</h4>
 <table class="table table-hover">
   <thead class="thead-light">
     <tr>
@@ -15,6 +46,7 @@ block content %} {% if current_user.is_authenticated %}
   </thead>
   <tbody>
     {% for user in Users %}
+    {% if (user.role == "Data Entry" or user.role == "Data Manager") %}
     <tr>
       <td>{{ user.abbrev }}</td>
       <td>{{ user.role }}</td>
@@ -25,7 +57,9 @@ block content %} {% if current_user.is_authenticated %}
         <a href="/delete_user/{{user.id}}">delete</a>
       </td>
     </tr>
+    {% endif %}
     {% endfor %}
   </tbody>
 </table>
+
 {% endif %} {% endblock %}

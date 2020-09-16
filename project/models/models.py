@@ -1,9 +1,9 @@
-# models.py
-
 from flask_login import UserMixin
-from . import db
+from project import db
+
 from sqlalchemy import DateTime
 from datetime import datetime
+
 
 # SQLAlchemy maps Python classes to database tables
 
@@ -54,12 +54,13 @@ class DB_User(UserMixin, db.Model):
 
 class User_Management(UserMixin, db.Model):
 
-    __tablename__ = 'user_audit'
+    __tablename__ = 'user_management'
 
     id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(100), unique=True)
     action = db.Column(db.Text)
     abbrev = db.Column(db.Text, unique=True)
     role = db.Column(db.Text)
     date_time = db.Column(DateTime, default=datetime.strptime(
         str(datetime.now()), '%Y-%m-%d %H:%M:%S.%f'))
-    changed_by = db.Column(db.Text)
+    change_by = db.Column(db.Text)
