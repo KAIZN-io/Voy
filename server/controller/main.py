@@ -147,7 +147,7 @@ def profile():
 def audit_trail(todo, id, category, old_value, new_value):
 
     # the audit trail file
-    path_to_file = os.getcwd()+'/project/.log_files/data_log_qc.csv'
+    path_to_file = os.getcwd()+'/server/.log_files/data_log_qc.csv'
     # '../../templates'
     # metadata
     user = current_user.abbrev
@@ -197,7 +197,7 @@ def edit():
             if (old_data[category] != new_data[category]):
 
                 # add the data to the audit trail
-                # audit_trail("edit", id, category, old_data[category], new_value)
+                audit_trail("edit", id, category, old_data[category], new_value)
 
                 # add new data to the data base
                 QC_Check.query.filter_by(id=id).update({category: new_value})

@@ -1,6 +1,5 @@
 from flask_login import UserMixin
 from sqlalchemy import DateTime
-from datetime import datetime
 
 from server import db
 # from server.database import db
@@ -35,8 +34,7 @@ class QC_Audit(UserMixin, db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     category = db.Column(db.Text)
-    date_time = db.Column(DateTime, default=datetime.strptime(
-        str(datetime.now()), '%Y-%m-%d %H:%M:%S.%f'))
+    date_time = db.Column(DateTime)
     user = db.Column(db.Text)
     old_value = db.Column(db.String(100))
     new_value = db.Column(db.String(100))
@@ -62,6 +60,5 @@ class User_Management(UserMixin, db.Model):
     action = db.Column(db.Text)
     abbrev = db.Column(db.Text, unique=True)
     role = db.Column(db.Text)
-    date_time = db.Column(DateTime, default=datetime.strptime(
-        str(datetime.now()), '%Y-%m-%d %H:%M:%S.%f'))
+    date_time = db.Column(DateTime)
     change_by = db.Column(db.Text)
