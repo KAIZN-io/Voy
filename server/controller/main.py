@@ -1,17 +1,20 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from flask_login import login_required, current_user
-
-from server.database.models import QC_Check, DB_User, QC_Audit
-from server import db
 from datetime import datetime
 import csv
 import string
 import os
+
+from server.database.models import QC_Check, DB_User, QC_Audit
+from server import db
+# from server.database import db
+
 # from werkzeug.wrappers import Response
 # from io import StringIO
 
 
 main = Blueprint('main', __name__)
+
 
 @main.route('/')
 @login_required
@@ -48,14 +51,13 @@ def index():
 #     return output
 
 
-
 @main.route('/about')
 def about():
     return render_template('about.html')
 
 
 # get the last time the user was activ
-# TODO: calculate the time until auto-lockout 
+# TODO: calculate the time until auto-lockout
 # @main.before_request
 # def update_last_active():
 #     current_user.last_active = datetime.utcnow()
@@ -73,25 +75,28 @@ def create():
 
     if request.method == 'POST':
 
-        todo_name = request.form['name']
-        title = request.form['title']
-        description = request.form['description']
-        page = request.form['page']
-        visit = request.form['visit']
+        # header data form the form 
         scr_no = request.form['scr_no']
         study_id = request.form['study_id']
         type = request.form['type']
 
-        blog_entry = QC_Check(procedure=title, type=type, corrected=1, close=1, description=description, checker=current_user.abbrev,
-                              created=datetime.utcnow(), visit=visit, page=page, scr_no=scr_no, study_id=study_id, responsible=todo_name)
+        # data under the header data
+        todo_name = request.form.getlist('row[][name]')
+        title = request.form.getlist('row[][title]')
+        description = request.form.getlist('row[][description]')
+        page = request.form.getlist('row[][page]')
+        visit = request.form.getlist('row[][visit]')
+        created = datetime.utcnow()
 
-        if not title:
-            flash('Title is required!')
-        else:
+        for i in range(len(todo_name)):
+
+            blog_entry = QC_Check(procedure=title[i], type=type, corrected=1, close=1, description=description[i], checker=current_user.abbrev,
+                                  created=created, visit=visit[i], page=page[i], scr_no=scr_no, study_id=study_id, responsible=todo_name[i])
+
             db.session.add(blog_entry)
             db.session.commit()
 
-            return redirect(url_for('main.create'))
+        return redirect(url_for('main.create'))
 
     return render_template('create.html', Users=User_data, source_type=Source_type)
 
@@ -137,7 +142,7 @@ def profile():
 
 # write the db changes to the audittrail file
 def audit_trail(todo, id, category, old_value, new_value):
-    
+
     # the audit trail file
     path_to_file = os.getcwd()+'/project/.log_files/data_log_qc.csv'
     # '../../templates'
@@ -169,6 +174,7 @@ def audit_trail(todo, id, category, old_value, new_value):
 
     return "added to audit trail"
 
+
 @main.route('/edit', methods=('GET', 'POST'))
 @login_required
 def edit():
@@ -184,7 +190,7 @@ def edit():
         new_data = request.form.to_dict()
 
         for category, new_value in new_data.items():
-      
+
             # compare the data from the DB with the from the request.form
             if (old_data[category] != new_data[category]):
 
@@ -194,7 +200,6 @@ def edit():
                 # add new data to the data base
                 QC_Check.query.filter_by(id=id).update({category: new_value})
                 db.session.commit()
-  
 
         return index()
 
