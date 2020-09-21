@@ -43,7 +43,7 @@
 
     <br>  
 
-    <table class="table">
+    <table data-ticket-table class="table">
       <thead class="thead-light">
         <tr>
           <th scope="col">Visit</th>
@@ -55,10 +55,11 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
+        <!-- ein attribut, den es nur für uns gibt 'data-ticket-row' -->
+        <tr data-ticket-row>
           <td>
             <div class="form-group">
-              <input type="text" name="visit"
+              <input type="text" name="row[][visit]"
                       placeholder="which visit?" class="form-control"
                       value="{{ request.form['visit'] }}"></input>
             </div>
@@ -66,28 +67,28 @@
           
           <td>
             <div class="form-group">
-              <input type="text" name="page"
+              <input type="text" name="row[][page]"
                       placeholder="which page?" class="form-control"
                       value="{{ request.form['page'] }}"></input>
             </div>
           </td>
           <td>
             <div class="form-group">
-              <input type="text" name="title"
+              <input type="text" name="row[][title]"
                      placeholder="Post title" class="form-control"
                      value="{{ request.form['title'] }}"></input>
             </div>
           </td>
           <td>
             <div class="form-group">
-              <textarea name="description" placeholder="Please describe your finding"
+              <textarea name="row[][description]" placeholder="Please describe your finding"
                         class="form-control" required>{{ request.form['description'] }}</textarea>
              </div>
 
           </td>
           <td>    
             <div class="form-group">
-            <select name="name" width="300px">
+            <select name="row[][name]" width="300px">
               {% for user in Users %}
               <option value="{{ user.abbrev }}" SELECTED>{{ user.abbrev }}</option>
           
@@ -95,11 +96,24 @@
             </select> 
         </div>
       </td>
-        </tr>
-      
+      </tr>
+    </tbody>
+
     </table>
   <div class="form-group">
     <button type="submit" class="btn btn-primary">Submit</button>
+    <button type="button" class="btn btn-primary" id="add_row">add row</button>
+    <script>
+      document.getElementById("add_row").onclick = function(){
+        let ticket_row = document.querySelector("tr[data-ticket-row]");
+        let ticket_row_clone = ticket_row.cloneNode(true);
+        let ticket_table = document.querySelector("table[data-ticket-table] tbody");
+        ticket_table.appendChild(ticket_row_clone);
+        console.log("add new row");
+
+      }
+      
+    </script>
   </div>
 </form>
 

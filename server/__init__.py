@@ -26,6 +26,7 @@ db = SQLAlchemy()
 
 def create_app():
     app = Flask(__name__)
+    # app = Flask(__name__, template_folder='../../templates')
 
     # import the configuration from the file config.py
     app.config.from_object('config.DevelopmentConfig')
