@@ -3,8 +3,9 @@ class Config(object):
     DEBUG = False
     TESTING = False
     SECRET_KEY = '9OLWxND4o83j4K4iuopO'
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///db.sqlite'
-    
+    # database location 
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///database/db.sqlite'
+
     # set it false, if you dont use the Flask-SQLAlchemy event system 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
