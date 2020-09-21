@@ -17,7 +17,7 @@ def login():
 
 @auth.route('/login', methods=['POST'])
 def login_post():
-    # email = request.form.get('email')
+
     abbrev = request.form.get('abbreviation')
     password = request.form.get('password')
 

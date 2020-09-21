@@ -7,8 +7,8 @@ from datetime import datetime
 import csv
 import string
 import os
-from werkzeug.wrappers import Response
-from io import StringIO
+# from werkzeug.wrappers import Response
+# from io import StringIO
 
 
 main = Blueprint('main', __name__)
@@ -25,27 +25,27 @@ def index():
         # what DM / Admin sees
         posts_data = QC_Check.query.filter_by(close=1).all()
 
-    print(post(posts_data).data)
-    from flask import current_app, g
+    # print(post(posts_data).data)
+    # from flask import current_app, g
 
     return render_template('index.html', posts=posts_data)
 
 
-from flask import make_response
+# from flask import make_response
 
-@main.route('/download')
-def post(data):
-    csvList = ["ich", "bin", "Berliners"]
-    si = StringIO()
-    cw = csv.writer(si)
-    cw.writerows(csvList)
+# @main.route('/download')
+# def post(data):
+#     csvList = ["ich", "bin", "Berliners"]
+#     si = StringIO()
+#     cw = csv.writer(si)
+#     cw.writerows(csvList)
 
-    # 'output' type: <class 'flask.wrappers.Response'>
-    output = make_response(si.getvalue())
-    output.headers["Content-Disposition"] = "attachment; filename=export.csv"
-    output.headers["Content-type"] = "text/csv"
+#     # 'output' type: <class 'flask.wrappers.Response'>
+#     output = make_response(si.getvalue())
+#     output.headers["Content-Disposition"] = "attachment; filename=export.csv"
+#     output.headers["Content-type"] = "text/csv"
 
-    return output
+#     return output
 
 
 
@@ -56,10 +56,10 @@ def about():
 
 # get the last time the user was activ
 # TODO: calculate the time until auto-lockout 
-@main.before_request
-def update_last_active():
-    current_user.last_active = datetime.utcnow()
-    db.session.commit()
+# @main.before_request
+# def update_last_active():
+#     current_user.last_active = datetime.utcnow()
+#     db.session.commit()
 
 
 # erstelle einen neuen Blog Eintrag --> db Eintrag
@@ -140,7 +140,7 @@ def audit_trail(todo, id, category, old_value, new_value):
     
     # the audit trail file
     path_to_file = os.getcwd()+'/project/.log_files/data_log_qc.csv'
-
+    # '../../templates'
     # metadata
     user = current_user.abbrev
 
@@ -189,7 +189,7 @@ def edit():
             if (old_data[category] != new_data[category]):
 
                 # add the data to the audit trail
-                audit_trail("edit", id, category, old_data[category], new_value)
+                # audit_trail("edit", id, category, old_data[category], new_value)
 
                 # add new data to the data base
                 QC_Check.query.filter_by(id=id).update({category: new_value})
