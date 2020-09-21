@@ -1,8 +1,9 @@
 from flask_login import UserMixin
-from server import db
-
 from sqlalchemy import DateTime
 from datetime import datetime
+
+from server import db
+# from server.database import db
 
 
 # SQLAlchemy maps Python classes to database tables

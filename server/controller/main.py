@@ -1,9 +1,9 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from flask_login import login_required, current_user
-from datetime import datetime
 import csv
 import string
 import os
+import arrow 
 
 from server.database.models import QC_Check, DB_User, QC_Audit
 from server import db
@@ -15,6 +15,9 @@ from server import db
 
 main = Blueprint('main', __name__)
 
+# the time stamp in the requeried format 
+def time_stamp():
+    return arrow.utcnow().format('DD-MMM-YYYY HH:mm:ss')
 
 @main.route('/')
 @login_required
@@ -60,7 +63,7 @@ def about():
 # TODO: calculate the time until auto-lockout
 # @main.before_request
 # def update_last_active():
-#     current_user.last_active = datetime.utcnow()
+#     current_user.last_active = time_stamp()
 #     db.session.commit()
 
 
@@ -86,7 +89,7 @@ def create():
         description = request.form.getlist('row[][description]')
         page = request.form.getlist('row[][page]')
         visit = request.form.getlist('row[][visit]')
-        created = datetime.utcnow()
+        created = time_stamp()
 
         for i in range(len(todo_name)):
 
@@ -150,8 +153,7 @@ def audit_trail(todo, id, category, old_value, new_value):
     user = current_user.abbrev
 
     # the data in the model in form of a dict structure
-    audit_data = QC_Audit(id=id, category=category, date_time=datetime.strptime(
-        str(datetime.now()), '%Y-%m-%d %H:%M:%S.%f'),
+    audit_data = QC_Audit(id=id, category=category, date_time=time_stamp(),
         user=user, old_value=old_value, new_value=new_value).__dict__
 
     # NOTE: semi good solution for the extra data from sql alchemy

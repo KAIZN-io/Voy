@@ -34,12 +34,12 @@
       </div>
     </div>
 
-    <div class="field">
+    <!-- <div class="field">
       <label class="checkbox">
           <input type="checkbox">
           Save configuration 
       </label>
-    </div>
+    </div> -->
 
     <br>  
 
@@ -101,12 +101,16 @@
 
     </table>
   <div class="form-group">
-    <button type="submit" class="btn btn-primary">Submit</button>
-    <button type="button" class="btn btn-primary" id="add_row">add row</button>
+    <button type="submit" class="btn btn-primary" style="margin-left: 50%">Submit</button>
+    <button type="button" class="btn btn-primary" id="add_row" style="float: right;">add row</button>
     <script>
       document.getElementById("add_row").onclick = function(){
         let ticket_row = document.querySelector("tr[data-ticket-row]");
         let ticket_row_clone = ticket_row.cloneNode(true);
+        //.children();//.text("").end();
+        // console.log(ticket_row_empty);
+        // var $cloned = $("tr").clone().children().text("").end();
+
         let ticket_table = document.querySelector("table[data-ticket-table] tbody");
         ticket_table.appendChild(ticket_row_clone);
         console.log("add new row");
