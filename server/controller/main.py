@@ -10,6 +10,11 @@ from server.database.models import QC_Check, DB_User, QC_Audit
 from server import db
 from sqlalchemy import inspect
 
+import pdfkit as pdf
+import sqlite3
+
+
+
 main = Blueprint('main', __name__)
 
 
@@ -42,10 +47,12 @@ def index():
         # prepare the data to get read by pandas dataframe
         query_as_dict = [as_dict(r) for r in posts_data]
         # read the query data to the dataframe
-        query_DataFrame = pd.DataFrame(testPostData)
+        query_DataFrame = pd.DataFrame(query_as_dict)
 
         print(query_DataFrame)
-
+        # query_DataFrame.to_html('/home/linux/izvestaj.html')
+        # nazivFajla='/home/linux/pdfPrintOut.pdf'
+        # pdf.from_file('/home/linux/izvestaj.html', nazivFajla)
         return redirect('/')
 
     return render_template('index.html', posts=posts_data)
