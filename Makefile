@@ -1,5 +1,5 @@
 create_files: create_folder
-	touch project/.log_files/data_log_qc.csv project/.log_files/data_log_roles.csv project/.log_files/data_log_user.csv
+	touch server/.log_files/data_log_qc.csv server/.log_files/data_log_roles.csv server/.log_files/data_log_user.csv
 
 create_folder:
-	mkdir project/.log_files
+	mkdir server/.log_files
