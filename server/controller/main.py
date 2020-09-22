@@ -1,21 +1,26 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for
+from flask import Blueprint, render_template, request, flash, redirect, url_for, session
 from flask_login import login_required, current_user
 import csv
 import string
 import os
-import arrow 
+import arrow
+import pandas as pd
 
 from server.database.models import QC_Check, DB_User, QC_Audit
 from server import db
-# from server.database import db
-
-# from werkzeug.wrappers import Response
-# from io import StringIO
-
+from sqlalchemy import inspect
 
 main = Blueprint('main', __name__)
 
-# the time stamp in the requeried format 
+
+
+
+# transform the query results to a readable dict
+def as_dict(self):
+    return {c.key: getattr(self, c.key)
+            for c in inspect(self).mapper.column_attrs}
+
+# the time stamp in the requeried format
 def time_stamp():
     return arrow.utcnow().format('DD-MMM-YYYY HH:mm:ss')
 
@@ -32,13 +37,16 @@ def index():
         # what DM / Admin sees
         posts_data = QC_Check.query.filter_by(close=1).all()
 
-    # print(post(posts_data).data)
-    # from flask import current_app, g
-
+    # TODO: download your queries as an csv
     if request.method == 'POST':
+        # prepare the data to get read by pandas dataframe
+        query_as_dict = [as_dict(r) for r in posts_data]
+        # read the query data to the dataframe
+        query_DataFrame = pd.DataFrame(testPostData)
 
-        return redirect(url_for('main.create'))
+        print(query_DataFrame)
 
+        return redirect('/')
 
     return render_template('index.html', posts=posts_data)
 
@@ -76,7 +84,7 @@ def create():
 
     if request.method == 'POST':
 
-        # header data form the form 
+        # header data form the form
         scr_no = request.form['scr_no']
         study_id = request.form['study_id']
         type = request.form['type']
@@ -152,7 +160,7 @@ def audit_trail(todo, id, category, old_value, new_value):
 
     # the data in the model in form of a dict structure
     audit_data = QC_Audit(id=id, category=category, date_time=time_stamp(),
-        user=user, old_value=old_value, new_value=new_value).__dict__
+                          user=user, old_value=old_value, new_value=new_value).__dict__
 
     # NOTE: semi good solution for the extra data from sql alchemy
     audit_data.pop('_sa_instance_state', None)
@@ -195,7 +203,8 @@ def edit():
             if (old_data[category] != new_data[category]):
 
                 # add the data to the audit trail
-                audit_trail("edit", id, category, old_data[category], new_value)
+                audit_trail("edit", id, category,
+                            old_data[category], new_value)
 
                 # add new data to the data base
                 QC_Check.query.filter_by(id=id).update({category: new_value})
