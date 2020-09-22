@@ -3,74 +3,74 @@ content %} {% if current_user.is_authenticated %}
 <h1 class="title">QUERIES</h1>
 <br />
 {% if posts|length > 0 %}
+<form method="post">
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary" style="float: right">Download</button>
+    </div>
+</form>
 
 <table class="table">
-  <thead class="thead-light">
-    <tr>
-      <!-- MedOps is not allowed to see the status of the query -->
-      {% if not current_user.role == "MedOps" %}
-      <th scope="col">Status</th>
-      {% endif %}
-      <th scope="col">Study ID</th>
-      <th scope="col">Scr No</th>
-      <th scope="col">Type</th>
-      <th scope="col">Visit</th>
-      <th scope="col">Page</th>
-      <th scope="col">Procedure</th>
-      <th scope="col">Description</th>
-      <th scope="col">Created</th>
-      <th scope="col"></th>
-      <th scope="col"></th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for post in posts %}
-    <tr>
-      <!-- MedOps is not allowed to see the status of the query -->
-      {% if not current_user.role == "MedOps" %}
-      {% if post.corrected == 0 %}
-      <td>
-        <span class="badge badge-warning">
-          Requery
-        </span>
-      </td>
-      {% else %}
-      <td>
-        <span class="badge badge-danger">
-          Open
-        </span>
-      </td>
-      {% endif %}
-
-      {% endif %}
-      <td>{{ post.study_id }}</td>
-      <td>{{ post.scr_no }}</td>
-      <td>{{ post.type }}</td>
-      <td>{{ post.visit }}</td>
-      <td>{{ post.page }}</td>
-      <td>{{ post.procedure }}</td>
-      <td>{{ post.description }}</td>
-      <td>
-        <span class="badge badge-primary">{{ post.created }}</span>
-      </td>
-      <td>
-        {% if current_user.role == "MedOps" %}
-        <a href="/delete/{{post.id}}">done</a>
-        {% endif %}
-
-      </td>
-      <td>
-        <!-- close the query if you have the right role permission -->
-        {% if current_user.role == "Admin" %}
-        <a href="/requery/{{post.id}}">requery</a>
-        <!-- overgive the edit page the id -->
-        <a href="{{ url_for('main.edit', id=post.id) }}">edit</a>
-        <a href="/close/{{post.id}}">close</a>
-        {% endif %}
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
+    <thead class="thead-light">
+        <tr>
+            <!-- MedOps is not allowed to see the status of the query -->
+            {% if not current_user.role == "MedOps" %}
+            <th scope="col">Status</th>
+            {% endif %}
+            <th scope="col">Study ID</th>
+            <th scope="col">Scr No</th>
+            <th scope="col">Type</th>
+            <th scope="col">Visit</th>
+            <th scope="col">Page</th>
+            <th scope="col">Procedure</th>
+            <th scope="col">Description</th>
+            <th scope="col">Created</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for post in posts %}
+        <tr>
+            <!-- MedOps is not allowed to see the status of the query -->
+            {% if not current_user.role == "MedOps" %} {% if post.corrected == 0
+            %}
+            <td>
+                <span class="badge badge-warning"> Requery </span>
+            </td>
+            {% else %}
+            <td>
+                <span class="badge badge-danger"> Open </span>
+            </td>
+            {% endif %} {% endif %}
+            <td>{{ post.study_id }}</td>
+            <td>{{ post.scr_no }}</td>
+            <td>{{ post.type }}</td>
+            <td>{{ post.visit }}</td>
+            <td>{{ post.page }}</td>
+            <td>{{ post.procedure }}</td>
+            <td>{{ post.description }}</td>
+            <td>
+                <span class="badge badge-primary">{{ post.created }}</span>
+            </td>
+            <td>
+                {% if current_user.role == "MedOps" %}
+                <a href="/delete/{{post.id}}">done</a>
+                {% endif %}
+            </td>
+            <td>
+                <!-- close the query if you have the right role permission -->
+                {% if current_user.role == "Admin" %}
+                <a href="/requery/{{post.id}}">requery</a>
+                <!-- overgive the edit page the id -->
+                <a href="{{ url_for('main.edit', id=post.id) }}">edit</a>
+                <a href="/close/{{post.id}}">close</a>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
 </table>
+
+
 {% else %} Du bist grandios! Alles erledigt!!! Und hier deshalb ein schöne Bild
 einfügen (-->TODO an mich) {% endif %} {% endif %} {% endblock %}

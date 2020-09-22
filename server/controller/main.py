@@ -19,7 +19,8 @@ main = Blueprint('main', __name__)
 def time_stamp():
     return arrow.utcnow().format('DD-MMM-YYYY HH:mm:ss')
 
-@main.route('/')
+
+@main.route('/', methods=('GET', 'POST'))
 @login_required
 def index():
     # get the data in a dict structur
@@ -33,6 +34,11 @@ def index():
 
     # print(post(posts_data).data)
     # from flask import current_app, g
+
+    if request.method == 'POST':
+
+        return redirect(url_for('main.create'))
+
 
     return render_template('index.html', posts=posts_data)
 
@@ -57,14 +63,6 @@ def index():
 @main.route('/about')
 def about():
     return render_template('about.html')
-
-
-# get the last time the user was activ
-# TODO: calculate the time until auto-lockout
-# @main.before_request
-# def update_last_active():
-#     current_user.last_active = time_stamp()
-#     db.session.commit()
 
 
 # erstelle einen neuen Blog Eintrag --> db Eintrag
