@@ -48,11 +48,9 @@ def index():
         query_as_dict = [as_dict(r) for r in posts_data]
         # read the query data to the dataframe
         query_DataFrame = pd.DataFrame(query_as_dict)
-
+        query_DataFrame.to_excel("output.xlsx")
         print(query_DataFrame)
-        # query_DataFrame.to_html('/home/linux/izvestaj.html')
-        # nazivFajla='/home/linux/pdfPrintOut.pdf'
-        # pdf.from_file('/home/linux/izvestaj.html', nazivFajla)
+
         return redirect('/')
 
     return render_template('index.html', posts=posts_data)

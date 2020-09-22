@@ -30,3 +30,4 @@ notes.txt
 # Compliance data
 .log_files/
 .sqlite
+*.xlsx
