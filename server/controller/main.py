@@ -14,10 +14,7 @@ import pdfkit as pdf
 import sqlite3
 
 
-
 main = Blueprint('main', __name__)
-
-
 
 
 # transform the query results to a readable dict
@@ -93,7 +90,7 @@ def create():
         scr_no = request.form['scr_no']
         study_id = request.form['study_id']
         type = request.form['type']
-
+        
         # data under the header data
         todo_name = request.form.getlist('row[][name]')
         title = request.form.getlist('row[][title]')
