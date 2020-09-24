@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for, session
+from flask import Blueprint, render_template, request, flash, redirect, url_for, session, send_file
 from flask_login import login_required, current_user
 import csv
 import string
@@ -10,7 +10,7 @@ from server.database.models import QC_Check, DB_User, QC_Audit
 from server import db
 from sqlalchemy import inspect
 
-import pdfkit as pdf
+import pdfkit
 import sqlite3
 
 
@@ -25,7 +25,6 @@ def as_dict(self):
 # the time stamp in the requeried format
 def time_stamp():
     return arrow.utcnow().format('DD-MMM-YYYY HH:mm:ss')
-
 
 @main.route('/', methods=('GET', 'POST'))
 @login_required
@@ -46,9 +45,18 @@ def index():
         # read the query data to the dataframe
         query_DataFrame = pd.DataFrame(query_as_dict)
         query_DataFrame.to_excel("output.xlsx")
-        print(query_DataFrame)
 
-        return redirect('/')
+        query_DataFrame.to_html("query_DataFrame.html")
+
+        # convert the html file into pdf with wkhtmltopdf
+        pdfkit.from_file('query_DataFrame.html', 'query_DataFrame.pdf')
+
+        # pdfkit.from_url('http://localhost:5000', 'index_page.pdf')
+
+        print(query_DataFrame)
+        return send_file("query_DataFrame.pdf", as_attachment=True, attachment_filename="My_Queries.pdf")
+
+        # return redirect('/')
 
     return render_template('index.html', posts=posts_data)
 
@@ -90,7 +98,7 @@ def create():
         scr_no = request.form['scr_no']
         study_id = request.form['study_id']
         type = request.form['type']
-        
+
         # data under the header data
         todo_name = request.form.getlist('row[][name]')
         title = request.form.getlist('row[][title]')

@@ -31,3 +31,5 @@ notes.txt
 .log_files/
 .sqlite
 *.xlsx
+query_DataFrame.pdf 
+query_DataFrame.html
