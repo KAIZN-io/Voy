@@ -5,7 +5,16 @@ content %} {% if current_user.is_authenticated %}
 {% if posts|length > 0 %}
 <form method="post">
     <div class="form-group">
-        <button type="submit" class="btn btn-primary" style="float: right">Download</button>
+        <label for="type" >Download Queries as :</label>
+        <select name="download" width="300px">
+            {% for download in Download_Type %}
+            <option value="{{ download }}" selected required>{{ download }}</option>
+
+            {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-primary">
+            Download
+        </button>
     </div>
 </form>
 
@@ -70,7 +79,6 @@ content %} {% if current_user.is_authenticated %}
         {% endfor %}
     </tbody>
 </table>
-
 
 {% else %} Du bist grandios! Alles erledigt!!! Und hier deshalb ein schöne Bild
 einfügen (-->TODO an mich) {% endif %} {% endif %} {% endblock %}

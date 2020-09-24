@@ -29,6 +29,7 @@ def time_stamp():
 @main.route('/', methods=('GET', 'POST'))
 @login_required
 def index():
+    download_type = ['xlsx', 'pdf']
     # get the data in a dict structur
     # for the right person, if the query is not closed --> corrected=False (==1)
     if current_user.role == "MedOps":
@@ -40,42 +41,28 @@ def index():
 
     # TODO: download your queries as an csv
     if request.method == 'POST':
+        # get the requestesd file format 
+        download_type = request.form.get('download')
+
         # prepare the data to get read by pandas dataframe
         query_as_dict = [as_dict(r) for r in posts_data]
         # read the query data to the dataframe
         query_DataFrame = pd.DataFrame(query_as_dict)
-        query_DataFrame.to_excel("output.xlsx")
 
-        query_DataFrame.to_html("query_DataFrame.html")
+        if download_type == "pdf":
+            query_DataFrame.to_html("query_DataFrame.html")
+            # convert the html file into pdf with wkhtmltopdf
+            pdfkit.from_file('query_DataFrame.html', 'query_DataFrame.pdf')
+            # pdfkit.from_url('http://localhost:5000', 'index_page.pdf')
 
-        # convert the html file into pdf with wkhtmltopdf
-        pdfkit.from_file('query_DataFrame.html', 'query_DataFrame.pdf')
-
-        # pdfkit.from_url('http://localhost:5000', 'index_page.pdf')
+        else:
+            # create the excel file
+            query_DataFrame.to_excel("query_DataFrame.xlsx")
 
         print(query_DataFrame)
-        return send_file("query_DataFrame.pdf", as_attachment=True, attachment_filename="My_Queries.pdf")
+        return send_file("query_DataFrame.{}".format(download_type), as_attachment=True, attachment_filename="My_Queries.{}".format(download_type))
 
-        # return redirect('/')
-
-    return render_template('index.html', posts=posts_data)
-
-
-# from flask import make_response
-
-# @main.route('/download')
-# def post(data):
-#     csvList = ["ich", "bin", "Berliners"]
-#     si = StringIO()
-#     cw = csv.writer(si)
-#     cw.writerows(csvList)
-
-#     # 'output' type: <class 'flask.wrappers.Response'>
-#     output = make_response(si.getvalue())
-#     output.headers["Content-Disposition"] = "attachment; filename=export.csv"
-#     output.headers["Content-type"] = "text/csv"
-
-#     return output
+    return render_template('index.html', posts=posts_data, Download_Type=download_type)
 
 
 @main.route('/about')
