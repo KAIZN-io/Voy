@@ -12,6 +12,7 @@ from sqlalchemy import inspect
 
 import pdfkit
 import sqlite3
+# import xlsxwriter
 
 
 main = Blueprint('main', __name__)
@@ -50,13 +51,19 @@ def index():
         query_DataFrame = pd.DataFrame(query_as_dict)
 
         if download_type == "pdf":
+            # query_DataFrame.to_html("/server/.log_files/query_DataFrame.html")
             query_DataFrame.to_html("query_DataFrame.html")
+
             # convert the html file into pdf with wkhtmltopdf
             pdfkit.from_file('query_DataFrame.html', 'query_DataFrame.pdf')
             # pdfkit.from_url('http://localhost:5000', 'index_page.pdf')
 
         else:
             # create the excel file
+            # out_path = "./server/.log_files/query_De.xlsx"
+            # writer = pd.ExcelWriter(out_path , engine='xlsxwriter')
+            # query_DataFrame.to_excel(writer)
+
             query_DataFrame.to_excel("query_DataFrame.xlsx")
 
         print(query_DataFrame)
