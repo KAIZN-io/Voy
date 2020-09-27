@@ -6,7 +6,7 @@ import os
 import arrow
 import pandas as pd
 
-from server.database.models import QC_Check, DB_User, QC_Audit
+from server.model.models import QC_Check, DB_User, QC_Audit
 from server import db
 from sqlalchemy import inspect
 

@@ -30,10 +30,12 @@ class Server(MessagingHandler):
         self.server.send(Message(address=event.message.reply_to, body=event.message.body.upper(),
                             correlation_id=event.message.correlation_id))
 
+broker="localhost:5672/examples"
+
 # Apache ActiveMQ server address
 # Container(Server("localhost:8161", topic="examples")).run()
 parser = optparse.OptionParser(usage="usage: %prog [options]")
-parser.add_option("-a", "--address", default="localhost:5672/examples",
+parser.add_option("-a", "--address", default=broker,
                   help="address from which messages are received (default %default)")
 opts, args = parser.parse_args()
 

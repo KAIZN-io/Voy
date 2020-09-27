@@ -26,8 +26,7 @@ db = SQLAlchemy()
 
 
 def create_app():
-    app = Flask(__name__)
-    # app = Flask(__name__, template_folder='../../templates')
+    app = Flask(__name__, template_folder='view/templates')
 
     # import the configuration from the file config.py
     app.config.from_object('config.DevelopmentConfig')
@@ -42,7 +41,7 @@ def create_app():
     log = logging.getLogger('werkzeug')
     log.disabled = True
 
-    from server.database.models import DB_User
+    from server.model.models import DB_User
 
     @login_manager.user_loader
     def load_user(user_id):
