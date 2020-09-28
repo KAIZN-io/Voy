@@ -1,12 +1,11 @@
-from __future__ import print_function, unicode_literals
 from proton import Message
 from proton.handlers import MessagingHandler
 from proton.reactor import Container, DynamicNodeProperties
 
 
-class Client(MessagingHandler):
+class AMQP_Client(MessagingHandler):
     def __init__(self, server, requests):
-        super(Client, self).__init__()
+        super(AMQP_Client, self).__init__()
         self.server = server
         self.requests = requests
 
@@ -15,6 +14,7 @@ class Client(MessagingHandler):
     (Client <-> Message Broker) connection
 
     Initiates the establishment of a link over which messages can be sent.
+    'on_start()' is a function from MessagingHandler
     """
 
     def on_start(self, event):
@@ -55,7 +55,7 @@ class Client(MessagingHandler):
     (Message Broker -> Client) message 
     called when a message is received 
 
-    'on_message()' is a fuction from MessagingHandler
+    'on_message()' is a function from MessagingHandler
     """
 
     def on_message(self, event):
@@ -70,13 +70,17 @@ class Client(MessagingHandler):
 def request_amqp():
 
     requests = ["Twas brillig, and the slithy toves",
-                "hey jude", "zweite Nachricht"]
+                "hey jue",
+                "zweite Nachricht"
+                ]
 
     broker = "localhost:5672/examples"
 
     # send the request list to the server
-    Container(Client(broker, requests)).run()
-    
+    handler = AMQP_Client(broker, requests)
+    container = Container(handler)
+    container.run()
+
     return 0
 
 
