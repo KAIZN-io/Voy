@@ -30,6 +30,7 @@ class Server(MessagingHandler):
         self.server.send(Message(address=event.message.reply_to, body=event.message.body.upper(),
                             correlation_id=event.message.correlation_id))
 
+# broker="localhost:8161/examples"
 broker="localhost:5672/examples"
 
 # Apache ActiveMQ server address
@@ -40,6 +41,7 @@ parser.add_option("-a", "--address", default=broker,
 opts, args = parser.parse_args()
 
 url = Url(opts.address)
+print(url)
 
 try:
     Container(Server(url, url.path)).run()

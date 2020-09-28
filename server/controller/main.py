@@ -7,6 +7,7 @@ import arrow
 import pandas as pd
 
 from server.model.models import QC_Check, DB_User, QC_Audit
+from server.controller.amqp.client import request_amqp
 from server import db
 from sqlalchemy import inspect
 
@@ -31,6 +32,8 @@ def time_stamp():
 @login_required
 def index():
     download_type = ['xlsx', 'pdf']
+    request_amqp()
+
     # get the data in a dict structur
     # for the right person, if the query is not closed --> corrected=False (==1)
     if current_user.role == "MedOps":
@@ -42,6 +45,7 @@ def index():
 
     # TODO: download your queries as an csv
     if request.method == 'POST':
+        print(request_amqp())
         # get the requestesd file format 
         download_type = request.form.get('download')
 
