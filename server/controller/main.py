@@ -58,11 +58,11 @@ def index():
         # prepare the data to get read by pandas dataframe
         query_as_dict = [as_dict(r) for r in posts_data]
 
-        if download_type == "pdf":
-            request_amqp(query_as_dict, {"download_type":download_type})
+        # if download_type == "pdf":
+        request_amqp(query_as_dict, {"download_type":download_type})
 
-        else:
-            DictToExcel(query_as_dict)
+        # else:
+        #     DictToExcel(query_as_dict)
 
         return send_file("query_DataFrame.{}".format(download_type), as_attachment=True, attachment_filename="My_Queries.{}".format(download_type))
 

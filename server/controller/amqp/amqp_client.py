@@ -33,22 +33,7 @@ class AMQP_Client(MessagingHandler):
     """
 
     def on_link_opened(self, event):
-        print("SEND: Opened sender for target address")# '{0}'".format
-              #(event.message))
-
-
-    # def next_request(self):
-
-    #     if self.receiver.remote_source.address:
-    #         # req = Message(self.requests[0], reply_to=self.receiver.remote_source.address)
-    #         # print(self.requests)
-    #         # body (bytes | unicode | dict | list | int | long | float | UUID) – message body
-    #         req = Message(body=self.requests, reply_to=self.receiver.remote_source.address)
-
-    #         # req = Message(body="hallo", reply_to=self.receiver.remote_source.address)
-
-    #         # send the message / request
-    #         self.sender.send(req)
+        print("SEND: Opened sender for target address")
 
     """
     (Message Broker -> Client) message
@@ -63,19 +48,10 @@ class AMQP_Client(MessagingHandler):
                           annotations=self.annotation
                           )
 
-        print(message)
-        
+        # NOTE: is it the same as: 'self.sender.send(message)' ?
         event.sender.send(message)
-        # print("SEND: Sent message '{0}'".format(message))
         event.sender.close()
         event.connection.close()
-
-    # def on_message(self, event):
-    #     print("%s => %s" % (self.requests.pop(0), event.message.body))
-    #     if self.requests:
-    #         self.next_request()
-    #     else:
-    #         event.connection.close()
 
 
 def request_amqp(requests, annotation):
