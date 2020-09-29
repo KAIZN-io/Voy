@@ -7,13 +7,17 @@ import arrow
 import pandas as pd
 
 from server.model.models import QC_Check, DB_User, QC_Audit
-from server.controller.amqp.client import request_amqp
+from server.controller.amqp.amqp_client import request_amqp
 from server import db
 from sqlalchemy import inspect
 
 import pdfkit
 import sqlite3
 # import xlsxwriter
+
+from server.controller.python_scripts.TransformData import DictToPdf, DictToExcel
+
+# use of the message broker 
 
 
 main = Blueprint('main', __name__)
@@ -25,14 +29,16 @@ def as_dict(self):
             for c in inspect(self).mapper.column_attrs}
 
 # the time stamp in the requeried format
+
+
 def time_stamp():
     return arrow.utcnow().format('DD-MMM-YYYY HH:mm:ss')
+
 
 @main.route('/', methods=('GET', 'POST'))
 @login_required
 def index():
     download_type = ['xlsx', 'pdf']
-    request_amqp()
 
     # get the data in a dict structur
     # for the right person, if the query is not closed --> corrected=False (==1)
@@ -45,32 +51,19 @@ def index():
 
     # TODO: download your queries as an csv
     if request.method == 'POST':
-        print(request_amqp())
-        # get the requestesd file format 
+
+        # get the requestesd file format
         download_type = request.form.get('download')
 
         # prepare the data to get read by pandas dataframe
         query_as_dict = [as_dict(r) for r in posts_data]
-        # read the query data to the dataframe
-        query_DataFrame = pd.DataFrame(query_as_dict)
 
         if download_type == "pdf":
-            # query_DataFrame.to_html("/server/.log_files/query_DataFrame.html")
-            query_DataFrame.to_html("query_DataFrame.html")
-
-            # convert the html file into pdf with wkhtmltopdf
-            pdfkit.from_file('query_DataFrame.html', 'query_DataFrame.pdf')
-            # pdfkit.from_url('http://localhost:5000', 'index_page.pdf')
+            request_amqp(query_as_dict, {"download_type":download_type})
 
         else:
-            # create the excel file
-            # out_path = "./server/.log_files/query_De.xlsx"
-            # writer = pd.ExcelWriter(out_path , engine='xlsxwriter')
-            # query_DataFrame.to_excel(writer)
+            DictToExcel(query_as_dict)
 
-            query_DataFrame.to_excel("query_DataFrame.xlsx")
-
-        print(query_DataFrame)
         return send_file("query_DataFrame.{}".format(download_type), as_attachment=True, attachment_filename="My_Queries.{}".format(download_type))
 
     return render_template('index.html', posts=posts_data, Download_Type=download_type)

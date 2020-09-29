@@ -2,12 +2,10 @@ import optparse
 from proton import Message, Url, Terminus
 from proton.handlers import MessagingHandler
 from proton.reactor import Container, ReceiverOption
+
 import sys
-""" 
-Dummy Test: Server Response task:
-Our server will provide a very simple service: 
-it will respond with the body of the request converted to uppercase.
-"""
+sys.path.append("..")
+from python_scripts import TransformData
 
 """
 A durable subscription is a piece of state on the remote server representing a message receiver.
@@ -17,7 +15,6 @@ Any messages received while detached are available when the client re-attaches.
 """
 
 """Servers task: process the request and send the response"""
-# NOTE: The code here is not too different from the simple receiver example.
 
 class AMQP_Server(MessagingHandler):
     def __init__(self, url, address):
@@ -47,10 +44,19 @@ class AMQP_Server(MessagingHandler):
 
     def on_message(self, event):
         message = event.message
-        self.server.send(Message(address=message.reply_to, 
-                            body=message.body.upper(),
-                            correlation_id=message.correlation_id
-                            ))
+
+        # transform the data
+        if message.annotations['download_type']=='pdf':
+            TransformData.DictToPdf(message.body)
+
+        # TODO: send mail to user 
+        # TEMP now: save the file to the server directory
+        response = Message(body="hey",
+                        address=message.reply_to, 
+                        correlation_id=message.correlation_id
+                        )
+
+        self.server.send(response)
 
   
 
@@ -77,6 +83,7 @@ opts, args = parser.parse_args()
 url = Url(opts.address)
 
 try:
+
     handler = AMQP_Server(url, url.path)
     container = Container(handler)
     # Set the container ID
