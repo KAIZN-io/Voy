@@ -202,6 +202,9 @@ def edit():
 
                 # add new data to the data base
                 QC_Check.query.filter_by(id=id).update({category: new_value})
+                # set the query status to 'open' 
+                QC_Check.query.filter_by(id=id).update({"corrected": 1})
+
                 db.session.commit()
 
         return redirect(url_for('main.index'))

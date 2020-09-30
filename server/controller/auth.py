@@ -1,12 +1,18 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash, current_app, session
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
+import arrow
+
 
 from server import db
 from server.model.models import DB_User, User_Management
 
 
 auth = Blueprint('auth', __name__)
+
+
+def time_stamp():
+    return arrow.utcnow().format('DD-MMM-YYYY HH:mm:ss')
 
 
 @auth.route('/login')
@@ -99,7 +105,7 @@ def signup_post():
 
     # add the change to the user_management db
     user_management = User_Management(
-        email=email, abbrev=abbreviation, role=role, change_by=current_user.abbrev, action="added")
+        email=email, abbrev=abbreviation, role=role, change_by=current_user.abbrev, date_time=time_stamp(), action="added")
 
     # add the new user to the database
     db.session.add(user_management)
