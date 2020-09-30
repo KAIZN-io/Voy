@@ -204,6 +204,6 @@ def edit():
                 QC_Check.query.filter_by(id=id).update({category: new_value})
                 db.session.commit()
 
-        return index()
+        return redirect(url_for('main.index'))
 
     return render_template('edit.html', data=old_data, Users=User_data)
