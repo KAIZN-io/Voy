@@ -11,6 +11,14 @@ extra_folders: create_folder
 	touch server/.log_files/data_log_qc.csv server/.log_files/data_log_roles.csv \
 	server/.log_files/data_log_user.csv
 
+# NOTE: Does not work yet BUT the logic is correct
+.PHONY: database
+database:
+	flask shell; \
+	from server.model.models import db; \
+	db.create_all(); \
+	exit();
+
 # NOTE: Does not work yet 
 create_folder:
 ifneq ($(wildcard /server/.log_files),)

@@ -5,6 +5,7 @@ import string
 import os
 import arrow
 import pandas as pd
+import time
 
 from server.model.models import QC_Check, DB_User, QC_Audit
 from server.controller.amqp.amqp_client import request_amqp
@@ -56,6 +57,9 @@ def index():
 
         # send the data with the working request to the message broker 
         request_amqp(query_as_dict, {"download_type":download_type})
+
+        # TEMP: sleep until new pdf / excel file is really created
+        time.sleep(3) 
 
         return send_file("controller/amqp/query_DataFrame.{}".format(download_type), as_attachment=True, attachment_filename="My_Queries.{}".format(download_type))
 

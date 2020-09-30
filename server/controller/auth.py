@@ -118,6 +118,8 @@ def signup_post():
 @login_required
 def logout():
     logout_user()
+    current_app.logger.info('%s logged out successfully', current_user.abbrev)
+
     return redirect(url_for('auth.login'))
 
 
