@@ -6,7 +6,7 @@ import logging
 
 import sys
 sys.path.append("..")
-from python_scripts import TransformData
+from data_analysis import TransformData
 
 """
 A durable subscription is a piece of state on the remote server representing a message receiver.
@@ -59,7 +59,7 @@ class AMQP_Server(MessagingHandler):
 
         # TODO: send mail to user
         # TEMP now: save the file to the server directory
-        response = Message(body="hey",
+        response = Message(body="Die gewünschte Datei wurde generiert",
                            address=message.reply_to,
                            correlation_id=message.correlation_id
                            )
