@@ -29,7 +29,7 @@ c_test/
 notes.txt
 # Compliance data
 .log_files/
-.sqlite
+*.sqlite
 *.xlsx
 query_DataFrame.pdf 
 query_DataFrame.html
