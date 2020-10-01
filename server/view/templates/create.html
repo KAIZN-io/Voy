@@ -75,7 +75,7 @@
           <td>
             <div class="form-group">
               <input type="text" name="row[][title]"
-                     placeholder="Post title" class="form-control"
+                     placeholder="VS / ECG / ... ?" class="form-control"
                      value="{{ request.form['title'] }}"></input>
             </div>
           </td>
@@ -108,8 +108,7 @@
         let ticket_row = document.querySelector("tr[data-ticket-row]");
         let ticket_row_clone = ticket_row.cloneNode(true);
         //.children();//.text("").end();
-        // console.log(ticket_row_empty);
-        // var $cloned = $("tr").clone().children().text("").end();
+        var $cloned = $("tr").clone().children().text("").end();
 
         let ticket_table = document.querySelector("table[data-ticket-table] tbody");
         ticket_table.appendChild(ticket_row_clone);
