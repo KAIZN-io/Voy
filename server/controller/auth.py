@@ -73,15 +73,15 @@ def permissions():
     return render_template('permissions.html')
 
 
-@auth.route('/signup')
-def signup():
+@auth.route('/add_user')
+def add_user():
     # define the job roles
     job_roles = ["MedOps", "Data Entry", "Data Manager"]  # ,"Dengeki Daisy"]
-    return render_template('signup.html', Roles=job_roles)
+    return render_template('add_user.html', Roles=job_roles)
 
 
-@auth.route('/signup', methods=['POST'])
-def signup_post():
+@auth.route('/add_user', methods=['POST'])
+def add_user_post():
 
     email = request.form.get('email')
     password = request.form.get('password')
@@ -91,9 +91,9 @@ def signup_post():
     # if this returns a user, then the email already exists in database
     user = DB_User.query.filter_by(email=email).first()
 
-    if user:  # if a user is found, we want to redirect back to signup page so user can try again
+    if user:  
         flash('Email address already exists')
-        return redirect(url_for('auth.signup'))
+        return redirect(url_for('auth.add_user'))
 
     # create new user with the form data. Hash the password so plaintext version isn't saved.
     new_user = DB_User(email=email, abbrev=abbreviation, role=role,
