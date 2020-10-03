@@ -101,14 +101,18 @@
   <div class="form-group">
     <button type="submit" class="btn btn-primary" style="margin-left: 50%">Submit</button>
     <button type="button" class="btn btn-primary" id="add_row" style="float: right;">add row</button>
+
     <script>
       document.getElementById("add_row").onclick = function(){
         let ticket_row = document.querySelector("tr[data-ticket-row]");
-        let ticket_row_clone = ticket_row.cloneNode(true);
-        //.children();//.text("").end();
-        var $cloned = $("tr").clone().children().text("").end();
-
         let ticket_table = document.querySelector("table[data-ticket-table] tbody");
+
+        // copy the row; find the values with 'querySelectorAll'; transform it into an array, which you map
+        let ticket_row_clone = ticket_row.cloneNode(true);
+        let inputs = ticket_row_clone.querySelectorAll("input, textarea");
+        inputs = Array.from(inputs);
+        inputs.map(input => input.value = "");
+  
         ticket_table.appendChild(ticket_row_clone);
         console.log("add new row");
 
