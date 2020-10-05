@@ -47,8 +47,9 @@ def index(page_num):
     else:
         # what DM / Admin sees
         # NOTE: flask_sqlalchemy.Pagination
-        # posts_data = QC_Check.query.filter_by(close=1).paginate(per_page=2, page=page_num, error_out=False)
-        posts_data = QC_Check.query.filter_by(close=1).all()
+        # .query.filter_by(close=1)
+        posts_data = QC_Check.query.paginate(per_page=5, page=page_num, error_out=False)
+        # posts_data = QC_Check.query.filter_by(close=1).all()
 
     # TODO: download your queries as an csv
     if request.method == 'POST':
