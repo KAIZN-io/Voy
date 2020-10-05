@@ -1,0 +1,8 @@
+{
+    "name": "flask_auth_app",
+    "version": "0.0.1",
+    "dependencies": {
+        "datatables.net": "^1.10.22",
+        "datatables.net-dt": "^1.10.22"
+    }
+}
