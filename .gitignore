@@ -17,6 +17,9 @@ _mailinglist
 .idea/
 docs/_build/
 .vscode
+node_modules/
+build
+*.tgz
 
 # Coverage reports
 htmlcov/
