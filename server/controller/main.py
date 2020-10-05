@@ -32,9 +32,11 @@ def time_stamp():
     return arrow.utcnow().format('DD-MMM-YYYY HH:mm:ss')
 
 
+    
 @main.route('/', methods=('GET', 'POST'))
+@main.route('/index/<int:page_num>', methods=('GET', 'POST'))
 @login_required
-def index():
+def index(page_num):
     download_type = ['xlsx', 'pdf']
 
     # get the data in a dict structur
@@ -44,6 +46,8 @@ def index():
             responsible=current_user.abbrev, corrected=1, close=1).all()
     else:
         # what DM / Admin sees
+        # NOTE: flask_sqlalchemy.Pagination
+        # posts_data = QC_Check.query.filter_by(close=1).paginate(per_page=2, page=page_num, error_out=False)
         posts_data = QC_Check.query.filter_by(close=1).all()
 
     # TODO: download your queries as an csv
