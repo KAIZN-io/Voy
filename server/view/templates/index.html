@@ -2,7 +2,6 @@
 content %} {% if current_user.is_authenticated %}
 <h1 class="title">QUERIES</h1>
 <br />
-{% if posts|length > 0 %}
 <form method="post">
     <div class="form-group">
         <label for="type" >Download Queries as :</label>
@@ -38,7 +37,7 @@ content %} {% if current_user.is_authenticated %}
         </tr>
     </thead>
     <tbody>
-        {% for post in posts %}
+        {% for post in posts.items %}
         <tr>
             <!-- MedOps is not allowed to see the status of the query -->
             {% if not current_user.role == "MedOps" %} {% if post.corrected == 0
@@ -79,6 +78,4 @@ content %} {% if current_user.is_authenticated %}
         {% endfor %}
     </tbody>
 </table>
-
-{% else %} Du bist grandios! Alles erledigt!!! Und hier deshalb ein schöne Bild
-einfügen (-->TODO an mich) {% endif %} {% endif %} {% endblock %}
+{% endif %} {% endblock %}
