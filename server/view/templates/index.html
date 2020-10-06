@@ -81,7 +81,7 @@ content %} {% if current_user.is_authenticated %}
 
 <ul class="pagination">
     {% if posts.has_prev %}
-     <li class="page-item"><a class="page-link" href="{{ url_for('main.index', page_num=posts.prev_num) }}">Previous</a></li>
+     <li class="page-item"><a class="page-link" href="{{ url_for('main.qc_database', page_num=posts.prev_num) }}">Previous</a></li>
     {% else %}
      <li class="page-item disabled"><span class="page-link">Previous</span>
     {% endif %}
@@ -89,14 +89,14 @@ content %} {% if current_user.is_authenticated %}
       
     {% for page in posts.iter_pages(left_edge=3, right_edge=3) %}
     {% if page %}
-     <li class="page-item"><a class="page-link" href="{{ url_for('main.index', page_num=page) }}">{{ page }}</a></li>
+     <li class="page-item"><a class="page-link" href="{{ url_for('main.qc_database', page_num=page) }}">{{ page }}</a></li>
     {% else %}
      <li class="page-item disabled" id="example_ellipsis"><a href="#" class="page-link">…</a></li> 
     {% endif %}
     {% endfor %}
     
     {% if posts.has_next %}
-     <li class="page-item"><a class="page-link" href="{{ url_for('main.index', page_num=posts.next_num) }}">Next</a></li>
+     <li class="page-item"><a class="page-link" href="{{ url_for('main.qc_database', page_num=posts.next_num) }}">Next</a></li>
     {% else %}
      <li class="page-item disabled"><span class="page-link">Next</span>
     {% endif %}
