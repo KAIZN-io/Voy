@@ -31,7 +31,7 @@ content %} {% if current_user.is_authenticated %}
             <th scope="col">Page</th>
             <th scope="col">Procedure</th>
             <th scope="col">Description</th>
-            <th scope="col">Created</th>
+            <th scope="col">Created on</th>
             <th scope="col"></th>
             <th scope="col"></th>
         </tr>
@@ -57,9 +57,7 @@ content %} {% if current_user.is_authenticated %}
             <td>{{ post.page }}</td>
             <td>{{ post.procedure }}</td>
             <td>{{ post.description }}</td>
-            <td>
-                <span class="badge badge-primary">{{ post.created }}</span>
-            </td>
+            <td>{{ post.created }}</td>
             <td>
                 {% if current_user.role == "MedOps" %}
                 <a href="/delete/{{post.id}}">done</a>
