@@ -31,12 +31,13 @@ def as_dict(self):
 def time_stamp():
     return arrow.utcnow().format('DD-MMM-YYYY HH:mm:ss')
 
-
+@main.route('/')
+def index():
+    return redirect(url_for('main.qc_database', page_num=1))
     
-@main.route('/', methods=('GET', 'POST'))
-@main.route('/index/<int:page_num>', methods=('GET', 'POST'))
+@main.route('/qc_database/<int:page_num>', methods=('GET', 'POST'))
 @login_required
-def index(page_num):
+def qc_database(page_num):
     download_type = ['xlsx', 'pdf']
 
     # get the data in a dict structur
@@ -49,7 +50,6 @@ def index(page_num):
         # NOTE: flask_sqlalchemy.Pagination
         # .query.filter_by(close=1)
         posts_data = QC_Check.query.paginate(per_page=5, page=page_num, error_out=False)
-        # posts_data = QC_Check.query.filter_by(close=1).all()
 
     # TODO: download your queries as an csv
     if request.method == 'POST':
