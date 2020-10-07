@@ -17,7 +17,7 @@ content %} {% if current_user.is_authenticated %}
     </div>
 </form>
 
-<table class="table table-striped" id="query_table">
+<table class="table" id="query_table" class="display">
     <thead class="thead-light">
         <tr>
             <!-- MedOps is not allowed to see the status of the query -->
@@ -31,13 +31,13 @@ content %} {% if current_user.is_authenticated %}
             <th scope="col">Page</th>
             <th scope="col">Procedure</th>
             <th scope="col">Description</th>
-            <th scope="col">Created on</th>
+            <th scope="col">Created</th>
             <th scope="col"></th>
             <th scope="col"></th>
         </tr>
     </thead>
     <tbody>
-        {% for post in posts.items %}
+        {% for post in posts %}
         <tr>
             <!-- MedOps is not allowed to see the status of the query -->
             {% if not current_user.role == "MedOps" %} {% if post.corrected == 0
@@ -57,7 +57,9 @@ content %} {% if current_user.is_authenticated %}
             <td>{{ post.page }}</td>
             <td>{{ post.procedure }}</td>
             <td>{{ post.description }}</td>
-            <td>{{ post.created }}</td>
+            <td>
+                <span class="badge badge-primary">{{ post.created }}</span>
+            </td>
             <td>
                 {% if current_user.role == "MedOps" %}
                 <a href="/delete/{{post.id}}">done</a>
@@ -73,9 +75,10 @@ content %} {% if current_user.is_authenticated %}
                 {% endif %}
             </td>
         </tr>
-        {% endfor %} 
+        {% endfor %}
     </tbody>
 </table>
+
 
 <!-- <script src="{{ url_for('static', filename='js/bundle.js') }}"></script> -->
 <script src="{{ url_for('static', filename='js/node_modules/tablefilter/dist/tablefilter/tablefilter.js')}}"></script>
@@ -107,28 +110,7 @@ content %} {% if current_user.is_authenticated %}
 </script>
 
     
-<ul class="pagination">
-    {% if posts.has_prev %}
-     <li class="page-item"><a class="page-link" href="{{ url_for('main.qc_database', page_num=posts.prev_num) }}">Previous</a></li>
-    {% else %}
-     <li class="page-item disabled"><span class="page-link">Previous</span>
-    {% endif %}
-     </li>
-      
-    {% for page in posts.iter_pages(left_edge=3, right_edge=3) %}
-    {% if page %}
-     <li class="page-item"><a class="page-link" href="{{ url_for('main.qc_database', page_num=page) }}">{{ page }}</a></li>
-    {% else %}
-     <li class="page-item disabled" id="example_ellipsis"><a href="#" class="page-link">…</a></li> 
-    {% endif %}
-    {% endfor %}
-    
-    {% if posts.has_next %}
-     <li class="page-item"><a class="page-link" href="{{ url_for('main.qc_database', page_num=posts.next_num) }}">Next</a></li>
-    {% else %}
-     <li class="page-item disabled"><span class="page-link">Next</span>
-    {% endif %}
-</ul>
+
 
 
 {% endif %} {% endblock %}

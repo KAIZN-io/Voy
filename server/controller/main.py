@@ -31,13 +31,48 @@ def as_dict(self):
 def time_stamp():
     return arrow.utcnow().format('DD-MMM-YYYY HH:mm:ss')
 
-@main.route('/')
-def index():
-    return redirect(url_for('main.qc_database', page_num=1))
+# @main.route('/')
+# def index():
+#     return redirect(url_for('main.qc_database', page_num=1))
     
-@main.route('/qc_database/<int:page_num>', methods=('GET', 'POST'))
+# @main.route('/qc_database/<int:page_num>', methods=('GET', 'POST'))
+# @login_required
+# def qc_database(page_num):
+#     download_type = ['xlsx', 'pdf']
+
+#     # get the data in a dict structur
+#     # for the right person, if the query is not closed --> corrected=False (==1)
+#     if current_user.role == "MedOps":
+#         posts_data = QC_Check.query.filter_by(
+#             responsible=current_user.abbrev, corrected=1, close=1).all()
+#     else:
+#         # what DM / Admin sees
+#         # NOTE: flask_sqlalchemy.Pagination
+#         # .query.filter_by(close=1)
+#         posts_data = QC_Check.query.paginate(per_page=5, page=page_num, error_out=False)
+
+#     # TODO: download your queries as an csv
+#     if request.method == 'POST':
+
+#         # get the requestesd file format
+#         download_type = request.form.get('download')
+
+#         # prepare the data to get read by pandas dataframe
+#         query_as_dict = [as_dict(r) for r in posts_data]
+
+#         # send the data with the working request to the message broker 
+#         request_amqp(query_as_dict, {"download_type":download_type})
+
+#         # TEMP: sleep until new pdf / excel file is really created
+#         time.sleep(3) 
+
+#         return send_file("controller/amqp/query_DataFrame.{}".format(download_type), as_attachment=True, attachment_filename="My_Queries.{}".format(download_type))
+
+#     return render_template('index.html', posts=posts_data, Download_Type=download_type)
+
+@main.route('/', methods=('GET', 'POST'))
 @login_required
-def qc_database(page_num):
+def index():
     download_type = ['xlsx', 'pdf']
 
     # get the data in a dict structur
@@ -47,9 +82,7 @@ def qc_database(page_num):
             responsible=current_user.abbrev, corrected=1, close=1).all()
     else:
         # what DM / Admin sees
-        # NOTE: flask_sqlalchemy.Pagination
-        # .query.filter_by(close=1)
-        posts_data = QC_Check.query.paginate(per_page=5, page=page_num, error_out=False)
+        posts_data = QC_Check.query.all()
 
     # TODO: download your queries as an csv
     if request.method == 'POST':
