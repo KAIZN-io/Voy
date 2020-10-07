@@ -94,6 +94,14 @@ content %} {% if current_user.is_authenticated %}
         // selecting with a drop-down 
         col_0: 'select',
         col_1: 'select',
+        // to get all queries in the space of a grid
+        grid_layout: true,
+        // grid layout customisation
+        grid_layout: {
+            width: '1100px',
+            height: '400px',
+            filters: true,
+        },
         alternate_rows: true,
         mark_active_columns: true,
         highlight_keywords: true,
@@ -103,7 +111,20 @@ content %} {% if current_user.is_authenticated %}
             '100px', '200px', '200px'
         ],
         watermark: ['status', 'study ID', 'Scr No', 'Type', 'Visit', 'Page', 'Procedure', 'Description', 'Created on'],
+        // makes the table sortable
+        extensions:[{
+            name: 'sort'
+        }],
 
+        /** Bootstrap integration */
+
+        // aligns filter at cell bottom when Bootstrap is enabled
+        filters_cell_tag: 'th',
+
+        // allows Bootstrap table styling
+        themes: [{
+            name: 'transparent'
+        }]
     };
     var tf = new TableFilter('query_table', filtersConfig);
     tf.init();
