@@ -16,6 +16,8 @@
 2. Go to the AMQP server with `cd server/controller/amqp`
 3. Run the server with `python3 amqp_server.py`
 
+## Run in gunicorn
+1. Create a working venv with `make venv`
+2. Install gunicorn `pip install gunicorn`
+2. You can now run the app with `gunicorn --bind 0.0.0.0:5000 wsgi:app`
 
-
-    
