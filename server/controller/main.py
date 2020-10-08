@@ -31,7 +31,6 @@ def as_dict(self):
 def time_stamp():
     return arrow.utcnow().format('DD-MMM-YYYY HH:mm:ss')
 
-
 @main.route('/', methods=('GET', 'POST'))
 @login_required
 def index():
@@ -44,7 +43,7 @@ def index():
             responsible=current_user.abbrev, corrected=1, close=1).all()
     else:
         # what DM / Admin sees
-        posts_data = QC_Check.query.filter_by(close=1).all()
+        posts_data = QC_Check.query.all()
 
     # TODO: download your queries as an csv
     if request.method == 'POST':

@@ -2,23 +2,25 @@
 content %} {% if current_user.is_authenticated %}
 <h1 class="title">QUERIES</h1>
 <br />
-{% if posts|length > 0 %}
 <form method="post">
     <div class="form-group">
-        <label for="type" >Download Queries as :</label>
+        <label for="type">Download Queries as :</label>
         <select name="download" width="300px">
             {% for download in Download_Type %}
-            <option value="{{ download }}" selected required>{{ download }}</option>
+            <option value="{{ download }}" selected required>
+                {{ download }}
+            </option>
 
             {% endfor %}
         </select>
-        <button type="submit" class="btn btn-primary">
-            Download
-        </button>
+        <button type="submit" class="btn btn-primary">Download</button>
     </div>
 </form>
 
-<table class="table" id="table_id" class="display">
+<table class="table" id="query_table" class="display">
+    <caption>
+        These were all your Queries
+    </caption>
     <thead class="thead-light">
         <tr>
             <!-- MedOps is not allowed to see the status of the query -->
@@ -32,9 +34,8 @@ content %} {% if current_user.is_authenticated %}
             <th scope="col">Page</th>
             <th scope="col">Procedure</th>
             <th scope="col">Description</th>
-            <th scope="col">Created</th>
-            <th scope="col"></th>
-            <th scope="col"></th>
+            <th scope="col">Created on</th>
+            <th scope="col">Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -58,15 +59,11 @@ content %} {% if current_user.is_authenticated %}
             <td>{{ post.page }}</td>
             <td>{{ post.procedure }}</td>
             <td>{{ post.description }}</td>
-            <td>
-                <span class="badge badge-primary">{{ post.created }}</span>
-            </td>
+            <td>{{ post.created }}</td>
             <td>
                 {% if current_user.role == "MedOps" %}
                 <a href="/delete/{{post.id}}">done</a>
                 {% endif %}
-            </td>
-            <td>
                 <!-- close the query if you have the right role permission -->
                 {% if current_user.role == "Admin" %}
                 <a href="/requery/{{post.id}}">requery</a>
@@ -80,5 +77,74 @@ content %} {% if current_user.is_authenticated %}
     </tbody>
 </table>
 
-{% else %} Du bist grandios! Alles erledigt!!! Und hier deshalb ein schöne Bild
-einfügen (-->TODO an mich) {% endif %} {% endif %} {% endblock %}
+<!-- <script src="{{ url_for('static', filename='js/bundle.js') }}"></script> -->
+<script src="{{ url_for('static', filename='js/node_modules/tablefilter/dist/tablefilter/tablefilter.js')}}"></script>
+
+<!-- IMPORTANT INFO: in js muss man src script ohne (!) content laden; deshalb seperat -->
+<!-- "If a script element has a src attribute, the content must be ignored, any other behaviour is non-conformant." -->
+<script type="text/javascript">
+    var filtersConfig = {
+        // instruct TableFilter location to import ressources from
+        base_path: "https://unpkg.com/tablefilter@latest/dist/tablefilter/",
+        // define the user help with 'help_instructions'
+        help_instructions: false,
+        // you can disable it
+        popup_filters: false,
+        // selecting with a drop-down
+        col_0: "select",
+        col_1: "checklist",
+        col_3: "select",
+        // no filter for the last column
+        col_9: "none",
+        alternate_rows: true,
+        // grid layout customisation
+        grid_layout: {
+            width: "1200px",
+            height: "400px",
+        },
+        mark_active_columns: {
+            // Mark active columns
+            highlight_column: true, // .. and with column header
+        },
+        rows_counter: { text: "Queries : " },
+        highlight_keywords: true,
+        col_widths: [
+            "90px",
+            "110px",
+            "100px",
+            "90px",
+            "100px",
+            "100px",
+            "100px",
+            "200px",
+            "160px",
+        ],
+        watermark: [
+            "status",
+            "study ID",
+            "Scr No",
+            "Type",
+            "Visit",
+            "Page",
+            "Procedure",
+            "Description",
+            "Created on",
+        ],
+
+        /** Bootstrap integration */
+
+        // aligns filter at cell bottom when Bootstrap is enabled
+        // filters_cell_tag: "th",
+
+        // allows Bootstrap table styling
+        themes: [
+            {
+                name: "transparent",
+            },
+        ],
+    };
+    var tf = new TableFilter("query_table", filtersConfig);
+    tf.init();
+</script>
+
+{% endif %} {% endblock %}
