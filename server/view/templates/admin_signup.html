@@ -1,0 +1,55 @@
+{% extends "base.html" %} {% block title %} Hello Admin {% endblock %} {%
+    block content %}
+    <div class="column is-4 is-offset-4">
+      <h1 class="title">Hello Admin</h1>
+    
+      <div class="box">
+        {% with messages = get_flashed_messages() %} {% if messages %}
+        <div class="alert alert-success">{{ messages[0] }}</div>
+        {% endif %} {% endwith %}
+        <form method="POST" action="/add_user">
+          <div class="field">
+            <div class="control">
+              <input
+                class="input is-large"
+                type="email"
+                name="email"
+                placeholder="eMail"
+                autofocus=""
+                required
+              />
+            </div>
+          </div>
+          <div class="field">
+            <div class="control">
+              <input
+                class="input is-large"
+                type="text"
+                name="abbreviation"
+                placeholder="Abbreviation"
+                autofocus=""
+                required
+              />
+            </div>
+          </div>
+    
+          <div class="field">
+            <div class="control">
+              <input
+                class="input is-large"
+                type="password"
+                name="password"
+                placeholder="Password"
+                required
+              />
+            </div>
+          </div>
+    
+          <button class="button is-block is-info is-large is-fullwidth">
+            submit
+          </button>
+        </form>
+      </div>
+    </div>
+    {% endblock %}
+    
