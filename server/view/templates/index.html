@@ -34,7 +34,7 @@ content %} {% if current_user.is_authenticated %}
             <th scope="col">Page</th>
             <th scope="col">Procedure</th>
             <th scope="col">Description</th>
-            <th scope="col">Created</th>
+            <th scope="col">Created on</th>
             <th scope="col">Actions</th>
         </tr>
     </thead>
@@ -101,7 +101,6 @@ content %} {% if current_user.is_authenticated %}
         grid_layout: {
             width: "1200px",
             height: "400px",
-            filters: true,
         },
         mark_active_columns: {
             // Mark active columns
@@ -131,15 +130,11 @@ content %} {% if current_user.is_authenticated %}
             "Description",
             "Created on",
         ],
-        // makes the table sortable
-        // extensions:[{
-        //     name: 'sort'
-        // }],
 
         /** Bootstrap integration */
 
         // aligns filter at cell bottom when Bootstrap is enabled
-        filters_cell_tag: "th",
+        // filters_cell_tag: "th",
 
         // allows Bootstrap table styling
         themes: [
