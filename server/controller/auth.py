@@ -30,8 +30,15 @@ def login_post():
 
     user = DB_User.query.filter_by(abbrev=abbrev).first()
 
+    # check whether a user exits at all:
+    if user == None:
+        check_existing_user = DB_User.query.all()
+        if len(check_existing_user) == 0:
+
+            return redirect(url_for('auth.admin_signup'))
+
     # take the user supplied password, hash it, and compare it to the hashed password in database
-    if not user or not check_password_hash(user.password, password):
+    elif not user or not check_password_hash(user.password, password):
         flash('Please check your login details and try again.')
         # if user doesn't exist or password is wrong, reload the page
         return redirect(url_for('auth.login'))
@@ -73,6 +80,44 @@ def permissions():
     return render_template('permissions.html')
 
 
+@auth.route('/admin_signup')
+def admin_signup():
+    return render_template('admin_signup.html')
+
+
+@auth.route('/admin_signup', methods=('GET', 'POST'))
+def admin_signup_post():
+    email = request.form.get('email')
+    password = request.form.get('password')
+    abbreviation = request.form.get('abbreviation')
+    role = 'Admin'
+
+    # if this returns a user, then the email already exists in database
+    user = DB_User.query.filter_by(role=role).first()
+
+    if user:
+        flash('The Admin already exists')
+        return redirect(url_for('auth.login'))
+
+    # create new user with the form data. Hash the password so plaintext version isn't saved.
+    new_user = DB_User(email=email, abbrev=abbreviation, role=role,
+                       password=generate_password_hash(password, method='sha256'))
+
+    # add the new user to the database
+    db.session.add(new_user)
+    db.session.commit()
+
+    # add the change to the user_management db
+    user_management = User_Management(
+        email=email, abbrev=abbreviation, role=role, change_by="Initial Signup", date_time=time_stamp(), action="added")
+
+    # add the new user to the database
+    db.session.add(user_management)
+    db.session.commit()
+
+    return redirect(url_for('main.index'))
+
+
 @auth.route('/add_user')
 def add_user():
     # define the job roles
@@ -91,7 +136,7 @@ def add_user_post():
     # if this returns a user, then the email already exists in database
     user = DB_User.query.filter_by(email=email).first()
 
-    if user:  
+    if user:
         flash('Email address already exists')
         return redirect(url_for('auth.add_user'))
 
