@@ -18,6 +18,7 @@
 
 ## Run in gunicorn
 1. Create a working venv with `make venv`
-2. Install gunicorn `pip install gunicorn`
-2. You can now run the app with `gunicorn --bind 0.0.0.0:5000 wsgi:app`
+2. Activate venv with `. venv/bin/activate`
+3. Install gunicorn `pip3 install gunicorn`
+4. You can now run the app with `gunicorn -b 0.0.0.0:5000 wsgi:app` or `gunicorn -b 127.0.0.1:5000 wsgi:app` (localhost)
 
