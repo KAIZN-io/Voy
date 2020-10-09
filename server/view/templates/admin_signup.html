@@ -7,7 +7,7 @@
         {% with messages = get_flashed_messages() %} {% if messages %}
         <div class="alert alert-success">{{ messages[0] }}</div>
         {% endif %} {% endwith %}
-        <form method="POST" action="/add_user">
+        <form method="POST">
           <div class="field">
             <div class="control">
               <input

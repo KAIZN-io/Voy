@@ -90,7 +90,7 @@ def admin_signup_post():
     email = request.form.get('email')
     password = request.form.get('password')
     abbreviation = request.form.get('abbreviation')
-    role = "Admin"
+    role = 'Admin'
 
     # if this returns a user, then the email already exists in database
     user = DB_User.query.filter_by(role=role).first()
@@ -109,7 +109,7 @@ def admin_signup_post():
 
     # add the change to the user_management db
     user_management = User_Management(
-        email=email, abbrev=abbreviation, role=role, change_by=current_user.abbrev, date_time=time_stamp(), action="added")
+        email=email, abbrev=abbreviation, role=role, change_by="Initial Signup", date_time=time_stamp(), action="added")
 
     # add the new user to the database
     db.session.add(user_management)
