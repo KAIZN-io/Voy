@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, session, send_file
 from flask_login import login_required, current_user
-from flask_breadcrumbs import Breadcrumbs, register_breadcrumb
+from flask_breadcrumbs import Breadcrumbs, register_breadcrumb, default_breadcrumb_root
 
 import csv
 import string
@@ -21,6 +21,8 @@ import sqlite3
 
 main = Blueprint('main', __name__)
 
+# set main blueprint as a root
+default_breadcrumb_root(main, '.')
 
 # transform the query results to a readable dict
 def as_dict(self):
@@ -33,8 +35,10 @@ def as_dict(self):
 def time_stamp():
     return arrow.utcnow().format('DD-MMM-YYYY HH:mm:ss')
 
+
+
 @main.route('/', methods=('GET', 'POST'))
-@register_breadcrumb(main, '.', 'QC Database')
+@register_breadcrumb(main, '.', 'QC-DB')
 @login_required
 def index():
     download_type = ['xlsx', 'pdf']
@@ -68,15 +72,12 @@ def index():
     return render_template('index.html', posts=posts_data, Download_Type=download_type)
 
 
-@main.route('/about')
-def about():
-    return render_template('about.html')
-
 
 # erstelle einen neuen Blog Eintrag --> db Eintrag
 # erstellt eine /create-Route -> d.h. 'kaizn.io/create'
 
 @main.route('/create', methods=('GET', 'POST'))
+@register_breadcrumb(main, '.data_entry', '')
 @login_required
 def create():
     Source_type = ["Source", "ICF"]
@@ -143,12 +144,6 @@ def close_query(id):
     return redirect('/')
 
 
-@main.route('/profile')
-@login_required
-def profile():
-    return render_template('profile.html', name=current_user.abbrev)
-
-
 # write the db changes to the audittrail file
 def audit_trail(todo, id, category, old_value, new_value):
 
@@ -184,6 +179,7 @@ def audit_trail(todo, id, category, old_value, new_value):
 
 
 @main.route('/edit', methods=('GET', 'POST'))
+@register_breadcrumb(main, '.edit_data', '')
 @login_required
 def edit():
     # get the id of the query you want to edit

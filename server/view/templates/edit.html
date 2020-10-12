@@ -5,6 +5,12 @@ Edit Data
 {% endblock %}
 
 {% block content %}
+<div>
+    {%- for breadcrumb in breadcrumbs -%}
+        <a href="{{ breadcrumb.url }}">{{ breadcrumb.text }}</a>
+        {{ '/' if not loop.last }}
+    {%- endfor -%}
+</div>
 <h1>Edit Data</h1>
 
 <form method="post">

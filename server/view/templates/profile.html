@@ -7,6 +7,12 @@
 {% endblock %}
 
 {% block content %}
+<div>
+    {%- for breadcrumb in breadcrumbs -%}
+        <a href="{{ breadcrumb.url }}">{{ breadcrumb.text }}</a>
+        {{ '/' if not loop.last }}
+    {%- endfor -%}
+</div>
 <h1 class="title">
   Welcome, {{ name }}!
 </h1>

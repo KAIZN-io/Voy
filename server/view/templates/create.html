@@ -5,6 +5,12 @@
 {% endblock %}
 
 {% block content %}
+<div>
+    {%- for breadcrumb in breadcrumbs -%}
+        <a href="{{ breadcrumb.url }}">{{ breadcrumb.text }}</a>
+        {{ '/' if not loop.last }}
+    {%- endfor -%}
+</div>
 <h1>Create a New Post</h1>
 
 <form method="post">
@@ -31,14 +37,6 @@
               value="{{ request.form['scr_no'] }}"></input>
       </div>
     </div>
-
-    <!-- <div class="field">
-      <label class="checkbox">
-          <input type="checkbox">
-          Save configuration 
-      </label>
-    </div> -->
-
     <br>  
 
     <table data-ticket-table class="table">
