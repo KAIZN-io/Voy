@@ -1,9 +1,17 @@
 {% extends "base.html" %} {% block title %} User Managment {% endblock %} {%
 block content %} {% if current_user.is_authenticated %}
+<div>
+    {%- for breadcrumb in breadcrumbs -%}
+        <a href="{{ breadcrumb.url }}">{{ breadcrumb.text }}</a>
+        {{ '/' if not loop.last }}
+    {%- endfor -%}
+</div>
 <h1 class="title">User Managment</h1>
+
+<button onclick="location.href='/add_user'" type="button" class="btn btn-primary" style="float: left;">add User</button>
 <br />
-<a href="/add_user">add User</a>
-<br /><br />
+<br />
+
 <h4>MedOps</h4>
 <table class="table table-hover">
   <thead class="thead-light">

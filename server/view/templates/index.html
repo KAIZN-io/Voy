@@ -1,6 +1,13 @@
 {% extends "base.html" %} {% block title %} QC-Datenbank {% endblock %} {% block
 content %} {% if current_user.is_authenticated %}
+<div>
+    {%- for breadcrumb in breadcrumbs -%}
+        <a href="{{ breadcrumb.url }}">{{ breadcrumb.text }}</a>
+        {{ '/' if not loop.last }}
+    {%- endfor -%}
+</div>
 <h1 class="title">QUERIES</h1>
+
 <br />
 <form method="post">
     <div class="form-group">

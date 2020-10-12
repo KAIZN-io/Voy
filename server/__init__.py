@@ -3,6 +3,7 @@ from flask import current_app, g
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 import logging
+from flask_breadcrumbs import Breadcrumbs, register_breadcrumb
 
 
 import sqlite3
@@ -30,7 +31,9 @@ def create_app():
 
     # import the configuration from the file config.py
     app.config.from_object('config.DevelopmentConfig')
-
+    # Initialize Flask-Breadcrumbs
+    Breadcrumbs(app=app)
+    
     db.init_app(app)
 
     login_manager = LoginManager()

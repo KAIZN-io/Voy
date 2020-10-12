@@ -1,5 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash, current_app, session
 from flask_login import login_user, logout_user, login_required, current_user
+from flask_breadcrumbs import Breadcrumbs, register_breadcrumb, default_breadcrumb_root
+
 from werkzeug.security import generate_password_hash, check_password_hash
 import arrow
 
@@ -9,7 +11,8 @@ from server.model.models import DB_User, User_Management
 
 
 auth = Blueprint('auth', __name__)
-
+# set main blueprint as a root
+default_breadcrumb_root(auth, '.')
 
 def time_stamp():
     return arrow.utcnow().format('DD-MMM-YYYY HH:mm:ss')
@@ -55,6 +58,7 @@ def login_post():
 
 
 @auth.route('/user_management')
+@register_breadcrumb(auth, '.user_management', '')
 def user_management():
     # filter all user except for the admin
     User_data = DB_User.query.filter(DB_User.role != "Admin").all()
@@ -119,6 +123,7 @@ def admin_signup_post():
 
 
 @auth.route('/add_user')
+@register_breadcrumb(auth, '.user_management.add_user', '')
 def add_user():
     # define the job roles
     job_roles = ["MedOps", "Data Entry", "Data Manager"]  # ,"Dengeki Daisy"]
@@ -168,6 +173,7 @@ def logout():
 
 
 @auth.route('/profile')
+@register_breadcrumb(auth, '.profile', '')
 @login_required
 def profile():
     return render_template('profile.html', name=current_user.abbrev)
