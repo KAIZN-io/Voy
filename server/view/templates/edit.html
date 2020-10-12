@@ -18,15 +18,14 @@ Edit Data
                   required>
         </div>
       </div>
-      <!-- <div class="form-group col-md-4">
+      
+      <div class="form-group col-md-4">
         <label for="type">Document-Type :</label>
         <select name="type" class="form-control">
-          {% for type in source_type %}
-          <option value="{{ type }}" SELECTED>{{ type }}</option>
-      
-          {% endfor %}
-        </select> 
-      </div> -->
+            <option value="Source"{% if data.type=="Source" %} selected="selected"{% endif %}>Source</option>
+            <option value="ICF"{% if data.type=="ICF" %} selected="selected"{% endif %}>ICF</option>
+        </select>
+      </div>
 
       <div class="form-group col-md-2">
         <label for="scr_no">Scr No</label>
