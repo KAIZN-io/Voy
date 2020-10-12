@@ -26,10 +26,14 @@
   <body>
 
     <!-- create the navigation bar on top of the page -->
-
     <nav class="navbar navbar-expand-md navbar-light bg-light">
-        <!-- <div class="navbar-end"> -->
-        <a class="navbar-brand" href="{{ url_for('main.index')}}">QC-Database</a>
+
+        <!-- your logo ! -->
+        <a class="navbar-brand" href="{{ url_for('main.index')}}">
+            <img src="{{ url_for('static', filename='img/bootstrap-logo.png')}}" width="30" height="30" alt="">
+            QC-Database
+        </a>
+
         <button
             class="navbar-toggler"
             type="button"
