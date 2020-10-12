@@ -1,5 +1,7 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, session, send_file
 from flask_login import login_required, current_user
+from flask_breadcrumbs import Breadcrumbs, register_breadcrumb
+
 import csv
 import string
 import os
@@ -32,6 +34,7 @@ def time_stamp():
     return arrow.utcnow().format('DD-MMM-YYYY HH:mm:ss')
 
 @main.route('/', methods=('GET', 'POST'))
+@register_breadcrumb(main, '.', 'QC Database')
 @login_required
 def index():
     download_type = ['xlsx', 'pdf']
