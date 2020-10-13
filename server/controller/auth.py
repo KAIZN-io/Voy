@@ -205,3 +205,37 @@ def change_password():
             db.session.commit()
 
     return redirect(url_for('main.index'))
+
+@auth.route('/activate')
+def activate():
+    return render_template('activate.html', name=current_user.abbrev)
+    
+@auth.route('/activate', methods=('GET', 'POST'))
+def activate_post():
+
+    oldPassword = request.form.get('oldpassword')
+    password1 = request.form.get('password1')
+    password2 = request.form.get('password2')
+    abbrev = request.form.get('abbreviation')
+
+    # filter the requested user
+    user = DB_User.query.filter_by(abbrev=abbrev).first()
+
+    # take the user supplied password, hash it, and compare it to the hashed password in database
+    if not check_password_hash(user.password, oldPassword):
+        flash('You made a mistake with you old password')
+        return redirect(url_for('auth.activate_account'))
+
+    else:
+        if password1 != password2:
+            flash('Passwords are not the same')
+            return redirect(url_for('auth.activate_account'))
+        else:
+            password = generate_password_hash(password1, method='sha256')
+
+            # set the new password and activate the account
+            DB_User.query.filter_by(abbrev=abbrev).update(
+                {"password": password, "active": 0})
+            db.session.commit()
+
+    return redirect(url_for('auth.login'))

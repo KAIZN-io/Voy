@@ -48,6 +48,7 @@ class DB_User(UserMixin, db.Model):
     password = db.Column(db.String(100))
     abbrev = db.Column(db.Text, unique=True)
     role = db.Column(db.Text)
+    active = db.Column(db.Integer)
 
 
 class User_Management(UserMixin, db.Model):
