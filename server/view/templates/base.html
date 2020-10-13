@@ -6,6 +6,10 @@
     <!-- enable javascript -->
     <script type="text/javascript" src="{{ url_for('static', filename='js/bundle.js') }}"></script>
    
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
     <meta charset="utf-8" />
     <meta
       name="viewport"
@@ -45,7 +49,8 @@
         >
             <span class="navbar-toggler-icon"></span>
         </button>
-        
+
+
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
 
@@ -56,27 +61,34 @@
         {% endif %}
         <!-- in the right corner of the nav bar -->
         <div class="topnav-right">
-            {% if not current_user.is_authenticated %}
-            <a href="{{ url_for('auth.login') }}" class="navbar-item">
-                Login
-            </a>
-            {% endif %}
-            {% if (current_user.is_authenticated) and (current_user.role == 'Admin' or current_user.role == 'Data Manager') %}
-            <a href="{{ url_for('auth.user_management') }}" class="navbar-item">
-              User Management
-            </a>
-            {% endif %}
+            <div class="dropdown">
+                <a href="#" class="nav-link dropdown" data-toggle="dropdown">
+                    <img src="{{ url_for('static', filename='img/hamburger_icon.svg')}}" width="30" height="30" alt="">
+                </a>
+                <div class="dropdown-menu dropdown-menu-right">
 
-            {% if current_user.is_authenticated %}
-            <a href="{{ url_for('auth.profile') }}" class="navbar-item">
-              Profile   
-            </a>  
-            <a href="{{ url_for('auth.logout') }}" class="navbar-item">
-                Logout
-            </a>
-            {% endif %}
+                    {% if not current_user.is_authenticated %}
+                    <a href="{{ url_for('auth.login') }}" class="dropdown-item">
+                        Login
+                    </a>
+                    {% endif %}
+                    {% if (current_user.is_authenticated) and (current_user.role == 'Admin' or current_user.role == 'Data Manager') %}
+                    <a href="{{ url_for('auth.user_management') }}" class="dropdown-item">
+                      User Management
+                    </a>
+                    {% endif %}
+                    {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('auth.profile') }}" class="dropdown-item">
+                      Profile   
+                    </a>  
+                    <div class="dropdown-divider"></div>
+                    <a href="{{ url_for('auth.logout') }}" class="dropdown-item">
+                        Logout
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
         </div>
-        
     </nav>
     </div>
     
@@ -92,3 +104,4 @@
 
   </body>
 </html>
+
