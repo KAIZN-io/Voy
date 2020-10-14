@@ -161,7 +161,7 @@ def add_user_post():
 
     # create new user with the form data. Hash the password so plaintext version isn't saved.
     new_user = DB_User(email=email, abbrev=abbreviation, role=role,
-                       password=generate_password_hash(password, method='sha256'), active=1)
+                       system_passwd=generate_password_hash(password, method='sha256'), active=1)
 
     # add the new user to the database
     db.session.add(new_user)
