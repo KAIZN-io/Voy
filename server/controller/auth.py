@@ -16,12 +16,16 @@ auth = Blueprint('auth', __name__)
 # set main blueprint as a root
 default_breadcrumb_root(auth, '.')
 
+
 def time_stamp():
     return arrow.utcnow().format('DD-MMM-YYYY HH:mm:ss')
 
-# the password generator 
+# the password generator
+
+
 def passwd_generator(size=6, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
+
 
 @auth.route('/login')
 def login():
@@ -44,6 +48,11 @@ def login_post():
         if len(check_existing_user) == 0:
 
             return redirect(url_for('auth.admin_signup'))
+
+    if user.active == 1:
+        flash('Please activate your account.')
+
+        return redirect(url_for('auth.activate'))
 
     # take the user supplied password, hash it, and compare it to the hashed password in database
     elif not user or not check_password_hash(user.password, password):
@@ -211,10 +220,12 @@ def change_password():
 
     return redirect(url_for('main.index'))
 
+
 @auth.route('/activate')
 def activate():
     return render_template('activate.html')
-    
+
+
 @auth.route('/activate', methods=('GET', 'POST'))
 def activate_post():
 
@@ -240,10 +251,11 @@ def activate_post():
 
             # set the new password and activate the account
             DB_User.query.filter_by(abbrev=abbrev).update(
-                {"password": password, "active": 0, "system_passwd":None})
+                {"password": password, "active": 0, "system_passwd": None})
             db.session.commit()
 
     return redirect(url_for('auth.login'))
+
 
 @auth.route('/forgot_passwd')
 def forgot_passwd():
@@ -261,13 +273,13 @@ def forgot_passwd_post():
         # generate a system password with the lenght of 10 and hash it
         new_passwd = passwd_generator(size=10)
 
-        # TODO: send the new_passwd over mail to the user 
+        # TODO: send the new_passwd over mail to the user
         print(new_passwd)
         system_passwd = generate_password_hash(new_passwd, method='sha256')
 
-        # commit the new system password to the database 
-        DB_User.query.filter_by(abbrev=abbrev).update({"system_passwd": system_passwd, "active": 1})
+        # commit the new system password to the database
+        DB_User.query.filter_by(abbrev=abbrev).update(
+            {"system_passwd": system_passwd, "active": 1})
         db.session.commit()
 
     return redirect(url_for('auth.activate'))
-
