@@ -4,6 +4,8 @@ from flask_breadcrumbs import Breadcrumbs, register_breadcrumb, default_breadcru
 
 from werkzeug.security import generate_password_hash, check_password_hash
 import arrow
+import random
+import string
 
 
 from server import db
@@ -17,6 +19,9 @@ default_breadcrumb_root(auth, '.')
 def time_stamp():
     return arrow.utcnow().format('DD-MMM-YYYY HH:mm:ss')
 
+# the password generator 
+def passwd_generator(size=6, chars=string.ascii_uppercase + string.digits):
+    return ''.join(random.choice(chars) for _ in range(size))
 
 @auth.route('/login')
 def login():
@@ -147,7 +152,7 @@ def add_user_post():
 
     # create new user with the form data. Hash the password so plaintext version isn't saved.
     new_user = DB_User(email=email, abbrev=abbreviation, role=role,
-                       password=generate_password_hash(password, method='sha256'))
+                       password=generate_password_hash(password, method='sha256'), active=1)
 
     # add the new user to the database
     db.session.add(new_user)
@@ -208,12 +213,12 @@ def change_password():
 
 @auth.route('/activate')
 def activate():
-    return render_template('activate.html', name=current_user.abbrev)
+    return render_template('activate.html')
     
 @auth.route('/activate', methods=('GET', 'POST'))
 def activate_post():
 
-    oldPassword = request.form.get('oldpassword')
+    oldPassword = request.form.get('oldPassword')
     password1 = request.form.get('password1')
     password2 = request.form.get('password2')
     abbrev = request.form.get('abbreviation')
@@ -222,20 +227,47 @@ def activate_post():
     user = DB_User.query.filter_by(abbrev=abbrev).first()
 
     # take the user supplied password, hash it, and compare it to the hashed password in database
-    if not check_password_hash(user.password, oldPassword):
+    if not check_password_hash(user.system_passwd, oldPassword):
         flash('You made a mistake with you old password')
-        return redirect(url_for('auth.activate_account'))
+        return redirect(url_for('auth.activate'))
 
     else:
         if password1 != password2:
             flash('Passwords are not the same')
-            return redirect(url_for('auth.activate_account'))
+            return redirect(url_for('auth.activate'))
         else:
             password = generate_password_hash(password1, method='sha256')
 
             # set the new password and activate the account
             DB_User.query.filter_by(abbrev=abbrev).update(
-                {"password": password, "active": 0})
+                {"password": password, "active": 0, "system_passwd":None})
             db.session.commit()
 
     return redirect(url_for('auth.login'))
+
+@auth.route('/forgot_passwd')
+def forgot_passwd():
+    return render_template('forgot_passwd.html')
+
+
+@auth.route('/forgot_passwd', methods=('GET', 'POST'))
+def forgot_passwd_post():
+    abbrev = request.form.get('abbrev')
+
+    # filter the requested user
+    user = DB_User.query.filter_by(abbrev=abbrev).first()
+
+    if user:
+        # generate a system password with the lenght of 10 and hash it
+        new_passwd = passwd_generator(size=10)
+
+        # TODO: send the new_passwd over mail to the user 
+        print(new_passwd)
+        system_passwd = generate_password_hash(new_passwd, method='sha256')
+
+        # commit the new system password to the database 
+        DB_User.query.filter_by(abbrev=abbrev).update({"system_passwd": system_passwd, "active": 1})
+        db.session.commit()
+
+    return redirect(url_for('auth.activate'))
+
