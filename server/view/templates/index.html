@@ -2,9 +2,8 @@
 content %} {% if current_user.is_authenticated %}
 <div>
     {%- for breadcrumb in breadcrumbs -%}
-        <a href="{{ breadcrumb.url }}">{{ breadcrumb.text }}</a>
-        {{ '/' if not loop.last }}
-    {%- endfor -%}
+    <a href="{{ breadcrumb.url }}">{{ breadcrumb.text }}</a>
+    {{ '/' if not loop.last }} {%- endfor -%}
 </div>
 <h1 class="title">QUERIES</h1>
 
@@ -30,10 +29,7 @@ content %} {% if current_user.is_authenticated %}
     </caption>
     <thead class="thead-light">
         <tr>
-            <!-- MedOps is not allowed to see the status of the query -->
-            {% if not current_user.role == "MedOps" %}
             <th scope="col">Status</th>
-            {% endif %}
             <th scope="col">Study ID</th>
             <th scope="col">Scr No</th>
             <th scope="col">Type</th>
@@ -48,8 +44,7 @@ content %} {% if current_user.is_authenticated %}
     <tbody>
         {% for post in posts %}
         <tr>
-            <!-- MedOps is not allowed to see the status of the query -->
-            {% if not current_user.role == "MedOps" %} {% if post.corrected == 0
+            {% if post.corrected == 0
             %}
             <td>
                 <span class="badge badge-warning"> Requery </span>
@@ -58,10 +53,20 @@ content %} {% if current_user.is_authenticated %}
             <td>
                 <span class="badge badge-danger"> Open </span>
             </td>
-            {% endif %} {% endif %}
+            {% endif %} 
             <td>{{ post.study_id }}</td>
             <td>{{ post.scr_no }}</td>
+            {% if post.type == "ICF" %}
+            <td>
+                <span class="badge badge-info"> ICF </span>
+            </td>
+            {% elif post.type == "Source" %}
+            <td>
+                <span class="badge badge-secondary"> Source </span>
+            </td>
+            {% else %}
             <td>{{ post.type }}</td>
+            {% endif %}
             <td>{{ post.visit }}</td>
             <td>{{ post.page }}</td>
             <td>{{ post.procedure }}</td>
@@ -71,9 +76,9 @@ content %} {% if current_user.is_authenticated %}
                 {% if current_user.role == "MedOps" %}
                 <a href="/delete/{{post.id}}">done</a>
                 {% endif %}
+                <a href="/requery/{{post.id}}">requery</a>
                 <!-- close the query if you have the right role permission -->
                 {% if current_user.role == "Admin" %}
-                <a href="/requery/{{post.id}}">requery</a>
                 <!-- overgive the edit page the id -->
                 <a href="{{ url_for('main.edit_data', id=post.id) }}">edit</a>
                 <a href="/close/{{post.id}}">close</a>
@@ -96,7 +101,7 @@ content %} {% if current_user.is_authenticated %}
         // define the user help with 'help_instructions'
         help_instructions: false,
         // you can disable it
-        popup_filters: true,
+        popup_filters: false,
         // selecting with a drop-down
         col_0: "select",
         col_1: "checklist",
