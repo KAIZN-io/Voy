@@ -74,14 +74,15 @@ content %} {% if current_user.is_authenticated %}
             <td>{{ post.created }}</td>
             <td>
                 {% if current_user.role == "MedOps" %}
+                <i class="fas fa-check"></i>
                 <a href="/delete/{{post.id}}">done</a>
                 {% endif %}
-                <a href="/requery/{{post.id}}">requery</a>
+                <a href="/requery/{{post.id}}" class="far fa-comments"></a>
                 <!-- close the query if you have the right role permission -->
                 {% if current_user.role == "Admin" %}
                 <!-- overgive the edit page the id -->
-                <a href="{{ url_for('main.edit_data', id=post.id) }}">edit</a>
-                <a href="/close/{{post.id}}">close</a>
+                <a href="{{ url_for('main.edit_data', id=post.id) }}" class="far fa-edit">edit</a>
+                <a href="/close/{{post.id}}" class="fas fa-check"></a>
                 {% endif %}
             </td>
         </tr>
