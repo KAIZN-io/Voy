@@ -11,12 +11,12 @@ import time
 
 from server.model.models import QC_Check, DB_User, QC_Audit
 from server.controller.amqp.amqp_client import request_amqp
+from server.controller.compliance import audit_trail, time_stamp
 from server import db
 from sqlalchemy import inspect
 
 import pdfkit
 import sqlite3
-# import xlsxwriter
 
 
 main = Blueprint('main', __name__)
@@ -25,16 +25,11 @@ main = Blueprint('main', __name__)
 default_breadcrumb_root(main, '.')
 
 # transform the query results to a readable dict
+
+
 def as_dict(self):
     return {c.key: getattr(self, c.key)
             for c in inspect(self).mapper.column_attrs}
-
-# the time stamp in the requeried format
-
-
-def time_stamp():
-    return arrow.utcnow().format('DD-MMM-YYYY HH:mm:ss')
-
 
 
 @main.route('/', methods=('GET', 'POST'))
@@ -60,17 +55,15 @@ def index():
         # prepare the data to get read by pandas dataframe
         query_as_dict = [as_dict(r) for r in posts_data]
 
-        # send the data with the working request to the message broker 
-        request_amqp(query_as_dict, {"download_type":download_type})
+        # send the data with the working request to the message broker
+        request_amqp(query_as_dict, {"download_type": download_type})
 
         # TEMP: sleep until new pdf / excel file is really created
-        time.sleep(3) 
+        time.sleep(3)
 
         return send_file("controller/amqp/query_DataFrame.{}".format(download_type), as_attachment=True, attachment_filename="My_Queries.{}".format(download_type))
 
     return render_template('index.html', posts=posts_data, Download_Type=download_type)
-
-
 
 
 @main.route('/data_entry', methods=('GET', 'POST'))
@@ -141,40 +134,6 @@ def close_query(id):
     return redirect('/')
 
 
-# write the db changes to the audittrail file
-def audit_trail(todo, id, category, old_value, new_value):
-
-    # the audit trail file
-    path_to_file = os.getcwd()+'/server/.log_files/data_log_qc.csv'
-    # '../../templates'
-    # metadata
-    user = current_user.abbrev
-
-    # the data in the model in form of a dict structure
-    audit_data = QC_Audit(id=id, category=category, date_time=time_stamp(),
-                          user=user, old_value=old_value, new_value=new_value).__dict__
-
-    # NOTE: semi good solution for the extra data from sql alchemy
-    audit_data.pop('_sa_instance_state', None)
-
-    if todo == "edit":
-        # write to file
-        with open(path_to_file, 'a', newline='') as csvfile:
-            # csv file header
-            fieldnames = ['id', 'category', 'date_time',
-                          'user', 'old_value', 'new_value']
-
-            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-
-            # initiate the file
-            if os.path.getsize(path_to_file) == 0:
-                writer.writeheader()
-
-            writer.writerow(audit_data)
-
-    return "added to audit trail"
-
-
 @main.route('/edit', methods=('GET', 'POST'))
 @register_breadcrumb(main, '.edit_data', '')
 @login_required
@@ -196,12 +155,12 @@ def edit():
             if (old_data[category] != new_data[category]):
 
                 # add the data to the audit trail
-                audit_trail("edit", id, category,
+                audit_trail(current_user.abbrev, "edit", id, category,
                             old_data[category], new_value)
 
                 # add new data to the data base
                 QC_Check.query.filter_by(id=id).update({category: new_value})
-                # set the query status to 'open' 
+                # set the query status to 'open'
                 QC_Check.query.filter_by(id=id).update({"corrected": 1})
 
                 db.session.commit()
