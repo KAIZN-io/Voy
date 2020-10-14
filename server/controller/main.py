@@ -52,7 +52,6 @@ def index():
         # what DM / Admin sees
         posts_data = QC_Check.query.all()
 
-    # TODO: download your queries as an csv
     if request.method == 'POST':
 
         # get the requestesd file format
@@ -73,13 +72,11 @@ def index():
 
 
 
-# erstelle einen neuen Blog Eintrag --> db Eintrag
-# erstellt eine /create-Route -> d.h. 'kaizn.io/create'
 
-@main.route('/create', methods=('GET', 'POST'))
+@main.route('/data_entry', methods=('GET', 'POST'))
 @register_breadcrumb(main, '.data_entry', '')
 @login_required
-def create():
+def data_entry():
     Source_type = ["Source", "ICF"]
     User_data = DB_User.query.filter_by(role="MedOps").all()
 
@@ -106,9 +103,9 @@ def create():
             db.session.add(blog_entry)
             db.session.commit()
 
-        return redirect(url_for('main.create'))
+        return redirect(url_for('main.data_entry'))
 
-    return render_template('create.html', Users=User_data, source_type=Source_type)
+    return render_template('data_entry.html', Users=User_data, source_type=Source_type)
 
 
 @main.route('/delete/<int:id>')
