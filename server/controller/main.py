@@ -134,10 +134,10 @@ def close_query(id):
     return redirect('/')
 
 
-@main.route('/edit', methods=('GET', 'POST'))
+@main.route('/edit_data', methods=('GET', 'POST'))
 @register_breadcrumb(main, '.edit_data', '')
 @login_required
-def edit():
+def edit_data():
     # get the id of the query you want to edit
     id = request.args.get('id', None)
 
@@ -167,4 +167,4 @@ def edit():
 
         return redirect(url_for('main.index'))
 
-    return render_template('edit.html', data=old_data, Users=User_data)
+    return render_template('edit_data.html', data=old_data, Users=User_data)

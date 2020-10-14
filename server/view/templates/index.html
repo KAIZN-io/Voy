@@ -1,4 +1,4 @@
-{% extends "base.html" %} {% block title %} QC-Datenbank {% endblock %} {% block
+{% extends "base.html" %} {% block title %} QC-Database {% endblock %} {% block
 content %} {% if current_user.is_authenticated %}
 <div>
     {%- for breadcrumb in breadcrumbs -%}
@@ -75,7 +75,7 @@ content %} {% if current_user.is_authenticated %}
                 {% if current_user.role == "Admin" %}
                 <a href="/requery/{{post.id}}">requery</a>
                 <!-- overgive the edit page the id -->
-                <a href="{{ url_for('main.edit', id=post.id) }}">edit</a>
+                <a href="{{ url_for('main.edit_data', id=post.id) }}">edit</a>
                 <a href="/close/{{post.id}}">close</a>
                 {% endif %}
             </td>
