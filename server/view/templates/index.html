@@ -30,7 +30,6 @@ content %} {% if current_user.is_authenticated %}
     <thead class="thead-light">
         <tr>
             <th scope="col">Status</th>
-            <th scope="col">Query ID</th>
             <th scope="col">Study ID</th>
             <th scope="col">Scr No</th>
             <th scope="col">Type</th>
@@ -55,7 +54,6 @@ content %} {% if current_user.is_authenticated %}
                 <span class="badge badge-danger"> Open </span>
             </td>
             {% endif %} 
-            <td>{{ post.id }}</td>
             <td>{{ post.study_id }}</td>
             <td>{{ post.scr_no }}</td>
             {% if post.type == "ICF" %}
@@ -81,11 +79,16 @@ content %} {% if current_user.is_authenticated %}
                 {% endif %}
                 <!-- <a href="/requery/{{post.id}}" class="far fa-comments"></a> -->
                 <a href="#" id="comment_on_modal"class="far fa-comments" data-toggle="modal" data-id="{{post.id}}" data-target="#requery_Modal" data-whatever="@mdo"></a>
+        
                 <script>
-                    document.getElementById("comment_on_modal").onclick = function(event){
-                        let query_id = event.target.getAttribute("data-id");
-                        $(".modal-header #query_id").val(query_id); 
-                    }
+                    $('#requery_Modal').on('show.bs.modal', function (event) {
+                        var button = $(event.relatedTarget) // Button that triggered the modal
+                        var query_id = button.data('id') // Extract info from data-* attributes
+                        // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+                        // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+                        var modal = $(this)
+                        modal.find('.modal-title').text('Requery Dialog : ' + query_id)
+                    })
                 </script>
     
                 <!-- close the query if you have the right role permission -->
@@ -99,7 +102,6 @@ content %} {% if current_user.is_authenticated %}
                         <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="requery_ModalLabel">Requery Dialog</h5>
-                            <input type="text" name="query_id" id="query_id" value=""/>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                             </button>
@@ -108,7 +110,7 @@ content %} {% if current_user.is_authenticated %}
                             <form method="post">
                                 <div class="form-group">
                                     <input type="text" name="comment"
-                                           placeholder="your comment on {{ post.id }}" class="form-control"
+                                           placeholder="your comment" class="form-control"
                                            value="{{ request.form['comment'] }}"></input>
                                   </div>
                                 <div class="modal-footer">
