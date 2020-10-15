@@ -98,9 +98,10 @@ content %} {% if current_user.is_authenticated %}
                         <div class="modal-body">
                             <form method="post">
                                 <div class="form-group">
-                                    <label for="recipient-name" class="col-form-label">Recipient:</label>
-                                    <input type="text" class="form-control" id="recipient-name">
-                                </div>
+                                    <input type="text" name="comment"
+                                           placeholder="your comment" class="form-control"
+                                           value="{{ request.form['comment'] }}"></input>
+                                  </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                     <button type="submit" name="button" value="send_requery" class="btn btn-primary">Send message</button>

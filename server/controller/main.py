@@ -9,7 +9,7 @@ import arrow
 import pandas as pd
 import time
 
-from server.model.models import QC_Check, DB_User, QC_Audit
+from server.model.models import QC_Check, DB_User, QC_Audit, QC_Requery
 from server.controller.amqp.amqp_client import request_amqp
 from server.controller.compliance import audit_trail, time_stamp
 from server import db
@@ -66,7 +66,20 @@ def index():
             return send_file("controller/amqp/query_DataFrame.{}".format(download_type), as_attachment=True, attachment_filename="My_Queries.{}".format(download_type))
 
         elif request.form['button'] == 'send_requery':
-            print("hy my friend")
+            comment = request.form['comment']
+
+            new_comment = QC_Requery(abbrev=current_user.abbrev, date_time=time_stamp(), new_comment = comment)
+
+            db.session.add(new_comment)
+            db.session.commit()
+            # id = db.Column(db.Integer, primary_key=True)
+            # query_id = db.Column(db.Integer)
+            # abbrev = db.Column(db.Text)
+            # date_time = db.Column(db.Text)
+            # new_comment = db.Column(db.Text)
+
+            # NOTE: redirect after form submission to prevent duplicates.
+            return redirect('/')
 
     return render_template('index.html', posts=posts_data, Download_Type=download_type)
 
