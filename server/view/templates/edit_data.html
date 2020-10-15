@@ -91,9 +91,11 @@ Edit Data
           <td>    
             <div class="form-group">
             <select name="responsible" width="300px">
+              <option value="{{data.responsible}}" SELECTED>{{data.responsible}}</option>
+              <option disabled="disabled">----</option>
+
               {% for user in Users %}
-              <option value="{{ user.abbrev }}" SELECTED>{{ user.abbrev }}</option>
-          
+              <option value="{{ user.abbrev }}">{{ user.abbrev }}</option>
               {% endfor %}
             </select> 
         </div>
