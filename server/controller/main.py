@@ -49,19 +49,24 @@ def index():
 
     if request.method == 'POST':
 
-        # get the requestesd file format
-        download_type = request.form.get('download')
+        if request.form['button'] == 'download_button':
 
-        # prepare the data to get read by pandas dataframe
-        query_as_dict = [as_dict(r) for r in posts_data]
+            # get the requestesd file format
+            download_type = request.form.get('download')
 
-        # send the data with the working request to the message broker
-        request_amqp(query_as_dict, {"download_type": download_type})
+            # prepare the data to get read by pandas dataframe
+            query_as_dict = [as_dict(r) for r in posts_data]
 
-        # TEMP: sleep until new pdf / excel file is really created
-        time.sleep(3)
+            # send the data with the working request to the message broker
+            request_amqp(query_as_dict, {"download_type": download_type})
 
-        return send_file("controller/amqp/query_DataFrame.{}".format(download_type), as_attachment=True, attachment_filename="My_Queries.{}".format(download_type))
+            # TEMP: sleep until new pdf / excel file is really created
+            time.sleep(3)
+
+            return send_file("controller/amqp/query_DataFrame.{}".format(download_type), as_attachment=True, attachment_filename="My_Queries.{}".format(download_type))
+
+        elif request.form['button'] == 'send_requery':
+            print("hy my friend")
 
     return render_template('index.html', posts=posts_data, Download_Type=download_type)
 

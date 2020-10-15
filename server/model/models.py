@@ -39,6 +39,17 @@ class QC_Audit(UserMixin, db.Model):
     new_value = db.Column(db.String(100))
 
 
+class QC_Requery(UserMixin, db.Model):
+
+    __tablename__ = 'qc_requery'
+
+    id = db.Column(db.Integer, primary_key=True)
+    query_id = db.Column(db.Integer)
+    abbrev = db.Column(db.Text)
+    date_time = db.Column(db.Text)
+    new_comment = db.Column(db.Text)
+
+
 class DB_User(UserMixin, db.Model):
 
     __tablename__ = 'db_user'

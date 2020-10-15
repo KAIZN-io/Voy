@@ -19,7 +19,7 @@ content %} {% if current_user.is_authenticated %}
 
             {% endfor %}
         </select>
-        <button type="submit" class="btn btn-primary">Download</button>
+        <button type="submit" class="btn btn-primary" name="button" value="download_button">Download</button>
     </div>
 </form>
 
@@ -77,13 +77,40 @@ content %} {% if current_user.is_authenticated %}
                 <i class="fas fa-check"></i>
                 <a href="/delete/{{post.id}}">done</a>
                 {% endif %}
-                <a href="/requery/{{post.id}}" class="far fa-comments"></a>
+                <!-- <a href="/requery/{{post.id}}" class="far fa-comments"></a> -->
+                <a href="#" class="far fa-comments" data-toggle="modal" data-target="#requery_Modal" data-whatever="@mdo"></a>
+
                 <!-- close the query if you have the right role permission -->
                 {% if current_user.role == "Admin" %}
                 <!-- overgive the edit page the id -->
                 <a href="{{ url_for('main.edit_data', id=post.id) }}" class="far fa-edit">edit</a>
                 <a href="/close/{{post.id}}" class="fas fa-check"></a>
                 {% endif %}
+                <div class="modal fade" id="requery_Modal" tabindex="-1" role="dialog" aria-labelledby="requery_ModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="requery_ModalLabel">Requery Dialog</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form method="post">
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">Recipient:</label>
+                                    <input type="text" class="form-control" id="recipient-name">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" name="button" value="send_requery" class="btn btn-primary">Send message</button>
+                                </div>
+                            </form>
+                        </div>
+    
+                        </div>
+                    </div>
+                </div>
             </td>
         </tr>
         {% endfor %}
@@ -102,7 +129,7 @@ content %} {% if current_user.is_authenticated %}
         // define the user help with 'help_instructions'
         help_instructions: false,
         // you can disable it
-        popup_filters: false,
+        popup_filters: true,
         // selecting with a drop-down
         col_0: "select",
         col_1: "checklist",
@@ -161,3 +188,6 @@ content %} {% if current_user.is_authenticated %}
 </script>
 
 {% endif %} {% endblock %}
+
+
+
