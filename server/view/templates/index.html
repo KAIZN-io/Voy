@@ -82,12 +82,21 @@ content %} {% if current_user.is_authenticated %}
         
                 <script>
                     $('#requery_Modal').on('show.bs.modal', function (event) {
-                        var button = $(event.relatedTarget) // Button that triggered the modal
-                        var query_id = button.data('id') // Extract info from data-* attributes
+                        let button = $(event.relatedTarget) // Button that triggered the modal
+                        let query_id = button.data('id') // Extract info from data-* attributes
                         // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
                         // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-                        var modal = $(this)
-                        modal.find('.modal-title').text('Requery Dialog : ' + query_id)
+                        let $modal = $(this);
+
+                        // set query id as value
+                        $modal.find('.query_id-data').val(query_id);
+
+                        let $title = $modal.find('.modal-title');
+                        $title.text('Requery Dialog | Query ID: ' + query_id)
+                        
+                        
+                        // AJAX request -> load data for the modal 
+
                     })
                 </script>
     
@@ -108,10 +117,16 @@ content %} {% if current_user.is_authenticated %}
                         </div>
                         <div class="modal-body">
                             <form method="post">
+                                <!-- set the query_id to request it from python flask -->
+                                <input name="query_id"
+                                    class="query_id-data"
+                                    value="{{ request.form['query_id'] }}" 
+                                    readonly>
+                                </input>
                                 <div class="form-group">
                                     <input type="text" name="comment"
                                            placeholder="your comment" class="form-control"
-                                           value="{{ request.form['comment'] }}"></input>
+                                           value="{{ request.form['comment'] }}" required></input>
                                   </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

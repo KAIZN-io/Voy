@@ -67,8 +67,9 @@ def index():
 
         elif request.form['button'] == 'send_requery':
             comment = request.form['comment']
-
-            new_comment = QC_Requery(abbrev=current_user.abbrev, date_time=time_stamp(), new_comment = comment)
+            query_id = request.form['query_id'] 
+            
+            new_comment = QC_Requery(abbrev=current_user.abbrev, date_time=time_stamp(), new_comment = comment, query_id=query_id)
 
             db.session.add(new_comment)
             db.session.commit()
@@ -137,6 +138,18 @@ def requery_query(id):
     QC_Check.query.filter_by(id=id).update({"corrected": 1})
 
     db.session.commit()
+
+    return redirect('/')
+
+@main.route('/modal_data/<int:query_id>')
+@login_required
+def modal_data(query_id):
+    # # requery the row from the table of the QC Check model
+    # QC_Check.query.filter_by(id=id).update({"corrected": 1})
+    # db.session.commit()
+
+    old_comment = db.session.query(QC_Requery).filter_by(query_id=query_id).order_by(QC_Requery.id.desc()).first()
+    print(old_comment)
 
     return redirect('/')
 
