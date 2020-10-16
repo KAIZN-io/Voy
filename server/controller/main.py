@@ -68,7 +68,7 @@ def index():
         elif request.form['button'] == 'send_requery':
             comment = request.form['comment']
             query_id = request.form['query_id'] 
-            
+
             new_comment = QC_Requery(abbrev=current_user.abbrev, date_time=time_stamp(), new_comment = comment, query_id=query_id)
 
             db.session.add(new_comment)
@@ -149,9 +149,8 @@ def modal_data(query_id):
     # db.session.commit()
 
     old_comment = db.session.query(QC_Requery).filter_by(query_id=query_id).order_by(QC_Requery.id.desc()).first()
-    print(old_comment)
 
-    return redirect('/')
+    return render_template('modal_data.html', post=old_comment)
 
 
 @main.route('/close/<int:id>')

@@ -92,10 +92,15 @@ content %} {% if current_user.is_authenticated %}
                         $modal.find('.query_id-data').val(query_id);
 
                         let $title = $modal.find('.modal-title');
-                        $title.text('Requery Dialog | Query ID: ' + query_id)
+                        let $content = $modal.find('.modal-body_1');
+
+                        $title.text(`Requery Dialog | Query ID: ${query_id}`); 
                         
-                        
+                        // NOTE: recognize the `` !
                         // AJAX request -> load data for the modal 
+                        $data = $.get(`/modal_data/${query_id}`)
+                        // and push it into the modal 
+                        .done($data=> $content.html($data))
 
                     })
                 </script>
@@ -114,6 +119,9 @@ content %} {% if current_user.is_authenticated %}
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                             </button>
+                        </div>
+                        <!-- for the case, whether old comments are available -->
+                        <div class="modal-body_1">
                         </div>
                         <div class="modal-body">
                             <form method="post">
