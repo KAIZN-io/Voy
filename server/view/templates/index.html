@@ -2,9 +2,8 @@
 content %} {% if current_user.is_authenticated %}
 <div>
     {%- for breadcrumb in breadcrumbs -%}
-        <a href="{{ breadcrumb.url }}">{{ breadcrumb.text }}</a>
-        {{ '/' if not loop.last }}
-    {%- endfor -%}
+    <a href="{{ breadcrumb.url }}">{{ breadcrumb.text }}</a>
+    {{ '/' if not loop.last }} {%- endfor -%}
 </div>
 <h1 class="title">QUERIES</h1>
 
@@ -20,7 +19,7 @@ content %} {% if current_user.is_authenticated %}
 
             {% endfor %}
         </select>
-        <button type="submit" class="btn btn-primary">Download</button>
+        <button type="submit" class="btn btn-primary" name="button" value="download_button">Download</button>
     </div>
 </form>
 
@@ -30,10 +29,7 @@ content %} {% if current_user.is_authenticated %}
     </caption>
     <thead class="thead-light">
         <tr>
-            <!-- MedOps is not allowed to see the status of the query -->
-            {% if not current_user.role == "MedOps" %}
             <th scope="col">Status</th>
-            {% endif %}
             <th scope="col">Study ID</th>
             <th scope="col">Scr No</th>
             <th scope="col">Type</th>
@@ -48,8 +44,7 @@ content %} {% if current_user.is_authenticated %}
     <tbody>
         {% for post in posts %}
         <tr>
-            <!-- MedOps is not allowed to see the status of the query -->
-            {% if not current_user.role == "MedOps" %} {% if post.corrected == 0
+            {% if post.corrected == 0
             %}
             <td>
                 <span class="badge badge-warning"> Requery </span>
@@ -58,10 +53,20 @@ content %} {% if current_user.is_authenticated %}
             <td>
                 <span class="badge badge-danger"> Open </span>
             </td>
-            {% endif %} {% endif %}
+            {% endif %} 
             <td>{{ post.study_id }}</td>
             <td>{{ post.scr_no }}</td>
+            {% if post.type == "ICF" %}
+            <td>
+                <span class="badge badge-info"> ICF </span>
+            </td>
+            {% elif post.type == "Source" %}
+            <td>
+                <span class="badge badge-secondary"> Source </span>
+            </td>
+            {% else %}
             <td>{{ post.type }}</td>
+            {% endif %}
             <td>{{ post.visit }}</td>
             <td>{{ post.page }}</td>
             <td>{{ post.procedure }}</td>
@@ -69,15 +74,78 @@ content %} {% if current_user.is_authenticated %}
             <td>{{ post.created }}</td>
             <td>
                 {% if current_user.role == "MedOps" %}
+                <i class="fas fa-check"></i>
                 <a href="/delete/{{post.id}}">done</a>
                 {% endif %}
+                <!-- <a href="/requery/{{post.id}}" class="far fa-comments"></a> -->
+                <a href="#" id="comment_on_modal"class="far fa-comments" data-toggle="modal" data-id="{{post.id}}" data-target="#requery_Modal" data-whatever="@mdo"></a>
+        
+                <script>
+                    $('#requery_Modal').on('show.bs.modal', function (event) {
+                        let button = $(event.relatedTarget) // Button that triggered the modal
+                        let query_id = button.data('id') // Extract info from data-* attributes
+                        // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+                        // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+                        let $modal = $(this);
+
+                        // set query id as value
+                        $modal.find('.query_id-data').val(query_id);
+
+                        let $title = $modal.find('.modal-title');
+                        let $content = $modal.find('.modal-body_1');
+
+                        $title.text(`Requery Dialog | Query ID: ${query_id}`); 
+                        
+                        // NOTE: recognize the `` !
+                        // AJAX request -> load data for the modal 
+                        $data = $.get(`/modal_data/${query_id}`)
+                        // and push it into the modal 
+                        .done($data=> $content.html($data))
+
+                    })
+                </script>
+    
                 <!-- close the query if you have the right role permission -->
                 {% if current_user.role == "Admin" %}
-                <a href="/requery/{{post.id}}">requery</a>
                 <!-- overgive the edit page the id -->
-                <a href="{{ url_for('main.edit_data', id=post.id) }}">edit</a>
-                <a href="/close/{{post.id}}">close</a>
+                <a href="{{ url_for('main.edit_data', id=post.id) }}" class="far fa-edit">edit</a>
+                <a href="/close/{{post.id}}" class="fas fa-check"></a>
                 {% endif %}
+                <div class="modal fade" id="requery_Modal" tabindex="-1" role="dialog" aria-labelledby="requery_ModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="requery_ModalLabel">Requery Dialog</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <!-- for the case, whether old comments are available -->
+                        <div class="modal-body_1">
+                        </div>
+                        <div class="modal-body">
+                            <form method="post">
+                                <!-- set the query_id to request it from python flask -->
+                                <input name="query_id"
+                                    class="query_id-data"
+                                    value="{{ request.form['query_id'] }}" 
+                                    readonly>
+                                </input>
+                                <div class="form-group">
+                                    <input type="text" name="comment"
+                                           placeholder="your comment" class="form-control"
+                                           value="{{ request.form['comment'] }}" required></input>
+                                  </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" name="button" value="send_requery" class="btn btn-primary">Send message</button>
+                                </div>
+                            </form>
+                        </div>
+    
+                        </div>
+                    </div>
+                </div>
             </td>
         </tr>
         {% endfor %}
@@ -155,3 +223,6 @@ content %} {% if current_user.is_authenticated %}
 </script>
 
 {% endif %} {% endblock %}
+
+
+

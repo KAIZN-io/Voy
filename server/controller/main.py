@@ -9,7 +9,7 @@ import arrow
 import pandas as pd
 import time
 
-from server.model.models import QC_Check, DB_User, QC_Audit
+from server.model.models import QC_Check, DB_User, QC_Audit, QC_Requery
 from server.controller.amqp.amqp_client import request_amqp
 from server.controller.compliance import audit_trail, time_stamp
 from server import db
@@ -49,19 +49,38 @@ def index():
 
     if request.method == 'POST':
 
-        # get the requestesd file format
-        download_type = request.form.get('download')
+        if request.form['button'] == 'download_button':
 
-        # prepare the data to get read by pandas dataframe
-        query_as_dict = [as_dict(r) for r in posts_data]
+            # get the requestesd file format
+            download_type = request.form.get('download')
 
-        # send the data with the working request to the message broker
-        request_amqp(query_as_dict, {"download_type": download_type})
+            # prepare the data to get read by pandas dataframe
+            query_as_dict = [as_dict(r) for r in posts_data]
 
-        # TEMP: sleep until new pdf / excel file is really created
-        time.sleep(3)
+            # send the data with the working request to the message broker
+            request_amqp(query_as_dict, {"download_type": download_type})
 
-        return send_file("controller/amqp/query_DataFrame.{}".format(download_type), as_attachment=True, attachment_filename="My_Queries.{}".format(download_type))
+            # TEMP: sleep until new pdf / excel file is really created
+            time.sleep(3)
+
+            return send_file("controller/amqp/query_DataFrame.{}".format(download_type), as_attachment=True, attachment_filename="My_Queries.{}".format(download_type))
+
+        elif request.form['button'] == 'send_requery':
+            comment = request.form['comment']
+            query_id = request.form['query_id'] 
+
+            new_comment = QC_Requery(abbrev=current_user.abbrev, date_time=time_stamp(), new_comment = comment, query_id=query_id)
+
+            db.session.add(new_comment)
+            db.session.commit()
+            # id = db.Column(db.Integer, primary_key=True)
+            # query_id = db.Column(db.Integer)
+            # abbrev = db.Column(db.Text)
+            # date_time = db.Column(db.Text)
+            # new_comment = db.Column(db.Text)
+
+            # NOTE: redirect after form submission to prevent duplicates.
+            return redirect('/')
 
     return render_template('index.html', posts=posts_data, Download_Type=download_type)
 
@@ -121,6 +140,17 @@ def requery_query(id):
     db.session.commit()
 
     return redirect('/')
+
+@main.route('/modal_data/<int:query_id>')
+@login_required
+def modal_data(query_id):
+    # # requery the row from the table of the QC Check model
+    # QC_Check.query.filter_by(id=id).update({"corrected": 1})
+    # db.session.commit()
+
+    old_comment = db.session.query(QC_Requery).filter_by(query_id=query_id).order_by(QC_Requery.id.desc()).first()
+
+    return render_template('modal_data.html', post=old_comment)
 
 
 @main.route('/close/<int:id>')

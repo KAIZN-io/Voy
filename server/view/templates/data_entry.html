@@ -15,18 +15,21 @@
 
 <form method="post">
     <div class="form-row">
-      <div class="form-group col-md-6">
+      <div class="form-group col-md-6"> 
         <label for="study_id">Study ID</label>
         <input type="text" name="study_id"
               class="form-control"
-              value="{{ request.form['study_id'] }}"></input>
+              value="{{ request.form['study_id'] }}" 
+              required></input>
+
       </div>
       <div class="form-group col-md-4">
         <label for="type">Document-Type :</label>
         <select name="type" class="form-control">
+
           {% for type in source_type %}
           <option value="{{ type }}" SELECTED>{{ type }}</option>
-      
+
           {% endfor %}
         </select> 
       </div>
@@ -85,8 +88,11 @@
           <td>    
             <div class="form-group">
             <select name="row[][name]" width="300px">
+              <option SELECTED>no data yet</option>
+              <option disabled="disabled">----</option>
+
               {% for user in Users %}
-              <option value="{{ user.abbrev }}" SELECTED>{{ user.abbrev }}</option>
+              <option value="{{ user.abbrev }}">{{ user.abbrev }}</option>
           
               {% endfor %}
             </select> 
