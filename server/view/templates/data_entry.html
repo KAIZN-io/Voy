@@ -13,8 +13,11 @@
 </div>
 <h1>Data Entry</h1>
 
-<form method="post">
+<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> -->
+
+<form method="post" class="needs-validation" novalidate>
     <div class="form-row">
+
       <div class="form-group col-md-6"> 
         <label for="study_id">Study ID</label>
         <input type="text" name="study_id"
@@ -25,24 +28,26 @@
       </div>
       <div class="form-group col-md-4">
         <label for="type">Document-Type :</label>
-        <select name="type" class="form-control">
-
+        <select name="type" class="form-control" required>
+            <option disabled selected value>  -- select an option -- </option>
+            <option disabled="disabled">----</option>
           {% for type in source_type %}
-          <option value="{{ type }}" SELECTED>{{ type }}</option>
+          <option value="{{ type }}">{{ type }}</option>
 
           {% endfor %}
+          
         </select> 
       </div>
 
       <div class="form-group col-md-2">
         <label for="scr_no">Scr No</label>
-        <input type="text" name="scr_no"
-              value="{{ request.form['scr_no'] }}"></input>
+        <input type="text" name="scr_no" class="form-control"
+              value="{{ request.form['scr_no'] }}" required></input>
       </div>
     </div>
     <br>  
 
-    <table data-ticket-table class="table">
+    <table class="table" data-ticket-table id="data_entry_table" novalidate>
       <thead class="thead-light">
         <tr>
           <th scope="col">Visit</th>
@@ -57,7 +62,7 @@
         <!-- ein attribut, den es nur für uns gibt 'data-ticket-row' -->
         <tr data-ticket-row>
           <td>
-            <div class="form-group">
+            <div class="form-group is-invalid"">
               <input type="text" name="row[][visit]"
                       placeholder="which visit?" class="form-control"
                       value="{{ request.form['visit'] }}"></input>
@@ -87,12 +92,12 @@
           </td>
           <td>    
             <div class="form-group">
-            <select name="row[][name]" width="300px">
-              <option SELECTED>no data yet</option>
+            <select name="row[][name]" width="300px" class="form-control" required>
+              <option disabled selected value>  -- select an option -- </option>
               <option disabled="disabled">----</option>
-
+                <!-- if user is not active yet, display it -->
               {% for user in Users %}
-              <option value="{{ user.abbrev }}">{{ user.abbrev }}</option>
+              <option value="{{ user.abbrev }}">{{ user.abbrev }} {% if  user.active == 1 %}  (unactive) {% endif %}</option>
           
               {% endfor %}
             </select> 
@@ -103,10 +108,12 @@
 
     </table>
   <div class="form-group">
-    <button type="submit" class="btn btn-primary" style="margin-left: 50%">Submit</button>
+    <button type="submit" class="btn btn-primary" id="submit_table" style="margin-left: 50%">Submit</button>
+    <button type="button" class="btn btn-primary" id="remove_row">remove row</button>
     <button type="button" class="btn btn-primary" id="add_row" style="float: right;">add row</button>
 
     <script>
+        // add row 
       document.getElementById("add_row").onclick = function(){
         let ticket_row = document.querySelector("tr[data-ticket-row]");
         let ticket_table = document.querySelector("table[data-ticket-table] tbody");
@@ -119,9 +126,34 @@
   
         ticket_table.appendChild(ticket_row_clone);
         console.log("add new row");
-
       }
-      
+        // delete last row of the table
+      document.getElementById("remove_row").onclick = function(){
+        let rowCount = document.getElementById('data_entry_table').rows.length;
+        // if the table has more than 2 row you are allowed to delete the last row
+        if (rowCount > 2) {
+            document.getElementById("data_entry_table").deleteRow(-1);
+        }
+      }
+
+        document.getElementById("submit_table").onclick = function(){
+        // Disable form submissions if there are invalid fields
+        'use strict';
+        window.addEventListener('load', function() {
+            // Get the forms we want to add validation styles to
+            var forms = document.getElementsByClassName('needs-validation');
+            // Loop over them and prevent submission
+            var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('submit', function(event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+            });
+        }, false);
+        }();
     </script>
   </div>
 </form>
