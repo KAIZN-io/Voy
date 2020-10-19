@@ -103,7 +103,7 @@
               <option disabled="disabled">----</option>
 
               {% for user in Users %}
-              <option value="{{ user.abbrev }}">{{ user.abbrev }}</option>
+              <option value="{{ user.abbrev }}">{{ user.abbrev }} {% if  user.active == 1 %}  (unactive) {% endif %}</option>
           
               {% endfor %}
             </select> 
