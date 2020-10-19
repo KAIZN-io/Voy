@@ -98,8 +98,8 @@
           </td>
           <td>    
             <div class="form-group">
-            <select name="row[][name]" width="300px">
-              <option SELECTED>no data yet</option>
+            <select name="row[][name]" width="300px" class="form-control" required>
+              <option disabled selected value>  -- select an option -- </option>
               <option disabled="disabled">----</option>
 
               {% for user in Users %}
