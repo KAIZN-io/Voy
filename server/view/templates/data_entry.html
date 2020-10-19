@@ -13,14 +13,7 @@
 </div>
 <h1>Data Entry</h1>
 
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-
-
-
+<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> -->
 
 <form method="post" class="needs-validation" novalidate>
     <div class="form-row">
@@ -36,9 +29,10 @@
       <div class="form-group col-md-4">
         <label for="type">Document-Type :</label>
         <select name="type" class="form-control" required>
-
+            <option disabled selected value>  -- select an option -- </option>
+            <option disabled="disabled">----</option>
           {% for type in source_type %}
-          <option value="{{ type }}" SELECTED>{{ type }}</option>
+          <option value="{{ type }}">{{ type }}</option>
 
           {% endfor %}
           
@@ -101,7 +95,7 @@
             <select name="row[][name]" width="300px" class="form-control" required>
               <option disabled selected value>  -- select an option -- </option>
               <option disabled="disabled">----</option>
-
+                <!-- if user is not active yet, display it -->
               {% for user in Users %}
               <option value="{{ user.abbrev }}">{{ user.abbrev }} {% if  user.active == 1 %}  (unactive) {% endif %}</option>
           
