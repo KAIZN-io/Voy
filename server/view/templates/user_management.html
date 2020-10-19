@@ -19,7 +19,6 @@ block content %} {% if current_user.is_authenticated %}
       <th scope="col">Status</th>
       <th scope="col">User</th>
       <th scope="col">Role</th>
-      <!-- <th scope="col">Permission</th> -->
       <th scope="col">Delete</th>
     </tr>
   </thead>
@@ -41,9 +40,6 @@ block content %} {% if current_user.is_authenticated %}
         {% endif %}
       <td>{{ user.abbrev }}</td>
       <td>{{ user.role }}</td>
-      <!-- <td>
-        <a href="{{ url_for('auth.permissions', id=user.id) }}">edit</a>
-      </td> -->
       <td>
         <a href="/delete_user/{{user.id}}">delete</a>
       </td>
@@ -60,7 +56,6 @@ block content %} {% if current_user.is_authenticated %}
       <th scope="col">Status</th>
       <th scope="col">User</th>
       <th scope="col">Role</th>
-      <!-- <th scope="col">Permission</th> -->
       <th scope="col">Delete</th>
     </tr>
   </thead>
@@ -79,9 +74,6 @@ block content %} {% if current_user.is_authenticated %}
             </td>
         {% endif %}      <td>{{ user.abbrev }}</td>
       <td>{{ user.role }}</td>
-      <!-- <td>
-        <a href="{{ url_for('auth.permissions', id=user.id) }}">edit</a>
-      </td> -->
       <td>
         <a href="/delete_user/{{user.id}}">delete</a>
       </td>
