@@ -3,28 +3,16 @@ from flask_login import login_user, logout_user, login_required, current_user
 from flask_breadcrumbs import Breadcrumbs, register_breadcrumb, default_breadcrumb_root
 
 from werkzeug.security import generate_password_hash, check_password_hash
-import arrow
-import random
-import string
 
 
 from server import db
 from server.model.models import DB_User, User_Management
+from server.controller.compliance import audit_trail, time_stamp, passwd_generator
 
 
 auth = Blueprint('auth', __name__)
 # set main blueprint as a root
 default_breadcrumb_root(auth, '.')
-
-
-def time_stamp():
-    return arrow.utcnow().format('DD-MMM-YYYY HH:mm:ss')
-
-# the password generator
-
-
-def passwd_generator(size=6, chars=string.ascii_uppercase + string.digits):
-    return ''.join(random.choice(chars) for _ in range(size))
 
 
 @auth.route('/login')
@@ -38,30 +26,31 @@ def login_post():
     abbrev = request.form.get('abbreviation')
     password = request.form.get('password')
 
-    remember = True if request.form.get('remember') else False
-
     user = DB_User.query.filter_by(abbrev=abbrev).first()
 
-    # check whether a user exits at all:
+    # Case 1: check whether any user or this username exits at all
     if user == None:
         check_existing_user = DB_User.query.all()
         if len(check_existing_user) == 0:
-
             return redirect(url_for('auth.admin_signup'))
 
-    if user.active == 1:
-        flash('Please activate your account.')
+        else:
+            flash('Please check your login details and try again.')
+            return redirect(url_for('auth.login'))
 
+    # Case 2: check if the user is already ativated
+    if user.password == None or user.active == 1:
+        flash('Please activate your account.')
         return redirect(url_for('auth.activate'))
 
-    # take the user supplied password, hash it, and compare it to the hashed password in database
-    elif not user or not check_password_hash(user.password, password):
+    # Case 3: take the user supplied password, hash it, and compare it to the hashed password in database
+    if not check_password_hash(user.password, password):
         flash('Please check your login details and try again.')
         # if user doesn't exist or password is wrong, reload the page
         return redirect(url_for('auth.login'))
 
-    # if the above check passes, then we know the user has the right credentials
-    login_user(user, remember=remember)
+    # if the above cases check passes, then we know the user has the right credentials
+    login_user(user)
 
     current_app.logger.info('%s logged in successfully', abbrev)
 
@@ -72,6 +61,7 @@ def login_post():
 
 
 @auth.route('/user_management')
+@login_required
 @register_breadcrumb(auth, '.user_management', '')
 def user_management():
     # filter all user except for the admin
@@ -88,14 +78,6 @@ def delete_user(id):
     current_app.logger.warning('%s deleted a user', current_user.abbrev)
 
     return redirect(url_for('auth.user_management'))
-
-
-@auth.route('/permissions', methods=('GET', 'POST'))
-def permissions():
-    # get the id of the query you want to edit
-    id = request.args.get('id', None)
-
-    return render_template('permissions.html')
 
 
 @auth.route('/admin_signup')
@@ -137,6 +119,7 @@ def admin_signup_post():
 
 
 @auth.route('/add_user')
+@login_required
 @register_breadcrumb(auth, '.user_management.add_user', '')
 def add_user():
     # define the job roles
@@ -145,6 +128,7 @@ def add_user():
 
 
 @auth.route('/add_user', methods=['POST'])
+@login_required
 def add_user_post():
 
     email = request.form.get('email')
@@ -194,6 +178,7 @@ def profile():
 
 
 @auth.route('/profile', methods=['POST'])
+@login_required
 def change_password():
 
     oldPassword = request.form.get('oldpassword')
