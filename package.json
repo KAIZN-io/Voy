@@ -10,7 +10,7 @@
     "tablefilter": "^0.7.2"
   },
   "description": "1. Create a working virtualenv with `make venv` 2. Create some required structure with `make extra_folders` 3. Temporary: Install a pdf converter with `brew cask install wkhtmltopdf` 4. Start the server with `flask run` 5. Open http://localhost:5000/",
-  "main": "index.js",
+  "main": "index.html",
   "repository": {
     "type": "git",
     "url": "git+ssh://git@gitlab.com/piotraschke.janniklas/flask_auth_app.git"
