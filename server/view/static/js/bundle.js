@@ -17921,7 +17921,7 @@ module.exports = require('./dist/tablefilter/tablefilter').TableFilter;
 
 },{"./dist/tablefilter/tablefilter":4}],6:[function(require,module,exports){
 var $ = require('jquery');
-require('tablefilter');
+var TableFilter = require('tablefilter');
 require('popper.js');
 require('bootstrap');
 

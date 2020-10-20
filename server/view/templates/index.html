@@ -8,6 +8,8 @@ content %} {% if current_user.is_authenticated %}
 <h1 class="title">QUERIES</h1>
 
 <br />
+<script type="text/javascript" src="{{ url_for('static', filename='js/bundle.js') }}"></script>
+
 <form method="post">
     <div class="form-group">
         <label for="type">Download Queries as :</label>
@@ -152,7 +154,7 @@ content %} {% if current_user.is_authenticated %}
     </tbody>
 </table>
 
-<script src="{{ url_for('static', filename='js/node_modules/tablefilter/dist/tablefilter/tablefilter.js')}}"></script>
+<!-- <script src="{{ url_for('static', filename='js/node_modules/tablefilter/dist/tablefilter/tablefilter.js')}}"></script> -->
 
 <!-- IMPORTANT INFO: in js muss man src script ohne (!) content laden; deshalb seperat -->
 <!-- "If a script element has a src attribute, the content must be ignored, any other behaviour is non-conformant." -->

@@ -1,5 +1,5 @@
 var $ = require('jquery');
-require('tablefilter');
+var TableFilter = require('tablefilter');
 require('popper.js');
 require('bootstrap');
 
