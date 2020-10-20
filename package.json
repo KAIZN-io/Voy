@@ -1,11 +1,24 @@
 {
-    "name": "flask_auth_app",
-    "version": "0.0.1",
-    "dependencies": {
-        "datatables.net": "^1.10.22",
-        "datatables.net-dt": "^1.10.22"
-    },
-    "devDependencies": {
-        "tablefilter": "^0.7.2"
-    }
+  "name": "flask_auth_app",
+  "version": "0.0.1",
+  "dependencies": {
+    "bootstrap": "^4.5.2",
+    "jquery": "^3.5.1",
+    "popper.js": "^1.16.1"
+  },
+  "devDependencies": {
+    "tablefilter": "^0.7.2"
+  },
+  "description": "1. Create a working virtualenv with `make venv` 2. Create some required structure with `make extra_folders` 3. Temporary: Install a pdf converter with `brew cask install wkhtmltopdf` 4. Start the server with `flask run` 5. Open http://localhost:5000/",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/piotraschke.janniklas/flask_auth_app.git"
+  },
+  "author": "Jan Piotraschke",
+  "license": "GPL-3.0-only",
+  "bugs": {
+    "url": "https://gitlab.com/piotraschke.janniklas/flask_auth_app/issues"
+  },
+  "homepage": "https://gitlab.com/piotraschke.janniklas/flask_auth_app#readme"
 }
