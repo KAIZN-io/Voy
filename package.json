@@ -13,7 +13,7 @@
     "url": "https://gitlab.com/piotraschke.janniklas/flask_auth_app/issues"
   },
   "scripts": {
-    "build": "parcel build --no-cache ./server/view/static/js/main.js ./server/view/static/css/main.scss --out-dir ./server/view/static/dist"
+    "build": "parcel build --no-cache ./server/view/static/js/*.js ./server/view/static/css/main.scss --out-dir ./server/view/static/dist"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.1",
