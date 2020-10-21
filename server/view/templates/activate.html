@@ -1,45 +1,48 @@
 {% extends "base.html" %}
 
 {% block title %}
-    Mein Profile
+Mein Profil
 {% endblock %}
 
 {% block content %}
 <div class="column is-4 is-offset-4">
   <h3 class="title">Activate your account</h3>
   <div class="box">
-      {% with messages = get_flashed_messages() %}
-      {% if messages %}
-          <div class="notification is-danger">
-              {{ messages[0] }}
-          </div>
-      {% endif %}
-      {% endwith %}
-      <form method="POST" action="/activate">
-        <div class="field">
-            <div class="control">
-                <input class="input is-large" type="text" name="abbreviation" placeholder="Your Abbreviation" autofocus="" required>
-            </div>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="notification is-danger">
+      {{ messages[0] }}
+    </div>
+    {% endif %}
+    {% endwith %}
+    <form action="/activate" method="POST">
+      <div class="field">
+        <div class="control">
+          <input autofocus="" class="input is-large" name="abbreviation" placeholder="Your Abbreviation" required
+                 type="text">
         </div>
-        <div class="form-group">
-            <div class="control">
-                <input class="input is-large" type="password" name="oldPassword" placeholder="The System Password" autofocus="" required>
-            </div>
+      </div>
+      <div class="form-group">
+        <div class="control">
+          <input autofocus="" class="input is-large" name="oldPassword" placeholder="The System Password"
+                 required type="password">
         </div>
-          <div class="field">
-              <div class="control">
-                  <input class="input is-large" type="password" name="password1" placeholder="Your New Password" autofocus="" required>
-              </div>
-          </div>
-          <div class="field">
-              <div class="control">
-                  <input class="input is-large" type="password" name="password2" placeholder="Again your new Password" required>
-              </div>
-          </div>
-          <br>
-          <div class="field">
-          <button class="button is-block is-info is-large is-fullwidth">Activate</button>
-      </form>
+      </div>
+      <div class="field">
+        <div class="control">
+          <input autofocus="" class="input is-large" name="password1" placeholder="Your New Password" required
+                 type="password">
+        </div>
+      </div>
+      <div class="field">
+        <div class="control">
+          <input class="input is-large" name="password2" placeholder="Again your new Password" required type="password">
+        </div>
+      </div>
+      <br>
+      <div class="field">
+        <button class="button is-block is-info is-large is-fullwidth">Activate</button>
+    </form>
   </div>
 </div>
 {% endblock %}

@@ -1,118 +1,120 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    data entry
+data entry
 {% endblock %}
 
 {% block content %}
 <div>
-    {%- for breadcrumb in breadcrumbs -%}
-        <a href="{{ breadcrumb.url }}">{{ breadcrumb.text }}</a>
-        {{ '/' if not loop.last }}
-    {%- endfor -%}
+  {%- for breadcrumb in breadcrumbs -%}
+  <a href="{{ breadcrumb.url }}">{{ breadcrumb.text }}</a>
+  {{ '/' if not loop.last }}
+  {%- endfor -%}
 </div>
 <h1>Data Entry</h1>
 
-<form method="post" class="needs-validation" novalidate>
-    <div class="form-row">
+<form class="needs-validation" method="post" novalidate>
+  <div class="form-row">
 
-      <div class="form-group col-md-6"> 
-        <label for="study_id">Study ID</label>
-        <input type="text" name="study_id"
-              class="form-control"
-              value="{{ request.form['study_id'] }}" 
-              required></input>
+    <div class="form-group col-md-6">
+      <label for="study_id">Study ID</label>
+      <input class="form-control" name="study_id"
+             required
+             type="text"
+             value="{{ request.form['study_id'] }}"></input>
 
-      </div>
-      <div class="form-group col-md-4">
-        <label for="type">Document-Type :</label>
-        <select name="type" class="form-control" required>
-            <option disabled selected value>  -- select an option -- </option>
-            <option disabled="disabled">----</option>
-          {% for type in source_type %}
-          <option value="{{ type }}">{{ type }}</option>
-
-          {% endfor %}
-          
-        </select> 
-      </div>
-
-      <div class="form-group col-md-2">
-        <label for="scr_no">Scr No</label>
-        <input type="text" name="scr_no" class="form-control"
-              value="{{ request.form['scr_no'] }}" required></input>
-      </div>
     </div>
-    <br>  
+    <div class="form-group col-md-4">
+      <label for="type">Document-Type :</label>
+      <select class="form-control" name="type" required>
+        <option disabled selected value> -- select an option --</option>
+        <option disabled="disabled">----</option>
+        {% for type in source_type %}
+        <option value="{{ type }}">{{ type }}</option>
 
-    <table class="table" data-ticket-table id="data_entry_table" novalidate>
-      <thead class="thead-light">
-        <tr>
-          <th scope="col">Visit</th>
-          <th scope="col">Page</th>
-          <th scope="col">Procedure</th>
-          <th scope="col">Description</th>
-          <th scope="col">Responsible</th>
+        {% endfor %}
 
-        </tr>
-      </thead>
-      <tbody>
-        <!-- ein attribut, den es nur für uns gibt 'data-ticket-row' -->
-        <tr data-ticket-row>
-          <td>
-            <div class="form-group is-invalid"">
-              <input type="text" name="row[][visit]"
-                      placeholder="which visit?" class="form-control"
-                      value="{{ request.form['visit'] }}"></input>
-            </div>
-          </td>
-          
-          <td>
-            <div class="form-group">
-              <input type="text" name="row[][page]"
-                      placeholder="which page?" class="form-control"
-                      value="{{ request.form['page'] }}"></input>
-            </div>
-          </td>
-          <td>
-            <div class="form-group">
-              <input type="text" name="row[][title]"
-                     placeholder="VS / ECG / ... ?" class="form-control"
-                     value="{{ request.form['title'] }}"></input>
-            </div>
-          </td>
-          <td>
-            <div class="form-group">
-              <textarea name="row[][description]" placeholder="Please describe your finding"
-                        class="form-control" required>{{ request.form['description'] }}</textarea>
-             </div>
+      </select>
+    </div>
 
-          </td>
-          <td>    
-            <div class="form-group">
-            <select name="row[][name]" width="300px" class="form-control" required>
-              <option disabled selected value>  -- select an option -- </option>
-              <option disabled="disabled">----</option>
-                <!-- if user is not active yet, display it -->
-              {% for user in Users %}
-              <option value="{{ user.abbrev }}">{{ user.abbrev }} {% if  user.active == 1 %}  (unactive) {% endif %}</option>
-          
-              {% endfor %}
-            </select> 
+    <div class="form-group col-md-2">
+      <label for="scr_no">Scr No</label>
+      <input class="form-control" name="scr_no" required
+             type="text" value="{{ request.form['scr_no'] }}"></input>
+    </div>
+  </div>
+  <br>
+
+  <table class="table" data-ticket-table id="data_entry_table" novalidate>
+    <thead class="thead-light">
+    <tr>
+      <th scope="col">Visit</th>
+      <th scope="col">Page</th>
+      <th scope="col">Procedure</th>
+      <th scope="col">Description</th>
+      <th scope="col">Responsible</th>
+
+    </tr>
+    </thead>
+    <tbody>
+    <!-- ein attribut, den es nur für uns gibt 'data-ticket-row' -->
+    <tr data-ticket-row>
+      <td>
+        <div class="form-group is-invalid"
+        ">
+        <input class="form-control" name="row[][visit]"
+               placeholder="which visit?" type="text"
+               value="{{ request.form['visit'] }}"></input>
         </div>
       </td>
-      </tr>
+
+      <td>
+        <div class="form-group">
+          <input class="form-control" name="row[][page]"
+                 placeholder="which page?" type="text"
+                 value="{{ request.form['page'] }}"></input>
+        </div>
+      </td>
+      <td>
+        <div class="form-group">
+          <input class="form-control" name="row[][title]"
+                 placeholder="VS / ECG / ... ?" type="text"
+                 value="{{ request.form['title'] }}"></input>
+        </div>
+      </td>
+      <td>
+        <div class="form-group">
+              <textarea class="form-control" name="row[][description]"
+                        placeholder="Please describe your finding" required>{{ request.form['description'] }}</textarea>
+        </div>
+
+      </td>
+      <td>
+        <div class="form-group">
+          <select class="form-control" name="row[][name]" required width="300px">
+            <option disabled selected value> -- select an option --</option>
+            <option disabled="disabled">----</option>
+            <!-- if user is not active yet, display it -->
+            {% for user in Users %}
+            <option value="{{ user.abbrev }}">{{ user.abbrev }} {% if user.active == 1 %} (unactive) {% endif %}
+            </option>
+
+            {% endfor %}
+          </select>
+        </div>
+      </td>
+    </tr>
     </tbody>
 
-    </table>
+  </table>
   <div class="form-group">
-    <button type="submit" class="btn btn-primary" id="submit_table" style="margin-left: 50%">Submit</button>
-    <button type="button" class="btn btn-primary" id="remove_row">remove row</button>
-    <button type="button" class="btn btn-primary" id="add_row" style="float: right;">add row</button>
+    <button class="btn btn-primary" id="submit_table" style="margin-left: 50%" type="submit">Submit</button>
+    <button class="btn btn-primary" id="remove_row" type="button">remove row</button>
+    <button class="btn btn-primary" id="add_row" style="float: right;" type="button">add row</button>
 
     <script>
-        // add row 
-      document.getElementById("add_row").onclick = function(){
+      // add row
+      document.getElementById("add_row").onclick = function () {
         let ticket_row = document.querySelector("tr[data-ticket-row]");
         let ticket_table = document.querySelector("table[data-ticket-table] tbody");
 
@@ -121,37 +123,37 @@
         let inputs = ticket_row_clone.querySelectorAll("input, textarea");
         inputs = Array.from(inputs);
         inputs.map(input => input.value = "");
-  
+
         ticket_table.appendChild(ticket_row_clone);
         console.log("add new row");
       }
-        // delete last row of the table
-      document.getElementById("remove_row").onclick = function(){
+      // delete last row of the table
+      document.getElementById("remove_row").onclick = function () {
         let rowCount = document.getElementById('data_entry_table').rows.length;
         // if the table has more than 2 row you are allowed to delete the last row
         if (rowCount > 2) {
-            document.getElementById("data_entry_table").deleteRow(-1);
+          document.getElementById("data_entry_table").deleteRow(-1);
         }
       }
 
-        document.getElementById("submit_table").onclick = function(){
+      document.getElementById("submit_table").onclick = function () {
         // Disable form submissions if there are invalid fields
         'use strict';
-        window.addEventListener('load', function() {
-            // Get the forms we want to add validation styles to
-            var forms = document.getElementsByClassName('needs-validation');
-            // Loop over them and prevent submission
-            var validation = Array.prototype.filter.call(forms, function(form) {
-            form.addEventListener('submit', function(event) {
-                if (form.checkValidity() === false) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                }
-                form.classList.add('was-validated');
+        window.addEventListener('load', function () {
+          // Get the forms we want to add validation styles to
+          var forms = document.getElementsByClassName('needs-validation');
+          // Loop over them and prevent submission
+          var validation = Array.prototype.filter.call(forms, function (form) {
+            form.addEventListener('submit', function (event) {
+              if (form.checkValidity() === false) {
+                event.preventDefault();
+                event.stopPropagation();
+              }
+              form.classList.add('was-validated');
             }, false);
-            });
+          });
         }, false);
-        }();
+      }();
     </script>
   </div>
 </form>
