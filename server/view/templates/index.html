@@ -82,7 +82,7 @@ content %} {% if current_user.is_authenticated %}
       <a class="far fa-comments" data-id="{{post.id}}" data-target="#requery_Modal" data-toggle="modal" data-whatever="@mdo"
          href="#" id="comment_on_modal"></a>
 
-      <script src="{{ url_for('static', filename='dist/js/index_modal.js') }}" type="text/javascript"></script>
+      <script src="{{ url_for('static', filename='js/index_modal.js') }}" type="text/javascript"></script>
 
 
       <!-- close the query if you have the right role permission -->
@@ -135,7 +135,7 @@ content %} {% if current_user.is_authenticated %}
 
 <!-- IMPORTANT INFO: in js muss man src script ohne (!) content laden; deshalb seperat -->
 <!-- "If a script element has a src attribute, the content must be ignored, any other behaviour is non-conformant." -->
-<script src="{{ url_for('static', filename='dist/js/data_table.js') }}" type="text/javascript"></script>
+<script src="{{ url_for('static', filename='js/data_table.js') }}" type="text/javascript"></script>
 
 
 {% endif %} {% endblock %}
