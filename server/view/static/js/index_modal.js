@@ -1,3 +1,6 @@
+import $ from 'jquery';
+
+
 $('#requery_Modal').on('show.bs.modal', function (event) {
   let button = $(event.relatedTarget) // Button that triggered the modal
   let query_id = button.data('id') // Extract info from data-* attributes

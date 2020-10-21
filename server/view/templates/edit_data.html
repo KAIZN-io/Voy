@@ -28,8 +28,9 @@ Edit Data
     <div class="form-group col-md-4">
       <label for="type">Document-Type :</label>
       <select class="form-control" name="type">
-        <option %} %} data.type=="Source" endif if selected="selected" value="Source" {% {%>Source</option>
-        <option %} %} data.type=="ICF" endif if selected="selected" value="ICF" {% {%>ICF</option>
+          <option value="Source"{% if data.type=="Source" %} selected="selected"{% endif %}>Source</option>
+            <option value="ICF"{% if data.type=="ICF" %} selected="selected"{% endif %}>ICF</option>
+
       </select>
     </div>
 
