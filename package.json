@@ -12,12 +12,18 @@
   "bugs": {
     "url": "https://gitlab.com/piotraschke.janniklas/flask_auth_app/issues"
   },
+  "scripts": {
+    "build": "parcel build --no-cache ./server/view/static/js/main.js ./server/view/static/css/main.scss --out-dir ./server/view/static/dist"
+  },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.15.1",
     "bootstrap": "^4.5.2",
     "jquery": "^3.5.1",
-    "popper.js": "^1.16.1"
+    "popper.js": "^1.16.1",
+    "tablefilter": "^0.7.2"
   },
   "devDependencies": {
-    "tablefilter": "^0.7.2"
+    "parcel-bundler": "^1.12.4",
+    "sass": "^1.27.0"
   }
 }
