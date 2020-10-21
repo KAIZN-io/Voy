@@ -27,7 +27,7 @@ db = SQLAlchemy()
 
 
 def create_app():
-    app = Flask(__name__, template_folder='view/templates', static_url_path='', static_folder='view/static')
+    app = Flask(__name__, template_folder='view/templates', static_url_path='', static_folder='view/static/dist')
 
     # import the configuration from the file config.py
     app.config.from_object('config.DevelopmentConfig')
