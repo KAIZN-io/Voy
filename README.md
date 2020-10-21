@@ -2,8 +2,10 @@
 1. Create a working virtualenv with `make venv`
 2. Create some required structure with `make extra_folders`
 3. Temporary: Install a pdf converter with `brew cask install wkhtmltopdf`
-4. Start the server with `flask run`
-5. Open http://localhost:5000/ 
+4. Install node modules with `npm install`
+5. Bundle assets with `npm run build`
+6. Start the server with `flask run`
+7. Open http://localhost:5000/ 
 
 ### For creating and initiating the database
 1. Activate venv with `. venv/bin/activate`
@@ -20,6 +22,3 @@
 1. Activate venv with `. venv/bin/activate`
 1.5. Only ones: To activate the **node** virtual environment along with venv in the future: `nodeenv -p`
 2. Install npm package with `npm install -g {PACKAGE NAME}`
-
-
-    
