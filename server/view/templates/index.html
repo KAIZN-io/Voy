@@ -82,30 +82,8 @@ content %} {% if current_user.is_authenticated %}
       <a class="far fa-comments" data-id="{{post.id}}" data-target="#requery_Modal" data-toggle="modal" data-whatever="@mdo"
          href="#" id="comment_on_modal"></a>
 
-      <script>
-        $('#requery_Modal').on('show.bs.modal', function (event) {
-          let button = $(event.relatedTarget) // Button that triggered the modal
-          let query_id = button.data('id') // Extract info from data-* attributes
-          // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-          // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-          let $modal = $(this);
+      <script src="{{ url_for('static', filename='js/index_modal.js') }}" type="text/javascript"></script>
 
-          // set query id as value
-          $modal.find('.query_id-data').val(query_id);
-
-          let $title = $modal.find('.modal-title');
-          let $content = $modal.find('.modal-body_1');
-
-          $title.text(`Requery Dialog | Query ID: ${query_id}`);
-
-          // NOTE: recognize the `` !
-          // AJAX request -> load data for the modal
-          $data = $.get(`/modal_data/${query_id}`)
-            // and push it into the modal
-            .done($data => $content.html($data))
-
-        })
-      </script>
 
       <!-- close the query if you have the right role permission -->
       {% if current_user.role == "Admin" %}
@@ -155,76 +133,10 @@ content %} {% if current_user.is_authenticated %}
   </tbody>
 </table>
 
-<!-- <script src="{{ url_for('static', filename='js/node_modules/tablefilter/dist/tablefilter/tablefilter.js')}}"></script> -->
-
 <!-- IMPORTANT INFO: in js muss man src script ohne (!) content laden; deshalb seperat -->
 <!-- "If a script element has a src attribute, the content must be ignored, any other behaviour is non-conformant." -->
+<script src="{{ url_for('static', filename='js/data_table.js') }}" type="text/javascript"></script>
 
-<script type="text/javascript">
-  var filtersConfig = {
-    // instruct TableFilter location to import ressources from
-    base_path: "https://unpkg.com/tablefilter@latest/dist/tablefilter/",
-    // define the user help with 'help_instructions'
-    help_instructions: false,
-    // you can disable it
-    popup_filters: true,
-    // selecting with a drop-down
-    col_0: "select",
-    col_1: "checklist",
-    col_3: "select",
-    // no filter for the last column
-    col_9: "none",
-    alternate_rows: true,
-    // grid layout customisation
-    grid_layout: {
-      width: "1200px",
-      height: "400px",
-    },
-    mark_active_columns: {
-      // Mark active columns
-      highlight_column: true, // .. and with column header
-    },
-    rows_counter: {text: "Queries : "},
-    highlight_keywords: true,
-    col_widths: [
-      "90px",
-      "110px",
-      "100px",
-      "90px",
-      "100px",
-      "100px",
-      "100px",
-      "200px",
-      "160px",
-    ],
-    watermark: [
-      "status",
-      "study ID",
-      "Scr No",
-      "Type",
-      "Visit",
-      "Page",
-      "Procedure",
-      "Description",
-      "Created on",
-    ],
-
-    /** Bootstrap integration */
-
-    // aligns filter at cell bottom when Bootstrap is enabled
-    // filters_cell_tag: "th",
-
-    // allows Bootstrap table styling
-    themes: [
-      {
-        name: "transparent",
-      },
-    ],
-  };
-
-  var tf = new TableFilter("query_table", filtersConfig);
-  tf.init();
-</script>
 
 {% endif %} {% endblock %}
 
