@@ -18,7 +18,10 @@
 2. Go to the AMQP server with `cd server/controller/amqp`
 3. Run the server with `python3 amqp_server.py`
 
-## JS handling (--> work with 'require'), if venv is already initiated
+## Asset handling
+### Install npm packages
 1. Activate venv with `. venv/bin/activate`
 1.5. Only ones: To activate the **node** virtual environment along with venv in the future: `nodeenv -p`
 2. Install npm package with `npm install -g {PACKAGE NAME}`
+### Develop JS / CSS
+Run `npm run watch` for an easy and smooth develop experience.
