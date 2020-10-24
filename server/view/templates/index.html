@@ -1,33 +1,51 @@
-{% extends "base.html" %} {% block title %} QC-Database {% endblock %} {% block
-content %} {% if current_user.is_authenticated %}
+{% extends "base.html" %}
+
+{% block title %} QC-Database {% endblock %}
+
+{% block content %}
+
+{% if current_user.is_authenticated %}
+
 <div>
   {%- for breadcrumb in breadcrumbs -%}
   <a href="{{ breadcrumb.url }}">{{ breadcrumb.text }}</a>
-  {{ '/' if not loop.last }} {%- endfor -%}
+  {{ '/' if not loop.last }}
+  {%- endfor -%}
 </div>
-<h1 class="title">QUERIES</h1>
+
+<h1 class="title">
+  QUERIES
+</h1>
 
 <br/>
 
 <form method="post">
   <div class="form-group">
-    <label for="type">Download Queries as :</label>
-    <select name="download" width="300px">
-      {% for download in Download_Type %}
-      <option required selected value="{{ download }}">
-        {{ download }}
-      </option>
 
-      {% endfor %}
-    </select>
-    <button class="btn btn-primary" name="button" type="submit" value="download_button">Download</button>
+    <label>
+      Download Queries as :
+
+      <select name="download" width="300px">
+        {% for download in Download_Type %}
+        <option required value="{{ download }}">
+          {{ download }}
+        </option>
+        {% endfor %}
+      </select>
+    </label>
+
+    <button class="btn btn-primary" name="button" type="submit" value="download_button">
+      Download
+    </button>
   </div>
 </form>
 
 <table class="table" class="display" id="query_table">
+
   <caption>
     These were all your Queries
   </caption>
+
   <thead class="thead-light">
   <tr>
     <th scope="col">Status</th>
@@ -42,11 +60,12 @@ content %} {% if current_user.is_authenticated %}
     <th scope="col">Actions</th>
   </tr>
   </thead>
+
   <tbody>
   {% for post in posts %}
+
   <tr>
-    {% if post.corrected == 0
-    %}
+    {% if post.corrected == 0 %}
     <td>
       <span class="badge badge-warning"> Requery </span>
     </td>
@@ -55,8 +74,10 @@ content %} {% if current_user.is_authenticated %}
       <span class="badge badge-danger"> Open </span>
     </td>
     {% endif %}
+
     <td>{{ post.study_id }}</td>
     <td>{{ post.scr_no }}</td>
+
     {% if post.type == "ICF" %}
     <td>
       <span class="badge badge-info"> ICF </span>
@@ -68,68 +89,100 @@ content %} {% if current_user.is_authenticated %}
     {% else %}
     <td>{{ post.type }}</td>
     {% endif %}
+
     <td>{{ post.visit }}</td>
     <td>{{ post.page }}</td>
     <td>{{ post.procedure }}</td>
     <td>{{ post.description }}</td>
     <td>{{ post.created }}</td>
+
     <td>
+
       {% if current_user.role == "MedOps" %}
       <i class="fas fa-check"></i>
       <a href="/delete/{{post.id}}">done</a>
       {% endif %}
-      <!-- <a href="/requery/{{post.id}}" class="far fa-comments"></a> -->
-      <a class="far fa-comments" data-id="{{post.id}}" data-target="#requery_Modal" data-toggle="modal" data-whatever="@mdo"
-         href="#" id="comment_on_modal"></a>
+
+      <a
+        data-id="{{post.id}}"
+        data-target="#requery_Modal"
+        data-toggle="modal"
+        href="#" >
+        <i class="far fa-comments"></i>
+      </a>
 
       <!-- close the query if you have the right role permission -->
       {% if current_user.role == "Admin" %}
       <!-- overgive the edit page the id -->
-      <a class="far fa-edit" href="{{ url_for('main.edit_data', id=post.id) }}">edit</a>
-      <a class="fas fa-check" href="/close/{{post.id}}"></a>
+      <a href="{{ url_for('main.edit_data', id=post.id) }}">
+        <i class="far fa-edit"></i>
+      </a>
+      <a href="/close/{{post.id}}">
+        <i class="fas fa-check"></i>
+      </a>
       {% endif %}
-      <div aria-hidden="true" aria-labelledby="requery_ModalLabel" class="modal fade" id="requery_Modal" role="dialog"
-           tabindex="-1">
+
+      <div
+        aria-hidden="true"
+        aria-labelledby="requery_ModalLabel"
+        class="modal fade"
+        id="requery_Modal"
+        role="dialog" >
         <div class="modal-dialog" role="document">
           <div class="modal-content">
+
             <div class="modal-header">
               <h5 class="modal-title" id="requery_ModalLabel">Requery Dialog</h5>
               <button aria-label="Close" class="close" data-dismiss="modal" type="button">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
+
             <!-- for the case, whether old comments are available -->
             <div class="modal-body_1">
             </div>
+
             <div class="modal-body">
               <form method="post">
-                <!-- set the query_id to request it from python flask -->
-                <input class="query_id-data"
-                       name="query_id"
-                       readonly
-                       value="{{ request.form['query_id'] }}">
-                </input>
-                <div class="form-group">
-                  <input class="form-control" name="comment"
-                         placeholder="your comment" required
-                         type="text" value="{{ request.form['comment'] }}"></input>
-                </div>
+
+                <input
+                  type="text"
+                  class="form-control"
+                  name="query_id"
+                  readonly
+                  value="{{ request.form['query_id'] }}" />
+
+                <input
+                  type="text"
+                  class="form-control"
+                  name="comment"
+                  placeholder="your comment"
+                  required
+                  value="{{ request.form['comment'] }}" />
+
                 <div class="modal-footer">
-                  <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
-                  <button class="btn btn-primary" name="button" type="submit" value="send_requery">Send message</button>
+                  <button class="btn btn-secondary" data-dismiss="modal" type="button">
+                    Close
+                  </button>
+                  <button class="btn btn-primary" name="button" type="submit" value="send_requery">
+                    Send message
+                  </button>
                 </div>
+
               </form>
             </div>
 
           </div>
         </div>
       </div>
+
     </td>
   </tr>
   {% endfor %}
   </tbody>
 </table>
-{% endif %} {% endblock %}
+{% endif %}
+{% endblock %}
 
 {% block js %}
 <script src="{{ url_for('static', filename='js/data_table.js') }}" type="text/javascript"></script>
