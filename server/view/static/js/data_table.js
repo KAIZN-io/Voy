@@ -1,6 +1,4 @@
-import $ from 'jquery';
 import TableFilter from 'tablefilter';
-
 
 
 $(document).ready(function () {
