@@ -1,13 +1,17 @@
 # write the db changes to the audittrail file
 import os
 import csv
-import arrow 
+import arrow
+import random
+import string
 from server.model.models import QC_Audit
 
 # the time stamp in the requeried format
 
+
 def time_stamp():
     return arrow.utcnow().format('DD-MMM-YYYY HH:mm:ss')
+
 
 def audit_trail(user, todo, id, category, old_value, new_value):
 
@@ -40,3 +44,9 @@ def audit_trail(user, todo, id, category, old_value, new_value):
             writer.writerow(audit_data)
 
     return "added to audit trail"
+
+# the password generator
+
+
+def passwd_generator(size=6, chars=string.ascii_uppercase + string.digits):
+    return ''.join(random.choice(chars) for _ in range(size))

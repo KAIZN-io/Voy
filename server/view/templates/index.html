@@ -1,228 +1,189 @@
-{% extends "base.html" %} {% block title %} QC-Database {% endblock %} {% block
-content %} {% if current_user.is_authenticated %}
+{% extends "base.html" %}
+
+{% block title %} QC-Database {% endblock %}
+
+{% block content %}
+
+{% if current_user.is_authenticated %}
+
 <div>
-    {%- for breadcrumb in breadcrumbs -%}
-    <a href="{{ breadcrumb.url }}">{{ breadcrumb.text }}</a>
-    {{ '/' if not loop.last }} {%- endfor -%}
+  {%- for breadcrumb in breadcrumbs -%}
+  <a href="{{ breadcrumb.url }}">{{ breadcrumb.text }}</a>
+  {{ '/' if not loop.last }}
+  {%- endfor -%}
 </div>
-<h1 class="title">QUERIES</h1>
 
-<br />
+<h1 class="title">
+  QUERIES
+</h1>
+
+<br/>
+
 <form method="post">
-    <div class="form-group">
-        <label for="type">Download Queries as :</label>
-        <select name="download" width="300px">
-            {% for download in Download_Type %}
-            <option value="{{ download }}" selected required>
-                {{ download }}
-            </option>
+  <div class="form-group">
 
-            {% endfor %}
-        </select>
-        <button type="submit" class="btn btn-primary" name="button" value="download_button">Download</button>
-    </div>
+    <label>
+      Download Queries as :
+
+      <select name="download" width="300px">
+        {% for download in Download_Type %}
+        <option required value="{{ download }}">
+          {{ download }}
+        </option>
+        {% endfor %}
+      </select>
+    </label>
+
+    <button class="btn btn-primary" name="button" type="submit" value="download_button">
+      Download
+    </button>
+  </div>
 </form>
 
-<table class="table" id="query_table" class="display">
-    <caption>
-        These were all your Queries
-    </caption>
-    <thead class="thead-light">
-        <tr>
-            <th scope="col">Status</th>
-            <th scope="col">Study ID</th>
-            <th scope="col">Scr No</th>
-            <th scope="col">Type</th>
-            <th scope="col">Visit</th>
-            <th scope="col">Page</th>
-            <th scope="col">Procedure</th>
-            <th scope="col">Description</th>
-            <th scope="col">Created on</th>
-            <th scope="col">Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for post in posts %}
-        <tr>
-            {% if post.corrected == 0
-            %}
-            <td>
-                <span class="badge badge-warning"> Requery </span>
-            </td>
-            {% else %}
-            <td>
-                <span class="badge badge-danger"> Open </span>
-            </td>
-            {% endif %} 
-            <td>{{ post.study_id }}</td>
-            <td>{{ post.scr_no }}</td>
-            {% if post.type == "ICF" %}
-            <td>
-                <span class="badge badge-info"> ICF </span>
-            </td>
-            {% elif post.type == "Source" %}
-            <td>
-                <span class="badge badge-secondary"> Source </span>
-            </td>
-            {% else %}
-            <td>{{ post.type }}</td>
-            {% endif %}
-            <td>{{ post.visit }}</td>
-            <td>{{ post.page }}</td>
-            <td>{{ post.procedure }}</td>
-            <td>{{ post.description }}</td>
-            <td>{{ post.created }}</td>
-            <td>
-                {% if current_user.role == "MedOps" %}
-                <i class="fas fa-check"></i>
-                <a href="/delete/{{post.id}}">done</a>
-                {% endif %}
-                <!-- <a href="/requery/{{post.id}}" class="far fa-comments"></a> -->
-                <a href="#" id="comment_on_modal"class="far fa-comments" data-toggle="modal" data-id="{{post.id}}" data-target="#requery_Modal" data-whatever="@mdo"></a>
-        
-                <script>
-                    $('#requery_Modal').on('show.bs.modal', function (event) {
-                        let button = $(event.relatedTarget) // Button that triggered the modal
-                        let query_id = button.data('id') // Extract info from data-* attributes
-                        // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-                        // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-                        let $modal = $(this);
+<table class="table" class="display" id="query_table">
 
-                        // set query id as value
-                        $modal.find('.query_id-data').val(query_id);
+  <caption>
+    These were all your Queries
+  </caption>
 
-                        let $title = $modal.find('.modal-title');
-                        let $content = $modal.find('.modal-body_1');
+  <thead class="thead-light">
+  <tr>
+    <th scope="col">Status</th>
+    <th scope="col">Study ID</th>
+    <th scope="col">Scr No</th>
+    <th scope="col">Type</th>
+    <th scope="col">Visit</th>
+    <th scope="col">Page</th>
+    <th scope="col">Procedure</th>
+    <th scope="col">Description</th>
+    <th scope="col">Created on</th>
+    <th scope="col">Actions</th>
+  </tr>
+  </thead>
 
-                        $title.text(`Requery Dialog | Query ID: ${query_id}`); 
-                        
-                        // NOTE: recognize the `` !
-                        // AJAX request -> load data for the modal 
-                        $data = $.get(`/modal_data/${query_id}`)
-                        // and push it into the modal 
-                        .done($data=> $content.html($data))
+  <tbody>
+  {% for post in posts %}
 
-                    })
-                </script>
-    
-                <!-- close the query if you have the right role permission -->
-                {% if current_user.role == "Admin" %}
-                <!-- overgive the edit page the id -->
-                <a href="{{ url_for('main.edit_data', id=post.id) }}" class="far fa-edit">edit</a>
-                <a href="/close/{{post.id}}" class="fas fa-check"></a>
-                {% endif %}
-                <div class="modal fade" id="requery_Modal" tabindex="-1" role="dialog" aria-labelledby="requery_ModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="requery_ModalLabel">Requery Dialog</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <!-- for the case, whether old comments are available -->
-                        <div class="modal-body_1">
-                        </div>
-                        <div class="modal-body">
-                            <form method="post">
-                                <!-- set the query_id to request it from python flask -->
-                                <input name="query_id"
-                                    class="query_id-data"
-                                    value="{{ request.form['query_id'] }}" 
-                                    readonly>
-                                </input>
-                                <div class="form-group">
-                                    <input type="text" name="comment"
-                                           placeholder="your comment" class="form-control"
-                                           value="{{ request.form['comment'] }}" required></input>
-                                  </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    <button type="submit" name="button" value="send_requery" class="btn btn-primary">Send message</button>
-                                </div>
-                            </form>
-                        </div>
-    
-                        </div>
-                    </div>
+  <tr>
+    {% if post.corrected == 0 %}
+    <td>
+      <span class="badge badge-warning"> Requery </span>
+    </td>
+    {% else %}
+    <td>
+      <span class="badge badge-danger"> Open </span>
+    </td>
+    {% endif %}
+
+    <td>{{ post.study_id }}</td>
+    <td>{{ post.scr_no }}</td>
+
+    {% if post.type == "ICF" %}
+    <td>
+      <span class="badge badge-info"> ICF </span>
+    </td>
+    {% elif post.type == "Source" %}
+    <td>
+      <span class="badge badge-secondary"> Source </span>
+    </td>
+    {% else %}
+    <td>{{ post.type }}</td>
+    {% endif %}
+
+    <td>{{ post.visit }}</td>
+    <td>{{ post.page }}</td>
+    <td>{{ post.procedure }}</td>
+    <td>{{ post.description }}</td>
+    <td>{{ post.created }}</td>
+
+    <td>
+
+      {% if current_user.role == "MedOps" %}
+      <i class="fas fa-check"></i>
+      <a href="/delete/{{post.id}}">done</a>
+      {% endif %}
+
+      <a
+        data-id="{{post.id}}"
+        data-target="#requery_Modal"
+        data-toggle="modal"
+        href="#" >
+        <i class="far fa-comments"></i>
+      </a>
+
+      <!-- close the query if you have the right role permission -->
+      {% if current_user.role == "Admin" %}
+      <!-- overgive the edit page the id -->
+      <a href="{{ url_for('main.edit_data', id=post.id) }}">
+        <i class="far fa-edit"></i>
+      </a>
+      <a href="/close/{{post.id}}">
+        <i class="fas fa-check"></i>
+      </a>
+      {% endif %}
+
+      <div
+        aria-hidden="true"
+        aria-labelledby="requery_ModalLabel"
+        class="modal fade"
+        id="requery_Modal"
+        role="dialog" >
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+
+            <div class="modal-header">
+              <h5 class="modal-title" id="requery_ModalLabel">Requery Dialog</h5>
+              <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+
+            <!-- for the case, whether old comments are available -->
+            <div class="modal-body_1">
+            </div>
+
+            <div class="modal-body">
+              <form method="post">
+
+                <input
+                  type="text"
+                  class="form-control"
+                  name="query_id"
+                  readonly
+                  value="{{ request.form['query_id'] }}" />
+
+                <input
+                  type="text"
+                  class="form-control"
+                  name="comment"
+                  placeholder="your comment"
+                  required
+                  value="{{ request.form['comment'] }}" />
+
+                <div class="modal-footer">
+                  <button class="btn btn-secondary" data-dismiss="modal" type="button">
+                    Close
+                  </button>
+                  <button class="btn btn-primary" name="button" type="submit" value="send_requery">
+                    Send message
+                  </button>
                 </div>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
+
+              </form>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </td>
+  </tr>
+  {% endfor %}
+  </tbody>
 </table>
+{% endif %}
+{% endblock %}
 
-<!-- <script src="{{ url_for('static', filename='js/bundle.js') }}"></script> -->
-<script src="{{ url_for('static', filename='js/node_modules/tablefilter/dist/tablefilter/tablefilter.js')}}"></script>
-
-<!-- IMPORTANT INFO: in js muss man src script ohne (!) content laden; deshalb seperat -->
-<!-- "If a script element has a src attribute, the content must be ignored, any other behaviour is non-conformant." -->
-<script type="text/javascript">
-    var filtersConfig = {
-        // instruct TableFilter location to import ressources from
-        base_path: "https://unpkg.com/tablefilter@latest/dist/tablefilter/",
-        // define the user help with 'help_instructions'
-        help_instructions: false,
-        // you can disable it
-        popup_filters: true,
-        // selecting with a drop-down
-        col_0: "select",
-        col_1: "checklist",
-        col_3: "select",
-        // no filter for the last column
-        col_9: "none",
-        alternate_rows: true,
-        // grid layout customisation
-        grid_layout: {
-            width: "1200px",
-            height: "400px",
-        },
-        mark_active_columns: {
-            // Mark active columns
-            highlight_column: true, // .. and with column header
-        },
-        rows_counter: { text: "Queries : " },
-        highlight_keywords: true,
-        col_widths: [
-            "90px",
-            "110px",
-            "100px",
-            "90px",
-            "100px",
-            "100px",
-            "100px",
-            "200px",
-            "160px",
-        ],
-        watermark: [
-            "status",
-            "study ID",
-            "Scr No",
-            "Type",
-            "Visit",
-            "Page",
-            "Procedure",
-            "Description",
-            "Created on",
-        ],
-
-        /** Bootstrap integration */
-
-        // aligns filter at cell bottom when Bootstrap is enabled
-        // filters_cell_tag: "th",
-
-        // allows Bootstrap table styling
-        themes: [
-            {
-                name: "transparent",
-            },
-        ],
-    };
-    var tf = new TableFilter("query_table", filtersConfig);
-    tf.init();
-</script>
-
-{% endif %} {% endblock %}
-
-
-
+{% block js %}
+<script src="{{ url_for('static', filename='js/index.js') }}" type="text/javascript"></script>
+{% endblock %}

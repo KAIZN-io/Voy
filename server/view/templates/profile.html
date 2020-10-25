@@ -3,15 +3,15 @@
 {% extends "base.html" %}
 
 {% block title %}
-    Mein Profile
+Mein Profile
 {% endblock %}
 
 {% block content %}
 <div>
-    {%- for breadcrumb in breadcrumbs -%}
-        <a href="{{ breadcrumb.url }}">{{ breadcrumb.text }}</a>
-        {{ '/' if not loop.last }}
-    {%- endfor -%}
+  {%- for breadcrumb in breadcrumbs -%}
+  <a href="{{ breadcrumb.url }}">{{ breadcrumb.text }}</a>
+  {{ '/' if not loop.last }}
+  {%- endfor -%}
 </div>
 <h1 class="title">
   Welcome, {{ name }}!
@@ -20,33 +20,35 @@
 <div class="column is-4 is-offset-4">
   <h3 class="title">Change Password</h3>
   <div class="box">
-      {% with messages = get_flashed_messages() %}
-      {% if messages %}
-          <div class="notification is-danger">
-              {{ messages[0] }}
-          </div>
-      {% endif %}
-      {% endwith %}
-      <form method="POST" action="/profile">
-        <div class="form-group">
-            <div class="control">
-                <input class="input is-large" type="password" name="oldpassword" placeholder="Your Old Password" autofocus="" required>
-            </div>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="notification is-danger">
+      {{ messages[0] }}
+    </div>
+    {% endif %}
+    {% endwith %}
+    <form action="/profile" method="POST">
+      <div class="form-group">
+        <div class="control">
+          <input autofocus="" class="input is-large" name="oldpassword" placeholder="Your Old Password" required
+                 type="password">
         </div>
-          <div class="field">
-              <div class="control">
-                  <input class="input is-large" type="password" name="password1" placeholder="Your New Password" autofocus="" required>
-              </div>
-          </div>
-          <div class="field">
-              <div class="control">
-                  <input class="input is-large" type="password" name="password2" placeholder="Again your new Password" required>
-              </div>
-          </div>
-          <br>
-          <div class="field">
-          <button class="button is-block is-info is-large is-fullwidth">Change Password</button>
-      </form>
+      </div>
+      <div class="field">
+        <div class="control">
+          <input autofocus="" class="input is-large" name="password1" placeholder="Your New Password" required
+                 type="password">
+        </div>
+      </div>
+      <div class="field">
+        <div class="control">
+          <input class="input is-large" name="password2" placeholder="Again your new Password" required type="password">
+        </div>
+      </div>
+      <br>
+      <div class="field">
+        <button class="button is-block is-info is-large is-fullwidth">Change Password</button>
+    </form>
   </div>
 </div>
 {% endblock %}
