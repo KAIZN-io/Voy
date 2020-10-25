@@ -13,7 +13,7 @@
     "url": "https://gitlab.com/piotraschke.janniklas/flask_auth_app/issues"
   },
   "scripts": {
-    "build": "parcel build --no-cache ./server/view/static/img/* ./server/view/static/js/*.js ./server/view/static/css/*.scss --out-dir ./server/view/static/dist",
+    "build": "parcel build --no-cache --no-minify ./server/view/static/img/* ./server/view/static/js/*.js ./server/view/static/css/*.scss --out-dir ./server/view/static/dist",
     "watch": "parcel watch --no-cache ./server/view/static/img/* ./server/view/static/js/*.js ./server/view/static/css/*.scss --out-dir ./server/view/static/dist"
   },
   "dependencies": {
