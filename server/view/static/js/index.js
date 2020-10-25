@@ -12,7 +12,7 @@ $('#requery_Modal').on('show.bs.modal', function (event) {
   let $content = $modal.find('.modal-body_1');
 
   // Set query id as value
-  $modal.find('input.query_id').val(query_id);
+  $modal.find('input[name="query_id"]').val(query_id);
 
   // Update the modal Title
   $title.text(`Requery Dialog | Query ID: ${query_id}`);
@@ -33,7 +33,7 @@ $(document).ready(function () {
     // define the user help with 'help_instructions'
     help_instructions: false,
     // you can disable it
-    popup_filters: true,
+    popup_filters: false,
     // selecting with a drop-down
     col_0: "select",
     col_1: "checklist",

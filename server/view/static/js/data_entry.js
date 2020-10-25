@@ -25,7 +25,6 @@ $(document).ready(function () {
     document.getElementById("submit_table").onclick = function () {
       // Disable form submissions if there are invalid fields
       'use strict';
-      window.addEventListener('load', function () {
         // Get the forms we want to add validation styles to
         var forms = document.getElementsByClassName('needs-validation');
         // Loop over them and prevent submission
@@ -38,7 +37,6 @@ $(document).ready(function () {
             form.classList.add('was-validated');
           }, false);
         });
-      }, false);
     }();
   }
 
