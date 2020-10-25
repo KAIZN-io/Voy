@@ -18,9 +18,9 @@ $('#requery_Modal').on('show.bs.modal', function (event) {
   $title.text(`Requery Dialog | Query ID: ${query_id}`);
 
   // AJAX request -> load data for the modal
-  $data = $.get(`/modal_data/${query_id}`)
+ $.get(`/modal_data/${query_id}`)
     // and push it into the modal
-    .done($data => $content.html($data))
+    .done(data => $content.html(data));
 })
 
 
