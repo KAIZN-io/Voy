@@ -1,3 +1,18 @@
+# About this project
+
+This project was designed to fulfill the requirements of a compliant software in EU | Life Science.
+
+An overview:
+
+-   build with: Python Flask
+-   built-in database: SQLite
+-   software design pattern: Model-View-Controller (MVC)
+-   runs inside a virtual environment: `nodeenv` (JS / Node.js) inside of `virtualenv` (Python)
+-   runs offline: `npm` downloads the JS packages and (????) bundles them, that they are executable in the project
+-   deploy it on a server with: `gunicorn`
+-   message broker: Apache ActiveMQ (AMQP: AMQP 1.0 protocol)
+  -   AMQP communications with the broker: qpid-proton (Python)
+
 ## Getting started on Mac
 1. Create a working virtualenv with `make venv`
 2. Create some required structure with `make extra_folders`
