@@ -8,7 +8,7 @@ An overview:
 -   built-in database: SQLite
 -   software design pattern: Model-View-Controller (MVC)
 -   runs inside a virtual environment: `nodeenv` (JS / Node.js) inside of `virtualenv` (Python)
--   runs offline: `npm` downloads the JS packages and (????) bundles them, that they are executable in the project
+-   runs offline: `npm` downloads the JS packages and `parcel.js` bundles them, that they are executable in the project
 -   deploy it on a server with: `gunicorn`
 -   message broker: Apache ActiveMQ (AMQP: AMQP 1.0 protocol)
   -   AMQP communications with the broker: qpid-proton (Python)
@@ -35,7 +35,7 @@ An overview:
 
 ## Asset handling
 ### Install npm packages
-1. Activate venv with `. venv/bin/activate`
+1. Activate venv with `. venv/bin/activate`  
 1.5. Only ones: To activate the **node** virtual environment along with venv in the future: `nodeenv -p`
 2. Install npm package with `npm install -g {PACKAGE NAME}`
 ### Develop JS / CSS
