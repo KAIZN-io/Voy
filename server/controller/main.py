@@ -105,7 +105,12 @@ def data_entry():
         page = request.form.getlist('row[][page]')
         visit = request.form.getlist('row[][visit]')
         created = time_stamp()
-        logger.debug(created)
+
+        # log into the console
+        # logger.consoleHandler(created)
+        # NOTE: should log into a log file with a json format
+        logger(created)
+
         for i in range(len(todo_name)):
 
             blog_entry = QC_Check(procedure=title[i], type=type, corrected=1, close=1, description=description[i], checker=current_user.abbrev,
