@@ -30,7 +30,7 @@ extra steps, if you use **MySQL** as your database:
 1.2. type into your terminal: `export PATH=$PATH:/usr/local/mysql/bin`  
 1.3. login as root user with `mysql -u root -p`  
 1.4. create the database with `CREATE DATABASE db;`  
-1.5. create dummy user with `CREATE USER ‚jnp‘@‚localhost' IDENTIFIED BY ‚jnp‘`
+1.5. create dummy user with `CREATE USER ‚jnp‘@‚localhost' IDENTIFIED BY ‚jnp‘;`
 
 2. Open the Flask shell with `flask shell`
 3. Get the model schema with `from server.model.models import db`
