@@ -58,7 +58,7 @@ class DB_User(UserMixin, db.Model):
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(100))
     system_passwd = db.Column(db.String(100))
-    abbrev = db.Column(db.Text, unique=True)
+    abbrev = db.Column(db.String(5), unique=True)
     role = db.Column(db.Text)
     active = db.Column(db.Integer)
 
@@ -70,7 +70,7 @@ class User_Management(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(100), unique=True)
     action = db.Column(db.Text)
-    abbrev = db.Column(db.Text, unique=True)
+    abbrev = db.Column(db.String(5), unique=True)
     role = db.Column(db.Text)
     date_time = db.Column(db.Text)
     change_by = db.Column(db.Text)
