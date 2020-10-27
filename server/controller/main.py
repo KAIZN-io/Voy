@@ -10,11 +10,12 @@ import time
 from server.model.models import QC_Check, DB_User, QC_Audit, QC_Requery
 from server.controller.amqp.amqp_client import request_amqp
 from server.controller.compliance import audit_trail, time_stamp
-from server import db
+from server import db, logger
 from sqlalchemy import inspect
 
 import pdfkit
 import sqlite3
+
 
 
 main = Blueprint('main', __name__)
@@ -104,7 +105,7 @@ def data_entry():
         page = request.form.getlist('row[][page]')
         visit = request.form.getlist('row[][visit]')
         created = time_stamp()
-
+        logger.debug(created)
         for i in range(len(todo_name)):
 
             blog_entry = QC_Check(procedure=title[i], type=type, corrected=1, close=1, description=description[i], checker=current_user.abbrev,

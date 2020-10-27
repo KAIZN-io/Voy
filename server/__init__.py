@@ -9,17 +9,11 @@ from flask_breadcrumbs import Breadcrumbs, register_breadcrumb
 import sqlite3
 from contextlib import closing
 
-# DATABASE = 'flaskr.db'
+import logging.config
 
-# def connect_db():
-#     return sqlite3.connect(app.config[’DATABASE’])
-
-
-# def init_db():
-#     with closing(connect_db()) as db:
-#         with app.open_resource(’schema.sql’, mode=’r’) as f:
-#             db.cursor().executescript(f.read())
-#         db.commit()
+logging.config.fileConfig('logging.conf',
+                          disable_existing_loggers=False)
+logger = logging.getLogger(__name__)
 
 
 # init SQLAlchemy so we can use it later in our models
@@ -27,13 +21,14 @@ db = SQLAlchemy()
 
 
 def create_app():
-    app = Flask(__name__, template_folder='view/templates', static_url_path='', static_folder='view/static/dist')
+    app = Flask(__name__, template_folder='view/templates',
+                static_url_path='', static_folder='view/static/dist')
 
     # import the configuration from the file config.py
     app.config.from_object('config.DevelopmentConfig')
     # Initialize Flask-Breadcrumbs
     Breadcrumbs(app=app)
-    
+
     db.init_app(app)
 
     login_manager = LoginManager()
