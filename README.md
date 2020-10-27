@@ -25,9 +25,9 @@ An overview:
 ### For creating and initiating the database
 1. Activate venv with `. venv/bin/activate`   
 
-extra steps, if you use **MySQL** as your database:
-1.1. download a [MySQL Server](https://dev.mysql.com/downloads/mysql/) 
-1.2. type in your terminal: `export PATH=$PATH:/usr/local/mysql/bin`    
+extra steps, if you use **MySQL** as your database:  
+1.1. download a [MySQL Server](https://dev.mysql.com/downloads/mysql/)  
+1.2. type into your terminal: `export PATH=$PATH:/usr/local/mysql/bin`  
 1.3. login as root user with `mysql -u root -p`  
 1.4. create the database with `CREATE DATABASE db;`  
 1.5. create dummy user with `CREATE USER ‚jnp‘@‚localhost' IDENTIFIED BY ‚jnp‘`
