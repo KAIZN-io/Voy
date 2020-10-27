@@ -8,7 +8,8 @@ class Config(object):
     SECRET_KEY = '9OLWxND4o83j4K4iuopO'
     # sqlite:///database.db
     # database location
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///model/db.sqlite'
+    # SQLALCHEMY_DATABASE_URI = 'sqlite:///model/db.sqlite'
+    SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://jnp:jnp@localhost/db'
 
     # set it false, if you dont use the Flask-SQLAlchemy event system
     SQLALCHEMY_TRACK_MODIFICATIONS = False
@@ -19,7 +20,7 @@ class Config(object):
     # SQLALCHEMY_DATABASE_URI = 'sqlite:///database.db'
 
 # class ProductionConfig(Config):
-    """Uses production database server."""
+#     """Uses production database server."""
 
 #     DATABASE_URI = 'mysql://user@localhost/foo'
 

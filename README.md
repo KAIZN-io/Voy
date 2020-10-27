@@ -23,7 +23,15 @@ An overview:
 7. Open http://localhost:5000/ 
 
 ### For creating and initiating the database
-1. Activate venv with `. venv/bin/activate`
+1. Activate venv with `. venv/bin/activate`   
+
+extra steps, if you use **MySQL** as your database:
+1.1. download a [MySQL Server](https://dev.mysql.com/downloads/mysql/) 
+1.2. type in your terminal: `export PATH=$PATH:/usr/local/mysql/bin`    
+1.3. login as root user with `mysql -u root -p`  
+1.4. create the database with `CREATE DATABASE db;`  
+1.5. create dummy user with `CREATE USER ‚jnp‘@‚localhost' IDENTIFIED BY ‚jnp‘`
+
 2. Open the Flask shell with `flask shell`
 3. Get the model schema with `from server.model.models import db`
 4. Create the database and the tables with `db.create_all()`
