@@ -1,27 +1,36 @@
 version: 1
 
-disable_existing_loggers: False
+disable_existing_loggers: True
 
+# the desired logging formats 
+# specify the design here and 
+# call it in the 'handlers' over 'formatter:'
 formatters:
-  standard:  
-    format: '%(asctime)s %(name)s %(levelname)s %(message)s'
   brief:
     format: '%(message)s'
-  default:
+  cro_qc:
     format: '%(asctime)s %(levelname)-8s [%(name)s] %(message)s'
-    datefmt: '%Y-%m-%d %H:%M:%S'
+    datefmt: '%d-%b-%Y %H:%M:%S'
+
 
 handlers:
   console:
     class: logging.StreamHandler
-    formatter: default
+    formatter: brief
     level: INFO
-  file:
+    stream: ext://sys.stdout
+  qc_log:
     class : logging.handlers.RotatingFileHandler
-    formatter: default 
-    level: INFO
+    formatter: cro_qc 
+    level: DEBUG
     filename: server/.log_files/qc.log
     maxBytes: 1024
     backupCount: 3
 
+root:
+  handlers: [console, qc_log]
+  level: WARN
 
+loggers:
+  app:
+    level: DEBUG

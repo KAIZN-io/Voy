@@ -5,7 +5,7 @@ from flask_breadcrumbs import Breadcrumbs, register_breadcrumb, default_breadcru
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
-from server import db
+from server import db, logger
 from server.model.models import DB_User, User_Management
 from server.controller.compliance import audit_trail, time_stamp, passwd_generator
 
