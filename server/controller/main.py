@@ -109,7 +109,7 @@ def data_entry():
         # log into the console
         # logger.consoleHandler(created)
         # NOTE: should log into a log file with a json format
-        logger(created)
+        logger.file(created)
 
         for i in range(len(todo_name)):
 

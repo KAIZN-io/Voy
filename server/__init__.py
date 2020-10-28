@@ -9,12 +9,20 @@ from flask_breadcrumbs import Breadcrumbs, register_breadcrumb
 import sqlite3
 from contextlib import closing
 
+import yaml
 import logging.config
 
-logging.config.fileConfig('logging.conf',
-                          disable_existing_loggers=False)
-logger = logging.getLogger(__name__)
+# logging.config.fileConfig('logging.conf',
+#                           disable_existing_loggers=False)
+# logging.config.dictConfig('logging.yml')
 
+# logger = logging.getLogger(__name__)
+
+with open('logging.yaml', 'r') as stream:
+    yamld = yaml.load(stream)
+    logging.config.dictConfig(yamld)
+
+logger = logging.getLogger(__name__)
 
 # init SQLAlchemy so we can use it later in our models
 db = SQLAlchemy()
