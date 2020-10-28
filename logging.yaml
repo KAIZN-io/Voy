@@ -6,10 +6,10 @@ formatters:
   brief:
     format: "%(message)s"
   cro_qc:
-    format: "%(asctime)s %(levelname)-8s [%(name)s] %(message)s"
+    format: "[%(study)s] %(asctime)s %(levelname)-8s [%(name)s] %(message)s"
     datefmt: "%d-%b-%Y %H:%M:%S"
 
-# handlers nehmen die Informationen der Logger auf und senden sie weiter.
+    # handlers nehmen die Informationen der Logger auf und senden sie weiter.
 handlers:
   console:
     class: logging.StreamHandler

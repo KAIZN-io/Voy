@@ -5,6 +5,7 @@ import arrow
 import random
 import string
 from server.model.models import QC_Audit
+from server import to_qc_file
 
 # the time stamp in the requeried format
 
@@ -27,6 +28,10 @@ def audit_trail(user, todo, id, category, old_value, new_value):
 
     # NOTE: semi good solution for the extra data from sql alchemy
     audit_data.pop('_sa_instance_state', None)
+
+    # !NOTE: extra logging message -> create a dict an pass it into the info() commit
+    extra_logging = {'study': '1123'}
+    to_qc_file.info("hello", extra=extra_logging)
 
     if todo == "edit":
         # write to file
