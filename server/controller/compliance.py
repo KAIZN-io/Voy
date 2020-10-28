@@ -30,8 +30,8 @@ def audit_trail(user, todo, id, category, old_value, new_value):
     audit_data.pop('_sa_instance_state', None)
 
     # !NOTE: extra logging message -> create a dict an pass it into the info() commit
-    extra_logging = {'study': '1123'}
-    to_qc_file.info("hello", extra=extra_logging)
+
+    to_qc_file.info(audit_data['new_value'], extra=audit_data)
 
     if todo == "edit":
         # write to file

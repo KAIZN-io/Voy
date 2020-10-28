@@ -51,8 +51,8 @@ def login_post():
 
     # if the above cases check passes, then we know the user has the right credentials
     login_user(user)
-    to_console.error('hey u')
-    to_qc_file.info('%s logged in successfully', abbrev)
+
+    to_console.info('logged in successfully')
 
     # After verify the validity of abbrev and password
     session.permanent = True
