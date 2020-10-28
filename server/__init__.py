@@ -22,7 +22,8 @@ with open('logging.yaml', 'r') as stream:
     yamld = yaml.load(stream)
     logging.config.dictConfig(yamld)
 
-logger = logging.getLogger(__name__)
+to_qc_file = logging.getLogger('to_qc_file')
+to_console = logging.getLogger('to_console')
 
 # init SQLAlchemy so we can use it later in our models
 db = SQLAlchemy()

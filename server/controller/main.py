@@ -10,7 +10,7 @@ import time
 from server.model.models import QC_Check, DB_User, QC_Audit, QC_Requery
 from server.controller.amqp.amqp_client import request_amqp
 from server.controller.compliance import audit_trail, time_stamp
-from server import db, logger
+from server import db
 from sqlalchemy import inspect
 
 import pdfkit
@@ -106,11 +106,6 @@ def data_entry():
         visit = request.form.getlist('row[][visit]')
         created = time_stamp()
 
-        # log into the console
-        # logger.consoleHandler(created)
-        # NOTE: should log into a log file with a json format
-        # logger.console(created)
-        # logger.file()
         for i in range(len(todo_name)):
 
             blog_entry = QC_Check(procedure=title[i], type=type, corrected=1, close=1, description=description[i], checker=current_user.abbrev,

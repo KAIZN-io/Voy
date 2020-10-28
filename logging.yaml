@@ -1,18 +1,15 @@
 version: 1
 
-disable_existing_loggers: True
-
-# the desired logging formats 
-# specify the design here and 
-# call it in the 'handlers' over 'formatter:'
+# the desired logging formats
+# specify the design here and call it in the 'handlers' over 'formatter:'
 formatters:
   brief:
-    format: '%(message)s'
+    format: "%(message)s"
   cro_qc:
-    format: '%(asctime)s %(levelname)-8s [%(name)s] %(message)s'
-    datefmt: '%d-%b-%Y %H:%M:%S'
+    format: "%(asctime)s %(levelname)-8s [%(name)s] %(message)s"
+    datefmt: "%d-%b-%Y %H:%M:%S"
 
-
+# handlers nehmen die Informationen der Logger auf und senden sie weiter.
 handlers:
   console:
     class: logging.StreamHandler
@@ -20,17 +17,30 @@ handlers:
     level: INFO
     stream: ext://sys.stdout
   qc_log:
-    class : logging.handlers.RotatingFileHandler
-    formatter: cro_qc 
+    class: logging.FileHandler
+    formatter: cro_qc
     level: DEBUG
     filename: server/.log_files/qc.log
-    maxBytes: 1024
-    backupCount: 3
 
+# this will be the configuration for the root logger.
+# Processing of the configuration will be as for any logger, except
+# that the propagate setting will not be applicable.
 root:
   handlers: [console, qc_log]
   level: WARN
+  propagate: false
 
+# Logger zeichnen die Aktionen während eines Programmdurchlaufs auf.
+# Sie treten nicht direkt als Instanz auf, sondern man ruft sie mit der Funktion
+# logging.getLogger(Loggername) auf. Weisen Sie dem Logger einen Namen zu, um
+# beispielsweise Hierarchien strukturiert darzustellen.
 loggers:
-  app:
+  to_console:
     level: DEBUG
+    handlers: [console]
+    propagate: false
+
+  to_qc_file:
+    level: DEBUG
+    handlers: [qc_log]
+    propagate: false

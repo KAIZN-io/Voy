@@ -5,7 +5,7 @@ from flask_breadcrumbs import Breadcrumbs, register_breadcrumb, default_breadcru
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
-from server import db, logger
+from server import db, to_qc_file, to_console
 from server.model.models import DB_User, User_Management
 from server.controller.compliance import audit_trail, time_stamp, passwd_generator
 
@@ -51,8 +51,8 @@ def login_post():
 
     # if the above cases check passes, then we know the user has the right credentials
     login_user(user)
-
-    current_app.logger.info('%s logged in successfully', abbrev)
+    to_console.error('hey u')
+    to_qc_file.info('%s logged in successfully', abbrev)
 
     # After verify the validity of abbrev and password
     session.permanent = True
