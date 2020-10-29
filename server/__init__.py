@@ -18,7 +18,7 @@ import logging.config
 
 # logger = logging.getLogger(__name__)
 
-with open('logging.yaml', 'r') as stream:
+with open('config/logging.yaml', 'r') as stream:
     yamld = yaml.load(stream)
     logging.config.dictConfig(yamld)
 
