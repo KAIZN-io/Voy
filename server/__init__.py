@@ -5,7 +5,7 @@ from flask_login import LoginManager
 import logging
 from flask_breadcrumbs import Breadcrumbs, register_breadcrumb
 
-
+import os
 import sqlite3
 from contextlib import closing
 
@@ -31,10 +31,15 @@ db = SQLAlchemy()
 
 def create_app():
     app = Flask(__name__, template_folder='view/templates',
-                static_url_path='', static_folder='view/static/dist')
+                static_url_path='', static_folder='view/static/dist',
+                instance_relative_config=True)
 
     # import the configuration from the file config.py
-    app.config.from_object('config.DevelopmentConfig')
+    # app.config.from_object('config.DevelopmentConfig')
+    app.config.from_object('config.default')
+    app.config.from_pyfile('config.py')
+    # app.config.from_object("config."+os.getenv("ENV"))
+
     # Initialize Flask-Breadcrumbs
     Breadcrumbs(app=app)
 

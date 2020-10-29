@@ -19,6 +19,7 @@ docs/_build/
 node_modules/
 build
 *.tgz
+instance/ 
 
 # Coverage reports
 htmlcov/

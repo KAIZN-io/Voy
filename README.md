@@ -15,7 +15,7 @@ An overview:
 
 ## Getting started on Mac
 1. Create a working virtualenv with `make venv`
-2. Create some required structure with `make extra_folders`
+2. Create some required structure with `make deployment`
 3. Temporary: Install a pdf converter with `brew cask install wkhtmltopdf`
 4. Install node modules with `npm install`
 5. Bundle assets with `npm run build`
@@ -43,7 +43,7 @@ extra steps, if you use **MySQL** as your database:
 
 ## Configure the app
 - the logging style is inside `logging.yaml`
-
+- the app default env is "development". Set it to "production" with `export FLASK_ENV=production` before running it with `flask run`
 ## Asset handling
 ### Install npm packages
 1. Activate venv with `. venv/bin/activate`  
