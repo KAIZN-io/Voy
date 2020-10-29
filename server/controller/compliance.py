@@ -28,6 +28,7 @@ def audit_trail(user, todo, id, category, old_value, new_value):
 
     # NOTE: semi good solution for the extra data from sql alchemy
     audit_data.pop('_sa_instance_state', None)
+    audit_data.pop('date_time', None)
 
     # !NOTE: extra logging message -> create a dict an pass it into the info() commit
 

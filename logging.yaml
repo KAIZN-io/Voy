@@ -6,7 +6,8 @@ formatters:
   brief:
     format: "%(message)s"
   cro_qc:
-    format: "[%(id)s] %(category)s %(asctime)s %(user)s %(old_value)s %(message)s"
+    format: "[%(id)s] %(category)s %(asctime)s %(user)s %(old_value)s %(new_value)s"
+    class: pythonjsonlogger.jsonlogger.JsonFormatter
     datefmt: "%d-%b-%Y %H:%M:%S"
 
     # handlers nehmen die Informationen der Logger auf und senden sie weiter.
