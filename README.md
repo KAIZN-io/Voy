@@ -41,6 +41,9 @@ extra steps, if you use **MySQL** as your database:
 2. Go to the AMQP server with `cd server/controller/amqp`
 3. Run the server with `python3 amqp_server.py`
 
+## Configure the app
+- the logging style is inside `logging.yaml`
+
 ## Asset handling
 ### Install npm packages
 1. Activate venv with `. venv/bin/activate`  
