@@ -25,12 +25,12 @@ handlers:
     class: logging.FileHandler
     formatter: cro_qc
     level: DEBUG
-    filename: server/.log_files/qc.log
+    filename: server/log_files/qc.log
   user_log:
     class: logging.FileHandler
     formatter: cro_user
     level: INFO
-    filename: server/.log_files/app_user.log
+    filename: server/log_files/app_user.log
 
 # this will be the configuration for the root logger.
 # Processing of the configuration will be as for any logger, except
