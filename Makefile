@@ -6,13 +6,13 @@ venv:
 	source venv/bin/activate; \
 	pip3 install -r requirements.txt;
 
-.PHONY: extra_folders
-extra_folders: create_folder
-	touch server/.log_files/data_log_qc.csv server/.log_files/data_log_roles.csv \
-	server/.log_files/data_log_user.csv
+.PHONY: deployment
+deployment: create_folder
+	mkdir instance; \
+	touch instance/config.py;
 
 # NOTE: Does not work yet 
-create_folder:
+create_folder: 
 ifneq ($(wildcard /server/.log_files),)
 	@echo "Found server/.log_files."
 else

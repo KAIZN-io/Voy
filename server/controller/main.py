@@ -2,25 +2,26 @@ from flask import Blueprint, render_template, request, flash, redirect, url_for,
 from flask_login import login_required, current_user
 from flask_breadcrumbs import Breadcrumbs, register_breadcrumb, default_breadcrumb_root
 
-import csv
-import os
-import pandas as pd
-import time
-
 from server.model.models import QC_Check, DB_User, QC_Audit, QC_Requery
 from server.controller.amqp.amqp_client import request_amqp
 from server.controller.compliance import audit_trail, time_stamp
 from server import db
-from sqlalchemy import inspect
 
-import pdfkit
-import sqlite3
+from sqlalchemy import inspect
+import time
 
 
 main = Blueprint('main', __name__)
 
 # set main blueprint as a root
 default_breadcrumb_root(main, '.')
+
+
+"""
+this file handles the qc data 
+
+"""
+
 
 # transform the query results to a readable dict
 
@@ -65,9 +66,10 @@ def index():
 
         elif request.form['button'] == 'send_requery':
             comment = request.form['comment']
-            query_id = request.form['query_id'] 
+            query_id = request.form['query_id']
 
-            new_comment = QC_Requery(abbrev=current_user.abbrev, date_time=time_stamp(), new_comment = comment, query_id=query_id)
+            new_comment = QC_Requery(abbrev=current_user.abbrev, date_time=time_stamp(
+            ), new_comment=comment, query_id=query_id)
 
             db.session.add(new_comment)
             db.session.commit()
@@ -139,6 +141,7 @@ def requery_query(id):
 
     return redirect('/')
 
+
 @main.route('/modal_data/<int:query_id>')
 @login_required
 def modal_data(query_id):
@@ -146,7 +149,8 @@ def modal_data(query_id):
     # QC_Check.query.filter_by(id=id).update({"corrected": 1})
     # db.session.commit()
 
-    old_comment = db.session.query(QC_Requery).filter_by(query_id=query_id).order_by(QC_Requery.id.desc()).first()
+    old_comment = db.session.query(QC_Requery).filter_by(
+        query_id=query_id).order_by(QC_Requery.id.desc()).first()
 
     return render_template('modal_data.html', post=old_comment)
 

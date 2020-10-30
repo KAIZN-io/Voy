@@ -1,0 +1,61 @@
+version: 1
+
+# the desired logging formats
+# specify the design here and call it in the 'handlers' over 'formatter:'
+formatters:
+  brief:
+    format: "%(message)s"
+  cro_qc:
+    format: "[%(id)s] %(asctime)s %(category)s %(user)s %(old_value)s %(new_value)s"
+    class: pythonjsonlogger.jsonlogger.JsonFormatter
+    datefmt: "%d-%b-%Y %H:%M:%S"
+  cro_user:
+    format: "[%(asctime)s] %(email)s %(abbrev)s %(role)s %(action)s %(change_by)s"
+    class: pythonjsonlogger.jsonlogger.JsonFormatter
+    datefmt: "%d-%b-%Y %H:%M:%S"
+
+# handlers nehmen die Informationen der Logger auf und senden sie weiter.
+handlers:
+  console:
+    class: logging.StreamHandler
+    formatter: brief
+    level: INFO
+    stream: ext://sys.stdout
+  qc_log:
+    class: logging.FileHandler
+    formatter: cro_qc
+    level: DEBUG
+    filename: server/.log_files/qc.log
+  user_log:
+    class: logging.FileHandler
+    formatter: cro_user
+    level: INFO
+    filename: server/.log_files/app_user.log
+
+# this will be the configuration for the root logger.
+# Processing of the configuration will be as for any logger, except
+# that the propagate setting will not be applicable.
+root:
+  handlers: [console, qc_log, user_log]
+  level: WARN
+  propagate: false
+
+# Logger zeichnen die Aktionen während eines Programmdurchlaufs auf.
+# Sie treten nicht direkt als Instanz auf, sondern man ruft sie mit der Funktion
+# logging.getLogger(Loggername) auf. Weisen Sie dem Logger einen Namen zu, um
+# beispielsweise Hierarchien strukturiert darzustellen.
+loggers:
+  to_console:
+    level: DEBUG
+    handlers: [console]
+    propagate: false
+
+  to_qc_file:
+    level: DEBUG
+    handlers: [qc_log]
+    propagate: false
+
+  to_user_file:
+    level: DEBUG
+    handlers: [user_log]
+    propagate: false
