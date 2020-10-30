@@ -24,6 +24,7 @@ with open('config/logging.yaml', 'r') as stream:
 
 to_qc_file = logging.getLogger('to_qc_file')
 to_console = logging.getLogger('to_console')
+to_user_file = logging.getLogger('to_user_file')
 
 # init SQLAlchemy so we can use it later in our models
 db = SQLAlchemy()

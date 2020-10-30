@@ -5,7 +5,7 @@ from flask_breadcrumbs import Breadcrumbs, register_breadcrumb, default_breadcru
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
-from server import db, to_qc_file, to_console
+from server import db, to_qc_file, to_console, to_user_file
 from server.model.models import DB_User, User_Management
 from server.controller.compliance import audit_trail, time_stamp, passwd_generator
 
@@ -73,9 +73,24 @@ def user_management():
 @auth.route('/delete_user/<int:id>')
 @login_required
 def delete_user(id):
+    # query the data from the user 
+    user_management = DB_User.query.filter_by(id=id).one().__dict__
+
+    # delete the user from the db
     DB_User.query.filter_by(id=id).delete()
     db.session.commit()
-    current_app.logger.warning('%s deleted a user', current_user.abbrev)
+
+    # document the deletion to the log file 
+    # delete unimportend data before that
+    user_management.pop('date_time', None)
+    user_management.pop('system_passwd', None)
+    user_management.pop('password', None)
+    user_management.pop('active', None)
+    user_management.pop('id', None)
+    user_management['change_by']=current_user.abbrev
+    user_management['action'] = 'deleted'
+
+    to_user_file.info(user_management['change_by'], extra=user_management)
 
     return redirect(url_for('auth.user_management'))
 
@@ -111,9 +126,12 @@ def admin_signup_post():
     user_management = User_Management(
         email=email, abbrev=abbreviation, role=role, change_by="Initial Signup", date_time=time_stamp(), action="added")
 
-    # add the new user to the database
-    db.session.add(user_management)
-    db.session.commit()
+    audit_data = user_management.__dict__
+
+    # NOTE: semi good solution for the extra data from sqlalchemy
+    audit_data.pop('date_time', None)
+
+    to_user_file.info(audit_data['change_by'], extra=audit_data)
 
     return redirect(url_for('main.index'))
 
@@ -155,9 +173,16 @@ def add_user_post():
     user_management = User_Management(
         email=email, abbrev=abbreviation, role=role, change_by=current_user.abbrev, date_time=time_stamp(), action="added")
 
+    audit_data = user_management.__dict__
+
+    # NOTE: semi good solution for the extra data from sqlalchemy
+    audit_data.pop('date_time', None)
+
+    to_user_file.info(audit_data['change_by'], extra=audit_data)
+
     # add the new user to the database
-    db.session.add(user_management)
-    db.session.commit()
+    # db.session.add(user_management)
+    # db.session.commit()
 
     return redirect(url_for('auth.user_management'))
 
