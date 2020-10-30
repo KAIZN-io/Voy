@@ -19,8 +19,13 @@ An overview:
 3. Temporary: Install a pdf converter with `brew cask install wkhtmltopdf`
 4. Install node modules with `npm install`
 5. Bundle assets with `npm run build`
-6. Start the server with `flask run`
-7. Open http://localhost:5000/ 
+6. Open instance/config.py and enter some data, that look like this:
+```
+SECRET_KEY = 'secretedPassword'
+SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://<user>:<password>@<host>/db'
+```
+7. Start the server with `flask run`
+8. Open http://localhost:5000/ 
 
 ### For creating and initiating the database
 1. Activate venv with `. venv/bin/activate`   
