@@ -31,7 +31,7 @@ htmlcov/
 c_test/
 notes.txt
 # Compliance data
-.log_files/
+*.log
 *.sqlite
 *.xlsx
 query_DataFrame.pdf 
