@@ -3,33 +3,46 @@ from flask import current_app, g
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 import logging
+from flask_breadcrumbs import Breadcrumbs, register_breadcrumb
 
-
+import os
 import sqlite3
 from contextlib import closing
 
-# DATABASE = 'flaskr.db'
+import yaml
+import logging.config
 
-# def connect_db():
-#     return sqlite3.connect(app.config[’DATABASE’])
+# logging.config.fileConfig('logging.conf',
+#                           disable_existing_loggers=False)
+# logging.config.dictConfig('logging.yml')
 
+# logger = logging.getLogger(__name__)
 
-# def init_db():
-#     with closing(connect_db()) as db:
-#         with app.open_resource(’schema.sql’, mode=’r’) as f:
-#             db.cursor().executescript(f.read())
-#         db.commit()
+with open('config/logging.yaml', 'r') as stream:
+    yamld = yaml.load(stream)
+    logging.config.dictConfig(yamld)
 
+to_qc_file = logging.getLogger('to_qc_file')
+to_console = logging.getLogger('to_console')
+to_user_file = logging.getLogger('to_user_file')
 
 # init SQLAlchemy so we can use it later in our models
 db = SQLAlchemy()
 
 
 def create_app():
-    app = Flask(__name__, template_folder='view/templates', static_url_path='', static_folder='view/static')
+    app = Flask(__name__, template_folder='view/templates',
+                static_url_path='', static_folder='view/static/dist',
+                instance_relative_config=True)
 
     # import the configuration from the file config.py
-    app.config.from_object('config.DevelopmentConfig')
+    # app.config.from_object('config.DevelopmentConfig')
+    app.config.from_object('config.default')
+    app.config.from_pyfile('config.py')
+    # app.config.from_object("config."+os.getenv("ENV"))
+
+    # Initialize Flask-Breadcrumbs
+    Breadcrumbs(app=app)
 
     db.init_app(app)
 

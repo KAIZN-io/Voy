@@ -1,5 +1,11 @@
 {% extends "base.html" %} {% block title %} Create Users {% endblock %} {%
 block content %}
+<div>
+  {%- for breadcrumb in breadcrumbs -%}
+  <a href="{{ breadcrumb.url }}">{{ breadcrumb.text }}</a>
+  {{ '/' if not loop.last }}
+  {%- endfor -%}
+</div>
 <div class="column is-4 is-offset-4">
   <h1 class="title">Create Users</h1>
 
@@ -7,23 +13,23 @@ block content %}
     {% with messages = get_flashed_messages() %} {% if messages %}
     <div class="alert alert-success">{{ messages[0] }}</div>
     {% endif %} {% endwith %}
-    <form method="POST" action="/add_user">
+    <form action="/add_user" method="POST">
       <div class="field">
         <div class="control">
           <input
+            autofocus=""
             class="input is-large"
-            type="email"
             name="email"
             placeholder="eMail"
-            autofocus=""
             required
+            type="email"
           />
         </div>
       </div>
       <div class="field">
         <select name="role" width="300px">
           {% for role in Roles %}
-          <option value="{{ role }}" selected required>{{ role }}</option>
+          <option required value="{{ role }}">{{ role }}</option>
 
           {% endfor %}
         </select>
@@ -32,12 +38,12 @@ block content %}
       <div class="field">
         <div class="control">
           <input
+            autofocus=""
             class="input is-large"
-            type="text"
             name="abbreviation"
             placeholder="Abbreviation"
-            autofocus=""
             required
+            type="text"
           />
         </div>
       </div>
@@ -46,10 +52,10 @@ block content %}
         <div class="control">
           <input
             class="input is-large"
-            type="password"
             name="password"
             placeholder="Password"
             required
+            type="password"
           />
         </div>
       </div>

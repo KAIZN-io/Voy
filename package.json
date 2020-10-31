@@ -1,11 +1,30 @@
 {
-    "name": "flask_auth_app",
-    "version": "0.0.1",
-    "dependencies": {
-        "datatables.net": "^1.10.22",
-        "datatables.net-dt": "^1.10.22"
-    },
-    "devDependencies": {
-        "tablefilter": "^0.7.2"
-    }
+  "name": "flask_auth_app",
+  "version": "0.0.1",
+  "license": "GPL-3.0-only",
+  "author": "Jan Piotraschke",
+  "description": "A simple distributed todo list for use in the clinical sector.",
+  "homepage": "https://gitlab.com/piotraschke.janniklas/flask_auth_app#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/piotraschke.janniklas/flask_auth_app.git"
+  },
+  "bugs": {
+    "url": "https://gitlab.com/piotraschke.janniklas/flask_auth_app/issues"
+  },
+  "scripts": {
+    "build": "parcel build --no-cache --no-minify ./server/view/static/img/* ./server/view/static/js/*.js ./server/view/static/css/*.scss --out-dir ./server/view/static/dist",
+    "watch": "parcel watch --no-cache ./server/view/static/img/* ./server/view/static/js/*.js ./server/view/static/css/*.scss --out-dir ./server/view/static/dist"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.15.1",
+    "bootstrap": "^4.5.2",
+    "jquery": "^3.5.1",
+    "popper.js": "^1.16.1",
+    "tablefilter": "^0.7.2"
+  },
+  "devDependencies": {
+    "parcel-bundler": "^1.12.4",
+    "sass": "^1.27.0"
+  }
 }

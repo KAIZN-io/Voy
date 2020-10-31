@@ -6,7 +6,6 @@
 env/
 venv/
 env*
-dist/
 build/
 *.egg
 *.egg-info/
@@ -20,6 +19,7 @@ docs/_build/
 node_modules/
 build
 *.tgz
+instance/ 
 
 # Coverage reports
 htmlcov/
@@ -31,8 +31,11 @@ htmlcov/
 c_test/
 notes.txt
 # Compliance data
-.log_files/
+*.log
 *.sqlite
 *.xlsx
 query_DataFrame.pdf 
 query_DataFrame.html
+
+/server/view/static/dist/*
+!/server/view/static/dist/tablefilter
