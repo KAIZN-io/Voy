@@ -114,7 +114,7 @@
       <!-- close the query if you have the right role permission -->
       {% if current_user.role == "Admin" %}
       <!-- overgive the edit page the id -->
-      <a href="{{ url_for('main.edit_data', id=post.id) }}">
+      <a href="{{ url_for('qc_database.edit_data', id=post.id) }}">
         <i class="far fa-edit"></i>
       </a>
       <a href="/close/{{post.id}}">

@@ -11,7 +11,7 @@ from server.controller.compliance import audit_trail, time_stamp, passwd_generat
 
 
 auth = Blueprint('auth', __name__)
-# set main blueprint as a root
+# set auth blueprint as a root
 default_breadcrumb_root(auth, '.')
 
 
@@ -57,7 +57,7 @@ def login_post():
     # After verify the validity of abbrev and password
     session.permanent = True
 
-    return redirect(url_for('main.index'))
+    return redirect(url_for('qc_database.index'))
 
 
 @auth.route('/admin_signup')
@@ -98,7 +98,7 @@ def admin_signup_post():
 
     to_user_file.info(audit_data['change_by'], extra=audit_data)
 
-    return redirect(url_for('main.index'))
+    return redirect(url_for('qc_database.index'))
 
 
 @auth.route('/forgot_passwd')
@@ -198,7 +198,7 @@ def change_password():
                 {"password": password})
             db.session.commit()
 
-    return redirect(url_for('main.index'))
+    return redirect(url_for('qc_database.index'))
 
 
 @auth.route('/logout')
