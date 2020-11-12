@@ -60,41 +60,6 @@ def login_post():
     return redirect(url_for('main.index'))
 
 
-@auth.route('/user_management')
-@login_required
-@register_breadcrumb(auth, '.user_management', '')
-def user_management():
-    # filter all user except for the admin
-    User_data = DB_User.query.filter(DB_User.role != "Admin").all()
-
-    return render_template('user_management.html', Users=User_data)
-
-
-@auth.route('/delete_user/<int:id>')
-@login_required
-def delete_user(id):
-    # query the data from the user 
-    user_management = DB_User.query.filter_by(id=id).one().__dict__
-
-    # delete the user from the db
-    DB_User.query.filter_by(id=id).delete()
-    db.session.commit()
-
-    # document the deletion to the log file 
-    # delete unimportend data before that
-    user_management.pop('date_time', None)
-    user_management.pop('system_passwd', None)
-    user_management.pop('password', None)
-    user_management.pop('active', None)
-    user_management.pop('id', None)
-    user_management['change_by']=current_user.abbrev
-    user_management['action'] = 'deleted'
-
-    to_user_file.info(user_management['change_by'], extra=user_management)
-
-    return redirect(url_for('auth.user_management'))
-
-
 @auth.route('/admin_signup')
 def admin_signup():
     return render_template('admin_signup.html')
@@ -134,6 +99,149 @@ def admin_signup_post():
     to_user_file.info(audit_data['change_by'], extra=audit_data)
 
     return redirect(url_for('main.index'))
+
+
+@auth.route('/forgot_passwd')
+def forgot_passwd():
+    return render_template('forgot_passwd.html')
+
+
+@auth.route('/forgot_passwd', methods=('GET', 'POST'))
+def forgot_passwd_post():
+    abbrev = request.form.get('abbrev')
+
+    # filter the requested user
+    user = DB_User.query.filter_by(abbrev=abbrev).first()
+
+    if user:
+        # generate a system password with the lenght of 10 and hash it
+        new_passwd = passwd_generator(size=10)
+
+        # TODO: send the new_passwd over mail to the user
+        print(new_passwd)
+        system_passwd = generate_password_hash(new_passwd, method='sha256')
+
+        # commit the new system password to the database
+        DB_User.query.filter_by(abbrev=abbrev).update(
+            {"system_passwd": system_passwd, "active": 1})
+        db.session.commit()
+
+    return redirect(url_for('auth.activate'))
+
+
+@auth.route('/activate')
+def activate():
+    return render_template('activate.html')
+
+
+@auth.route('/activate', methods=('GET', 'POST'))
+def activate_post():
+
+    oldPassword = request.form.get('oldPassword')
+    password1 = request.form.get('password1')
+    password2 = request.form.get('password2')
+    abbrev = request.form.get('abbreviation')
+
+    # filter the requested user
+    user = DB_User.query.filter_by(abbrev=abbrev).first()
+
+    # take the user supplied password, hash it, and compare it to the hashed password in database
+    if not check_password_hash(user.system_passwd, oldPassword):
+        flash('You made a mistake with you old password')
+        return redirect(url_for('auth.activate'))
+
+    else:
+        if password1 != password2:
+            flash('Passwords are not the same')
+            return redirect(url_for('auth.activate'))
+        else:
+            password = generate_password_hash(password1, method='sha256')
+
+            # set the new password and activate the account
+            DB_User.query.filter_by(abbrev=abbrev).update(
+                {"password": password, "active": 0, "system_passwd": None})
+            db.session.commit()
+
+    return redirect(url_for('auth.login'))
+
+
+@auth.route('/profile')
+@register_breadcrumb(auth, '.profile', '')
+@login_required
+def profile():
+    return render_template('profile.html', name=current_user.abbrev)
+
+
+@auth.route('/profile', methods=['POST'])
+@login_required
+def change_password():
+
+    oldPassword = request.form.get('oldpassword')
+    password1 = request.form.get('password1')
+    password2 = request.form.get('password2')
+
+    user = DB_User.query.filter_by(abbrev=current_user.abbrev).first()
+
+    # take the user supplied password, hash it, and compare it to the hashed password in database
+    if not check_password_hash(user.password, oldPassword):
+        flash('You made a mistake with you old password')
+        return redirect(url_for('auth.profile'))
+
+    else:
+        if password1 != password2:
+            flash('Passwords are not the same')
+            return redirect(url_for('auth.profile'))
+        else:
+            password = generate_password_hash(password1, method='sha256')
+
+            DB_User.query.filter_by(abbrev=current_user.abbrev).update(
+                {"password": password})
+            db.session.commit()
+
+    return redirect(url_for('main.index'))
+
+
+@auth.route('/logout')
+@login_required
+def logout():
+    logout_user()
+
+    return redirect(url_for('auth.login'))
+
+
+@auth.route('/user_management')
+@login_required
+@register_breadcrumb(auth, '.user_management', '')
+def user_management():
+    # filter all user except for the admin
+    User_data = DB_User.query.filter(DB_User.role != "Admin").all()
+
+    return render_template('user_management.html', Users=User_data)
+
+
+@auth.route('/delete_user/<int:id>')
+@login_required
+def delete_user(id):
+    # query the data from the user
+    user_management = DB_User.query.filter_by(id=id).one().__dict__
+
+    # delete the user from the db
+    DB_User.query.filter_by(id=id).delete()
+    db.session.commit()
+
+    # document the deletion to the log file
+    # delete unimportend data before that
+    user_management.pop('date_time', None)
+    user_management.pop('system_passwd', None)
+    user_management.pop('password', None)
+    user_management.pop('active', None)
+    user_management.pop('id', None)
+    user_management['change_by'] = current_user.abbrev
+    user_management['action'] = 'deleted'
+
+    to_user_file.info(user_management['change_by'], extra=user_management)
+
+    return redirect(url_for('auth.user_management'))
 
 
 @auth.route('/add_user')
@@ -185,111 +293,3 @@ def add_user_post():
     # db.session.commit()
 
     return redirect(url_for('auth.user_management'))
-
-
-@auth.route('/logout')
-@login_required
-def logout():
-    logout_user()
-
-    return redirect(url_for('auth.login'))
-
-
-@auth.route('/profile')
-@register_breadcrumb(auth, '.profile', '')
-@login_required
-def profile():
-    return render_template('profile.html', name=current_user.abbrev)
-
-
-@auth.route('/profile', methods=['POST'])
-@login_required
-def change_password():
-
-    oldPassword = request.form.get('oldpassword')
-    password1 = request.form.get('password1')
-    password2 = request.form.get('password2')
-
-    user = DB_User.query.filter_by(abbrev=current_user.abbrev).first()
-
-    # take the user supplied password, hash it, and compare it to the hashed password in database
-    if not check_password_hash(user.password, oldPassword):
-        flash('You made a mistake with you old password')
-        return redirect(url_for('auth.profile'))
-
-    else:
-        if password1 != password2:
-            flash('Passwords are not the same')
-            return redirect(url_for('auth.profile'))
-        else:
-            password = generate_password_hash(password1, method='sha256')
-
-            DB_User.query.filter_by(abbrev=current_user.abbrev).update(
-                {"password": password})
-            db.session.commit()
-
-    return redirect(url_for('main.index'))
-
-
-@auth.route('/activate')
-def activate():
-    return render_template('activate.html')
-
-
-@auth.route('/activate', methods=('GET', 'POST'))
-def activate_post():
-
-    oldPassword = request.form.get('oldPassword')
-    password1 = request.form.get('password1')
-    password2 = request.form.get('password2')
-    abbrev = request.form.get('abbreviation')
-
-    # filter the requested user
-    user = DB_User.query.filter_by(abbrev=abbrev).first()
-
-    # take the user supplied password, hash it, and compare it to the hashed password in database
-    if not check_password_hash(user.system_passwd, oldPassword):
-        flash('You made a mistake with you old password')
-        return redirect(url_for('auth.activate'))
-
-    else:
-        if password1 != password2:
-            flash('Passwords are not the same')
-            return redirect(url_for('auth.activate'))
-        else:
-            password = generate_password_hash(password1, method='sha256')
-
-            # set the new password and activate the account
-            DB_User.query.filter_by(abbrev=abbrev).update(
-                {"password": password, "active": 0, "system_passwd": None})
-            db.session.commit()
-
-    return redirect(url_for('auth.login'))
-
-
-@auth.route('/forgot_passwd')
-def forgot_passwd():
-    return render_template('forgot_passwd.html')
-
-
-@auth.route('/forgot_passwd', methods=('GET', 'POST'))
-def forgot_passwd_post():
-    abbrev = request.form.get('abbrev')
-
-    # filter the requested user
-    user = DB_User.query.filter_by(abbrev=abbrev).first()
-
-    if user:
-        # generate a system password with the lenght of 10 and hash it
-        new_passwd = passwd_generator(size=10)
-
-        # TODO: send the new_passwd over mail to the user
-        print(new_passwd)
-        system_passwd = generate_password_hash(new_passwd, method='sha256')
-
-        # commit the new system password to the database
-        DB_User.query.filter_by(abbrev=abbrev).update(
-            {"system_passwd": system_passwd, "active": 1})
-        db.session.commit()
-
-    return redirect(url_for('auth.activate'))
