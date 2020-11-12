@@ -69,8 +69,8 @@ def create_app():
 
     # blueprint for non-auth parts of app
     # from .main import main as main_blueprint
-    from server.controller.main import main as main_blueprint
+    from server.controller.qc_database import qc_database as qc_database_blueprint
 
-    app.register_blueprint(main_blueprint)
+    app.register_blueprint(qc_database_blueprint)
 
     return app

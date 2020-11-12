@@ -19,7 +19,7 @@
 <nav class="navbar navbar-expand-md navbar-light bg-light">
 
   <!-- your logo ! -->
-  <a class="navbar-brand" href="{{ url_for('main.index')}}">
+  <a class="navbar-brand" href="{{ url_for('qc_database.index')}}">
     <img alt="" height="30" src="{{ url_for('static', filename='img/bootstrap-logo.png')}}" width="30">
     QC-Database
   </a>
@@ -44,7 +44,7 @@
   </div>
   {% if (current_user.is_authenticated) and (current_user.role == 'Admin' or current_user.role == 'Data Manager' or
   current_user.role == 'Data Entry') %}
-  <a class="nav-link" href="{{ url_for('main.data_entry')}}">Data Entry</a>
+  <a class="nav-link" href="{{ url_for('qc_database.data_entry')}}">Data Entry</a>
   {% endif %}
   <!-- in the right corner of the nav bar -->
   <div class="topnav-right">
