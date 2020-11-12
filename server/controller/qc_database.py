@@ -31,6 +31,41 @@ def as_dict(self):
             for c in inspect(self).mapper.column_attrs}
 
 
+@qc_database.route('/data_entry', methods=('GET', 'POST'))
+@register_breadcrumb(qc_database, '.data_entry', '')
+@login_required
+def data_entry():
+    Source_type = ["Source", "ICF"]
+    User_data = DB_User.query.filter_by(role="MedOps").all()
+
+    if request.method == 'POST':
+
+        # header data form the form
+        scr_no = request.form['scr_no']
+        study_id = request.form['study_id']
+        type = request.form['type']
+
+        # data under the header data
+        todo_name = request.form.getlist('row[][name]')
+        title = request.form.getlist('row[][title]')
+        description = request.form.getlist('row[][description]')
+        page = request.form.getlist('row[][page]')
+        visit = request.form.getlist('row[][visit]')
+        created = time_stamp()
+
+        for i in range(len(todo_name)):
+
+            blog_entry = QC_Check(procedure=title[i], type=type, corrected=1, close=1, description=description[i], checker=current_user.abbrev,
+                                  created=created, visit=visit[i], page=page[i], scr_no=scr_no, study_id=study_id, responsible=todo_name[i])
+
+            db.session.add(blog_entry)
+            db.session.commit()
+
+        return redirect(url_for('qc_database.data_entry'))
+
+    return render_template('data_entry.html', Users=User_data, source_type=Source_type)
+
+
 @qc_database.route('/', methods=('GET', 'POST'))
 @register_breadcrumb(qc_database, '.', 'QC-DB')
 @login_required
@@ -83,41 +118,6 @@ def index():
             return redirect('/')
 
     return render_template('index.html', posts=posts_data, Download_Type=download_type)
-
-
-@qc_database.route('/data_entry', methods=('GET', 'POST'))
-@register_breadcrumb(qc_database, '.data_entry', '')
-@login_required
-def data_entry():
-    Source_type = ["Source", "ICF"]
-    User_data = DB_User.query.filter_by(role="MedOps").all()
-
-    if request.method == 'POST':
-
-        # header data form the form
-        scr_no = request.form['scr_no']
-        study_id = request.form['study_id']
-        type = request.form['type']
-
-        # data under the header data
-        todo_name = request.form.getlist('row[][name]')
-        title = request.form.getlist('row[][title]')
-        description = request.form.getlist('row[][description]')
-        page = request.form.getlist('row[][page]')
-        visit = request.form.getlist('row[][visit]')
-        created = time_stamp()
-
-        for i in range(len(todo_name)):
-
-            blog_entry = QC_Check(procedure=title[i], type=type, corrected=1, close=1, description=description[i], checker=current_user.abbrev,
-                                  created=created, visit=visit[i], page=page[i], scr_no=scr_no, study_id=study_id, responsible=todo_name[i])
-
-            db.session.add(blog_entry)
-            db.session.commit()
-
-        return redirect(url_for('qc_database.data_entry'))
-
-    return render_template('data_entry.html', Users=User_data, source_type=Source_type)
 
 
 @qc_database.route('/delete/<int:id>')
