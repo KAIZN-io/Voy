@@ -73,4 +73,8 @@ def create_app():
 
     app.register_blueprint(qc_database_blueprint)
 
+    from server.controller.users_module import users_module as users_module_blueprint
+
+    app.register_blueprint(users_module_blueprint)
+
     return app
