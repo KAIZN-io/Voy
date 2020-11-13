@@ -6,8 +6,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 
 from server import db, to_qc_file, to_console, to_user_file
-from server.model.models import DB_User, User_Management
-from server.controller.compliance import audit_trail, time_stamp, passwd_generator
+from server.model import DB_User, User_Management
+from server.controller.Compliance_Computerized_Systems_EMA import audit_trail, time_stamp, passwd_generator
 
 
 users_module = Blueprint('users_module', __name__)
