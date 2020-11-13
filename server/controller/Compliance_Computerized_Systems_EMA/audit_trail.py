@@ -1,5 +1,5 @@
 from server.controller.Compliance_Computerized_Systems_EMA.time_stamp import time_stamp
-from server.model.models import QC_Audit
+from server.model import QC_Audit
 from server import to_qc_file
 
 
