@@ -4,7 +4,7 @@ from flask_breadcrumbs import Breadcrumbs, register_breadcrumb, default_breadcru
 
 from server.model.models import QC_Check, DB_User, QC_Audit, QC_Requery
 from server.controller.amqp.amqp_client import request_amqp
-from server.controller.compliance import audit_trail, time_stamp
+from server.controller.Compliance_Computerized_Systems_EMA import audit_trail, time_stamp
 from server import db
 
 from sqlalchemy import inspect
