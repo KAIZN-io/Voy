@@ -12,7 +12,7 @@ An overview:
 -   message broker: Apache ActiveMQ (AMQP: AMQP 1.0 protocol)
   -   AMQP communications with the broker: qpid-proton (Python)
 
-## Getting started on Mac
+# Prepare the app
 1. Create a working virtualenv with `make venv` and activate it with `. venv/bin/activate`   
 2. Create some required structure with `make deployment`
 3. Open instance/config.py and enter some data, that look like this:
@@ -20,13 +20,17 @@ An overview:
 SECRET_KEY = 'secretPassword'
 SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://<user>:<password>@<host>/db'
 ```
-4. Temporary: Install a pdf converter with `brew cask install wkhtmltopdf`
-5. Install node modules with `npm install`
-6. Bundle assets with `npm run build`
-7. Start the server with `flask run`
-8. Open http://localhost:5000/ 
+4. Install node modules with `npm install`
+5. Bundle assets with `npm run build`
 
-### For creating and initiating the database
+# The server
+## Run in gunicorn
+1. Create a working venv with `make venv`
+2. Activate venv with `. venv/bin/activate`
+3. Install gunicorn `pip3 install gunicorn`
+4. You can now run the app with `gunicorn -b 0.0.0.0:5000 wsgi:app` or `gunicorn -b 127.0.0.1:5000 wsgi:app` (localhost)
+
+## Create and initiate the database
 1. Create a database; if you use **MySQL** as your database:  
 1.1. download a [MySQL Server](https://dev.mysql.com/downloads/mysql/)  
 1.2. type into your terminal: `export PATH=$PATH:/usr/local/mysql/bin`  
@@ -38,23 +42,22 @@ SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://<user>:<password>@<host>/db'
 3. Get the model schema with `from server.model.models import db`
 4. Create the database and the tables with `db.create_all()`
 
-### For creating new pdf and xlsx query files (temporary) 
-1. Go to the AMQP server with `cd server/controller/amqp`
-2. Run the server with `python3 amqp_server.py`
+## For creating new pdf and xlsx query files (temporary) 
+1. Temporary: Install a pdf converter with `brew cask install wkhtmltopdf`
+2. Go to the AMQP server with `cd server/controller/amqp`
+3. Run this server with `python3 amqp_server.py`
 
 ## Configure the app
 - the logging style is inside `logging.yaml`
 - the app default env is "development". Set it to "production" with `export FLASK_ENV=production` before running it with `flask run`
 
-## Run in gunicorn
-1. Create a working venv with `make venv`
-2. Activate venv with `. venv/bin/activate`
-3. Install gunicorn `pip3 install gunicorn`
-4. You can now run the app with `gunicorn -b 0.0.0.0:5000 wsgi:app` or `gunicorn -b 127.0.0.1:5000 wsgi:app` (localhost)
+# Finally: run the app
+1. Start the app with `flask run`
+2. Open http://localhost:5000/ 
 
-## Asset handling
-### Install npm packages
+# Asset handling
+## Install npm packages
 1. Only ones: To activate the **node** virtual environment along with venv in the future: `nodeenv -p`
 2. Install npm package with `npm install -g {PACKAGE NAME}`
-### Develop JS / CSS
+## Develop JS / CSS
 Run `npm run watch` for an easy and smooth develop experience.
