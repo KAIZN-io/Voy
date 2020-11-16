@@ -1,3 +1,4 @@
+# SHELL := /bin/bash
 # Important for the developement process
 # ============================================================
 .PHONY: venv
