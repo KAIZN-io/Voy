@@ -12,52 +12,55 @@ An overview:
 -   message broker: Apache ActiveMQ (AMQP: AMQP 1.0 protocol)
   -   AMQP communications with the broker: qpid-proton (Python)
 
-# Prepare the app
-1. Create a working virtualenv with `make venv` and activate it with `. venv/bin/activate`   
-2. Create some required structure with `make deployment`
-3. Open instance/config.py and enter some data, that look like this:
+# Getting started with local development
+1. Create a working virtualenv with `make venv` and activate it with `. venv/bin/activate`
+2. Only once: To activate the **node** virtual environment along with venv in the future: `nodeenv -p`
+
+## 1. Prepare configuration
+1. Create some required structure with `make deployment`
+2. Open `instance/config.py` and enter some data, that look like this:
 ```
 SECRET_KEY = 'secretPassword'
-SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://<user>:<password>@<host>/db'
+SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://<user>:<password>@<host>:<port>/<database>'
 ```
-4. Install node modules with `npm install`
-5. Bundle assets with `npm run build`
 
-# The server
-## Run in gunicorn
-1. Create a working venv with `make venv`
-2. Activate venv with `. venv/bin/activate`
-3. Install gunicorn `pip3 install gunicorn`
-4. You can now run the app with `gunicorn -b 0.0.0.0:5000 wsgi:app` or `gunicorn -b 127.0.0.1:5000 wsgi:app` (localhost)
+Replace `<user>`, `<password>`, `<host>`, `<port>` and `<database>` with the values for your local database.
 
-## Create and initiate the database
-1. Create a database; if you use **MySQL** as your database:  
-1.1. download a [MySQL Server](https://dev.mysql.com/downloads/mysql/)  
-1.2. type into your terminal: `export PATH=$PATH:/usr/local/mysql/bin`  
-1.3. login as root user with `mysql -u root -p`  
-1.4. create the database with `CREATE DATABASE db;`  
-1.5. create dummy user with `CREATE USER ‚<user>‘@‚<host>' IDENTIFIED BY ‚<password>‘;`
+### 1.1 (Optional) Docker
+Don't want to locally install a MySQL or MariaDB database? Use the included Docker setup.
 
-2. Open the Flask shell with `flask shell`
-3. Get the model schema with `from server.model.user_management import db`
-4. Create the database and the table with `db.create_all()`
+1. Copy `.example.env` to `.env`
+2. Use the example values or adapt them to your preference
+3. Update the `instance/config.py` to reflect the values in your `.env` file. The `<host>` is localhost.
+4. You can now start your database with `docker-compose up`
 
-## For creating new pdf and xlsx query files (temporary) 
+## 2. Initialize the database
+1. Open the Flask shell with `flask shell`
+2. Get the model schema with `from server.model.user_management import db`
+3. Create the database and the table with `db.create_all()`
+
+## 3. Build assets
+1. Install node modules with `npm install`
+2. Bundle assets with `npm run build`
+
+### 3.1 Develop assets
+For a more convenient way of working with the CSS and JS assets, run `npm run watch`.
+
+# 4. (Optional) For creating new pdf and xlsx query files (temporary) 
 1. Temporary: Install a pdf converter with `brew cask install wkhtmltopdf`
 2. Go to the AMQP server with `cd server/controller/amqp`
 3. Run this server with `python3 amqp_server.py`
 
-## Configure the app
+## 5. Finally: run the app
+1. Start the app with `flask run`
+2. Open http://localhost:5000/
+
+# Advanced configuration
 - the logging style is inside `logging.yaml`
 - the app default env is "development". Set it to "production" with `export FLASK_ENV=production` before running it with `flask run`
 
-# Finally: run the app
-1. Start the app with `flask run`
-2. Open http://localhost:5000/ 
+# Deployment
+In deployment the app is run with Gunicorn. To start it this way do:
 
-# Asset handling
-## Install npm packages
-1. Only ones: To activate the **node** virtual environment along with venv in the future: `nodeenv -p`
-2. Install npm package with `npm install -g {PACKAGE NAME}`
-## Develop JS / CSS
-Run `npm run watch` for an easy and smooth develop experience.
+1. Have your environment prepared like described in steps 1 through 3
+2. You can now run the app with `gunicorn -b 0.0.0.0:5000 wsgi:app` or `gunicorn -b 127.0.0.1:5000 wsgi:app` (localhost)
