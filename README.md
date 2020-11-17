@@ -29,6 +29,8 @@ SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://<user>:<password>@<host>/db'
 2. Activate venv with `. venv/bin/activate`
 3. Install gunicorn `pip3 install gunicorn`
 4. You can now run the app with `gunicorn -b 0.0.0.0:5000 'server:create_app()'` or `gunicorn -b 127.0.0.1:5000 'server:create_app()'` (localhost)
+5. Open e.g. http://localhost:5000/ 
+
 
 ### Debugging
 To debug gunicorn you can add teh `--preload` flag to it. This will give you stack traces to errors that occurred.
@@ -54,10 +56,6 @@ To debug gunicorn you can add teh `--preload` flag to it. This will give you sta
 ## Configure the app
 - the logging style is inside `logging.yaml`
 - the app default env is "development". Set it to "production" with `export FLASK_ENV=production` before running it with `flask run`
-
-# Finally: run the app
-1. Start the app with `flask run`
-2. Open http://localhost:5000/ 
 
 # Asset handling
 ## Install npm packages
