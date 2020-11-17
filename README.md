@@ -28,7 +28,11 @@ SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://<user>:<password>@<host>/db'
 1. Create a working venv with `make venv`
 2. Activate venv with `. venv/bin/activate`
 3. Install gunicorn `pip3 install gunicorn`
-4. You can now run the app with `gunicorn -b 0.0.0.0:5000 wsgi:app` or `gunicorn -b 127.0.0.1:5000 wsgi:app` (localhost)
+4. You can now run the app with `gunicorn -b 0.0.0.0:5000 'server:create_app()'` or `gunicorn -b 127.0.0.1:5000 'server:create_app()'` (localhost)
+
+### Debugging
+To debug gunicorn you can add teh `--preload` flag to it. This will give you stack traces to errors that occurred.
+
 
 ## Create and initiate the database
 1. Create a database; if you use **MySQL** as your database:  

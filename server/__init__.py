@@ -19,7 +19,7 @@ import logging.config
 # logger = logging.getLogger(__name__)
 
 with open('config/logging.yaml', 'r') as stream:
-    yamld = yaml.load(stream)
+    yamld = yaml.safe_load(stream)
     logging.config.dictConfig(yamld)
 
 to_qc_file = logging.getLogger('to_qc_file')
