@@ -39,8 +39,8 @@ SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://<user>:<password>@<host>/db'
 1.5. create dummy user with `CREATE USER ‚<user>‘@‚<host>' IDENTIFIED BY ‚<password>‘;`
 
 2. Open the Flask shell with `flask shell`
-3. Get the model schema with `from server.model.models import db`
-4. Create the database and the tables with `db.create_all()`
+3. Get the model schema with `from server.model.user_management import db`
+4. Create the database and the table with `db.create_all()`
 
 ## For creating new pdf and xlsx query files (temporary) 
 1. Temporary: Install a pdf converter with `brew cask install wkhtmltopdf`
