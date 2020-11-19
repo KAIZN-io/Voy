@@ -47,8 +47,8 @@ Replace `<user>`, `<password>`, `<host>`, `<port>` and `<database>` with the val
 <a name="init_database"></a>
 ## 2. Initialize the database
 1. Open the Flask shell with `flask shell`
-2. Get the model schema with `from server.model.user_management import db`
-3. Create the database and the table with `db.create_all()`
+2. Get the model schemas with `from server.model import db`
+3. Create the database and the tables with `db.create_all()`
 
 <a name="build_assets"></a>
 ## 3. Build assets
