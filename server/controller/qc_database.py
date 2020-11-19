@@ -195,6 +195,9 @@ def edit_data():
                 # set the query status to 'open'
                 QC_Check.query.filter_by(id=id).update({"corrected": 1})
 
+                # ! BUG resolve ? 
+                QC_Check.query.filter_by(id=id).update({"close": 1})
+
                 db.session.commit()
 
         return redirect(url_for('qc_database.index'))
