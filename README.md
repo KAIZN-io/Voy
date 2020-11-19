@@ -9,10 +9,11 @@ This project was designed to fulfill the requirements of a compliant software in
     - [Initialize the database](#init_database)
     - [Build assets](#build_assets)
         - [Develop assets](#develop_assets)
-    - [(Optional) For creating new pdf and xlsx query files](#mq)
+    - [(Optional) Usage of Python data analysis scripts over ActiveMQ](#mq)
     - [Run the app](#run_app)
 - [Advanced configuration](#advanced_config)
 - [Deployment](#deployment)
+    - [Debugging](#debugging)
   
 
 <a name="overview"></a>
@@ -66,10 +67,11 @@ Don't want to locally install a MySQL or MariaDB database? Use the included Dock
 For a more convenient way of working with the CSS and JS assets, run `npm run watch`.
 
 <a name="mq"></a>
-## 4. (Optional) For creating new pdf and xlsx query files (temporary) 
-1. Temporary: Install a pdf converter with `brew cask install wkhtmltopdf`
-2. Go to the AMQP server with `cd server/controller/amqp`
-3. Run this server with `python3 amqp_server.py`
+## 4. (Optional) Usage of Python data analysis scripts over ActiveMQ
+1. install ActiveMQ by following [this article](https://websiteforstudents.com/how-to-install-apache-activemq-on-ubuntu-20-04-18-04/)
+2. Temporary: Install a pdf converter with `brew cask install wkhtmltopdf`
+3. Go to the AMQP server with `cd server/controller/amqp`
+4. Run this server with `python3 amqp_server.py`
 
 <a name="run_app"></a>
 ## 5. Finally: run the app
@@ -86,4 +88,8 @@ For a more convenient way of working with the CSS and JS assets, run `npm run wa
 In deployment the app is run with Gunicorn. To start it this way do:
 
 1. Have your environment prepared like described in steps 1 through 3
-2. You can now run the app with `gunicorn -b 0.0.0.0:5000 wsgi:app` or `gunicorn -b 127.0.0.1:5000 wsgi:app` (localhost)
+2. You can now run the app with `gunicorn -b 0.0.0.0:5000 'server:create_app()'` or `gunicorn -b 127.0.0.1:5000 'server:create_app()'` (localhost)
+
+<a name="debugging"></a>
+## Debugging
+To debug gunicorn you can add teh `--preload` flag to it. This will give you stack traces to errors that occurred.
