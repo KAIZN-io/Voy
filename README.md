@@ -42,6 +42,7 @@ SECRET_KEY = 'secretPassword'
 SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://<user>:<password>@<host>:<port>/<database>'
 ```
 Replace `<user>`, `<password>`, `<host>`, `<port>` and `<database>` with the values for your local database.
+
 3. You can now start your database with `docker-compose up`
 
 <a name="init_database"></a>
