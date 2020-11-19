@@ -4,8 +4,7 @@ This project was designed to fulfill the requirements of a compliant software in
 
 - [An overview](#overview)
 - [Local development](#local_dev)
-    - [Prepare configuration](#prepare_config)
-        - [(Optional) Docker](#docker)
+    - [Prepare configuration - Docker](#docker)
     - [Initialize the database](#init_database)
     - [Build assets](#build_assets)
         - [Develop assets](#develop_assets)
