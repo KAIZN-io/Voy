@@ -3,13 +3,17 @@
 This project was designed to fulfill the requirements of a compliant software in EU | Life Science.
 
 - [An overview](#overview)
-- [Prepare the app](#prepare_app)
-    - [Asset handling](#assets)
-- [Prepare the server](#prepare_server)
-    - [Run the app in gunicorn](#gunicorn)
-    - [The database](#database)
-    - [Usage of Python data analysis scripts over ActiveMQ](#mq)
-    - [Configure the app](#config_app)
+- [Local development](#local_dev)
+    - [Prepare configuration](#prepare_config)
+        - [(Optional) Docker](#docker)
+    - [Initialize the database](#init_database)
+    - [Build assets](#build_assets)
+        - [Develop assets](#develop_assets)
+    - [(Optional) For creating new pdf and xlsx query files](#mq)
+    - [Run the app](#run_app)
+- [Advanced configuration](#advanced_config)
+- [Deployment](#deployment)
+  
 
 <a name="overview"></a>
 # An overview
@@ -22,10 +26,12 @@ This project was designed to fulfill the requirements of a compliant software in
 -   message broker: Apache ActiveMQ (AMQP: AMQP 1.0 protocol)
   -   AMQP communications with the broker: qpid-proton (Python)
 
+<a name="local_dev"></a>
 # Getting started with local development
 1. Create a working virtualenv with `make venv` and activate it with `. venv/bin/activate`
 2. Only once: To activate the **node** virtual environment along with venv in the future: `nodeenv -p`
 
+<a name="prepare_config"></a>
 ## 1. Prepare configuration
 1. Create some required structure with `make deployment`
 2. Open `instance/config.py` and enter some data, that look like this:
@@ -35,7 +41,7 @@ SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://<user>:<password>@<host>:<port
 ```
 
 Replace `<user>`, `<password>`, `<host>`, `<port>` and `<database>` with the values for your local database.
-
+<a name="docker"></a>
 ### 1.1 (Optional) Docker
 Don't want to locally install a MySQL or MariaDB database? Use the included Docker setup.
 
@@ -44,31 +50,38 @@ Don't want to locally install a MySQL or MariaDB database? Use the included Dock
 3. Update the `instance/config.py` to reflect the values in your `.env` file. The `<host>` is localhost.
 4. You can now start your database with `docker-compose up`
 
+<a name="init_database"></a>
 ## 2. Initialize the database
 1. Open the Flask shell with `flask shell`
 2. Get the model schema with `from server.model.user_management import db`
 3. Create the database and the table with `db.create_all()`
 
+<a name="build_assets"></a>
 ## 3. Build assets
 1. Install node modules with `npm install`
 2. Bundle assets with `npm run build`
 
+<a name="develop_assets"></a>
 ### 3.1 Develop assets
 For a more convenient way of working with the CSS and JS assets, run `npm run watch`.
 
-# 4. (Optional) For creating new pdf and xlsx query files (temporary) 
+<a name="mq"></a>
+## 4. (Optional) For creating new pdf and xlsx query files (temporary) 
 1. Temporary: Install a pdf converter with `brew cask install wkhtmltopdf`
 2. Go to the AMQP server with `cd server/controller/amqp`
 3. Run this server with `python3 amqp_server.py`
 
+<a name="run_app"></a>
 ## 5. Finally: run the app
 1. Start the app with `flask run`
 2. Open http://localhost:5000/
 
+<a name="advanced_config"></a>
 # Advanced configuration
 - the logging style is inside `logging.yaml`
 - the app default env is "development". Set it to "production" with `export FLASK_ENV=production` before running it with `flask run`
 
+<a name="deployment"></a>
 # Deployment
 In deployment the app is run with Gunicorn. To start it this way do:
 
