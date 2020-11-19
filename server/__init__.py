@@ -38,7 +38,6 @@ def create_app():
     # import the configuration from the file config.py
     # app.config.from_object('config.DevelopmentConfig')
     app.config.from_object('config.default')
-    app.config.from_pyfile('config.py')
     # app.config.from_object("config."+os.getenv("ENV"))
 
     # Initialize Flask-Breadcrumbs
