@@ -2,7 +2,17 @@
 
 This project was designed to fulfill the requirements of a compliant software in EU | Life Science.
 
-An overview:
+- [An overview](#overview)
+- [Prepare the app](#prepare_app)
+    - [Asset handling](#assets)
+- [Prepare the server](#prepare_server)
+    - [Run the app in gunicorn](#gunicorn)
+    - [The database](#database)
+    - [Usage of Python data analysis scripts over ActiveMQ](#mq)
+    - [Configure the app](#config_app)
+
+<a name="overview"></a>
+# An overview
 
 -   build with: Python Flask
 -   software design pattern: Model-View-Controller (MVC)
