@@ -1,3 +1,5 @@
+from server import db
+
 from .db_user import DB_User
 from .qc_audit import QC_Audit
 from .qc_check import QC_Check
