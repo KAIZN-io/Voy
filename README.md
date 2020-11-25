@@ -36,13 +36,7 @@ This project was designed to fulfill the requirements of a compliant software in
 Don't want to locally install a MySQL or MariaDB database? Use the included Docker setup.
 
 1. Copy `.example.env` to `.env`
-2. Use the example values or adapt them to your preference and add the database connection, that look like this
-```
-SECRET_KEY = 'secretPassword'
-SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://<user>:<password>@<host>:<port>/<database>'
-```
-Replace `<user>`, `<password>`, `<host>`, `<port>` and `<database>` with the values for your local database.
-
+2. Use the example values or adapt them to your preference.
 3. You can now start your database with `docker-compose up`
 
 <a name="init_database"></a>

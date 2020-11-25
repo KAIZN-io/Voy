@@ -35,10 +35,8 @@ def create_app():
                 static_url_path='', static_folder='view/static/dist',
                 instance_relative_config=True)
 
-    # import the configuration from the file config.py
-    # app.config.from_object('config.DevelopmentConfig')
-    app.config.from_object('config.default')
-    # app.config.from_object("config."+os.getenv("ENV"))
+    # import the configuration
+    app.config.from_object('config.default.Config')
 
     # Initialize Flask-Breadcrumbs
     Breadcrumbs(app=app)
