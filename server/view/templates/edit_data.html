@@ -13,8 +13,9 @@ Edit Data
 </div>
 <h1>Edit Data</h1>
 
-<form method="post">
+<form class="needs-validation" method="post" novalidate>
   <div class="form-row">
+
     <div class="form-group col-md-6">
       <label for="study_id">Study ID</label>
       <div class="form-group">
@@ -27,7 +28,7 @@ Edit Data
 
     <div class="form-group col-md-4">
       <label for="type">Document-Type :</label>
-      <select class="form-control" name="type">
+      <select class="form-control" name="type" required>
           <option value="Source"{% if data.type=="Source" %} selected="selected"{% endif %}>Source</option>
             <option value="ICF"{% if data.type=="ICF" %} selected="selected"{% endif %}>ICF</option>
 
@@ -43,7 +44,7 @@ Edit Data
                value="{{ data.scr_no }}">
       </div>
     </div>
-    <table class="table">
+    <table class="table" data-ticket-table id="data_entry_table" novalidate>
       <thead class="thead-light">
       <tr>
         <th scope="col">Visit</th>
@@ -105,8 +106,12 @@ Edit Data
 
     </table>
     <div class="form-group">
-      <button class="btn btn-primary" type="submit">Submit</button>
+      <button class="btn btn-primary" id="submit_table" style="margin-left: 50%" type="submit">Submit</button>
     </div>
 </form>
 
+{% endblock %}
+
+{% block js %} 
+  <script src="{{ url_for('static', filename='js/edit_data.js') }}" type="text/javascript"></script>
 {% endblock %}
