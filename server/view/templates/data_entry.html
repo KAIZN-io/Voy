@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-data entry
+Data Entry
 {% endblock %}
 
 {% block content %}
@@ -60,11 +60,10 @@ data entry
     <!-- ein attribut, den es nur für uns gibt 'data-ticket-row' -->
     <tr data-ticket-row>
       <td>
-        <div class="form-group is-invalid"
-        ">
+        <div class="form-group">
         <input class="form-control" name="row[][visit]"
                placeholder="which visit?" type="text"
-               value="{{ request.form['visit'] }}"></input>
+               value="{{ request.form['visit'] }}" required></input>
         </div>
       </td>
 
@@ -72,14 +71,14 @@ data entry
         <div class="form-group">
           <input class="form-control" name="row[][page]"
                  placeholder="which page?" type="text"
-                 value="{{ request.form['page'] }}"></input>
+                 value="{{ request.form['page'] }}" required></input>
         </div>
       </td>
       <td>
         <div class="form-group">
           <input class="form-control" name="row[][title]"
                  placeholder="VS / ECG / ... ?" type="text"
-                 value="{{ request.form['title'] }}"></input>
+                 value="{{ request.form['title'] }}" required></input>
         </div>
       </td>
       <td>
