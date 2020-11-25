@@ -37,13 +37,21 @@ Don't want to locally install a MySQL or MariaDB database? Use the included Dock
 
 1. Copy `.example.env` to `.env`
 2. Use the example values or adapt them to your preference.
-3. You can now start your database with `docker-compose up`
+3. You can now start your database with `docker-compose up -d db`
 
 <a name="init_database"></a>
 ## 2. Initialize the database
 1. Open the Flask shell with `flask shell`
 2. Get the model schemas with `from server.model import db`
 3. Create the database and the tables with `db.create_all()`
+
+### 2.1 Initialize the database in Docker
+When using the docker setup, one can initialize the database by opening a shell inside the python docker container. This
+is useful when there is no setup on the host machine to run the python code locally.
+
+1. Start the python service with `docker-compose up -d p`
+2. Open a shell inside the now running container with `docker-compose exec p /bin/bash`
+3. Setup the database like normal in the steps above.
 
 <a name="build_assets"></a>
 ## 3. Build assets
