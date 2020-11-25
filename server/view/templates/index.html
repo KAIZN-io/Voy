@@ -65,9 +65,13 @@
   {% for post in posts %}
 
   <tr>
-    {% if post.corrected == 0 %}
+    {% if (post.corrected == 0 and post.close ==1) %}
     <td>
       <span class="badge badge-warning"> Requery </span>
+    </td>
+    {% elif (post.close ==0) %}
+    <td>
+      <span class="badge badge-success">Closed</span>
     </td>
     {% else %}
     <td>
@@ -112,7 +116,7 @@
       {% endif %}
 
       <!-- close the query if you have the right role permission -->
-      {% if current_user.role == "Admin" or "Data Entry" or "Data Manager" %}
+      {% if (current_user.role == "Admin" or current_user.role == "Data Entry" or current_user.role == "Data Manager") %}
       <!-- overgive the edit page the id -->
       <a href="{{ url_for('qc_database.edit_data', id=post.id) }}">
         <i class="far fa-edit"></i>

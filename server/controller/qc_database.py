@@ -79,7 +79,7 @@ def index():
             responsible=current_user.abbrev, corrected=1, close=1).all()
     else:
         # what DM / Admin sees
-        posts_data = QC_Check.query.all()
+        posts_data = QC_Check.query.filter_by(close=1).all()
 
     if request.method == 'POST':
 
@@ -193,12 +193,11 @@ def edit_data():
                 # add new data to the data base
                 QC_Check.query.filter_by(id=id).update({category: new_value})
                 # set the query status to 'open'
-                QC_Check.query.filter_by(id=id).update({"corrected": 1})
-
-                # ! BUG resolve ? 
-                QC_Check.query.filter_by(id=id).update({"close": 1})
-
                 db.session.commit()
+
+        QC_Check.query.filter_by(id=id).update({"corrected": 1})
+
+        db.session.commit()
 
         return redirect(url_for('qc_database.index'))
 
