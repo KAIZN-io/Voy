@@ -80,11 +80,15 @@ For a more convenient way of working with the CSS and JS assets, run `npm run wa
 - the app default env is "development". Set it to "production" with `export FLASK_ENV=production` before running it with `flask run`
 
 <a name="deployment"></a>
-# Deployment
-In deployment the app is run with Gunicorn. To start it this way do:
+# Deployment with Docker
+This ap includes a docker setup for live deployment. Here is how to use it:
 
-1. Have your environment prepared like described in steps 1 through 3
-2. You can now run the app with `gunicorn -b 0.0.0.0:5000 'server:create_app()'` or `gunicorn -b 127.0.0.1:5000 'server:create_app()'` (localhost)
+### Initial Setup
+For the initial setup, just follow the instructions described in steps 1 and 2.1.
+
+### Updating
+When code changed a `docker-compose up -d p` should suffice to update the docker image and recreate the service
+container.
 
 <a name="debugging"></a>
 ## Debugging
