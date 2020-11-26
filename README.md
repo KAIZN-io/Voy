@@ -87,8 +87,9 @@ This ap includes a docker setup for live deployment. Here is how to use it:
 For the initial setup, just follow the instructions described in steps 1 and 2.1.
 
 ### Updating
-When code changed a `docker-compose up -d p` should suffice to update the docker image and recreate the service
-container.
+When code changed, one needs to rebuild the image for the `p` service. This can be done like so:
+1. Run `docker-compose build` to have doker create a new image with the code in the repo.
+2. Update the running containers with `docker-compose up -d p`
 
 <a name="debugging"></a>
 ## Debugging
