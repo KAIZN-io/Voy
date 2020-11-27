@@ -17,6 +17,11 @@ services:
   p:
     image: project-p
     build: .
+    volumes:
+      - ./:/usr/src/project-p
+      - /usr/src/project-p/.cache
+      - /usr/src/project-p/node_modules
+      - /usr/src/project-p/venv
     environment:
       - MYSQL_HOST=db
       - MYSQL_PORT=3306
