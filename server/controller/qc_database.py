@@ -81,6 +81,17 @@ def index():
         # what DM / Admin sees
         posts_data = QC_Check.query.filter_by(close=1).all()
 
+    # query all user and the corresponding roles
+    user_qc_requery = QC_Requery.query.with_entities(QC_Requery.query_id, QC_Requery.abbrev).all()
+    user_data = DB_User.query.with_entities(DB_User.abbrev, DB_User.role).all()
+    user_data = (dict(user_data))
+    user_qc_requery = dict(user_qc_requery)
+
+    user_requery = {}
+    # map the query id with the corresponding user role
+    for i,j in user_qc_requery.items():
+        user_requery[str(i)] = user_data[j]
+
     if request.method == 'POST':
 
         if request.form['button'] == 'download_button':
@@ -117,7 +128,7 @@ def index():
             # NOTE: redirect after form submission to prevent duplicates.
             return redirect('/')
 
-    return render_template('index.html', posts=posts_data, Download_Type=download_type)
+    return render_template('index.html', posts=posts_data, user_requery=user_requery, Download_Type=download_type)
 
 
 @qc_database.route('/delete/<int:id>')

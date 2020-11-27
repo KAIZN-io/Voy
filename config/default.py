@@ -1,14 +1,22 @@
 from datetime import timedelta
 from os import environ
 
-# from dotenv import load_dotenv
-# load_dotenv()
 
-DEBUG = True
-TESTING = False
+class Config(object):
+    DEBUG   = environ.get('DEBUG')
+    TESTING = environ.get('TESTING')
 
-# set it false, if you dont use the Flask-SQLAlchemy event system
-SQLALCHEMY_TRACK_MODIFICATIONS = False
-PERMANENT_SESSION_LIFETIME = timedelta(minutes=60)
-SECRET_KEY = environ.get('SECRET_KEY')
-SQLALCHEMY_DATABASE_URI = environ.get('SQLALCHEMY_DATABASE_URI')
+    # set it false, if you dont use the Flask-SQLAlchemy event system
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+    SQLALCHEMY_DATABASE_URI = "mysql+mysqlconnector://%s:%s@%s:%s/%s" % (
+        environ.get('MYSQL_USER'),
+        environ.get('MYSQL_PASSWORD'),
+        environ.get('MYSQL_HOST'),
+        environ.get('MYSQL_PORT'),
+        environ.get('MYSQL_DATABASE'),
+    )
+
+    PERMANENT_SESSION_LIFETIME = timedelta(minutes=60)
+    SECRET_KEY   = environ.get('SECRET_KEY')
+    SESSION_TYPE = 'filesystem'

@@ -13,3 +13,20 @@ services:
       - MYSQL_PASSWORD
     ports:
       - ${MYSQL_SERVICE_PORT}:3306
+
+  p:
+    image: project-p
+    build: .
+    environment:
+      - MYSQL_HOST=db
+      - MYSQL_PORT=3306
+      - MYSQL_DATABASE
+      - MYSQL_USER
+      - MYSQL_PASSWORD
+      - SECRET_KEY
+      - FLASK_APP
+      - FLASK_ENV
+      - DEBUG
+      - TESTING
+    ports:
+      - ${P_SERVICE_PORT}:5000

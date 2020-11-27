@@ -99,9 +99,8 @@
     <td>{{ post.procedure }}</td>
     <td>{{ post.description }}</td>
     <td>{{ post.created }}</td>
-
     <td>
-
+      {% if (post.id|string not in user_requery or current_user.role == user_requery[post.id|string])%}
       <a
         data-id="{{post.id}}"
         data-target="#requery_Modal"
@@ -109,6 +108,16 @@
         href="#" >
         <i class="far fa-comments"></i>
       </a>
+      {% else %}
+      <a
+        data-id="{{post.id}}"
+        data-target="#requery_Modal"
+        data-toggle="modal"
+        href="#" 
+        style="color: red;">
+        <i class="far fa-comments"></i>
+      </a>
+      {% endif %}
 
       {% if current_user.role == "MedOps" %}
       <i class="fas fa-check"></i>
