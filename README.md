@@ -81,15 +81,21 @@ For a more convenient way of working with the CSS and JS assets, run `npm run wa
 
 <a name="deployment"></a>
 # Deployment with Docker
-This ap includes a docker setup for live deployment. Here is how to use it:
+This app includes a Docker setup for live deployment. Here is how to use it:
 
 ### Initial Setup
 For the initial setup, just follow the instructions described in steps 1 and 2.1.
 
 ### Updating
-When code changed, one needs to rebuild the image for the `p` service. This can be done like so:
-1. Run `docker-compose build` to have doker create a new image with the code in the repo.
-2. Update the running containers with `docker-compose up -d p`
+The setup relies on mounting the code into the container, so code changes are relatively easy to propagate. However,
+when the python dependencies change, a rebuild of the Docker image is necessary.
+
+- Has your `requirements.txt` changed?
+  1. Run `docker-compose build` to have Docker update the image with the new dependencies.
+  2. Recreate the running containers with `docker-compose up -d p`
+
+- Only changes in code?
+  1. Gunicorn does not reload your code, so you need to restart your `p` service: `docker-compose restart p`
 
 <a name="debugging"></a>
 ## Debugging
