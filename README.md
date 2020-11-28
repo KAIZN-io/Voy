@@ -99,4 +99,4 @@ when the python dependencies change, a rebuild of the Docker image is necessary.
 
 <a name="debugging"></a>
 ## Debugging
-To debug gunicorn you can add teh `--preload` flag to it. This will give you stack traces to errors that occurred.
+To debug gunicorn you can add the `--preload` flag to it. This will give you stack traces to errors that occurred.
