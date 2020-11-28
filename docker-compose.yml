@@ -17,6 +17,7 @@ services:
   p:
     image: project-p
     build: .
+    command: [ "gunicorn", "-b 0.0.0.0:5000", "--preload", "server:create_app()" ]
     volumes:
       - ./:/usr/src/project-p
       - /usr/src/project-p/.cache

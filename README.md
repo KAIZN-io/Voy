@@ -99,4 +99,7 @@ when the python dependencies change, a rebuild of the Docker image is necessary.
 
 <a name="debugging"></a>
 ## Debugging
-To debug gunicorn you can add the `--preload` flag to it. This will give you stack traces to errors that occurred.
+To debug gunicorn you can add the `--preload` flag to it. This will give you stack traces to errors that occurred. The
+`--preload` flag is now set by default when using the Docker-Compose setup.
+
+To see the logs of the `p` service run `docker-compose logs -f p`.
