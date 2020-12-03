@@ -84,7 +84,9 @@ Data Entry
       <td>
         <div class="form-group">
               <textarea class="form-control" name="row[][description]"
-                        placeholder="Please describe your finding" required>{{ request.form['description'] }}</textarea>
+                        placeholder="Please describe your finding"            
+                        maxlength="100"
+                        required>{{ request.form['description'] }}</textarea>
         </div>
 
       </td>
