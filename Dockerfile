@@ -5,7 +5,8 @@ WORKDIR /usr/src/project-p
 # Install system packages
 RUN apt-get update && \
     apt-get -y upgrade && \
-    apt-get -y install --no-install-recommends build-essential nodejs npm && \
+    apt-get -y install --no-install-recommends build-essential curl && \
+    curl -sL https://deb.nodesource.com/setup_15.x | bash - && apt-get install -y nodejs && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
