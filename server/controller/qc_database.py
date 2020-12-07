@@ -5,6 +5,8 @@ from flask_breadcrumbs import Breadcrumbs, register_breadcrumb, default_breadcru
 from server.model import QC_Check, DB_User, QC_Audit, QC_Requery
 from server.controller.amqp.amqp_client import request_amqp
 from server.controller.Compliance_Computerized_Systems_EMA import audit_trail, time_stamp
+from server.controller.data_analysis import TransformData
+
 from server import db
 
 from sqlalchemy import inspect
@@ -129,6 +131,7 @@ def index():
     if request.method == 'POST':
 
         if request.form['button'] == 'download_button':
+            file_name = "Queries_{}".format(current_user.abbrev)
 
             # get the requestesd file format
             download_type = request.form.get('download')
@@ -136,13 +139,22 @@ def index():
             # prepare the data to get read by pandas dataframe
             query_as_dict = [as_dict(r) for r in posts_data]
 
-            # send the data with the working request to the message broker
-            request_amqp(query_as_dict, {"download_type": download_type})
+            if download_type == 'pdf':
+                TransformData.DictToPdf(query_as_dict, file_name)
+
+            elif download_type == 'xlsx':
+                TransformData.DictToExcel(query_as_dict, file_name)
 
             # TEMP: sleep until new pdf / excel file is really created
             time.sleep(3)
 
-            return send_file("controller/amqp/query_DataFrame.{}".format(download_type), as_attachment=True, attachment_filename="My_Queries.{}".format(download_type))
+            return send_file("controller/query_downloads/{}.{}".format(file_name,download_type), as_attachment=True)
+
+            # # send the data with the working request to the message broker
+            # request_amqp(query_as_dict, {"download_type": download_type})
+
+
+            # return send_file("controller/amqp/query_DataFrame.{}".format(download_type), as_attachment=True, attachment_filename="My_Queries.{}".format(download_type))
 
         elif request.form['button'] == 'send_requery':
             comment = request.form['comment']
