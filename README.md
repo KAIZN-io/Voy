@@ -95,7 +95,8 @@ when the python dependencies change, a rebuild of the Docker image is necessary.
   2. Recreate the running containers with `docker-compose up -d p`
 
 - Only changes in code?
-  1. Gunicorn does not reload your code, so you need to restart your `p` service: `docker-compose restart p`
+  1. If you changed your static files run: `npm run build`
+  2. Gunicorn does not reload your code, so you need to restart your `p` service: `docker-compose restart p`
 
 <a name="debugging"></a>
 ## Debugging
