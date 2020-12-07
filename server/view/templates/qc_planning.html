@@ -8,24 +8,14 @@ content %}
 <h1>QC Planning</h1>
 
 <form method="post">
-  Prioritize the study: 
-  <div class="form-group col-md-4">
-    <select class="form-control" name="study" required>
-      <option disabled selected value>-- select an option --</option>
-      <option disabled="disabled">----</option>
-      <!-- if user is not active yet, display it -->
-      {% for study in studies %}
-      <option value="{{ study }}">{{ study }}</option>
 
-      {% endfor %}
-    </select>
-  </div>
+  <p>Prioritize these studies: </p>
 
   {% for study in studies %}  
   {% if study|string in prioritized_studies %}
-  <input type="checkbox" id="{{ study }}" name="{{ study }}" value="{{ study }}" checked="checked">
+  <input type="checkbox" id="{{ study }}" name="studyCheckbox" value="{{ study }}" checked="checked">
   {% else %}
-  <input type="checkbox" id="{{ study }}" name="{{ study }}" value="{{ study }}">
+  <input type="checkbox" id="{{ study }}" name="studyCheckbox" value="{{ study }}">
 
   {% endif %}
 
@@ -35,7 +25,6 @@ content %}
   <div class="form-group">
     <button
       class="btn btn-primary"
-      id="submit_table"
       style="float: left"
       type="submit"
     >

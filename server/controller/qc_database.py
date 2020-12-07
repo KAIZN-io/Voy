@@ -43,15 +43,23 @@ def qc_planning():
     prioritized_studies = QC_Check.query.filter_by(prioritized=0).all()
     # get an unique list of all prioritized studies 
     prioritized_studies = list(set([str(i.study_id) for i in prioritized_studies]))  
-    print(prioritized_studies)
 
     if request.method == 'POST':
-        study_id = request.form['study']
+        prioritize_list = request.form.getlist('studyCheckbox')
+        prioritize_list = [int(i) for i in prioritize_list]
 
-        # give your anwser to DM
-        QC_Check.query.filter_by(study_id=study_id).update({"prioritized": 0})
+        # first reset all prioritizations  
+        QC_Check.query.update({"prioritized": 1})
 
         db.session.commit()
+
+        # then update the database with the new prioritizations:
+        for study_id in prioritize_list:
+            QC_Check.query.filter_by(study_id=study_id).update({"prioritized": 0})
+
+            db.session.commit()
+        
+        return redirect(url_for('qc_database.qc_planning'))
 
     return render_template('qc_planning.html', studies = study_list, prioritized_studies=prioritized_studies)
 
