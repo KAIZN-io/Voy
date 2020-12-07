@@ -131,7 +131,7 @@ def index():
     if request.method == 'POST':
 
         if request.form['button'] == 'download_button':
-            file_name = "Queries {} {}".format(current_user.abbrev, time_stamp())
+            file_name = "Queries_{}".format(current_user.abbrev)
 
             # get the requestesd file format
             download_type = request.form.get('download')
@@ -145,13 +145,14 @@ def index():
             elif download_type == 'xlsx':
                 TransformData.DictToExcel(query_as_dict, file_name)
 
-            return redirect('/')
+            # TEMP: sleep until new pdf / excel file is really created
+            time.sleep(3)
+
+            return send_file("controller/query_downloads/{}.{}".format(file_name,download_type), as_attachment=True)
+
             # # send the data with the working request to the message broker
             # request_amqp(query_as_dict, {"download_type": download_type})
 
-
-            # # TEMP: sleep until new pdf / excel file is really created
-            # time.sleep(3)
 
             # return send_file("controller/amqp/query_DataFrame.{}".format(download_type), as_attachment=True, attachment_filename="My_Queries.{}".format(download_type))
 

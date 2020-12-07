@@ -11,6 +11,7 @@ def DictToPdf(query_as_dict={},file_name=''):
 
     # convert the html file into pdf with wkhtmltopdf
     return pdfkit.from_file("server/controller/query_downloads/{}.html".format(file_name), "server/controller/query_downloads/{}.pdf".format(file_name))
+    
 
 
 def DictToExcel(query_as_dict={}, file_name=''):
@@ -18,3 +19,4 @@ def DictToExcel(query_as_dict={}, file_name=''):
     query_DataFrame = pd.DataFrame(query_as_dict)
 
     return query_DataFrame.to_excel("server/controller/query_downloads/{}.xlsx".format(file_name))
+    
