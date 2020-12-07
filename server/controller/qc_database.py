@@ -31,6 +31,13 @@ def as_dict(self):
             for c in inspect(self).mapper.column_attrs}
 
 
+@qc_database.route('/qc_planning', methods=('GET', 'POST'))
+@register_breadcrumb(qc_database, '.qc_planning', '')
+@login_required
+def qc_planning():
+    return render_template('qc_planning.html')
+
+
 @qc_database.route('/data_entry', methods=('GET', 'POST'))
 @register_breadcrumb(qc_database, '.data_entry', '')
 @login_required
