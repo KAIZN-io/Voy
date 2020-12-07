@@ -48,6 +48,7 @@
 
   <thead class="thead-light">
   <tr>
+    <th scope="col">Info</th>
     <th scope="col">Status</th>
     <th scope="col">Study ID</th>
     <th scope="col">Scr No</th>
@@ -65,6 +66,16 @@
   {% for post in posts %}
 
   <tr>
+    <td>
+      <a
+        data-id="{{post.id}}"
+        data-target="#info_Modal"
+        data-toggle="modal"
+        href="#" 
+        style="color: black;">
+        <i class="fas fa-exclamation"></i>
+      </a>
+    </td>
     {% if (post.corrected == 0 and post.close ==1) %}
     <td>
       <span class="badge badge-warning"> Requery </span>
@@ -188,7 +199,26 @@
           </div>
         </div>
       </div>
+      <div
+        aria-hidden="true"
+        aria-labelledby="info_ModalLabel"
+        class="modal fade"
+        id="info_Modal"
+        role="dialog" >
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
 
+            <div class="modal-header">
+              <h5 class="modal-title" id="info_ModalLabel">Info Dialog</h5>
+              <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body_2">
+            </div>
+          </div>
+        </div>
+      </div>
     </td>
   </tr>
   {% endfor %}

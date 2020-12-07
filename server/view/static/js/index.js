@@ -23,6 +23,19 @@ $('#requery_Modal').on('show.bs.modal', function (event) {
     .done(data => $content.html(data));
 })
 
+// get more infos about this query
+$('#info_Modal').on('show.bs.modal', function (event) {
+  let button   = $(event.relatedTarget) // Button that triggered the modal
+  let query_id = button.data('id') // Extract info from data-* attributes
+  let $modal   = $(this);
+  let $content = $modal.find('.modal-body_2');
+
+  // AJAX request -> load data for the modal
+  $.get(`/info_modal/${query_id}`)
+    // and push it into the modal
+    .done(data => $content.html(data));
+})
+
 
 /**
  * Code for creating the data table
@@ -34,12 +47,13 @@ $(document).ready(function () {
     help_instructions: false,
     // you can disable it
     popup_filters: false,
+    col_0: "none",
     // selecting with a drop-down
-    col_0: "select",
-    col_1: "checklist",
-    col_3: "select",
+    col_1: "select",
+    col_2: "checklist",
+    col_4: "select",
     // no filter for the last column
-    col_9: "none",
+    col_10: "none",
     alternate_rows: true,
     // grid layout customisation
     grid_layout: {
@@ -55,6 +69,7 @@ $(document).ready(function () {
     },
     highlight_keywords: true,
     col_widths: [
+      "50px",
       "90px",
       "110px",
       "100px",
@@ -66,6 +81,7 @@ $(document).ready(function () {
       "160px",
     ],
     watermark: [
+      "info",
       "status",
       "study ID",
       "Scr No",

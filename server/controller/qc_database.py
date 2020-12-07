@@ -156,15 +156,18 @@ def requery_query(id):
 @qc_database.route('/modal_data/<int:query_id>')
 @login_required
 def modal_data(query_id):
-    # # requery the row from the table of the QC Check model
-    # QC_Check.query.filter_by(id=id).update({"corrected": 1})
-    # db.session.commit()
 
     old_comment = db.session.query(QC_Requery).filter_by(
         query_id=query_id).order_by(QC_Requery.id.desc()).first()
 
     return render_template('modal_data.html', post=old_comment)
 
+@qc_database.route('/info_modal/<int:query_id>')
+@login_required
+def info_modal(query_id):
+    data_about_query = QC_Check.query.filter_by(id=query_id).first()
+
+    return render_template('modal_info.html', post=data_about_query)
 
 @qc_database.route('/close/<int:id>')
 @login_required
