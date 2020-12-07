@@ -67,6 +67,16 @@
 
   <tr>
     <td>
+      {% if post.prioritized == 0%}
+      <a
+        data-id="{{post.id}}"
+        data-target="#info_Modal"
+        data-toggle="modal"
+        href="#" 
+        style="color: red;">
+        <i class="fas fa-exclamation"></i>
+      </a>
+      {% else %}
       <a
         data-id="{{post.id}}"
         data-target="#info_Modal"
@@ -75,7 +85,10 @@
         style="color: black;">
         <i class="fas fa-exclamation"></i>
       </a>
+      {% endif %}
     </td>
+
+    
     {% if (post.corrected == 0 and post.close ==1) %}
     <td>
       <span class="badge badge-warning"> Requery </span>

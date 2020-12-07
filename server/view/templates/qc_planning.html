@@ -20,6 +20,18 @@ content %}
       {% endfor %}
     </select>
   </div>
+
+  {% for study in studies %}  
+  {% if study|string in prioritized_studies %}
+  <input type="checkbox" id="{{ study }}" name="{{ study }}" value="{{ study }}" checked="checked">
+  {% else %}
+  <input type="checkbox" id="{{ study }}" name="{{ study }}" value="{{ study }}">
+
+  {% endif %}
+
+  <label for="{{ study }}"> {{ study }}</label><br>
+  {% endfor %}
+
   <div class="form-group">
     <button
       class="btn btn-primary"

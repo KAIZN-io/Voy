@@ -38,12 +38,22 @@ def qc_planning():
     # filter all unique study numbers 
     study_list = db.session.query(QC_Check.study_id).distinct().all()
     study_list = [x[0] for x in study_list]
+    study_list.sort()
+
+    prioritized_studies = QC_Check.query.filter_by(prioritized=0).all()
+    # get an unique list of all prioritized studies 
+    prioritized_studies = list(set([str(i.study_id) for i in prioritized_studies]))  
+    print(prioritized_studies)
 
     if request.method == 'POST':
         study_id = request.form['study']
-        print(study_id)
 
-    return render_template('qc_planning.html', studies = study_list)
+        # give your anwser to DM
+        QC_Check.query.filter_by(study_id=study_id).update({"prioritized": 0})
+
+        db.session.commit()
+
+    return render_template('qc_planning.html', studies = study_list, prioritized_studies=prioritized_studies)
 
 
 @qc_database.route('/data_entry', methods=('GET', 'POST'))
@@ -95,7 +105,7 @@ def index():
     else:
         # what DM / Admin sees
         posts_data = QC_Check.query.filter_by(close=1).all()
-
+    print(posts_data)
     # query all user and the corresponding roles
     user_qc_requery = QC_Requery.query.with_entities(QC_Requery.query_id, QC_Requery.abbrev).all()
     user_data = DB_User.query.with_entities(DB_User.abbrev, DB_User.role).all()
