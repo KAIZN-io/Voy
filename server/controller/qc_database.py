@@ -35,7 +35,33 @@ def as_dict(self):
 @register_breadcrumb(qc_database, '.qc_planning', '')
 @login_required
 def qc_planning():
-    return render_template('qc_planning.html')
+    # filter all unique study numbers 
+    study_list = db.session.query(QC_Check.study_id).distinct().all()
+    study_list = [x[0] for x in study_list]
+    study_list.sort()
+
+    prioritized_studies = QC_Check.query.filter_by(prioritized=0).all()
+    # get an unique list of all prioritized studies 
+    prioritized_studies = list(set([str(i.study_id) for i in prioritized_studies]))  
+
+    if request.method == 'POST':
+        prioritize_list = request.form.getlist('studyCheckbox')
+        prioritize_list = [int(i) for i in prioritize_list]
+
+        # first reset all prioritizations  
+        QC_Check.query.update({"prioritized": 1})
+
+        db.session.commit()
+
+        # then update the database with the new prioritizations:
+        for study_id in prioritize_list:
+            QC_Check.query.filter_by(study_id=study_id).update({"prioritized": 0})
+
+            db.session.commit()
+        
+        return redirect(url_for('qc_database.qc_planning'))
+
+    return render_template('qc_planning.html', studies = study_list, prioritized_studies=prioritized_studies)
 
 
 @qc_database.route('/data_entry', methods=('GET', 'POST'))
@@ -83,10 +109,11 @@ def index():
     # for the right person, if the query is not closed --> corrected=False (==1)
     if current_user.role == "MedOps":
         posts_data = QC_Check.query.filter_by(
-            responsible=current_user.abbrev, corrected=1, close=1).all()
+            responsible=current_user.abbrev, corrected=1, close=1).order_by(QC_Check.prioritized).all()
     else:
         # what DM / Admin sees
-        posts_data = QC_Check.query.filter_by(close=1).all()
+        posts_data = db.session.query(QC_Check).filter_by(close=1).order_by(QC_Check.prioritized).all()
+
 
     # query all user and the corresponding roles
     user_qc_requery = QC_Requery.query.with_entities(QC_Requery.query_id, QC_Requery.abbrev).all()

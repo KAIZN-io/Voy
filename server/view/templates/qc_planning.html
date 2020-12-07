@@ -1,21 +1,41 @@
-{% extends 'base.html' %}
-
-{% block title %}
-QC Planning
-{% endblock %}
-
-{% block content %}
+{% extends 'base.html' %} {% block title %} QC Planning {% endblock %} {% block
+content %}
 <div>
   {%- for breadcrumb in breadcrumbs -%}
   <a href="{{ breadcrumb.url }}">{{ breadcrumb.text }}</a>
-  {{ '/' if not loop.last }}
-  {%- endfor -%}
+  {{ '/' if not loop.last }} {%- endfor -%}
 </div>
-<h1>QC Planning </h1>
+<h1>QC Planning</h1>
 
+<form method="post">
 
-{% endblock %}
+  <p>Prioritize these studies: </p>
 
-{% block js %} 
-  <script src="{{ url_for('static', filename='js/data_entry.js') }}" type="text/javascript"></script>
+  {% for study in studies %}  
+  {% if study|string in prioritized_studies %}
+  <input type="checkbox" id="{{ study }}" name="studyCheckbox" value="{{ study }}" checked="checked">
+  {% else %}
+  <input type="checkbox" id="{{ study }}" name="studyCheckbox" value="{{ study }}">
+
+  {% endif %}
+
+  <label for="{{ study }}"> {{ study }}</label><br>
+  {% endfor %}
+
+  <div class="form-group">
+    <button
+      class="btn btn-primary"
+      style="float: left"
+      type="submit"
+    >
+    Prioritize
+    </button>
+  </div>
+</form>
+
+{% endblock %} {% block js %}
+<script
+  src="{{ url_for('static', filename='js/data_entry.js') }}"
+  type="text/javascript"
+></script>
 {% endblock %}
