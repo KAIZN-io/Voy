@@ -109,11 +109,12 @@ def index():
     # for the right person, if the query is not closed --> corrected=False (==1)
     if current_user.role == "MedOps":
         posts_data = QC_Check.query.filter_by(
-            responsible=current_user.abbrev, corrected=1, close=1).all()
+            responsible=current_user.abbrev, corrected=1, close=1).order_by(QC_Check.prioritized).all()
     else:
         # what DM / Admin sees
-        posts_data = QC_Check.query.filter_by(close=1).all()
-    print(posts_data)
+        posts_data = db.session.query(QC_Check).filter_by(close=1).order_by(QC_Check.prioritized).all()
+
+
     # query all user and the corresponding roles
     user_qc_requery = QC_Requery.query.with_entities(QC_Requery.query_id, QC_Requery.abbrev).all()
     user_data = DB_User.query.with_entities(DB_User.abbrev, DB_User.role).all()
