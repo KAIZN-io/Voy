@@ -18,5 +18,6 @@ class QC_Check(UserMixin, db.Model):
     procedure = db.Column(db.Text)
     description = db.Column(db.Text)
     responsible = db.Column(db.Text)
+    prioritized = db.Column(db.Integer)
     corrected = db.Column(db.Integer)
     close = db.Column(db.Integer)

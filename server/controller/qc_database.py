@@ -35,7 +35,15 @@ def as_dict(self):
 @register_breadcrumb(qc_database, '.qc_planning', '')
 @login_required
 def qc_planning():
-    return render_template('qc_planning.html')
+    # filter all unique study numbers 
+    study_list = db.session.query(QC_Check.study_id).distinct().all()
+    study_list = [x[0] for x in study_list]
+
+    if request.method == 'POST':
+        study_id = request.form['study']
+        print(study_id)
+
+    return render_template('qc_planning.html', studies = study_list)
 
 
 @qc_database.route('/data_entry', methods=('GET', 'POST'))
