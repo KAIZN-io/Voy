@@ -241,7 +241,12 @@ def edit_data():
         # get whole data as an dict
         new_data = request.form.to_dict()
 
+        # TEMP: Bug fix for the "scr_no" and "study_id"
+        new_data['scr_no'] = int(new_data['scr_no'])
+        new_data['study_id'] = int(new_data['study_id'])
+
         for category, new_value in new_data.items():
+        
 
             # compare the data from the DB with the from the request.form
             if (old_data[category] != new_data[category]):
