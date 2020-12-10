@@ -8,7 +8,6 @@ This project was designed to fulfill the requirements of a compliant software in
     - [Initialize the database](#init_database)
     - [Build assets](#build_assets)
         - [Develop assets](#develop_assets)
-    - [(Optional) Usage of Python data analysis scripts over ActiveMQ](#mq)
     - [Run the app](#run_app)
 - [Advanced configuration](#advanced_config)
 - [Deployment](#deployment)
@@ -20,16 +19,14 @@ This project was designed to fulfill the requirements of a compliant software in
 
 -   build with: Python Flask
 -   software design pattern: Model-View-Controller (MVC)
--   runs inside a virtual environment: `nodeenv` (JS / Node.js) inside of `virtualenv` (Python). That's why you must **always activate venv** with `. venv/bin/activate`   
+-   runs inside a virtual environment: `virtualenv` (Python). That's why you must **always activate venv** with `. venv/bin/activate`, if you run it outside of Docker 
 -   runs offline: `npm` downloads the JS packages and `parcel.js` bundles them, that they are executable in the project
 -   deploy it on a server with: `gunicorn`
--   message broker: Apache ActiveMQ (AMQP: AMQP 1.0 protocol)
-  -   AMQP communications with the broker: qpid-proton (Python)
+
 
 <a name="local_dev"></a>
 # Getting started with local development
 1. Create a working virtualenv with `make venv` and activate it with `. venv/bin/activate`
-2. Only once: To activate the **node** virtual environment along with venv in the future: `nodeenv -p`
 
 <a name="docker"></a>
 ## 1. Prepare configuration - Docker
@@ -62,15 +59,8 @@ is useful when there is no setup on the host machine to run the python code loca
 ### 3.1 Develop assets
 For a more convenient way of working with the CSS and JS assets, run `npm run watch`.
 
-<a name="mq"></a>
-## 4. (Optional) Usage of Python data analysis scripts over ActiveMQ
-1. install ActiveMQ by following [this article](https://websiteforstudents.com/how-to-install-apache-activemq-on-ubuntu-20-04-18-04/)
-2. Temporary: Install a pdf converter with `brew cask install wkhtmltopdf`
-3. Go to the AMQP server with `cd server/controller/amqp`
-4. Run this server with `python3 amqp_server.py`
-
 <a name="run_app"></a>
-## 5. Finally: run the app
+## 4. Finally: run the app
 1. Start the app with `flask run`
 2. Open http://localhost:5000/
 
@@ -92,8 +82,8 @@ when the python dependencies change, a rebuild of the Docker image is necessary.
 
 - Has your `requirements.txt` changed?
   1. Run `docker-compose build` to have Docker update the image with the new dependencies.
-  2. Recreate the running containers with `docker-compose up -d p`
-
+  2. Recreate the running containers with `docker-compose up -d p`    
+  
 - Only changes in code?
   1. If you changed your static files run: `npm run build`
   2. Gunicorn does not reload your code, so you need to restart your `p` service: `docker-compose restart p`
