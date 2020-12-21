@@ -13,7 +13,7 @@ services:
       timeout: 3s
       retries: 8
     ports:
-      - "3306:3306"
+      - ${POSTGRES_SERVICE_PORT}:5432
     volumes:
       - .:/postgresql
 
