@@ -31,6 +31,8 @@ services:
       - /usr/src/project-p/node_modules
       - /usr/src/project-p/venv
     environment:
+      - POSTGRES_HOST=db
+      - POSTGRES_PORT=3306
       - POSTGRES_DB=${DB_NAME}
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
