@@ -1,6 +1,6 @@
 # About this project
 
-This project was designed to fulfill the requirements of a compliant software in EU | Life Science.
+This project was designed to fulfill the requirements of a compliant software in EU | Life Science respective to the GDPR.
 
 - [An overview](#overview)
 - [Local development](#local_dev)
@@ -20,9 +20,10 @@ This project was designed to fulfill the requirements of a compliant software in
 -   build with: Python Flask
 -   software design pattern: Model-View-Controller (MVC)
 -   runs inside a virtual environment: `virtualenv` (Python). That's why you must **always activate venv** with `. venv/bin/activate`, if you run it outside of Docker 
--   runs offline: `npm` downloads the JS packages and `parcel.js` bundles them, that they are executable in the project
+-   the software runs offline: `npm` downloads the JS packages and `parcel.js` bundles them, that they are executable in the project
 -   deploy it on a server with: `gunicorn`
 
+![](project_overview.png)
 
 <a name="local_dev"></a>
 # Getting started with local development
@@ -61,7 +62,7 @@ For a more convenient way of working with the CSS and JS assets, run `npm run wa
 
 <a name="run_app"></a>
 ## 4. Finally: run the app
-1. Start the app with `flask run`
+1. Start the app with `flask run -p 5000`
 2. Open http://localhost:5000/
 
 <a name="advanced_config"></a>
