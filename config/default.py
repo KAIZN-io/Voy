@@ -10,11 +10,11 @@ class Config(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     SQLALCHEMY_DATABASE_URI = 'postgresql://{user}:{password}@{host}:{port}/{dbName}'.format(
-        user = environ.get('DB_USER'),
+        user     = environ.get('DB_USER'),
         password = environ.get('DB_PASSWORD'),
-        host =  environ.get('POSTGRES_HOST'),
-        port = environ.get('DB_PORT'),
-        dbName = environ.get('DB_NAME')
+        host     = environ.get('DB_HOST'),
+        port     = environ.get('DB_PORT'),
+        dbName   = environ.get('DB_NAME')
     )
 
     PERMANENT_SESSION_LIFETIME = timedelta(minutes=60)

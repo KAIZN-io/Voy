@@ -13,16 +13,16 @@ services:
       timeout: 3s
       retries: 8
     ports:
-      - ${POSTGRES_SERVICE_PORT}:5432
+      - ${DB_SERVICE_PORT}:5432
     volumes:
       - .:/postgresql
 
   p:
     image: project-p
-    build: 
+    build:
       context: .
     command: ["flask", "run", "--host=0.0.0.0"]
-    depends_on: 
+    depends_on:
       db:
         condition: service_healthy
     volumes:
@@ -31,11 +31,11 @@ services:
       - /usr/src/project-p/node_modules
       - /usr/src/project-p/venv
     environment:
-      - POSTGRES_HOST=db
-      - POSTGRES_PORT=5432
-      - POSTGRES_DB=${DB_NAME}
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME
+      - DB_USER
+      - DB_PASSWORD
       - SECRET_KEY
       - FLASK_APP
       - FLASK_ENV
