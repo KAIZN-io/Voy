@@ -12,6 +12,7 @@ This project was designed to fulfill the requirements of a compliant software in
 - [Advanced configuration](#advanced_config)
 - [Deployment](#deployment)
     - [Debugging](#debugging)
+- [This project in biological words](#biology_analogon)
   
 
 <a name="overview"></a>
@@ -95,3 +96,20 @@ To debug gunicorn you can add the `--preload` flag to it. This will give you sta
 `--preload` flag is now set by default when using the Docker-Compose setup.
 
 To see the logs of the `p` service run `docker-compose logs -f p`.
+
+<a name="biology_analogon"></a>
+# This project in biological words (in german)
+Ein leerer *Server* ist wie eine Zelle, die nur aus einer Plasmamembran mit Signalproteinen besteht.
+*ssh* entspricht diesen Proteinen auf der Plasmamembran, die Signale entgegen nehmen.  
+
+Um die Zelle mit Grundfunktionen auszustatten, importieren wir Ribosome und elementare Netzwerkstrukturen, was in Form des Aufsetzen des Betriebssystem *Ubuntu* erfolgt.  
+
+Das *Docker Image*, welches wir in die Zelle importieren können, entspricht der mtDNA (mitochondriale DNA), wohingegen diese mtDNA ohne das Mitochondrium exisitiert, sondern diese durch die Translation erstmalig mit allen Funktionen bildet.   
+
+*Docker Container* sind nun wie das Mitochondrium. Sie sind eine Zelle in einer größeren Zelle (so die Endosymbiontentheorie). 
+
+Jetzt können aber x-beliebig viele Mitochondrien in der Zelle existieren. Damit man mit ihnen kommunizieren kann, muss man deren entsprechende Membranproteine ansprechen, was *Port-binding* enstpricht 
+
+
+
+
