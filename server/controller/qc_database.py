@@ -3,7 +3,6 @@ from flask_login import login_required, current_user
 from flask_breadcrumbs import Breadcrumbs, register_breadcrumb, default_breadcrumb_root
 
 from server.model import QC_Check, DB_User, QC_Audit, QC_Requery
-from server.controller.amqp.amqp_client import request_amqp
 from server.controller.Compliance_Computerized_Systems_EMA import audit_trail, time_stamp
 from server.controller.data_analysis import TransformData
 

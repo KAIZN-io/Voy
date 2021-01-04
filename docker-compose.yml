@@ -1,34 +1,41 @@
 version: "3.8"
 
 services:
-
   db:
-    image: mariadb:10.4
-    volumes:
-      - /var/lib/mysql
+    image: postgres:13.1-alpine
     environment:
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE
-      - MYSQL_USER
-      - MYSQL_PASSWORD
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${DB_USER}", "-d", "${DB_NAME}"]
+      interval: 15s
+      timeout: 3s
+      retries: 8
     ports:
-      - ${MYSQL_SERVICE_PORT}:3306
+      - ${DB_SERVICE_PORT}:5432
+    volumes:
+      - .:/postgresql
 
   p:
     image: project-p
-    build: .
-    command: [ "flask", "run", "--host=0.0.0.0"]
+    build:
+      context: .
+    command: ["flask", "run", "--host=0.0.0.0"]
+    depends_on:
+      db:
+        condition: service_healthy
     volumes:
       - ./:/usr/src/project-p
       - /usr/src/project-p/.cache
       - /usr/src/project-p/node_modules
       - /usr/src/project-p/venv
     environment:
-      - MYSQL_HOST=db
-      - MYSQL_PORT=3306
-      - MYSQL_DATABASE
-      - MYSQL_USER
-      - MYSQL_PASSWORD
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME
+      - DB_USER
+      - DB_PASSWORD
       - SECRET_KEY
       - FLASK_APP
       - FLASK_ENV

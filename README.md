@@ -1,6 +1,6 @@
 # About this project
 
-This project was designed to fulfill the requirements of a compliant software in EU | Life Science.
+This project was designed to fulfill the requirements of a compliant software in EU | Life Science respective to the GDPR.
 
 - [An overview](#overview)
 - [Local development](#local_dev)
@@ -12,6 +12,7 @@ This project was designed to fulfill the requirements of a compliant software in
 - [Advanced configuration](#advanced_config)
 - [Deployment](#deployment)
     - [Debugging](#debugging)
+- [This project in biological words](#biology_analogon)
   
 
 <a name="overview"></a>
@@ -20,9 +21,10 @@ This project was designed to fulfill the requirements of a compliant software in
 -   build with: Python Flask
 -   software design pattern: Model-View-Controller (MVC)
 -   runs inside a virtual environment: `virtualenv` (Python). That's why you must **always activate venv** with `. venv/bin/activate`, if you run it outside of Docker 
--   runs offline: `npm` downloads the JS packages and `parcel.js` bundles them, that they are executable in the project
+-   the software runs offline: `npm` downloads the JS packages and `parcel.js` bundles them, that they are executable in the project
 -   deploy it on a server with: `gunicorn`
 
+![](project_overview.png)
 
 <a name="local_dev"></a>
 # Getting started with local development
@@ -61,7 +63,7 @@ For a more convenient way of working with the CSS and JS assets, run `npm run wa
 
 <a name="run_app"></a>
 ## 4. Finally: run the app
-1. Start the app with `flask run`
+1. Start the app with `flask run -p 5000`
 2. Open http://localhost:5000/
 
 <a name="advanced_config"></a>
@@ -94,3 +96,20 @@ To debug gunicorn you can add the `--preload` flag to it. This will give you sta
 `--preload` flag is now set by default when using the Docker-Compose setup.
 
 To see the logs of the `p` service run `docker-compose logs -f p`.
+
+<a name="biology_analogon"></a>
+# This project in biological words (in german)
+Ein leerer *Server* ist wie eine Zelle, die nur aus einer Plasmamembran mit Signalproteinen besteht.
+*ssh* entspricht diesen Proteinen auf der Plasmamembran, die Signale entgegen nehmen.  
+
+Um die Zelle mit Grundfunktionen auszustatten, importieren wir Ribosome und elementare Netzwerkstrukturen, was in Form des Aufsetzen des Betriebssystem *Ubuntu* erfolgt.  
+
+Das *Docker Image*, welches wir in die Zelle importieren können, entspricht der mtDNA (mitochondriale DNA), wohingegen diese mtDNA ohne das Mitochondrium exisitiert, sondern diese durch die Translation erstmalig mit allen Funktionen bildet.   
+
+*Docker Container* sind nun wie das Mitochondrium. Sie sind eine Zelle in einer größeren Zelle (so die Endosymbiontentheorie). 
+
+Jetzt können aber x-beliebig viele Mitochondrien in der Zelle existieren. Damit man mit ihnen kommunizieren kann, muss man deren entsprechende Membranproteine ansprechen, was *Port-binding* enstpricht 
+
+
+
+
