@@ -15,7 +15,7 @@ services:
     ports:
       - ${DB_SERVICE_PORT}:5432
     volumes:
-      - .:/postgresql
+      - db:/var/lib/postgresql/data
 
   p:
     image: project-p
@@ -45,3 +45,7 @@ services:
       - ${P_SERVICE_PORT}:5000
     depends_on:
       - db
+
+volumes:
+  db:
+
