@@ -76,7 +76,7 @@ For a more convenient way of working with the CSS and JS assets, run `npm run wa
 This app includes a Docker setup for live deployment. Here is how to use it:
 
 ### Initial Setup
-For the initial setup, just follow the instructions described in steps 1 and 2.1.
+For the initial setup, just follow the instructions described in steps 1., 2.1. and 3.
 
 ### Updating
 The setup relies on mounting the code into the container, so code changes are relatively easy to propagate. However,
