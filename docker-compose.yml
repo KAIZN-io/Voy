@@ -1,6 +1,7 @@
 version: "3.8"
 
 services:
+
   db:
     image: postgres:13.1-alpine
     environment:
@@ -16,6 +17,22 @@ services:
       - ${DB_SERVICE_PORT}:5432
     volumes:
       - db:/var/lib/postgresql/data
+
+  db-backup:
+    image: project-p/db-backup
+    build:
+      dockerfile: $PWD/docker/services/db-backup/Dockerfile
+      context: $PWD/docker/services/db-backup
+    volumes:
+      - ./ofelia.ini:/etc/ofelia/config.ini
+      - ${DB_BACKUP_DIR}:/backups/
+    environment:
+      - DB_HOST=db
+      - DB_USER
+      - DB_BACKUP_EXCLUDE_LIST
+      - PGPASSWORD=${DB_PASSWORD}
+    depends_on:
+      - db
 
   p:
     image: project-p/p
