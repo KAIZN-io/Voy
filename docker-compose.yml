@@ -58,8 +58,7 @@ services:
     ports:
       - ${P_SERVICE_PORT}:5000
     depends_on:
-      db:
-        condition: service_healthy
+      - db
 
 volumes:
   db:
