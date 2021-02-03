@@ -22,9 +22,6 @@ services:
     build:
       context: .
     command: ["flask", "run", "--host=0.0.0.0"]
-    depends_on:
-      db:
-        condition: service_healthy
     volumes:
       - ./:/usr/src/project-p
       - /usr/src/project-p/.cache
@@ -44,8 +41,8 @@ services:
     ports:
       - ${P_SERVICE_PORT}:5000
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
 volumes:
   db:
-
