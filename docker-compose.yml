@@ -24,8 +24,8 @@ services:
       dockerfile: $PWD/docker/services/db-backup/Dockerfile
       context: $PWD/docker/services/db-backup
     volumes:
-      - ./ofelia.ini:/etc/ofelia/config.ini
-      - ${DB_BACKUP_DIR}:/backups/
+      - ./ofelia.ini:/etc/ofelia/config.ini:ro
+      - ${DB_BACKUP_DIR}:/backups/:cached
     environment:
       - DB_HOST=db
       - DB_USER
@@ -40,7 +40,7 @@ services:
       context: .
     command: ["flask", "run", "--host=0.0.0.0"]
     volumes:
-      - ./:/usr/src/project-p
+      - ./:/usr/src/project-p:cached
       - /usr/src/project-p/.cache
       - /usr/src/project-p/node_modules
       - /usr/src/project-p/venv
