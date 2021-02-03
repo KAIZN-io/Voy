@@ -18,7 +18,7 @@ services:
       - db:/var/lib/postgresql/data
 
   p:
-    image: project-p
+    image: project-p/p
     build:
       context: .
     command: ["flask", "run", "--host=0.0.0.0"]
