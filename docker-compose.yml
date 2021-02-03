@@ -4,19 +4,19 @@ services:
 
   db:
     image: postgres:13.1-alpine
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "${DB_USER}", "-d", "${DB_NAME}" ]
+      interval: 15s
+      timeout: 3s
+      retries: 8
+    volumes:
+      - db:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=${DB_NAME}
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
-    healthcheck:
-      test: ["CMD", "pg_isready", "-U", "${DB_USER}", "-d", "${DB_NAME}"]
-      interval: 15s
-      timeout: 3s
-      retries: 8
     ports:
       - ${DB_SERVICE_PORT}:5432
-    volumes:
-      - db:/var/lib/postgresql/data
 
   db-backup:
     image: project-p/db-backup
