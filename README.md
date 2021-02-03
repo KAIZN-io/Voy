@@ -34,9 +34,8 @@ This project was designed to fulfill the requirements of a compliant software in
 ## 1. Prepare configuration - Docker
 Don't want to locally install a MySQL or MariaDB database? Use the included Docker setup.
 
-1. Copy `.example.env` to `.env`
-2. Use the example values or adapt them to your preference.
-3. You can now start your database with `docker-compose up -d db`
+1. Copy `.example.env` to `.env`. Use the example values or adapt them to your preference.
+2. You can now start your database with `docker-compose up -d db`
 
 <a name="init_database"></a>
 ## 2. Initialize the database
@@ -66,6 +65,10 @@ For a more convenient way of working with the CSS and JS assets, run `npm run wa
 1. Start the app with `flask run -p 5000`
 2. Open http://localhost:5000/
 
+### 4.1 Run the app in Docker
+2.1. Start the app with `docker-compose up -d p`
+2.2. Open http://localhost/ (Port may bi different depending on your `.env` configuration.)
+
 <a name="advanced_config"></a>
 # Advanced configuration
 - the logging style is inside `logging.yaml`
@@ -76,7 +79,7 @@ For a more convenient way of working with the CSS and JS assets, run `npm run wa
 This app includes a Docker setup for live deployment. Here is how to use it:
 
 ### Initial Setup
-For the initial setup, just follow the instructions described in steps 1., 2.1. and 3.
+For the initial setup, just follow the instructions described in steps 1., 2.1., 3. and 4.1
 
 ### Updating
 The setup relies on mounting the code into the container, so code changes are relatively easy to propagate. However,
@@ -89,6 +92,15 @@ when the python dependencies change, a rebuild of the Docker image is necessary.
 - Only changes in code?
   1. If you changed your static files run: `npm run build`
   2. Gunicorn does not reload your code, so you need to restart your `p` service: `docker-compose restart p`
+
+### Scheduled database backups
+The Docker setup also includes a container for creating scheduled backups of the database. Here is how to set them up:
+
+1. Copy `ofelia.example.ini` to `ofelia.ini`. Use the example values or adapt them to your preference. See: [mcuadros/ofelia](https://github.com/mcuadros/ofelia)
+2. You can now start your database backups with `docker-compose up -d db-backups`
+
+#### Adapt the location of the backups
+The location where the backups are stored can be adapted in the `.env` file with the `DB_BACKUP_DIR` variable.
 
 <a name="debugging"></a>
 ## Debugging
