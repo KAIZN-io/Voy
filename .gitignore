@@ -19,7 +19,12 @@ docs/_build/
 node_modules/
 build
 *.tgz
-instance/ 
+instance/
+
+# Backups
+/backups/*
+!/backups/.gitkeep
+/ofelia.ini
 
 # Coverage reports
 htmlcov/
@@ -30,6 +35,7 @@ htmlcov/
 # Custom 
 c_test/
 notes.txt
+
 # Compliance data
 *.log
 *.sqlite

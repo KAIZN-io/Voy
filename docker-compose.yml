@@ -1,32 +1,46 @@
 version: "3.8"
 
 services:
+
   db:
     image: postgres:13.1-alpine
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "${DB_USER}", "-d", "${DB_NAME}" ]
+      interval: 15s
+      timeout: 3s
+      retries: 8
+    volumes:
+      - db:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=${DB_NAME}
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
-    healthcheck:
-      test: ["CMD", "pg_isready", "-U", "${DB_USER}", "-d", "${DB_NAME}"]
-      interval: 15s
-      timeout: 3s
-      retries: 8
     ports:
       - ${DB_SERVICE_PORT}:5432
+
+  db-backup:
+    image: project-p/db-backup
+    build:
+      dockerfile: $PWD/docker/services/db-backup/Dockerfile
+      context: $PWD/docker/services/db-backup
     volumes:
-      - db:/var/lib/postgresql/data
+      - ./ofelia.ini:/etc/ofelia/config.ini:ro
+      - ${DB_BACKUP_DIR}:/backups/:cached
+    environment:
+      - DB_HOST=db
+      - DB_USER
+      - DB_BACKUP_EXCLUDE_LIST
+      - PGPASSWORD=${DB_PASSWORD}
+    depends_on:
+      - db
 
   p:
-    image: project-p
+    image: project-p/p
     build:
       context: .
     command: ["flask", "run", "--host=0.0.0.0"]
-    depends_on:
-      db:
-        condition: service_healthy
     volumes:
-      - ./:/usr/src/project-p
+      - ./:/usr/src/project-p:cached
       - /usr/src/project-p/.cache
       - /usr/src/project-p/node_modules
       - /usr/src/project-p/venv
@@ -48,4 +62,3 @@ services:
 
 volumes:
   db:
-
