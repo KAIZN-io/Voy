@@ -1,22 +1,18 @@
 # What is this software about?
 
-A simple software tool for the quality control of source documents.    
+A simple tool for the quality control of source documents.    
 Designed to fulfill the requirements of a compliant software in EU | Life Science respective to the GDPR.
 
 - [An overview](#overview)
 - [Quickstart](#quickstart)
-- [Development](#dev)
-    - [Prepare your environment](#prepare_env)
-        - [Create a virtual environment](#virtual_env)
+- [Local development](#local_dev)
     - [Get a database](#database)
     - [Initialize the database](#init_database)
-        - [Initialize the database via Docker](#init_database_via_docker)
     - [Build assets](#build_assets)
-        - [Develop assets](#develop_assets)
     - [Run the app](#run_app)
-- [Advanced configuration](#advanced_config)
 - [Deployment](#deployment)
     - [Debugging](#debugging)
+- [Advanced configuration](#advanced_config)
 - [This project in biological words](#biology_analogon)
   
 
@@ -44,63 +40,57 @@ Optional (for backups):
 4. `cp ofelia.example.ini ofelia.ini`       
 5. `docker-compose up -d db-backup`
 
-<a name="dev"></a>
-# Development
 
-<a name="prepare_env"></a>
-## 1. Prepare your environment
-1. Copy `.example.env` to `.env`
-2. Use the example values or adapt them to your preference.
-
-<a name="virtual_env"></a>
-## 1.1. Create a virtual enviroment for development 
+<a name="local_dev"></a>
+# Getting started with local development
 1. Create a working virtualenv with `make venv` and activate it with `. venv/bin/activate`
 
 <a name="database"></a>
-## 2. Get a database
-Don't want to locally install a PostgreSQL database?    
-Use the database from Docker with `docker-compose up -d db`
+## 1. Get a database
+Don't want to install a local PostgreSQL database?    
+
+1. Copy `.example.env` to `.env`. Use the example values or adapt them to your preference.
+2. You can now start your database with `docker-compose up -d db`
 
 <a name="init_database"></a>
-## 3. Initialize the database
+## 2. Initialize the database
 1. Open the Flask shell with `flask shell`
 2. Get the model schemas with `from server.model import db`
 3. Create the database and the tables with `db.create_all()`
 
 <a name="init_database_via_docker"></a>
-### 3.1 Initialize the database via Docker
+### 2.1 Initialize the database via Docker
 When using the docker setup, one can initialize the database by opening a shell inside the python docker container.
 1. Start the QC Database App with `docker-compose up -d p`
 2. Open a shell inside the now running container with `docker-compose exec p /bin/bash`
 3. Setup the database like normal in the steps above.
 
 <a name="build_assets"></a>
-## 4. Build assets
+## 3. Build assets
 1. Install node modules with `npm install`
 2. Bundle assets with `npm run build`
 
 <a name="develop_assets"></a>
-### 4.1 Develop assets
+### 3.1 Develop assets
 For a more convenient way of working with the CSS and JS assets, run `npm run watch`.
 
 <a name="run_app"></a>
-## 5. Run the app 
+## 4. Run the app 
 1. Start the app with `flask run -p 5000`
 2. Open http://localhost:5000/
 
-<a name="advanced_config"></a>
-# Advanced configuration
-- the logging style is inside `logging.yaml`
-- the app default env is "development". Set it to "production" with `export FLASK_ENV=production` before running it with `flask run`
+### 4.1 Run the app in Docker
+1. Start the app with `docker-compose up -d p`.   
+2. Open http://localhost/ (Port maybe different depending on your `.env` configuration.)
 
 <a name="deployment"></a>
 # Deployment with Docker
 This app includes a Docker setup for live deployment. Here is how to use it:
 
-### Initial Setup
-For the initial setup, just follow the instructions described in steps 1., 2. and 3.1
+## Initial Setup
+For the initial setup, just follow the instructions described in steps 1., 2.1 and 3. and 4.1
 
-### Updating
+## Updating
 The setup relies on mounting the code into the container, so code changes are relatively easy to propagate.    
 However, when the python dependencies change, a rebuild of the Docker image is necessary.
 
@@ -118,6 +108,11 @@ To debug gunicorn you can add the `--preload` flag to it. This will give you sta
 The `--preload` flag is now set by default when using the Docker-Compose setup.
 
 To see the logs of the `p` service run `docker-compose logs -f p`.
+
+<a name="advanced_config"></a>
+# Advanced configuration
+- the logging style is inside `logging.yaml`
+- the app default env is "development". Set it to "production" with `export FLASK_ENV=production` before running it with `flask run`
 
 <a name="biology_analogon"></a>
 # This project in biological words (in german)
