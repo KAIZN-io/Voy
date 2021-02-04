@@ -4,6 +4,7 @@ A simple software tool for the quality control of source documents.
 Designed to fulfill the requirements of a compliant software in EU | Life Science respective to the GDPR.
 
 - [An overview](#overview)
+- [Quickstart](#quickstart)
 - [Development](#dev)
     - [Prepare your environment](#prepare_env)
         - [Create a virtual environment](#virtual_env)
@@ -29,6 +30,19 @@ Designed to fulfill the requirements of a compliant software in EU | Life Scienc
 
 ![](project_overview.png)
 
+<a name="quickstart"></a>
+# Quickstart
+1. `cp .example.env .env`
+2. `docker-compose up -d p`
+3. `docker-compose exec p /bin/bash`    
+3.1 `flask shell`       
+3.2 `from server.model import db`    
+3.3 `db.create_all()`    
+4.   http://localhost/     
+
+Optional (for backups):    
+4. `cp ofelia.example.ini ofelia.ini`       
+5. `docker-compose up -d db-backup`
 
 <a name="dev"></a>
 # Development
