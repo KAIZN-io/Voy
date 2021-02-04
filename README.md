@@ -87,8 +87,8 @@ For a more convenient way of working with the CSS and JS assets, run `npm run wa
 # Deployment with Docker
 This app includes a Docker setup for live deployment. Here is how to use it:
 
-## Initial Setup
-For the initial setup, just follow the instructions described in steps 1., 2.1 and 3. and 4.1
+### Initial Setup
+For the initial setup, just follow the instructions described in steps 1., 2.1., 3. and 4.1
 
 ## Updating
 The setup relies on mounting the code into the container, so code changes are relatively easy to propagate.    
@@ -101,6 +101,15 @@ However, when the python dependencies change, a rebuild of the Docker image is n
 - Only changes in code?
   1. If you changed your static files run: `npm run build`
   2. Gunicorn does not reload your code, so you need to restart your `p` service: `docker-compose restart p`
+
+### Scheduled database backups
+The Docker setup also includes a container for creating scheduled backups of the database. Here is how to set them up:
+
+1. Copy `ofelia.example.ini` to `ofelia.ini`. Use the example values or adapt them to your preference. See: [mcuadros/ofelia](https://github.com/mcuadros/ofelia)
+2. You can now start your database backups with `docker-compose up -d db-backup`
+
+#### Adapt the location of the backups
+The location where the backups are stored can be adapted in the `.env` file with the `DB_BACKUP_DIR` variable.
 
 <a name="debugging"></a>
 ## Debugging
