@@ -97,7 +97,7 @@ when the python dependencies change, a rebuild of the Docker image is necessary.
 The Docker setup also includes a container for creating scheduled backups of the database. Here is how to set them up:
 
 1. Copy `ofelia.example.ini` to `ofelia.ini`. Use the example values or adapt them to your preference. See: [mcuadros/ofelia](https://github.com/mcuadros/ofelia)
-2. You can now start your database backups with `docker-compose up -d db-backups`
+2. You can now start your database backups with `docker-compose up -d db-backup`
 
 #### Adapt the location of the backups
 The location where the backups are stored can be adapted in the `.env` file with the `DB_BACKUP_DIR` variable.
