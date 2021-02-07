@@ -1,7 +1,9 @@
-from server import db
+from flask_sqlalchemy import SQLAlchemy
 
-from .db_user import DB_User
-from .qc_audit import QC_Audit
-from .qc_check import QC_Check
-from .qc_requery import QC_Requery
-from .user_management import User_Management
+db = SQLAlchemy()
+
+from server.model.db_user import DB_User
+from server.model.qc_audit import QC_Audit
+from server.model.qc_check import QC_Check
+from server.model.qc_requery import QC_Requery
+from server.model.user_management import User_Management

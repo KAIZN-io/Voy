@@ -4,7 +4,7 @@ from flask_breadcrumbs import Breadcrumbs, register_breadcrumb, default_breadcru
 from flask_login import login_required, current_user
 from sqlalchemy import inspect
 
-from server import db
+from server.model import db
 from server.controller.Compliance_Computerized_Systems_EMA import audit_trail, time_stamp
 from server.controller.data_analysis import TransformData
 from server.model import QC_Check, DB_User, QC_Audit, QC_Requery

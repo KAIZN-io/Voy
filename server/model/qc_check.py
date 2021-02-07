@@ -1,6 +1,6 @@
 from flask_login import UserMixin
 
-from server import db
+from server.model import db
 
 
 class QC_Check(UserMixin, db.Model):

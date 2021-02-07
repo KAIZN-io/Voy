@@ -6,17 +6,17 @@ from flask_breadcrumbs import Breadcrumbs, register_breadcrumb
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 
+from .controller import auth_blueprint, qc_database_blueprint, users_module_blueprint
+from .model import db, DB_User
 
 # Load logging configuration
 with open('config/logging.yaml', 'r') as stream:
     yamld = yaml.safe_load(stream)
     logging.config.dictConfig(yamld)
 
-# init SQLAlchemy so we can use it later in our models
-db = SQLAlchemy()
-
 
 def create_app():
+    # Create the app
     app = Flask(
         __name__,
         template_folder='view/templates',
@@ -25,19 +25,19 @@ def create_app():
         instance_relative_config=True
     )
 
-    # import the configuration
+    # Import the configuration
     app.config.from_object('config.default.Config')
+
+    # Attach the database to the app
+    db.init_app(app)
 
     # Initialize Flask-Breadcrumbs
     Breadcrumbs(app=app)
 
-    db.init_app(app)
-
+    # Initialize the login manager
     login_manager = LoginManager()
     login_manager.login_view = 'auth.login'
     login_manager.init_app(app)
-
-    from server.model import DB_User
 
     @login_manager.user_loader
     def load_user(user_id):
@@ -45,19 +45,8 @@ def create_app():
         return DB_User.query.get(int(user_id))
 
     # blueprint for auth routes in our app
-    # from .auth import auth as auth_blueprint
-    from server.controller.auth import auth as auth_blueprint
-
     app.register_blueprint(auth_blueprint)
-
-    # blueprint for non-auth parts of app
-    # from .main import main as main_blueprint
-    from server.controller.qc_database import qc_database as qc_database_blueprint
-
     app.register_blueprint(qc_database_blueprint)
-
-    from server.controller.users_module import users_module as users_module_blueprint
-
     app.register_blueprint(users_module_blueprint)
 
     return app
