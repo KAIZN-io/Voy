@@ -37,10 +37,6 @@ def create_app():
     login_manager.login_view = 'auth.login'
     login_manager.init_app(app)
 
-    # dont get information level logs
-    log = logging.getLogger('werkzeug')
-    log.disabled = True
-
     from server.model import DB_User
 
     @login_manager.user_loader
