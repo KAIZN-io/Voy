@@ -1,16 +1,11 @@
-from flask import Flask
-from flask import current_app, g
-from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager
 import logging
-from flask_breadcrumbs import Breadcrumbs, register_breadcrumb
-
-import os
-import sqlite3
-from contextlib import closing
-
-import yaml
 import logging.config
+import yaml
+from flask import Flask
+from flask_breadcrumbs import Breadcrumbs, register_breadcrumb
+from flask_login import LoginManager
+from flask_sqlalchemy import SQLAlchemy
+
 
 # logging.config.fileConfig('logging.conf',
 #                           disable_existing_loggers=False)

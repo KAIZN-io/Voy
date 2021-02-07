@@ -1,13 +1,12 @@
-from flask import Blueprint, render_template, redirect, url_for, request, flash, current_app, session
+import logging
+from flask import Blueprint, render_template, redirect, url_for, request, flash, session
+from flask_breadcrumbs import register_breadcrumb, default_breadcrumb_root
 from flask_login import login_user, logout_user, login_required, current_user
-from flask_breadcrumbs import Breadcrumbs, register_breadcrumb, default_breadcrumb_root
-
 from werkzeug.security import generate_password_hash, check_password_hash
 
-
 from server import db, to_qc_file, to_console, to_user_file
-from server.model import DB_User, User_Management
 from server.controller.Compliance_Computerized_Systems_EMA import audit_trail, time_stamp, passwd_generator
+from server.model import DB_User, User_Management
 
 auth = Blueprint('auth', __name__)
 # set auth blueprint as a root

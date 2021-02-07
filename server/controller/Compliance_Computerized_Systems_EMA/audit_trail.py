@@ -1,6 +1,6 @@
+from server import to_qc_file
 from server.controller.Compliance_Computerized_Systems_EMA.time_stamp import time_stamp
 from server.model import QC_Audit
-from server import to_qc_file
 
 
 def audit_trail(user, todo, id, category, old_value, new_value):

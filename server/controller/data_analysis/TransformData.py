@@ -1,6 +1,7 @@
-import pdfkit
 import pandas as pd
+import pdfkit
 import sqlite3
+
 
 def DictToPdf(query_as_dict={},file_name=''):
     # read the query data to the dataframe
@@ -19,4 +20,3 @@ def DictToExcel(query_as_dict={}, file_name=''):
     query_DataFrame = pd.DataFrame(query_as_dict)
 
     return query_DataFrame.to_excel("server/controller/query_downloads/{}.xlsx".format(file_name))
-    

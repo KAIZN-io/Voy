@@ -1,16 +1,13 @@
+import time
 from flask import Blueprint, render_template, request, flash, redirect, url_for, session, send_file
-from flask_login import login_required, current_user
 from flask_breadcrumbs import Breadcrumbs, register_breadcrumb, default_breadcrumb_root
-
-from server.model import QC_Check, DB_User, QC_Audit, QC_Requery
-from server.controller.Compliance_Computerized_Systems_EMA import audit_trail, time_stamp
-from server.controller.data_analysis import TransformData
+from flask_login import login_required, current_user
+from sqlalchemy import inspect
 
 from server import db
-
-from sqlalchemy import inspect
-import time
-
+from server.controller.Compliance_Computerized_Systems_EMA import audit_trail, time_stamp
+from server.controller.data_analysis import TransformData
+from server.model import QC_Check, DB_User, QC_Audit, QC_Requery
 
 qc_database = Blueprint('qc_database', __name__)
 

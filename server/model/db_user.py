@@ -2,6 +2,7 @@ from flask_login import UserMixin
 
 from server import db
 
+
 class DB_User(UserMixin, db.Model):
 
     __tablename__ = 'db_user'
