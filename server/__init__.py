@@ -6,19 +6,11 @@ from flask_breadcrumbs import Breadcrumbs, register_breadcrumb
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 
-# logging.config.fileConfig('logging.conf',
-#                           disable_existing_loggers=False)
-# logging.config.dictConfig('logging.yml')
 
-# logger = logging.getLogger(__name__)
-
+# Load logging configuration
 with open('config/logging.yaml', 'r') as stream:
     yamld = yaml.safe_load(stream)
     logging.config.dictConfig(yamld)
-
-to_qc_file = logging.getLogger('to_qc_file')
-to_console = logging.getLogger('to_console')
-to_user_file = logging.getLogger('to_user_file')
 
 # init SQLAlchemy so we can use it later in our models
 db = SQLAlchemy()

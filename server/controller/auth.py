@@ -4,9 +4,13 @@ from flask_breadcrumbs import register_breadcrumb, default_breadcrumb_root
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from server import db, to_qc_file, to_console, to_user_file
+from server import db
 from server.controller.Compliance_Computerized_Systems_EMA import audit_trail, time_stamp, passwd_generator
 from server.model import DB_User, User_Management
+
+# Get loggers
+to_console = logging.getLogger('to_console')
+to_user_file = logging.getLogger('to_user_file')
 
 auth = Blueprint('auth', __name__)
 # set auth blueprint as a root
