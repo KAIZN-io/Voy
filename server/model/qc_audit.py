@@ -4,7 +4,6 @@ from server import db
 
 
 class QC_Audit(UserMixin, db.Model):
-
     __tablename__ = 'qc_audit'
 
     id = db.Column(db.Integer, primary_key=True)

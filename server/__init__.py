@@ -6,7 +6,6 @@ from flask_breadcrumbs import Breadcrumbs, register_breadcrumb
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 
-
 # logging.config.fileConfig('logging.conf',
 #                           disable_existing_loggers=False)
 # logging.config.dictConfig('logging.yml')
@@ -26,9 +25,13 @@ db = SQLAlchemy()
 
 
 def create_app():
-    app = Flask(__name__, template_folder='view/templates',
-                static_url_path='', static_folder='view/static/dist',
-                instance_relative_config=True)
+    app = Flask(
+        __name__,
+        template_folder='view/templates',
+        static_url_path='',
+        static_folder='view/static/dist',
+        instance_relative_config=True
+    )
 
     # import the configuration
     app.config.from_object('config.default.Config')

@@ -4,7 +4,6 @@ from server import db
 
 
 class QC_Requery(UserMixin, db.Model):
-
     __tablename__ = 'qc_requery'
 
     id = db.Column(db.Integer, primary_key=True)

@@ -4,7 +4,6 @@ from server import db
 
 
 class User_Management(UserMixin, db.Model):
-
     __tablename__ = 'user_management'
 
     id = db.Column(db.Integer, primary_key=True)

@@ -4,7 +4,6 @@ from server import db
 
 
 class DB_User(UserMixin, db.Model):
-
     __tablename__ = 'db_user'
 
     id = db.Column(db.Integer, primary_key=True)

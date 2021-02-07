@@ -20,7 +20,6 @@ def login():
 
 @auth.route('/login', methods=('GET', 'POST'))
 def login_post():
-
     abbrev = request.form.get('abbreviation')
     password = request.form.get('password')
 
@@ -78,8 +77,12 @@ def admin_signup_post():
         return redirect(url_for('auth.login'))
 
     # create new user with the form data. Hash the password so plaintext version isn't saved.
-    new_user = DB_User(email=email, abbrev=abbreviation, role=role,
-                       password=generate_password_hash(password, method='sha256'))
+    new_user = DB_User(
+        email=email,
+        abbrev=abbreviation,
+        role=role,
+        password=generate_password_hash(password, method='sha256')
+    )
 
     # add the new user to the database
     db.session.add(new_user)
@@ -87,7 +90,13 @@ def admin_signup_post():
 
     # add the change to the user_management db
     user_management = User_Management(
-        email=email, abbrev=abbreviation, role=role, change_by="Initial Signup", date_time=time_stamp(), action="added")
+        email=email,
+        abbrev=abbreviation,
+        role=role,
+        change_by="Initial Signup",
+        date_time=time_stamp(),
+        action="added"
+    )
 
     audit_data = user_management.__dict__
 
@@ -134,7 +143,6 @@ def activate():
 
 @auth.route('/activate', methods=('GET', 'POST'))
 def activate_post():
-
     oldPassword = request.form.get('oldPassword')
     password1 = request.form.get('password1')
     password2 = request.form.get('password2')
@@ -173,7 +181,6 @@ def profile():
 @auth.route('/profile', methods=['POST'])
 @login_required
 def change_password():
-
     oldPassword = request.form.get('oldpassword')
     password1 = request.form.get('password1')
     password2 = request.form.get('password2')
@@ -205,4 +212,3 @@ def logout():
     logout_user()
 
     return redirect(url_for('auth.login'))
-

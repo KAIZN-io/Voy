@@ -12,7 +12,6 @@ users_module = Blueprint('users_module', __name__)
 default_breadcrumb_root(users_module, '.')
 
 
-
 @users_module.route('/user_management')
 @login_required
 @register_breadcrumb(users_module, '.user_management', '')
@@ -60,7 +59,6 @@ def add_user():
 @users_module.route('/add_user', methods=['POST'])
 @login_required
 def add_user_post():
-
     email = request.form.get('email')
     password = request.form.get('password')
     abbreviation = request.form.get('abbreviation')
@@ -74,8 +72,13 @@ def add_user_post():
         return redirect(url_for('users_module.add_user'))
 
     # create new user with the form data. Hash the password so plaintext version isn't saved.
-    new_user = DB_User(email=email, abbrev=abbreviation, role=role,
-                       system_passwd=generate_password_hash(password, method='sha256'), active=1)
+    new_user = DB_User(
+        email=email,
+        abbrev=abbreviation,
+        role=role,
+        system_passwd=generate_password_hash(password, method='sha256'),
+        active=1 # TODO: User boolean here.
+    )
 
     # add the new user to the database
     db.session.add(new_user)
@@ -83,7 +86,13 @@ def add_user_post():
 
     # add the change to the user_management db
     user_management = User_Management(
-        email=email, abbrev=abbreviation, role=role, change_by=current_user.abbrev, date_time=time_stamp(), action="added")
+        email=email,
+        abbrev=abbreviation,
+        role=role,
+        change_by=current_user.abbrev,
+        date_time=time_stamp(),
+        action="added"
+    )
 
     audit_data = user_management.__dict__
 
@@ -97,4 +106,3 @@ def add_user_post():
     # db.session.commit()
 
     return redirect(url_for('users_module.user_management'))
-
