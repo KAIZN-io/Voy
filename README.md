@@ -34,7 +34,7 @@ Designed to fulfill the requirements of a compliant software in EU | Life Scienc
 3.1 `flask shell`       
 3.2 `from server.model import db`    
 3.3 `db.create_all()`    
-4.   http://localhost/     
+4.   http://localhost:5000/
 
 Optional (for backups):    
 4. `cp ofelia.example.ini ofelia.ini`       
