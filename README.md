@@ -83,6 +83,29 @@ For a more convenient way of working with the CSS and JS assets, run `npm run wa
 1. Start the app with `docker-compose up -d p`.   
 2. Open http://localhost/ (Port maybe different depending on your `.env` configuration.)
 
+# Database migrations
+To enable updates for live instances of our software, it is crucial to have database migrations. Database migrations
+offer a way to adapt an existing databases so that they are on par with the updates made in the code. All this while
+preserving the data contained.
+
+Here is how to work with them:
+
+## Create migrations when the model changed
+For upgrading live databases it is necessary to always create migrations when changing to the model.
+
+**Attention**: The library we are using, **Flask-Migrate**, internally uses Alembic, which has some **limitations** when
+it comes to detecting changes.
+**Read more** about that here: https://alembic.sqlalchemy.org/en/latest/autogenerate.html#what-does-autogenerate-detect-and-what-does-it-not-detect
+
+To create a migration:
+- Run `flask db migrate -m "<Migration Message>"`. Make sure to enter a meaningful `<Migration Message>`.
+- Add the created migration(s) under `migrations/versions` to git.
+- Commit your changes to the database model together with the migrations.
+
+## Updating a running database instance
+To update a running database instance, just refresh the `migrations` folder from source control and run
+`flask db upgrade` command.
+
 <a name="deployment"></a>
 # Deployment with Docker
 This app includes a Docker setup for live deployment. Here is how to use it:
