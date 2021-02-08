@@ -7,7 +7,7 @@ from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 
 from .controller import auth_blueprint, qc_database_blueprint, users_module_blueprint
-from .model import db, DB_User
+from .model import db, migrate, DB_User
 
 # Load logging configuration
 with open('config/logging.yaml', 'r') as stream:
@@ -30,6 +30,9 @@ def create_app():
 
     # Attach the database to the app
     db.init_app(app)
+
+    # Init Flask-Migrate
+    migrate.init_app(app, db)
 
     # Initialize Flask-Breadcrumbs
     Breadcrumbs(app=app)
