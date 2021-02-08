@@ -1,13 +1,16 @@
-from flask import Blueprint, render_template, redirect, url_for, request, flash, current_app, session
+import logging
+from flask import Blueprint, render_template, redirect, url_for, request, flash, session
+from flask_breadcrumbs import register_breadcrumb, default_breadcrumb_root
 from flask_login import login_user, logout_user, login_required, current_user
-from flask_breadcrumbs import Breadcrumbs, register_breadcrumb, default_breadcrumb_root
-
 from werkzeug.security import generate_password_hash, check_password_hash
 
-
-from server import db, to_qc_file, to_console, to_user_file
-from server.model import DB_User, User_Management
+from server.model import db
 from server.controller.Compliance_Computerized_Systems_EMA import audit_trail, time_stamp, passwd_generator
+from server.model import DB_User, User_Management
+
+# Get loggers
+to_console = logging.getLogger('to_console')
+to_user_file = logging.getLogger('to_user_file')
 
 auth = Blueprint('auth', __name__)
 # set auth blueprint as a root
@@ -21,7 +24,6 @@ def login():
 
 @auth.route('/login', methods=('GET', 'POST'))
 def login_post():
-
     abbrev = request.form.get('abbreviation')
     password = request.form.get('password')
 
@@ -79,8 +81,12 @@ def admin_signup_post():
         return redirect(url_for('auth.login'))
 
     # create new user with the form data. Hash the password so plaintext version isn't saved.
-    new_user = DB_User(email=email, abbrev=abbreviation, role=role,
-                       password=generate_password_hash(password, method='sha256'))
+    new_user = DB_User(
+        email=email,
+        abbrev=abbreviation,
+        role=role,
+        password=generate_password_hash(password, method='sha256')
+    )
 
     # add the new user to the database
     db.session.add(new_user)
@@ -88,7 +94,13 @@ def admin_signup_post():
 
     # add the change to the user_management db
     user_management = User_Management(
-        email=email, abbrev=abbreviation, role=role, change_by="Initial Signup", date_time=time_stamp(), action="added")
+        email=email,
+        abbrev=abbreviation,
+        role=role,
+        change_by="Initial Signup",
+        date_time=time_stamp(),
+        action="added"
+    )
 
     audit_data = user_management.__dict__
 
@@ -135,7 +147,6 @@ def activate():
 
 @auth.route('/activate', methods=('GET', 'POST'))
 def activate_post():
-
     oldPassword = request.form.get('oldPassword')
     password1 = request.form.get('password1')
     password2 = request.form.get('password2')
@@ -174,7 +185,6 @@ def profile():
 @auth.route('/profile', methods=['POST'])
 @login_required
 def change_password():
-
     oldPassword = request.form.get('oldpassword')
     password1 = request.form.get('password1')
     password2 = request.form.get('password2')
@@ -206,4 +216,3 @@ def logout():
     logout_user()
 
     return redirect(url_for('auth.login'))
-

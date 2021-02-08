@@ -1,10 +1,10 @@
 from flask_login import UserMixin
 
-from server import db
+from server.model import db
+
 
 class QC_Check(UserMixin, db.Model):
-
-    #! overwrite the standard table name with 'posts', where you will commit the data to
+    # ! overwrite the standard table name with 'posts', where you will commit the data to
     __tablename__ = 'qc_check'
 
     id = db.Column(db.Integer, primary_key=True)

@@ -1,19 +1,19 @@
+import logging
 from flask import Blueprint, render_template, redirect, url_for, request, flash, current_app, session
-from flask_login import login_user, logout_user, login_required, current_user
 from flask_breadcrumbs import Breadcrumbs, register_breadcrumb, default_breadcrumb_root
-
+from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
-
-from server import db, to_qc_file, to_console, to_user_file
-from server.model import DB_User, User_Management
+from server.model import db
 from server.controller.Compliance_Computerized_Systems_EMA import audit_trail, time_stamp, passwd_generator
+from server.model import DB_User, User_Management
 
+# Get loggers
+to_user_file = logging.getLogger('to_user_file')
 
 users_module = Blueprint('users_module', __name__)
 # set auth blueprint as a root
 default_breadcrumb_root(users_module, '.')
-
 
 
 @users_module.route('/user_management')
@@ -63,7 +63,6 @@ def add_user():
 @users_module.route('/add_user', methods=['POST'])
 @login_required
 def add_user_post():
-
     email = request.form.get('email')
     password = request.form.get('password')
     abbreviation = request.form.get('abbreviation')
@@ -77,8 +76,13 @@ def add_user_post():
         return redirect(url_for('users_module.add_user'))
 
     # create new user with the form data. Hash the password so plaintext version isn't saved.
-    new_user = DB_User(email=email, abbrev=abbreviation, role=role,
-                       system_passwd=generate_password_hash(password, method='sha256'), active=1)
+    new_user = DB_User(
+        email=email,
+        abbrev=abbreviation,
+        role=role,
+        system_passwd=generate_password_hash(password, method='sha256'),
+        active=1 # TODO: User boolean here.
+    )
 
     # add the new user to the database
     db.session.add(new_user)
@@ -86,7 +90,13 @@ def add_user_post():
 
     # add the change to the user_management db
     user_management = User_Management(
-        email=email, abbrev=abbreviation, role=role, change_by=current_user.abbrev, date_time=time_stamp(), action="added")
+        email=email,
+        abbrev=abbreviation,
+        role=role,
+        change_by=current_user.abbrev,
+        date_time=time_stamp(),
+        action="added"
+    )
 
     audit_data = user_management.__dict__
 
@@ -100,4 +110,3 @@ def add_user_post():
     # db.session.commit()
 
     return redirect(url_for('users_module.user_management'))
-
