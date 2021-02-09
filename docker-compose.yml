@@ -55,6 +55,13 @@ services:
       - DB_NAME
       - DB_USER
       - DB_PASSWORD
+      - MAIL_SERVER=mailhog
+      - MAIL_PORT=1025
+      - MAIL_USE_TLS
+      - MAIL_USE_SSL
+      - MAIL_DEBUG
+      - MAIL_USERNAME
+      - MAIL_PASSWORD
       - SECRET_KEY
       - FLASK_APP
       - FLASK_ENV

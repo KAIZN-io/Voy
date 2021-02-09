@@ -8,6 +8,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 from .controller import auth_blueprint, qc_database_blueprint, users_module_blueprint
 from .model import db, migrate, DB_User
+from .mail import mail
 
 # Load logging configuration
 with open('config/logging.yaml', 'r') as stream:
@@ -33,6 +34,9 @@ def create_app():
 
     # Init Flask-Migrate
     migrate.init_app(app, db)
+
+    # Attach the mailing service to the app
+    mail.init_app(app)
 
     # Initialize Flask-Breadcrumbs
     Breadcrumbs(app=app)
