@@ -1,22 +1,18 @@
+import time
 from flask import Blueprint, render_template, request, flash, redirect, url_for, session, send_file
-from flask_login import login_required, current_user
 from flask_breadcrumbs import Breadcrumbs, register_breadcrumb, default_breadcrumb_root
+from flask_login import login_required, current_user
+from sqlalchemy import inspect
 
-from server.model import QC_Check, DB_User, QC_Audit, QC_Requery
+from server.model import db
 from server.controller.Compliance_Computerized_Systems_EMA import audit_trail, time_stamp
 from server.controller.data_analysis import TransformData
-
-from server import db
-
-from sqlalchemy import inspect
-import time
-
+from server.model import QC_Check, DB_User, QC_Audit, QC_Requery
 
 qc_database = Blueprint('qc_database', __name__)
 
 # set qc_database blueprint as a root
 default_breadcrumb_root(qc_database, '.')
-
 
 """
 this file handles the qc data 
@@ -43,7 +39,7 @@ def qc_planning():
 
     prioritized_studies = QC_Check.query.filter_by(prioritized=0).all()
     # get an unique list of all prioritized studies 
-    prioritized_studies = list(set([str(i.study_id) for i in prioritized_studies]))  
+    prioritized_studies = list(set([str(i.study_id) for i in prioritized_studies]))
 
     if request.method == 'POST':
         prioritize_list = request.form.getlist('studyCheckbox')
@@ -59,10 +55,10 @@ def qc_planning():
             QC_Check.query.filter_by(study_id=study_id).update({"prioritized": 0})
 
             db.session.commit()
-        
+
         return redirect(url_for('qc_database.qc_planning'))
 
-    return render_template('qc_planning.html', studies = study_list, prioritized_studies=prioritized_studies)
+    return render_template('qc_planning.html', studies=study_list, prioritized_studies=prioritized_studies)
 
 
 @qc_database.route('/data_entry', methods=('GET', 'POST'))
@@ -88,9 +84,20 @@ def data_entry():
         created = time_stamp()
 
         for i in range(len(todo_name)):
-
-            blog_entry = QC_Check(procedure=title[i], type=type, corrected=1, close=1, description=description[i], checker=current_user.abbrev,
-                                  created=created, visit=visit[i], page=page[i], scr_no=scr_no, study_id=study_id, responsible=todo_name[i])
+            blog_entry = QC_Check(
+                procedure=title[i],
+                type=type,
+                corrected=1,
+                close=1,
+                description=description[i],
+                checker=current_user.abbrev,
+                created=created,
+                visit=visit[i],
+                page=page[i],
+                scr_no=scr_no,
+                study_id=study_id,
+                responsible=todo_name[i]
+            )
 
             db.session.add(blog_entry)
             db.session.commit()
@@ -109,12 +116,20 @@ def index():
     # get the data in a dict structur
     # for the right person, if the query is not closed --> corrected=False (==1)
     if current_user.role == "MedOps":
-        posts_data = QC_Check.query.filter_by(
-            responsible=current_user.abbrev, corrected=1, close=1).order_by(QC_Check.prioritized).all()
+        posts_data = QC_Check.query\
+            .filter_by(
+                responsible=current_user.abbrev,
+                corrected=1,
+                close=1
+            )\
+            .order_by(QC_Check.prioritized)\
+            .all()
     else:
         # what DM / Admin sees
-        posts_data = db.session.query(QC_Check).filter_by(close=1).order_by(QC_Check.prioritized).all()
-
+        posts_data = db.session.query(QC_Check)\
+            .filter_by(close=1)\
+            .order_by(QC_Check.prioritized)\
+            .all()
 
     # query all user and the corresponding roles
     user_qc_requery = QC_Requery.query.with_entities(QC_Requery.query_id, QC_Requery.abbrev).all()
@@ -124,7 +139,7 @@ def index():
 
     user_requery = {}
     # map the query id with the corresponding user role
-    for i,j in user_qc_requery.items():
+    for i, j in user_qc_requery.items():
         user_requery[str(i)] = user_data[j]
 
     if request.method == 'POST':
@@ -147,11 +162,10 @@ def index():
             # TEMP: sleep until new pdf / excel file is really created
             time.sleep(3)
 
-            return send_file("controller/query_downloads/{}.{}".format(file_name,download_type), as_attachment=True)
+            return send_file("controller/query_downloads/{}.{}".format(file_name, download_type), as_attachment=True)
 
             # # send the data with the working request to the message broker
             # request_amqp(query_as_dict, {"download_type": download_type})
-
 
             # return send_file("controller/amqp/query_DataFrame.{}".format(download_type), as_attachment=True, attachment_filename="My_Queries.{}".format(download_type))
 
@@ -159,8 +173,12 @@ def index():
             comment = request.form['comment']
             query_id = request.form['query_id']
 
-            new_comment = QC_Requery(abbrev=current_user.abbrev, date_time=time_stamp(
-            ), new_comment=comment, query_id=query_id)
+            new_comment = QC_Requery(
+                abbrev=current_user.abbrev,
+                date_time=time_stamp(),
+                new_comment=comment,
+                query_id=query_id
+            )
 
             db.session.add(new_comment)
             db.session.commit()
@@ -201,11 +219,11 @@ def requery_query(id):
 @qc_database.route('/modal_data/<int:query_id>')
 @login_required
 def modal_data(query_id):
-
     old_comment = db.session.query(QC_Requery).filter_by(
         query_id=query_id).order_by(QC_Requery.id.desc()).first()
 
     return render_template('modal_data.html', post=old_comment)
+
 
 @qc_database.route('/info_modal/<int:query_id>')
 @login_required
@@ -213,6 +231,7 @@ def info_modal(query_id):
     data_about_query = QC_Check.query.filter_by(id=query_id).first()
 
     return render_template('modal_info.html', post=data_about_query)
+
 
 @qc_database.route('/close/<int:id>')
 @login_required
@@ -245,11 +264,9 @@ def edit_data():
         new_data['study_id'] = int(new_data['study_id'])
 
         for category, new_value in new_data.items():
-        
 
             # compare the data from the DB with the from the request.form
             if (old_data[category] != new_data[category]):
-
                 # add the data to the audit trail
                 audit_trail(current_user.abbrev, "edit", id, category,
                             old_data[category], new_value)

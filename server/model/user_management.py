@@ -1,9 +1,9 @@
 from flask_login import UserMixin
 
-from server import db
+from server.model import db
+
 
 class User_Management(UserMixin, db.Model):
-
     __tablename__ = 'user_management'
 
     id = db.Column(db.Integer, primary_key=True)

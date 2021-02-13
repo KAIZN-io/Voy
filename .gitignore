@@ -6,6 +6,7 @@
 env/
 venv/
 env*
+!/migrations/env.py
 build/
 *.egg
 *.egg-info/
