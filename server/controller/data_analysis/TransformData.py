@@ -1,6 +1,5 @@
 import pandas as pd
 import pdfkit
-import sqlite3
 
 
 def DictToPdf(query_as_dict={}, file_name=''):
