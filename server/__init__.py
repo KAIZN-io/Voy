@@ -14,11 +14,10 @@ with open('config/logging.yaml', 'r') as stream:
     yamld = yaml.safe_load(stream)
     logging.config.dictConfig(yamld)
 
-
 def create_app():
     # Create the app
     app = Flask(
-        __name__,
+        'flask-auth-app',
         template_folder='view/templates',
         static_url_path='',
         static_folder='view/static/dist',

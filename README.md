@@ -13,6 +13,7 @@ Designed to fulfill the requirements of a compliant software in EU | Life Scienc
 - [Deployment](#deployment)
     - [Debugging](#debugging)
 - [Advanced configuration](#advanced_config)
+- [Advanced Working with the Command Line Interface](#cli)
 - [This project in biological words](#biology_analogon)
   
 
@@ -145,6 +146,19 @@ To see the logs of the `p` service run `docker-compose logs -f p`.
 # Advanced configuration
 - the logging style is inside `logging.yaml`
 - the app default env is "development". Set it to "production" with `export FLASK_ENV=production` before running it with `flask run`
+
+<a name="cli"></a>
+# Working with the Command Line Interface
+This app comes with a custom Command Line Interface (CLI). To use it, you first need to install the app as a package:
+- Enter you virtual env with `. ./venv/bin/activate`
+- Run `pip3 install -e .` to install the app as a python package int he virtual env
+- You can now run commands with the `flask-auth-ap` command.
+
+Fun fact: The `flask-auth-app` command can be used the same way as the `flask` command. You can for example start the
+app with `flask-auth-app run`.
+
+The CLI also allows us to add custom commands. One of such is `flask-auth-app hello-world`. Later on we want to enable a
+password reset via the command line.
 
 <a name="biology_analogon"></a>
 # This project in biological words (in german)
