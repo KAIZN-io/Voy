@@ -40,6 +40,7 @@ notes.txt
 # Compliance data
 *.log
 *.sqlite
+*.sql
 *.xlsx
 query_DataFrame.pdf 
 query_DataFrame.html
