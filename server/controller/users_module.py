@@ -26,37 +26,21 @@ def user_management():
     return render_template('user_management.html', Users=User_data)
 
 
-@users_module.route('/delete_user/<int:id>')
+@users_module.route('/inactivate/<int:id>')
 @login_required
-def delete_user(id):
-    # query the data from the user
-    user_management = DB_User.query.filter_by(id=id).one().__dict__
-
-    # delete the user from the db
-    DB_User.query.filter_by(id=id).delete()
+def inactivate(id):
+    # change the active state to "FALSE"
+    DB_User.query.filter_by(id=id).update({"active": 1})
     db.session.commit()
 
-    # document the deletion to the log file
-    # delete unimportend data before that
-    user_management.pop('date_time', None)
-    user_management.pop('system_passwd', None)
-    user_management.pop('password', None)
-    user_management.pop('active', None)
-    user_management.pop('id', None)
-    user_management['change_by'] = current_user.abbrev
-    user_management['action'] = 'deleted'
-
-    to_user_file.info(user_management['change_by'], extra=user_management)
-
     return redirect(url_for('users_module.user_management'))
-
 
 @users_module.route('/add_user')
 @login_required
 @register_breadcrumb(users_module, '.user_management.add_user', '')
 def add_user():
     # define the job roles
-    job_roles = ["MedOps", "Data Entry", "Data Manager"]  # ,"Dengeki Daisy"]
+    job_roles = ["MedOps", "Data Entry", "Data Manager"]
     return render_template('add_user.html', Roles=job_roles)
 
 
@@ -80,8 +64,9 @@ def add_user_post():
         email=email,
         abbrev=abbreviation,
         role=role,
-        system_passwd=generate_password_hash(password, method='sha256'),
-        active=1 # TODO: User boolean here.
+        password=generate_password_hash(password, method='sha256'),
+        is_system_passwd=0,
+        active=0 # TODO: User boolean here.
     )
 
     # add the new user to the database

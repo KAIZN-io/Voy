@@ -6,7 +6,7 @@ block content %} {% if current_user.is_authenticated %}
   {{ '/' if not loop.last }}
   {%- endfor -%}
 </div>
-<h1 class="title">User Managment</h1>
+<h1 class="title">User Management</h1>
 
 <button class="btn btn-primary" onclick="location.href='/add_user'" style="float: left;" type="button">add User</button>
 <br/>
@@ -19,7 +19,7 @@ block content %} {% if current_user.is_authenticated %}
     <th scope="col">Status</th>
     <th scope="col">User</th>
     <th scope="col">Role</th>
-    <th scope="col">Delete</th>
+    <th scope="col">Inactivate</th>
   </tr>
   </thead>
   <tbody>
@@ -36,13 +36,21 @@ block content %} {% if current_user.is_authenticated %}
     {% else %}
     <td>
       <span class="badge badge-success"> Active </span>
+      {% if user.is_system_passwd == 0
+        %}
+      <span class="badge badge-danger"> sPasswd </span>
+      {% endif %}
     </td>
     {% endif %}
     <td>{{ user.abbrev }}</td>
     <td>{{ user.role }}</td>
     <td>
-      <a href="/delete_user/{{user.id}}">delete</a>
+    {% if user.active == 0
+      %}
+      <a href="/inactivate/{{user.id}}">inactivate</a>
+    {% endif %}
     </td>
+
   </tr>
   {% endif %}
   {% endfor %}
@@ -56,7 +64,7 @@ block content %} {% if current_user.is_authenticated %}
     <th scope="col">Status</th>
     <th scope="col">User</th>
     <th scope="col">Role</th>
-    <th scope="col">Delete</th>
+    <th scope="col">Inactivate</th>
   </tr>
   </thead>
   <tbody>
@@ -71,12 +79,20 @@ block content %} {% if current_user.is_authenticated %}
     {% else %}
     <td>
       <span class="badge badge-success"> Active </span>
+      {% if user.is_system_passwd == 0
+        %}
+      <span class="badge badge-danger"> sPasswd </span>
+      {% endif %}
     </td>
     {% endif %}
     <td>{{ user.abbrev }}</td>
     <td>{{ user.role }}</td>
     <td>
-      <a href="/delete_user/{{user.id}}">delete</a>
+      {% if user.active == 0
+        %}
+      <a href="/inactivate/{{user.id}}">inactivate</a>
+      {% endif %}
+
     </td>
   </tr>
   {% endif %}

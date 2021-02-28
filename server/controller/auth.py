@@ -39,12 +39,16 @@ def login_post():
             flash('Please check your login details and try again.')
             return redirect(url_for('auth.login'))
 
-    # Case 2: check if the user is already ativated
-    if user.password == None or user.active == 1:
-        flash('Please activate your account.')
-        return redirect(url_for('auth.activate'))
+    # Case 2: check if the user got inactivated
+    if user.active == 1:
+        flash('Your account got inactivated. Please contact your Admin for this issue.')
+        return redirect(url_for('auth.login'))
 
-    # Case 3: take the user supplied password, hash it, and compare it to the hashed password in database
+    # Case 3: the user is active but his password is a system password
+    if (user.active == 0 and user.is_system_passwd == 0):
+        return redirect(url_for('auth.new_password'))
+
+    # Case 4: take the user supplied password, hash it, and compare it to the hashed password in database
     if not check_password_hash(user.password, password):
         flash('Please check your login details and try again.')
         # if user doesn't exist or password is wrong, reload the page
@@ -85,7 +89,8 @@ def admin_signup_post():
         email=email,
         abbrev=abbreviation,
         role=role,
-        password=generate_password_hash(password, method='sha256')
+        password=generate_password_hash(password, method='sha256'),
+        is_system_passwd=1
     )
 
     # add the new user to the database
@@ -130,23 +135,23 @@ def forgot_passwd_post():
 
         # TODO: send the new_passwd over mail to the user
         print(new_passwd)
-        system_passwd = generate_password_hash(new_passwd, method='sha256')
+        password = generate_password_hash(new_passwd, method='sha256')
 
         # commit the new system password to the database
         DB_User.query.filter_by(abbrev=abbrev).update(
-            {"system_passwd": system_passwd, "active": 1})
+            {"password": password, "is_system_passwd": 0})
         db.session.commit()
 
-    return redirect(url_for('auth.activate'))
+    return redirect(url_for('auth.new_password'))
 
 
-@auth.route('/activate')
-def activate():
-    return render_template('activate.html')
+@auth.route('/new_password')
+def new_password():
+    return render_template('new_password.html')
 
 
-@auth.route('/activate', methods=('GET', 'POST'))
-def activate_post():
+@auth.route('/new_password', methods=('GET', 'POST'))
+def new_password_post():
     oldPassword = request.form.get('oldPassword')
     password1 = request.form.get('password1')
     password2 = request.form.get('password2')
@@ -156,20 +161,20 @@ def activate_post():
     user = DB_User.query.filter_by(abbrev=abbrev).first()
 
     # take the user supplied password, hash it, and compare it to the hashed password in database
-    if not check_password_hash(user.system_passwd, oldPassword):
+    if not check_password_hash(user.password, oldPassword):
         flash('You made a mistake with you old password')
-        return redirect(url_for('auth.activate'))
+        return redirect(url_for('auth.new_password'))
 
     else:
         if password1 != password2:
             flash('Passwords are not the same')
-            return redirect(url_for('auth.activate'))
+            return redirect(url_for('auth.new_password'))
         else:
             password = generate_password_hash(password1, method='sha256')
 
             # set the new password and activate the account
             DB_User.query.filter_by(abbrev=abbrev).update(
-                {"password": password, "active": 0, "system_passwd": None})
+                {"password": password, "is_system_passwd": 1})
             db.session.commit()
 
     return redirect(url_for('auth.login'))
