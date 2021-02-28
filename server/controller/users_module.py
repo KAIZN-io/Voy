@@ -30,7 +30,7 @@ def user_management():
 @login_required
 def inactivate(id):
     # change the active state to "FALSE"
-    DB_User.query.filter_by(id=id).update({"active": 1})
+    DB_User.query.filter_by(id=id).update({"active": 0})
     db.session.commit()
 
     return redirect(url_for('users_module.user_management'))
@@ -65,8 +65,8 @@ def add_user_post():
         abbrev=abbreviation,
         role=role,
         password=generate_password_hash(password, method='sha256'),
-        is_system_passwd=0,
-        active=0 # TODO: User boolean here.
+        is_system_passwd=1,
+        active=1 # TODO: User boolean here.
     )
 
     # add the new user to the database
