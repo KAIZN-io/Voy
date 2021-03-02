@@ -17,12 +17,12 @@ auth = Blueprint('auth', __name__)
 default_breadcrumb_root(auth, '.')
 
 
-@auth.route('/login')
+@auth.route('/login', methods=['GET'])
 def login():
     return render_template('login.html')
 
 
-@auth.route('/login', methods=('GET', 'POST'))
+@auth.route('/login', methods=['POST'])
 def login_post():
     abbrev = request.form.get('abbreviation')
     password = request.form.get('password')
@@ -65,12 +65,12 @@ def login_post():
     return redirect(url_for('qc_database.index'))
 
 
-@auth.route('/admin_signup')
+@auth.route('/admin_signup', methods=['GET'])
 def admin_signup():
     return render_template('admin_signup.html')
 
 
-@auth.route('/admin_signup', methods=('GET', 'POST'))
+@auth.route('/admin_signup', methods=['POST'])
 def admin_signup_post():
     email = request.form.get('email')
     password = request.form.get('password')
@@ -117,12 +117,12 @@ def admin_signup_post():
     return redirect(url_for('qc_database.index'))
 
 
-@auth.route('/forgot_passwd')
+@auth.route('/forgot_passwd', methods=['GET'])
 def forgot_passwd():
     return render_template('forgot_passwd.html')
 
 
-@auth.route('/forgot_passwd', methods=('GET', 'POST'))
+@auth.route('/forgot_passwd', methods=['POST'])
 def forgot_passwd_post():
     abbrev = request.form.get('abbrev')
 
@@ -145,12 +145,12 @@ def forgot_passwd_post():
     return redirect(url_for('auth.new_password'))
 
 
-@auth.route('/new_password')
+@auth.route('/new_password', methods=['GET'])
 def new_password():
     return render_template('new_password.html')
 
 
-@auth.route('/new_password', methods=('GET', 'POST'))
+@auth.route('/new_password', methods=['POST'])
 def new_password_post():
     oldPassword = request.form.get('oldPassword')
     password1 = request.form.get('password1')
@@ -180,7 +180,7 @@ def new_password_post():
     return redirect(url_for('auth.login'))
 
 
-@auth.route('/profile')
+@auth.route('/profile', methods=['GET'])
 @register_breadcrumb(auth, '.profile', '')
 @login_required
 def profile():
