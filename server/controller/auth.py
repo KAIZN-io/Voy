@@ -40,12 +40,12 @@ def login_post():
             return redirect(url_for('auth.login'))
 
     # Case 2: check if the user got inactivated
-    if user.active == 0:
+    if user.active == False:
         flash('Your account got inactivated. Please contact your Admin for this issue.')
         return redirect(url_for('auth.login'))
 
     # Case 3: the user is active but his password is a system password
-    if (user.active == 1 and user.is_system_passwd == 1):
+    if (user.active == True and user.is_system_passwd == True):
         return redirect(url_for('auth.new_password'))
 
     # Case 4: take the user supplied password, hash it, and compare it to the hashed password in database
@@ -90,7 +90,7 @@ def admin_signup_post():
         abbrev=abbreviation,
         role=role,
         password=generate_password_hash(password, method='sha256'),
-        is_system_passwd=0
+        is_system_passwd=False
     )
 
     # add the new user to the database
@@ -139,7 +139,7 @@ def forgot_passwd_post():
 
         # commit the new system password to the database
         DB_User.query.filter_by(abbrev=abbrev).update(
-            {"password": password, "is_system_passwd": 1})
+            {"password": password, "is_system_passwd": True})
         db.session.commit()
 
     return redirect(url_for('auth.new_password'))
@@ -174,7 +174,7 @@ def new_password_post():
 
             # set the new password and activate the account
             DB_User.query.filter_by(abbrev=abbrev).update(
-                {"password": password, "is_system_passwd": 0})
+                {"password": password, "is_system_passwd": False})
             db.session.commit()
 
     return redirect(url_for('auth.login'))
