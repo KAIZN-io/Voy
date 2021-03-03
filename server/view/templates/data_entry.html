@@ -20,6 +20,7 @@ Data Entry
       <label for="study_id">Study ID</label>
       <input class="form-control" name="study_id"
              required
+             maxlength="20"
              type="text"
              value="{{ request.form['study_id'] }}"></input>
 
@@ -40,7 +41,7 @@ Data Entry
     <div class="form-group col-md-2">
       <label for="scr_no">Scr No</label>
       <input class="form-control" name="scr_no" required
-             type="text" value="{{ request.form['scr_no'] }}"></input>
+             type="number" min="0" max="99999999" value="{{ request.form['scr_no'] }}"></input>
     </div>
   </div>
   <br>
@@ -62,7 +63,7 @@ Data Entry
       <td>
         <div class="form-group">
         <input class="form-control" name="row[][visit]"
-               placeholder="which visit?" type="text"
+               placeholder="which visit?" type="text" maxlength="10"
                value="{{ request.form['visit'] }}" required></input>
         </div>
       </td>
@@ -70,14 +71,14 @@ Data Entry
       <td>
         <div class="form-group">
           <input class="form-control" name="row[][page]"
-                 placeholder="which page?" type="text"
+                 placeholder="which page?" type="text" maxlength="10"
                  value="{{ request.form['page'] }}" required></input>
         </div>
       </td>
       <td>
         <div class="form-group">
           <input class="form-control" name="row[][title]"
-                 placeholder="VS / ECG / ... ?" type="text"
+                 placeholder="VS / ECG / ... ?" type="text" maxlength="20"
                  value="{{ request.form['title'] }}" required></input>
         </div>
       </td>

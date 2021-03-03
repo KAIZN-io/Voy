@@ -21,7 +21,8 @@ Edit Data
       <div class="form-group">
         <input class="form-control" name="study_id"
                required
-               type="number"
+               maxlength="20"
+               type="text"
                value="{{ data.study_id }}">
       </div>
     </div>
@@ -40,7 +41,7 @@ Edit Data
       <div class="form-group">
         <input class="form-control" name="scr_no"
                required
-               type="number"
+               type="number" min="0" max="99999999"
                value="{{ data.scr_no }}">
       </div>
     </div>
@@ -62,6 +63,7 @@ Edit Data
             <input class="form-control" name="visit"
                    required
                    type="text"
+                   maxlength="10"
                    value="{{ data.visit }}">
           </div>
         </td>
@@ -71,6 +73,7 @@ Edit Data
             <input class="form-control" name="page"
                    required
                    type="text"
+                   maxlength="10"
                    value="{{ data.page }}">
           </div>
         </td>
@@ -79,6 +82,7 @@ Edit Data
             <input class="form-control" name="procedure"
                    required
                    type="text"
+                   maxlength="20"
                    value="{{ data.procedure }}">
           </div>
         </td>
