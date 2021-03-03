@@ -60,7 +60,11 @@ db-upgrade:
 db-snapshot:
 	docker-compose exec db pg_dump -Fp --username=$(DB_USER) --dbname=$(DB_NAME) > ./backups/snapshot.sql
 
-# Restores a previously created backup of the database.
+# Restores a previously created backup of the database after ending the session between the container 'p' and 'db'.
 .PHONY: db-restore
 db-restore:
-	docker-compose exec -T db psql --username=$(DB_USER) --dbname=$(DB_NAME) < ./backups/snapshot.sql
+	docker-compose stop db; \
+	docker-compose up -d db; \
+	docker-compose exec -T db psql --username=$(DB_USER) --dbname=postgres -c 'DROP DATABASE "$(DB_NAME)";'; \
+	docker-compose exec -T db psql --username=$(DB_USER) --dbname=postgres -c 'CREATE DATABASE "$(DB_NAME)";'; \
+	docker-compose exec -T db psql --username=$(DB_USER) --dbname=$(DB_NAME) < ./backups/2021-03-02_10h57m48s-UTC/$(DB_NAME).sql
