@@ -43,7 +43,6 @@ def qc_planning():
 
     if request.method == 'POST':
         prioritize_list = request.form.getlist('studyCheckbox')
-        prioritize_list = [int(i) for i in prioritize_list]
 
         # first reset all prioritizations  
         QC_Check.query.update({"prioritized": False})
