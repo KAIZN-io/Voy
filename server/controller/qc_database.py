@@ -1,3 +1,4 @@
+import logging
 import time
 from flask import Blueprint, render_template, request, flash, redirect, url_for, session, send_file
 from flask_breadcrumbs import Breadcrumbs, register_breadcrumb, default_breadcrumb_root
@@ -18,7 +19,8 @@ default_breadcrumb_root(qc_database, '.')
 this file handles the qc data 
 
 """
-
+# Get loggers
+to_console = logging.getLogger('to_console')
 
 # transform the query results to a readable dict
 
@@ -38,6 +40,7 @@ def qc_planning():
     study_list.sort()
 
     prioritized_studies = QC_Check.query.filter_by(prioritized=True).all()
+
     # get an unique list of all prioritized studies 
     prioritized_studies = list(set([str(i.study_id) for i in prioritized_studies]))
 
@@ -156,10 +159,18 @@ def index():
             query_as_dict = [as_dict(r) for r in posts_data]
 
             if download_type == 'pdf':
-                TransformData.DictToPdf(query_as_dict, file_name)
+                try:
+                    TransformData.DictToPdf(query_as_dict, file_name)
+                    to_console.info("{} downloaded the query table as a pdf file".format(current_user.abbrev))
+                except:
+                    to_console.info("The query table for {} could not get transformed into a pdf file".format(current_user.abbrev))
 
             elif download_type == 'xlsx':
-                TransformData.DictToExcel(query_as_dict, file_name)
+                try:
+                    TransformData.DictToExcel(query_as_dict, file_name)
+                    to_console.info("{} downloaded the query table as an excel file".format(current_user.abbrev))
+                except:
+                    to_console.info("The query table for {} could not get transformed into a excel file".format(current_user.abbrev))
 
             # TEMP: sleep until new pdf / excel file is really created
             time.sleep(3)
@@ -262,7 +273,10 @@ def edit_data():
         new_data = request.form.to_dict()
 
         # !TEMP: Bug fix for the "scr_no"
-        new_data['scr_no'] = int(new_data['scr_no'])
+        try:
+            new_data['scr_no'] = int(new_data['scr_no'])
+        except:
+            to_console.info("{} could not get transformed into an integer".format(new_data['scr_no']))
 
         for category, new_value in new_data.items():
 
