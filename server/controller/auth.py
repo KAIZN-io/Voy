@@ -40,12 +40,12 @@ def login_post():
             return redirect(url_for('auth.login'))
 
     # Case 2: check if the user got inactivated
-    if user.active == False:
+    if user.is_active == False:
         flash('Your account got inactivated. Please contact your Admin for this issue.')
         return redirect(url_for('auth.login'))
 
     # Case 3: the user is active but his password is a system password
-    if (user.active == True and user.is_system_passwd == True):
+    if (user.is_active == True and user.is_system_passwd == True):
         return redirect(url_for('auth.new_password'))
 
     # Case 4: take the user supplied password, hash it, and compare it to the hashed password in database
@@ -90,7 +90,8 @@ def admin_signup_post():
         abbrev=abbreviation,
         role=role,
         password=generate_password_hash(password, method='sha256'),
-        is_system_passwd=False
+        is_system_passwd=False,
+        is_active=True
     )
 
     # add the new user to the database
