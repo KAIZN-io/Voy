@@ -37,7 +37,7 @@ def qc_planning():
     study_list = [x[0] for x in study_list]
     study_list.sort()
 
-    prioritized_studies = QC_Check.query.filter_by(prioritized=0).all()
+    prioritized_studies = QC_Check.query.filter_by(prioritized=True).all()
     # get an unique list of all prioritized studies 
     prioritized_studies = list(set([str(i.study_id) for i in prioritized_studies]))
 
@@ -46,13 +46,13 @@ def qc_planning():
         prioritize_list = [int(i) for i in prioritize_list]
 
         # first reset all prioritizations  
-        QC_Check.query.update({"prioritized": 1})
+        QC_Check.query.update({"prioritized": False})
 
         db.session.commit()
 
         # then update the database with the new prioritizations:
         for study_id in prioritize_list:
-            QC_Check.query.filter_by(study_id=study_id).update({"prioritized": 0})
+            QC_Check.query.filter_by(study_id=str(study_id)).update({"prioritized": True})
 
             db.session.commit()
 
@@ -87,8 +87,9 @@ def data_entry():
             blog_entry = QC_Check(
                 procedure=title[i],
                 type=type,
-                corrected=1,
-                close=1,
+                corrected=False,
+                close=False,
+                prioritized=False,
                 description=description[i],
                 checker=current_user.abbrev,
                 created=created,
@@ -114,21 +115,23 @@ def index():
     download_type = ['xlsx', 'pdf']
 
     # get the data in a dict structur
-    # for the right person, if the query is not closed --> corrected=False (==1)
+    # for the right person, if the query is not closed --> corrected=False
     if current_user.role == "MedOps":
         posts_data = QC_Check.query\
             .filter_by(
                 responsible=current_user.abbrev,
-                corrected=1,
-                close=1
+                corrected=False,
+                close=False
             )\
-            .order_by(QC_Check.prioritized)\
+            .order_by(QC_Check.prioritized.desc())\
+            .order_by(QC_Check.created)\
             .all()
     else:
         # what DM / Admin sees
         posts_data = db.session.query(QC_Check)\
-            .filter_by(close=1)\
-            .order_by(QC_Check.prioritized)\
+            .filter_by(close=False)\
+            .order_by(QC_Check.prioritized.desc())\
+            .order_by(QC_Check.created)\
             .all()
 
     # query all user and the corresponding roles
@@ -198,7 +201,7 @@ def index():
 @login_required
 def delete(id):
     # give your anwser to DM
-    QC_Check.query.filter_by(id=id).update({"corrected": 0})
+    QC_Check.query.filter_by(id=id).update({"corrected": True})
 
     db.session.commit()
 
@@ -209,7 +212,7 @@ def delete(id):
 @login_required
 def requery_query(id):
     # requery the row from the table of the QC Check model
-    QC_Check.query.filter_by(id=id).update({"corrected": 1})
+    QC_Check.query.filter_by(id=id).update({"corrected": False})
 
     db.session.commit()
 
@@ -237,7 +240,7 @@ def info_modal(query_id):
 @login_required
 def close_query(id):
     # close the row from the table of the QC Check model
-    QC_Check.query.filter_by(id=id).update({"close": 0})
+    QC_Check.query.filter_by(id=id).update({"close": True})
 
     db.session.commit()
 
@@ -276,7 +279,7 @@ def edit_data():
                 # set the query status to 'open'
                 db.session.commit()
 
-        QC_Check.query.filter_by(id=id).update({"corrected": 1})
+        QC_Check.query.filter_by(id=id).update({"corrected": False})
 
         db.session.commit()
 

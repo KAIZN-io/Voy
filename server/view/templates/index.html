@@ -54,7 +54,7 @@ current_user.role == 'Data Entry') %}
 
   <tr>
     <td>
-      {% if post.prioritized == 0%}
+      {% if post.prioritized == true%}
       <a
         data-id="{{post.id}}"
         data-target="#info_Modal"
@@ -76,11 +76,11 @@ current_user.role == 'Data Entry') %}
     </td>
 
     
-    {% if (post.corrected == 0 and post.close ==1) %}
+    {% if (post.corrected == true and post.close == false) %}
     <td>
       <span class="badge badge-warning"> Requery </span>
     </td>
-    {% elif (post.close ==0) %}
+    {% elif (post.close == true) %}
     <td>
       <span class="badge badge-success">Closed</span>
     </td>
