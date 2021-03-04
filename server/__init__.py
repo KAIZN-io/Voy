@@ -54,4 +54,5 @@ def create_app():
 
     # Register CLI blueprints
     app.register_blueprint(database_cli)
+
     return app
