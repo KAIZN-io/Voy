@@ -162,7 +162,7 @@ def new_password_post():
 
     # take the user supplied password, hash it, and compare it to the hashed password in database
     if not check_password_hash(user.password, oldPassword):
-        flash('You made a mistake with you old password')
+        flash('You made a mistake with your old password')
         return redirect(url_for('auth.new_password'))
 
     else:
