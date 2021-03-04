@@ -5,4 +5,4 @@ from server.commands.database import database as databaseCLI_blueprint
 
 @click.group(cls=FlaskGroup)
 def cli():
-    """Management script for the Wiki application."""
+    """Management script for Voy."""

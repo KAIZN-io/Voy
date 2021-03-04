@@ -18,7 +18,7 @@ with open('config/logging.yaml', 'r') as stream:
 def create_app():
     # Create the app
     app = Flask(
-        __name__,
+        'voy',
         template_folder='view/templates',
         static_url_path='',
         static_folder='view/static/dist',
