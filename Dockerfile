@@ -24,4 +24,4 @@ COPY . .
 # build assets
 RUN npm run build
 
-CMD [ "gunicorn", "-b 0.0.0.0:5000", "server:create_app()" ]
+CMD [ "gunicorn", "-b 0.0.0.0:5000", "voy:create_app()" ]

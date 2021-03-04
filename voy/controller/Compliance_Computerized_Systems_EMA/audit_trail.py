@@ -1,6 +1,6 @@
 import logging
-from server.controller.Compliance_Computerized_Systems_EMA.time_stamp import time_stamp
-from server.model import QC_Audit
+from voy.controller.Compliance_Computerized_Systems_EMA.time_stamp import time_stamp
+from voy.model import QC_Audit
 
 # Get loggers
 to_qc_file = logging.getLogger('to_qc_file')

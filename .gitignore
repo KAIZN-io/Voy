@@ -45,8 +45,8 @@ notes.txt
 query_DataFrame.pdf 
 query_DataFrame.html
 
-/server/view/static/dist/*
-!/server/view/static/dist/tablefilter
+/voy/view/static/dist/*
+!/voy/view/static/dist/tablefilter
 
-/server/controller/query_downloads/*
-!/server/controller/query_downloads/readme.md
+/voy/controller/query_downloads/*
+!/voy/controller/query_downloads/readme.md
