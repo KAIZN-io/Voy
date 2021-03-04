@@ -150,14 +150,14 @@ To see the logs of the `p` service run `docker-compose logs -f p`.
 <a name="cli"></a>
 # Working with the Command Line Interface
 This app comes with a custom Command Line Interface (CLI). To use it, you first need to install the app as a package:
-- Enter you virtual env with `. ./venv/bin/activate`
-- Run `pip3 install -e .` to install the app as a python package int he virtual env
-- You can now run commands with the `flask-auth-ap` command.
+- Enter you virtual env with `. venv/bin/activate`
+- Run `pip3 install -e .` to install the app as a python package in the virtual env
+- You can now run commands with the `voy` command.
 
-Fun fact: The `flask-auth-app` command can be used the same way as the `flask` command. You can for example start the
-app with `flask-auth-app run`.
+Fun fact: The `voy` command can be used the same way as the `flask` command. You can for example start the
+app with `voy run`.
 
-The CLI also allows us to add custom commands. One of such is `flask-auth-app hello-world`. Later on we want to enable a
+The CLI also allows us to add custom commands. One of such is `voy hello-world`. Later on we want to enable a
 password reset via the command line.
 
 <a name="biology_analogon"></a>

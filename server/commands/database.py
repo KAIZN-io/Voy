@@ -13,5 +13,5 @@ def hello_world():
 @database.cli.command('create')
 @click.argument('name')
 def create(name):
-    """"Create a user"""
+    """Create a user"""
     print("Create user: {}".format(name))
