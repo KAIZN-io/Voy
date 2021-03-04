@@ -97,7 +97,7 @@ Data Entry
             <option disabled="disabled">----</option>
             <!-- if user is not active yet, display it -->
             {% for user in Users %}
-            <option value="{{ user.abbrev }}">{{ user.abbrev }} {% if user.active == 1 %} (unactive) {% endif %}
+            <option value="{{ user.abbrev }}">{{ user.abbrev }} {% if user.active == false %} (inactive) {% endif %}
             </option>
 
             {% endfor %}

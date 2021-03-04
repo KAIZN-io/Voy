@@ -6,7 +6,7 @@ from flask_breadcrumbs import Breadcrumbs, register_breadcrumb
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 
-from .controller import auth_blueprint, qc_database_blueprint, users_module_blueprint
+from .controller import auth_blueprint, qc_database_blueprint, users_module_blueprint, databaseCLI_blueprint
 from .model import db, migrate, DB_User
 
 # Load logging configuration
@@ -47,6 +47,7 @@ def create_app():
         return DB_User.query.get(int(user_id))
 
     # blueprint for auth routes in our app
+    app.register_blueprint(databaseCLI_blueprint)
     app.register_blueprint(auth_blueprint)
     app.register_blueprint(qc_database_blueprint)
     app.register_blueprint(users_module_blueprint)
