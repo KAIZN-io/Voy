@@ -1,10 +1,10 @@
 from setuptools import setup
 
 setup(
-    name='flask-auth-app',
+    name='voy',
     entry_points={
         'console_scripts': [
-            'flask-auth-app=server.commands:cli'
+            'voy=server.commands:cli'
         ],
     },
 )

@@ -6,7 +6,8 @@ from flask_breadcrumbs import Breadcrumbs, register_breadcrumb
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 
-from .controller import auth_blueprint, qc_database_blueprint, users_module_blueprint, databaseCLI_blueprint
+from .controller import auth_blueprint, qc_database_blueprint, users_module_blueprint
+from .commands import databaseCLI_blueprint
 from .model import db, migrate, DB_User
 
 # Load logging configuration
@@ -17,7 +18,7 @@ with open('config/logging.yaml', 'r') as stream:
 def create_app():
     # Create the app
     app = Flask(
-        'flask-auth-app',
+        __name__,
         template_folder='view/templates',
         static_url_path='',
         static_folder='view/static/dist',
