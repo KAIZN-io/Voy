@@ -33,7 +33,7 @@ Designed to fulfill the requirements of a compliant software in EU | Life Scienc
 2. `docker-compose up -d p`
 3. `docker-compose exec p /bin/bash`    
 3.1 `flask shell`       
-3.2 `from server.model import db`    
+3.2 `from voy.model import db`
 3.3 `db.create_all()`    
 4.   http://localhost:5000/
 
@@ -56,7 +56,7 @@ Don't want to install a local PostgreSQL database?
 <a name="init_database"></a>
 ## 2. Initialize the database
 1. Open the Flask shell with `flask shell`
-2. Get the model schemas with `from server.model import db`
+2. Get the model schemas with `from voy.model import db`
 3. Create the database and the tables with `db.create_all()`
 
 <a name="init_database_via_docker"></a>
