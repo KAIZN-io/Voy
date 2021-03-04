@@ -7,7 +7,7 @@ from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 
 from .controller import auth_blueprint, qc_database_blueprint, users_module_blueprint
-from .commands import databaseCLI_blueprint
+from .commands import database_cli
 from .model import db, migrate, DB_User
 
 # Load logging configuration
@@ -47,10 +47,11 @@ def create_app():
         # since the user_id is just the primary key of our user table, use it in the query for the user
         return DB_User.query.get(int(user_id))
 
-    # blueprint for auth routes in our app
-    app.register_blueprint(databaseCLI_blueprint)
+    # Register routing blueprints
     app.register_blueprint(auth_blueprint)
     app.register_blueprint(qc_database_blueprint)
     app.register_blueprint(users_module_blueprint)
 
+    # Register CLI blueprints
+    app.register_blueprint(database_cli)
     return app
