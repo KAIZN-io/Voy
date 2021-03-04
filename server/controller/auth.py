@@ -40,12 +40,12 @@ def login_post():
             return redirect(url_for('auth.login'))
 
     # Case 2: check if the user got inactivated
-    if user.active == False:
+    if user.is_active == False:
         flash('Your account got inactivated. Please contact your Admin for this issue.')
         return redirect(url_for('auth.login'))
 
     # Case 3: the user is active but his password is a system password
-    if (user.active == True and user.is_system_passwd == True):
+    if (user.is_active == True and user.is_system_passwd == True):
         return redirect(url_for('auth.new_password'))
 
     # Case 4: take the user supplied password, hash it, and compare it to the hashed password in database
@@ -90,7 +90,8 @@ def admin_signup_post():
         abbrev=abbreviation,
         role=role,
         password=generate_password_hash(password, method='sha256'),
-        is_system_passwd=False
+        is_system_passwd=False,
+        is_active=True
     )
 
     # add the new user to the database
@@ -159,26 +160,29 @@ def new_password_post():
 
     # filter the requested user
     user = DB_User.query.filter_by(abbrev=abbrev).first()
+    if user:
+        # take the user supplied password, hash it, and compare it to the hashed password in database
+        if not check_password_hash(user.password, oldPassword):
+            flash('You made a mistake with you old password')
+            return redirect(url_for('auth.new_password'))
 
-    # take the user supplied password, hash it, and compare it to the hashed password in database
-    if not check_password_hash(user.password, oldPassword):
-        flash('You made a mistake with you old password')
-        return redirect(url_for('auth.new_password'))
+        else:
+            if password1 != password2:
+                flash('Passwords are not the same')
+                return redirect(url_for('auth.new_password'))
+            else:
+                password = generate_password_hash(password1, method='sha256')
+
+                # set the new password and activate the account
+                DB_User.query.filter_by(abbrev=abbrev).update(
+                    {"password": password, "is_system_passwd": False})
+                db.session.commit()
+
+        return redirect(url_for('auth.login'))
 
     else:
-        if password1 != password2:
-            flash('Passwords are not the same')
-            return redirect(url_for('auth.new_password'))
-        else:
-            password = generate_password_hash(password1, method='sha256')
-
-            # set the new password and activate the account
-            DB_User.query.filter_by(abbrev=abbrev).update(
-                {"password": password, "is_system_passwd": False})
-            db.session.commit()
-
-    return redirect(url_for('auth.login'))
-
+        flash('Your account was not created yet. Please contact the admin for this issue.')
+        return redirect(url_for('auth.new_password'))
 
 @auth.route('/profile', methods=['GET'])
 @register_breadcrumb(auth, '.profile', '')

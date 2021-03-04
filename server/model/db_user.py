@@ -12,4 +12,4 @@ class DB_User(UserMixin, db.Model):
     is_system_passwd = db.Column(db.Boolean, default=False, nullable=False,)
     abbrev = db.Column(db.String(5), unique=True)
     role = db.Column(db.Text)
-    active = db.Column(db.Boolean, default=False, nullable=False,)
+    is_active = db.Column(db.Boolean, default=False, nullable=False)
