@@ -30,12 +30,10 @@ Designed to fulfill the requirements of a compliant software in EU | Life Scienc
 <a name="quickstart"></a>
 # Quickstart
 1. `cp .example.env .env`
-2. `docker-compose up -d p`
-3. `docker-compose exec p /bin/bash`    
-3.1 `flask shell`       
-3.2 `from voy.model import db`
-3.3 `db.create_all()`    
-4.   http://localhost:5000/
+2. `docker-compose up -d voy`
+3. `docker-compose exec voy /bin/bash`    
+3.1 `voy database init`         
+4. http://localhost:5000/
 
 Optional (for backups):    
 4. `cp ofelia.example.ini ofelia.ini`       
@@ -55,15 +53,13 @@ Don't want to install a local PostgreSQL database?
 
 <a name="init_database"></a>
 ## 2. Initialize the database
-1. Open the Flask shell with `flask shell`
-2. Get the model schemas with `from voy.model import db`
-3. Create the database and the tables with `db.create_all()`
+1. Create the database and the tables with `voy database init`
 
 <a name="init_database_via_docker"></a>
 ### 2.1 Initialize the database via Docker
 When using the docker setup, one can initialize the database by opening a shell inside the python docker container.
-1. Start the QC Database App with `docker-compose up -d p`
-2. Open a shell inside the now running container with `docker-compose exec p /bin/bash`
+1. Start the QC Database App with `docker-compose up -d voy`
+2. Open a shell inside the now running container with `docker-compose exec voy /bin/bash`
 3. Setup the database like normal in the steps above.
 
 <a name="build_assets"></a>
@@ -81,7 +77,7 @@ For a more convenient way of working with the CSS and JS assets, run `npm run wa
 2. Open http://localhost:5000/
 
 ### 4.1 Run the app in Docker
-1. Start the app with `docker-compose up -d p`.   
+1. Start the app with `docker-compose up -d voy`.   
 2. Open http://localhost/ (Port maybe different depending on your `.env` configuration.)
 
 # Database migrations
@@ -120,11 +116,11 @@ However, when the python dependencies change, a rebuild of the Docker image is n
 
 - Has your `requirements.txt` changed?
   1. Run `docker-compose build` to have Docker update the image with the new dependencies.
-  2. Recreate the running containers with `docker-compose up -d p`    
+  2. Recreate the running containers with `docker-compose up -d voy`    
   
 - Only changes in code?
   1. If you changed your static files run: `npm run build`
-  2. Gunicorn does not reload your code, so you need to restart your `p` service: `docker-compose restart p`
+  2. Gunicorn does not reload your code, so you need to restart your `voy` service: `docker-compose restart voy`
 
 ## Scheduled database backups
 The Docker setup also includes a container for creating scheduled backups of the database. Here is how to set them up:
@@ -140,7 +136,7 @@ The location where the backups are stored can be adapted in the `.env` file with
 To debug gunicorn you can add the `--preload` flag to it. This will give you stack traces to errors that occurred.    
 The `--preload` flag is now set by default when using the Docker-Compose setup.
 
-To see the logs of the `p` service run `docker-compose logs -f p`.
+To see the logs of the `voy` service run `docker-compose logs -f voy`.
 
 <a name="advanced_config"></a>
 # Advanced configuration
