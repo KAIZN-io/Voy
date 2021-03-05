@@ -1,3 +1,4 @@
+import logging
 import time
 from flask import Blueprint, render_template, request, flash, redirect, url_for, session, send_file
 from flask_breadcrumbs import Breadcrumbs, register_breadcrumb, default_breadcrumb_root
@@ -18,7 +19,8 @@ default_breadcrumb_root(qc_database, '.')
 this file handles the qc data 
 
 """
-
+# Get loggers
+to_console = logging.getLogger('to_console')
 
 # transform the query results to a readable dict
 
@@ -37,22 +39,22 @@ def qc_planning():
     study_list = [x[0] for x in study_list]
     study_list.sort()
 
-    prioritized_studies = QC_Check.query.filter_by(prioritized=0).all()
+    prioritized_studies = QC_Check.query.filter_by(prioritized=True).all()
+
     # get an unique list of all prioritized studies 
     prioritized_studies = list(set([str(i.study_id) for i in prioritized_studies]))
 
     if request.method == 'POST':
         prioritize_list = request.form.getlist('studyCheckbox')
-        prioritize_list = [int(i) for i in prioritize_list]
 
         # first reset all prioritizations  
-        QC_Check.query.update({"prioritized": 1})
+        QC_Check.query.update({"prioritized": False})
 
         db.session.commit()
 
         # then update the database with the new prioritizations:
         for study_id in prioritize_list:
-            QC_Check.query.filter_by(study_id=study_id).update({"prioritized": 0})
+            QC_Check.query.filter_by(study_id=str(study_id)).update({"prioritized": True})
 
             db.session.commit()
 
@@ -87,8 +89,9 @@ def data_entry():
             blog_entry = QC_Check(
                 procedure=title[i],
                 type=type,
-                corrected=1,
-                close=1,
+                corrected=False,
+                close=False,
+                prioritized=False,
                 description=description[i],
                 checker=current_user.abbrev,
                 created=created,
@@ -114,21 +117,23 @@ def index():
     download_type = ['xlsx', 'pdf']
 
     # get the data in a dict structur
-    # for the right person, if the query is not closed --> corrected=False (==1)
+    # for the right person, if the query is not closed --> corrected=False
     if current_user.role == "MedOps":
         posts_data = QC_Check.query\
             .filter_by(
                 responsible=current_user.abbrev,
-                corrected=1,
-                close=1
+                corrected=False,
+                close=False
             )\
-            .order_by(QC_Check.prioritized)\
+            .order_by(QC_Check.prioritized.desc())\
+            .order_by(QC_Check.created)\
             .all()
     else:
         # what DM / Admin sees
         posts_data = db.session.query(QC_Check)\
-            .filter_by(close=1)\
-            .order_by(QC_Check.prioritized)\
+            .filter_by(close=False)\
+            .order_by(QC_Check.prioritized.desc())\
+            .order_by(QC_Check.created)\
             .all()
 
     # query all user and the corresponding roles
@@ -154,10 +159,18 @@ def index():
             query_as_dict = [as_dict(r) for r in posts_data]
 
             if download_type == 'pdf':
-                TransformData.DictToPdf(query_as_dict, file_name)
+                try:
+                    TransformData.DictToPdf(query_as_dict, file_name)
+                    to_console.info("{} downloaded the query table as a pdf file".format(current_user.abbrev))
+                except:
+                    to_console.info("The query table for {} could not get transformed into a pdf file".format(current_user.abbrev))
 
             elif download_type == 'xlsx':
-                TransformData.DictToExcel(query_as_dict, file_name)
+                try:
+                    TransformData.DictToExcel(query_as_dict, file_name)
+                    to_console.info("{} downloaded the query table as an excel file".format(current_user.abbrev))
+                except:
+                    to_console.info("The query table for {} could not get transformed into a excel file".format(current_user.abbrev))
 
             # TEMP: sleep until new pdf / excel file is really created
             time.sleep(3)
@@ -198,7 +211,7 @@ def index():
 @login_required
 def delete(id):
     # give your anwser to DM
-    QC_Check.query.filter_by(id=id).update({"corrected": 0})
+    QC_Check.query.filter_by(id=id).update({"corrected": True})
 
     db.session.commit()
 
@@ -209,7 +222,7 @@ def delete(id):
 @login_required
 def requery_query(id):
     # requery the row from the table of the QC Check model
-    QC_Check.query.filter_by(id=id).update({"corrected": 1})
+    QC_Check.query.filter_by(id=id).update({"corrected": False})
 
     db.session.commit()
 
@@ -237,7 +250,7 @@ def info_modal(query_id):
 @login_required
 def close_query(id):
     # close the row from the table of the QC Check model
-    QC_Check.query.filter_by(id=id).update({"close": 0})
+    QC_Check.query.filter_by(id=id).update({"close": True})
 
     db.session.commit()
 
@@ -259,9 +272,11 @@ def edit_data():
         # get whole data as an dict
         new_data = request.form.to_dict()
 
-        # TEMP: Bug fix for the "scr_no" and "study_id"
-        new_data['scr_no'] = int(new_data['scr_no'])
-        new_data['study_id'] = int(new_data['study_id'])
+        # !TEMP: Bug fix for the "scr_no"
+        try:
+            new_data['scr_no'] = int(new_data['scr_no'])
+        except:
+            to_console.info("{} could not get transformed into an integer".format(new_data['scr_no']))
 
         for category, new_value in new_data.items():
 
@@ -276,7 +291,7 @@ def edit_data():
                 # set the query status to 'open'
                 db.session.commit()
 
-        QC_Check.query.filter_by(id=id).update({"corrected": 1})
+        QC_Check.query.filter_by(id=id).update({"corrected": False})
 
         db.session.commit()
 

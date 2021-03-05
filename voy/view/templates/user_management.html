@@ -28,7 +28,7 @@ block content %} {% if current_user.is_authenticated %}
   {% if user.role == "MedOps" %}
 
   <tr>
-    {% if user.active == false%}
+    {% if user.is_active == false%}
     <td>
       <span class="badge badge-danger"> Inactive </span>
     </td>
@@ -43,7 +43,7 @@ block content %} {% if current_user.is_authenticated %}
     <td>{{ user.abbrev }}</td>
     <td>{{ user.role }}</td>
     <td>
-    {% if user.active == true%}
+    {% if user.is_active == true%}
       <a href="/inactivate/{{user.id}}">inactivate</a>
     {% endif %}
     </td>
@@ -68,7 +68,7 @@ block content %} {% if current_user.is_authenticated %}
   {% for user in Users %}
   {% if (user.role == "Data Entry" or user.role == "Data Manager") %}
   <tr>
-    {% if user.active == false%}
+    {% if user.is_active == false%}
     <td>
       <span class="badge badge-danger"> Inactive </span>
     </td>
@@ -83,7 +83,7 @@ block content %} {% if current_user.is_authenticated %}
     <td>{{ user.abbrev }}</td>
     <td>{{ user.role }}</td>
     <td>
-      {% if user.active == true%}
+      {% if user.is_active == true%}
       <a href="/inactivate/{{user.id}}">inactivate</a>
       {% endif %}
 
