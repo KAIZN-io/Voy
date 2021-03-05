@@ -31,8 +31,7 @@ Designed to fulfill the requirements of a compliant software in EU | Life Scienc
 # Quickstart
 1. `cp .example.env .env`
 2. `docker-compose up -d voy`
-3. `docker-compose exec voy /bin/bash`    
-3.1 `voy database init`         
+3. `docker-compose exec voy voy database init`    
 4. http://localhost:5000/
 
 Optional (for backups):    

@@ -9,12 +9,6 @@ from werkzeug.security import generate_password_hash
 database = Blueprint('database', __name__)
 
 
-@database.cli.command('create')
-@click.argument('name')
-def create(name):
-    """Create a user"""
-    print("Create user: {}".format(name))
-
 @database.cli.command('init')
 @with_appcontext
 def init():
@@ -27,20 +21,19 @@ def init():
 @with_appcontext
 def reset(user_abbreviation):
     """Reset a password of an user"""
-    abbrev = user_abbreviation
 
     # filter the requested user
-    user = DB_User.query.filter_by(abbrev=abbrev).first()
+    user = DB_User.query.filter_by(abbrev=user_abbreviation).first()
 
     if user:
         # generate a system password with the lenght of 10 and hash it
         new_passwd = passwd_generator(size=10)
 
-        password = generate_password_hash(new_passwd, method='sha256')
+        new_passwd_hash = generate_password_hash(new_passwd, method='sha256')
 
         # commit the new system password to the database
         DB_User.query.filter_by(abbrev=abbrev).update(
-            {"password": password, "is_system_passwd": True})
+            {"password": new_passwd_hash, "is_system_passwd": True})
         db.session.commit()
 
         click.echo("Reset the password of the user {}".format(abbrev))
