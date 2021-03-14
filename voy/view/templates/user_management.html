@@ -1,0 +1,97 @@
+{% extends "base.html" %} {% block title %} User Managment {% endblock %} {%
+block content %} {% if current_user.is_authenticated %}
+<div>
+  {%- for breadcrumb in breadcrumbs -%}
+  <a href="{{ breadcrumb.url }}">{{ breadcrumb.text }}</a>
+  {{ '/' if not loop.last }}
+  {%- endfor -%}
+</div>
+<h1 class="title">User Management</h1>
+
+<button class="btn btn-primary" onclick="location.href='/add_user'" style="float: left;" type="button">add User</button>
+<br/>
+<br/>
+
+<h4>MedOps</h4>
+<table class="table table-hover">
+  <thead class="thead-light">
+  <tr>
+    <th scope="col">Status</th>
+    <th scope="col">User</th>
+    <th scope="col">Role</th>
+    <th scope="col">Inactivate</th>
+  </tr>
+  </thead>
+  <tbody>
+
+  {% for user in Users %}
+  {% if user.role == "MedOps" %}
+
+  <tr>
+    {% if user.is_active == false%}
+    <td>
+      <span class="badge badge-danger"> Inactive </span>
+    </td>
+    {% else %}
+    <td>
+      <span class="badge badge-success"> Active </span>
+      {% if user.is_system_passwd == true%}
+      <span class="badge badge-danger"> sPasswd </span>
+      {% endif %}
+    </td>
+    {% endif %}
+    <td>{{ user.abbrev }}</td>
+    <td>{{ user.role }}</td>
+    <td>
+    {% if user.is_active == true%}
+      <a href="/inactivate/{{user.id}}">inactivate</a>
+    {% endif %}
+    </td>
+
+  </tr>
+  {% endif %}
+  {% endfor %}
+  </tbody>
+</table>
+<br>
+<h4>DM</h4>
+<table class="table table-hover">
+  <thead class="thead-light">
+  <tr>
+    <th scope="col">Status</th>
+    <th scope="col">User</th>
+    <th scope="col">Role</th>
+    <th scope="col">Inactivate</th>
+  </tr>
+  </thead>
+  <tbody>
+  {% for user in Users %}
+  {% if (user.role == "Data Entry" or user.role == "Data Manager") %}
+  <tr>
+    {% if user.is_active == false%}
+    <td>
+      <span class="badge badge-danger"> Inactive </span>
+    </td>
+    {% else %}
+    <td>
+      <span class="badge badge-success"> Active </span>
+      {% if user.is_system_passwd == true%}
+      <span class="badge badge-danger"> sPasswd </span>
+      {% endif %}
+    </td>
+    {% endif %}
+    <td>{{ user.abbrev }}</td>
+    <td>{{ user.role }}</td>
+    <td>
+      {% if user.is_active == true%}
+      <a href="/inactivate/{{user.id}}">inactivate</a>
+      {% endif %}
+
+    </td>
+  </tr>
+  {% endif %}
+  {% endfor %}
+  </tbody>
+</table>
+
+{% endif %} {% endblock %}

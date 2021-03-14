@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Edit Data
+{% endblock %}
+
+{% block content %}
+<div>
+  {%- for breadcrumb in breadcrumbs -%}
+  <a href="{{ breadcrumb.url }}">{{ breadcrumb.text }}</a>
+  {{ '/' if not loop.last }}
+  {%- endfor -%}
+</div>
+<h1>Edit Data</h1>
+
+<form class="needs-validation" method="post" novalidate>
+  <div class="form-row">
+
+    <div class="form-group col-md-6">
+      <label for="study_id">Study ID</label>
+      <div class="form-group">
+        <input class="form-control" name="study_id"
+               required
+               maxlength="20"
+               type="text"
+               value="{{ data.study_id }}">
+      </div>
+    </div>
+
+    <div class="form-group col-md-4">
+      <label for="type">Document-Type :</label>
+      <select class="form-control" name="type" required>
+          <option value="Source"{% if data.type=="Source" %} selected="selected"{% endif %}>Source</option>
+            <option value="ICF"{% if data.type=="ICF" %} selected="selected"{% endif %}>ICF</option>
+
+      </select>
+    </div>
+
+    <div class="form-group col-md-2">
+      <label for="scr_no">Scr No</label>
+      <div class="form-group">
+        <input class="form-control" name="scr_no"
+               required
+               type="number" min="0" max="99999999"
+               value="{{ data.scr_no }}">
+      </div>
+    </div>
+    <table class="table" data-ticket-table id="data_entry_table" novalidate>
+      <thead class="thead-light">
+      <tr>
+        <th scope="col">Visit</th>
+        <th scope="col">Page</th>
+        <th scope="col">Procedure</th>
+        <th scope="col">Description</th>
+        <th scope="col">Responsible</th>
+
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td>
+          <div class="form-group">
+            <input class="form-control" name="visit"
+                   required
+                   type="text"
+                   maxlength="10"
+                   value="{{ data.visit }}">
+          </div>
+        </td>
+
+        <td>
+          <div class="form-group">
+            <input class="form-control" name="page"
+                   required
+                   type="text"
+                   maxlength="10"
+                   value="{{ data.page }}">
+          </div>
+        </td>
+        <td>
+          <div class="form-group">
+            <input class="form-control" name="procedure"
+                   required
+                   type="text"
+                   maxlength="20"
+                   value="{{ data.procedure }}">
+          </div>
+        </td>
+        <td>
+          <div class="form-group">
+            <input class="form-control" name="description"
+                   required
+                   maxlength="100"
+                   type="text"
+                   value="{{ data.description }}">
+          </div>
+        </td>
+        <td>
+          <div class="form-group">
+            <select name="responsible" width="300px">
+              <option SELECTED value="{{data.responsible}}">{{data.responsible}}</option>
+              <option disabled="disabled">----</option>
+
+              {% for user in Users %}
+              <option value="{{ user.abbrev }}">{{ user.abbrev }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </td>
+      </tr>
+
+    </table>
+    <div class="form-group">
+      <button class="btn btn-primary" id="submit_table" style="margin-left: 50%" type="submit">Submit</button>
+    </div>
+</form>
+
+{% endblock %}
+
+{% block js %} 
+  <script src="{{ url_for('static', filename='js/edit_data.js', v='1.0.0') }}" type="text/javascript"></script>
+{% endblock %}

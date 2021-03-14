@@ -39,7 +39,7 @@ services:
     depends_on:
       - db
 
-  p:
+  voy:
     image: project-p/p
     build:
       context: .

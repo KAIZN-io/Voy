@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <meta
+    content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    name="viewport"
+  />
+
+  <title>{% block title %} {% endblock %}</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css', v='1.0.0') }}" />
+
+</head>
+
+<body>
+
+<!-- create the navigation bar on top of the page -->
+<nav class="navbar navbar-expand-md navbar-light bg-light">
+
+  <!-- your logo ! -->
+  <a class="navbar-brand" href="{{ url_for('qc_database.index')}}">
+    <img alt="" height="30" src="{{ url_for('static', filename='img/bootstrap-logo.png')}}" width="30">
+    QC-Database
+  </a>
+
+  <button
+    aria-controls="navbarNav"
+    aria-expanded="false"
+    aria-label="Toggle navigation"
+    class="navbar-toggler"
+    data-target="#navbarNav"
+    data-toggle="collapse"
+    type="button"
+  >
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
+
+    </ul>
+  </div>
+  {% if (current_user.is_authenticated) and (current_user.role == 'Admin' or current_user.role == 'Data Manager') %}
+  <a class="nav-link" href="{{ url_for('qc_database.qc_planning')}}">Planning</a>
+  {% endif %}
+  <!-- in the right corner of the nav bar -->
+  <div class="topnav-right">
+    <div class="dropdown">
+      <a class="nav-link dropdown" data-toggle="dropdown" href="#">
+        <img alt="" height="30" src="{{ url_for('static', filename='img/hamburger_icon.svg')}}" width="30">
+      </a>
+      <div class="dropdown-menu dropdown-menu-right">
+
+        {% if not current_user.is_authenticated %}
+        <a class="dropdown-item" href="{{ url_for('auth.login') }}">
+          Login
+        </a>
+        {% endif %}
+        {% if (current_user.is_authenticated) and (current_user.role == 'Admin' or current_user.role == 'Data Manager')
+        %}
+        <a class="dropdown-item" href="{{ url_for('users_module.user_management') }}">
+          User Management
+        </a>
+        {% endif %}
+        {% if current_user.is_authenticated %}
+        <a class="dropdown-item" href="{{ url_for('auth.profile') }}">
+          Profile
+        </a>
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item" href="{{ url_for('auth.logout') }}">
+          Logout
+        </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</nav>
+</div>
+
+<div class="container">
+  <!-- für pop-ups / flash message  -->
+  {% for message in get_flashed_messages() %}
+  <div class="alert alert-danger">{{ message }}</div>
+  {% endfor %}
+
+  <!-- nachfolger Block wir mit Inhalt ersetzt -->
+  {% block content %} {% endblock %}
+</div>
+
+<script src="{{ url_for('static', filename='js/main.js', v='1.0.0') }}" type="text/javascript"></script>
+
+
+{% block js %} {% endblock %}
+<nav class="navbar fixed-bottom navbar-light padding-top bg-light">
+  <a class="navbar-brand" href="#"></a>
+</nav>
+</body>
+</html>
+
