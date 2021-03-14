@@ -10,6 +10,7 @@ Designed to fulfill the requirements of a compliant software in EU | Life Scienc
     - [Initialize the database](#init_database)
     - [Build assets](#build_assets)
     - [Run the app](#run_app)
+    - [Mailing](#mailing)
 - [Deployment](#deployment)
     - [Debugging](#debugging)
 - [Advanced configuration](#advanced_config)
@@ -78,6 +79,12 @@ For a more convenient way of working with the CSS and JS assets, run `npm run wa
 ### 4.1 Run the app in Docker
 1. Start the app with `docker-compose up -d voy`.   
 2. Open http://localhost/ (Port maybe different depending on your `.env` configuration.)
+
+<a name="mailing"></a>
+## Mailing
+To check and verify outgoing e-mails from our app, the docker setup includes a dummy SMTP server - Mailhog. It is
+started together with the app. One can access it under [localhost:5001](http://localhost:5001/) and see sent mails from
+our application there.
 
 # Database migrations
 To enable updates for live instances of our software, it is crucial to have database migrations. Database migrations
