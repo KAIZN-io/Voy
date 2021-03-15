@@ -24,14 +24,14 @@ def reset(user_abbreviation):
         new_passwd_hash = generate_password_hash(new_passwd, method='sha256')
 
         # commit the new system password to the database
-        DB_User.query.filter_by(abbrev=abbrev).update(
+        DB_User.query.filter_by(abbrev=user_abbreviation).update(
             {"password": new_passwd_hash, "is_system_passwd": True})
         db.session.commit()
 
-        click.echo("Reset the password of the user {}".format(abbrev))
+        click.echo("Reset the password of the user {}".format(user_abbreviation))
         # print the new password
         click.echo("The new password is : {}".format(new_passwd))
 
     else:
-        click.echo("A user with the abbreviation of {} does not exist".format(abbrev))
+        click.echo("A user with the abbreviation of {} does not exist".format(user_abbreviation))
 
