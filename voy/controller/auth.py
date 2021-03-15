@@ -2,8 +2,10 @@ import logging
 from flask import Blueprint, render_template, redirect, url_for, request, flash, session
 from flask_breadcrumbs import register_breadcrumb, default_breadcrumb_root
 from flask_login import login_user, logout_user, login_required, current_user
+from flask_mail import Message
 from werkzeug.security import generate_password_hash, check_password_hash
 
+from voy.mail import mail
 from voy.model import db
 from voy.controller.Compliance_Computerized_Systems_EMA import audit_trail, time_stamp, passwd_generator
 from voy.model import DB_User, User_Management
@@ -134,8 +136,11 @@ def forgot_passwd_post():
         # generate a system password with the lenght of 10 and hash it
         new_passwd = passwd_generator(size=10)
 
-        # TODO: send the new_passwd over mail to the user
-        print(new_passwd)
+        # ToDo: Remove hard-coded sender
+        msg = Message('Hello', sender='no-reply@kaizn.io', recipients=[user.email])
+        msg.body = "Your new password is: {password}".format(password=new_passwd)
+        mail.send(msg)
+
         password = generate_password_hash(new_passwd, method='sha256')
 
         # commit the new system password to the database

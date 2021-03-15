@@ -2,6 +2,11 @@ version: "3.8"
 
 services:
 
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - ${MAILHOG_SERVICE_PORT}:8025
+
   db:
     image: postgres:13.1-alpine
     healthcheck:
@@ -50,6 +55,13 @@ services:
       - DB_NAME
       - DB_USER
       - DB_PASSWORD
+      - MAIL_SERVER=mailhog
+      - MAIL_PORT=1025
+      - MAIL_USE_TLS
+      - MAIL_USE_SSL
+      - MAIL_DEBUG
+      - MAIL_USERNAME
+      - MAIL_PASSWORD
       - SECRET_KEY
       - FLASK_APP
       - FLASK_ENV
@@ -59,6 +71,7 @@ services:
       - ${P_SERVICE_PORT}:5000
     depends_on:
       - db
+      - mailhog
 
 volumes:
   db:
