@@ -2,6 +2,11 @@ version: "3.8"
 
 services:
 
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - ${MAILHOG_SERVICE_PORT}:8025
+
   db:
     image: postgres:13.1-alpine
     healthcheck:
@@ -34,31 +39,39 @@ services:
     depends_on:
       - db
 
-  p:
-    image: project-p/p
+  voy:
+    image: project-p/voy
     build:
       context: .
     command: ["flask", "run", "--host=0.0.0.0"]
     volumes:
-      - ./:/usr/src/project-p:cached
-      - /usr/src/project-p/.cache
-      - /usr/src/project-p/node_modules
-      - /usr/src/project-p/venv
+      - ./:/usr/src/voy:cached
+      - /usr/src/voy/.cache
+      - /usr/src/voy/node_modules
+      - /usr/src/voy/venv
     environment:
       - DB_HOST=db
       - DB_PORT=5432
       - DB_NAME
       - DB_USER
       - DB_PASSWORD
+      - MAIL_SERVER=mailhog
+      - MAIL_PORT=1025
+      - MAIL_USE_TLS
+      - MAIL_USE_SSL
+      - MAIL_DEBUG
+      - MAIL_USERNAME
+      - MAIL_PASSWORD
       - SECRET_KEY
       - FLASK_APP
       - FLASK_ENV
       - DEBUG
       - TESTING
     ports:
-      - ${P_SERVICE_PORT}:5000
+      - ${VOY_SERVICE_PORT}:5000
     depends_on:
       - db
+      - mailhog
 
 volumes:
   db:

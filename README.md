@@ -10,9 +10,11 @@ Designed to fulfill the requirements of a compliant software in EU | Life Scienc
     - [Initialize the database](#init_database)
     - [Build assets](#build_assets)
     - [Run the app](#run_app)
+    - [Mailing](#mailing)
 - [Deployment](#deployment)
     - [Debugging](#debugging)
 - [Advanced configuration](#advanced_config)
+- [Advanced Working with the Command Line Interface](#cli)
 - [This project in biological words](#biology_analogon)
   
 
@@ -29,12 +31,9 @@ Designed to fulfill the requirements of a compliant software in EU | Life Scienc
 <a name="quickstart"></a>
 # Quickstart
 1. `cp .example.env .env`
-2. `docker-compose up -d p`
-3. `docker-compose exec p /bin/bash`    
-3.1 `flask shell`       
-3.2 `from server.model import db`    
-3.3 `db.create_all()`    
-4.   http://localhost:5000/
+2. `docker-compose up -d voy`
+3. `docker-compose exec voy voy database init`    
+4. http://localhost:5000/
 
 Optional (for backups):    
 4. `cp ofelia.example.ini ofelia.ini`       
@@ -54,15 +53,13 @@ Don't want to install a local PostgreSQL database?
 
 <a name="init_database"></a>
 ## 2. Initialize the database
-1. Open the Flask shell with `flask shell`
-2. Get the model schemas with `from server.model import db`
-3. Create the database and the tables with `db.create_all()`
+1. Create the database and the tables with `voy database init`
 
 <a name="init_database_via_docker"></a>
 ### 2.1 Initialize the database via Docker
 When using the docker setup, one can initialize the database by opening a shell inside the python docker container.
-1. Start the QC Database App with `docker-compose up -d p`
-2. Open a shell inside the now running container with `docker-compose exec p /bin/bash`
+1. Start the QC Database App with `docker-compose up -d voy`
+2. Open a shell inside the now running container with `docker-compose exec voy /bin/bash`
 3. Setup the database like normal in the steps above.
 
 <a name="build_assets"></a>
@@ -80,8 +77,14 @@ For a more convenient way of working with the CSS and JS assets, run `npm run wa
 2. Open http://localhost:5000/
 
 ### 4.1 Run the app in Docker
-1. Start the app with `docker-compose up -d p`.   
+1. Start the app with `docker-compose up -d voy`.   
 2. Open http://localhost/ (Port maybe different depending on your `.env` configuration.)
+
+<a name="mailing"></a>
+## Mailing
+To check and verify outgoing e-mails from our app, the docker setup includes a dummy SMTP server - Mailhog. It is
+started together with the app. One can access it under [localhost:5001](http://localhost:5001/) and see sent mails from
+our application there.
 
 # Database migrations
 To enable updates for live instances of our software, it is crucial to have database migrations. Database migrations
@@ -119,11 +122,11 @@ However, when the python dependencies change, a rebuild of the Docker image is n
 
 - Has your `requirements.txt` changed?
   1. Run `docker-compose build` to have Docker update the image with the new dependencies.
-  2. Recreate the running containers with `docker-compose up -d p`    
+  2. Recreate the running containers with `docker-compose up -d voy`    
   
 - Only changes in code?
   1. If you changed your static files run: `npm run build`
-  2. Gunicorn does not reload your code, so you need to restart your `p` service: `docker-compose restart p`
+  2. Gunicorn does not reload your code, so you need to restart your `voy` service: `docker-compose restart voy`
 
 ## Scheduled database backups
 The Docker setup also includes a container for creating scheduled backups of the database. Here is how to set them up:
@@ -139,12 +142,25 @@ The location where the backups are stored can be adapted in the `.env` file with
 To debug gunicorn you can add the `--preload` flag to it. This will give you stack traces to errors that occurred.    
 The `--preload` flag is now set by default when using the Docker-Compose setup.
 
-To see the logs of the `p` service run `docker-compose logs -f p`.
+To see the logs of the `voy` service run `docker-compose logs -f voy`.
 
 <a name="advanced_config"></a>
 # Advanced configuration
 - the logging style is inside `logging.yaml`
 - the app default env is "development". Set it to "production" with `export FLASK_ENV=production` before running it with `flask run`
+
+<a name="cli"></a>
+# Working with the Command Line Interface
+This app comes with a custom Command Line Interface (CLI). To use it, you first need to install the app as a package:
+- Enter you virtual env with `. venv/bin/activate`
+- Run `pip3 install -e .` to install the app as a python package in the virtual env
+- You can now run commands with the `voy` command.
+
+Fun fact: The `voy` command can be used the same way as the `flask` command. You can for example start the
+app with `voy run`.
+
+The CLI also allows us to add custom commands. One of such is `voy hello-world`. Later on we want to enable a
+password reset via the command line.
 
 <a name="biology_analogon"></a>
 # This project in biological words (in german)

@@ -1,6 +1,6 @@
 FROM python:3.8-slim-buster
 
-WORKDIR /usr/src/project-p
+WORKDIR /usr/src/voy
 
 # Install system packages
 RUN apt-get update && \
@@ -11,8 +11,9 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Installing Python packages...
-COPY requirements.txt ./
-RUN pip3 install --no-cache-dir -r requirements.txt
+COPY requirements.txt setup.py ./
+RUN pip3 install --no-cache-dir -r requirements.txt && \
+    pip3 install --no-cache-dir -e .
 
 # Install npm dependencies
 COPY package.json package-lock.json ./
@@ -24,4 +25,4 @@ COPY . .
 # build assets
 RUN npm run build
 
-CMD [ "gunicorn", "-b 0.0.0.0:5000", "server:create_app()" ]
+CMD [ "gunicorn", "-b 0.0.0.0:5000", "voy:create_app()" ]
