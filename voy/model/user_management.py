@@ -1,6 +1,6 @@
 from flask_login import UserMixin
 
-from server.model import db
+from voy.model import db
 
 
 class User_Management(UserMixin, db.Model):
