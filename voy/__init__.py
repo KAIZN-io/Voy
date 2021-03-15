@@ -7,7 +7,7 @@ from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 
 from .controller import auth_blueprint, qc_database_blueprint, users_module_blueprint
-from .commands import database_cli
+from .commands import database_cli, user_cli
 from .model import db, migrate, DB_User
 
 # Load logging configuration
@@ -54,5 +54,6 @@ def create_app():
 
     # Register CLI blueprints
     app.register_blueprint(database_cli)
+    app.register_blueprint(user_cli)
 
     return app
