@@ -55,6 +55,11 @@ db-upgrade:
 # DATABASE                                                                                                             #
 ########################################################################################################################
 
+# Initializes an empty database with the basic structure needed for the application to run.
+.PHONY: db-init
+db-init:
+	docker-compose exec voy voy database init
+
 # Creates a simple backup of the database; Useful for development purposes.
 .PHONY: db-snapshot
 db-snapshot:
