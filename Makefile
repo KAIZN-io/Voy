@@ -7,17 +7,17 @@ include .env
 export
 
 
-# Setup the virtual environment for development
-.PHONY: venv
-venv: 
-	python3 -m venv venv; \
-	source venv/bin/activate; \
-	pip3 install -r requirements.txt;
-
 
 ########################################################################################################################
 # PYTHON                                                                                                             #
 ########################################################################################################################
+
+# Setup the virtual environment. Recommended for development.
+.PHONY: venv
+venv:
+	python3 -m venv venv; \
+	source venv/bin/activate; \
+	pip3 install -r requirements.txt;
 
 # (Re-)installs python packages
 .PHONY: pip-install
