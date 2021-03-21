@@ -1,4 +1,4 @@
-# Important for the developement process
+# Important for the development process
 # ============================================================
 # SHELL := /bin/bash
 
