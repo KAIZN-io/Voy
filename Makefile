@@ -29,11 +29,15 @@ pip-install:
 # ASSETS                                                                                                             #
 ########################################################################################################################
 
-# Installs node packages and builds the frontend assets
+# Installs node packages
+.PHONY: npm-install
+npm-install:
+	docker-compose exec voy npm install
+
+# builds the frontend assets
 .PHONY: assets
-assets:
-	npm install
-	npm run build
+assets: npm-install
+	docker-compose exec voy npm run build
 
 
 ########################################################################################################################
