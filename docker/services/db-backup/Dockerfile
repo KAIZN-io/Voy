@@ -9,7 +9,7 @@ FROM alpine:3.13
 ###############################################################
 
 # With the bumped up Alpine version we can noe install postgresql-client version 13.1, matching our database
-RUN apk --no-cache add ca-certificates tzdata postgresql-client=13.1-r2
+RUN apk --no-cache add ca-certificates tzdata postgresql-client=13.2-r0
 
 # this label is required to identify container with ofelia running
 LABEL ofelia.service=true
