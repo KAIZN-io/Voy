@@ -13,6 +13,7 @@ build/
 _mailinglist
 .tox/
 .cache/
+.parcel-cache/
 .pytest_cache/
 .idea/
 docs/_build/
