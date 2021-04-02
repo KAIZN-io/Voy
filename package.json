@@ -13,19 +13,18 @@
     "url": "https://gitlab.com/piotraschke.janniklas/flask_auth_app/issues"
   },
   "scripts": {
-    "build": "parcel build --no-cache --no-minify ./voy/view/static/img/* ./voy/view/static/js/*.js ./voy/view/static/css/*.scss --out-dir ./voy/view/static/dist",
-    "watch": "parcel watch --no-cache ./voy/view/static/img/* ./voy/view/static/js/*.js ./voy/view/static/css/*.scss --out-dir ./voy/view/static/dist"
+    "build": "parcel build ./voy/view/static/img/* ./voy/view/static/js/*.js ./voy/view/static/css/*.scss --dist-dir ./voy/view/static/dist",
+    "watch": "parcel watch ./voy/view/static/img/* ./voy/view/static/js/*.js ./voy/view/static/css/*.scss --dist-dir ./voy/view/static/dist"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-free": "^5.15.1",
-    "bootstrap": "^4.5.2",
-    "jquery": "^3.5.1",
-    "parcel": "^1.12.4",
+    "@fortawesome/fontawesome-free": "^5.15.3",
+    "bootstrap": "^4.6.0",
+    "jquery": "^3.6.0",
     "popper.js": "^1.16.1",
     "tablefilter": "^0.7.2"
   },
   "devDependencies": {
-    "parcel-bundler": "1.12.3",
-    "sass": "^1.27.0"
+    "parcel": "^2.0.0-beta.2",
+    "sass": "^1.32.8"
   }
 }
