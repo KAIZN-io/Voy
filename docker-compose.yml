@@ -10,7 +10,7 @@ services:
   db:
     image: postgres:13.1-alpine
     healthcheck:
-      test: [ "CMD", "pg_isready", "-U", "${DB_USER}", "-d", "${DB_NAME}" ]
+      test: [ "CMD", "pg_isready", "-U", "${DB_USERNAME}", "-d", "${DB_NAME}" ]
       interval: 15s
       timeout: 3s
       retries: 8
@@ -18,7 +18,7 @@ services:
       - db:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=${DB_NAME}
-      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_USER=${DB_USERNAME}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
     ports:
       - ${DB_SERVICE_PORT}:5432
@@ -32,8 +32,8 @@ services:
       - ./ofelia.ini:/etc/ofelia/config.ini:ro
       - ${DB_BACKUP_DIR}:/backups/:cached
     environment:
-      - DB_HOST=db
-      - DB_USER
+      - DB_HOST
+      - DB_USERNAME
       - DB_BACKUP_EXCLUDE_LIST
       - PGPASSWORD=${DB_PASSWORD}
     depends_on:
@@ -50,13 +50,13 @@ services:
       - /usr/src/voy/node_modules
       - /usr/src/voy/venv
     environment:
-      - DB_HOST=db
-      - DB_PORT=5432
+      - DB_HOST
+      - DB_PORT
       - DB_NAME
-      - DB_USER
+      - DB_USERNAME
       - DB_PASSWORD
-      - MAIL_SERVER=mailhog
-      - MAIL_PORT=1025
+      - MAIL_HOST
+      - MAIL_PORT
       - MAIL_USE_TLS
       - MAIL_USE_SSL
       - MAIL_DEBUG
