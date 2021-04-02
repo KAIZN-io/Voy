@@ -20,12 +20,11 @@
     "@fortawesome/fontawesome-free": "^5.15.1",
     "bootstrap": "^4.5.2",
     "jquery": "^3.5.1",
-    "parcel": "^1.12.4",
     "popper.js": "^1.16.1",
     "tablefilter": "^0.7.2"
   },
   "devDependencies": {
-    "parcel-bundler": "1.12.3",
+    "parcel": "^1.12.4",
     "sass": "^1.27.0"
   }
 }
