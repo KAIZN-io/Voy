@@ -31,7 +31,7 @@ CMD ["daemon", "--config", "/etc/ofelia/config.ini"]
 ENV DB_HOST=localhost
 
 # Username to connect to database as.
-ENV DB_USER=postgres
+ENV DB_USERNAME=postgres
 
 # List of strings to match against in database name, separated by space or comma, which we
 # wish to exclude. Any database names which contain any of these

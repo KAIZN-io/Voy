@@ -8,8 +8,8 @@ if [ ! $DB_HOST ]; then
 	DB_HOST="localhost"
 fi;
 
-if [ ! $DB_USER ]; then
-	DB_USER="postgres"
+if [ ! $DB_USERNAME ]; then
+	DB_USERNAME="postgres"
 fi;
 
 
@@ -42,11 +42,11 @@ done
 
 FULL_BACKUP_QUERY="select datname from pg_database where not datistemplate and datallowconn $EXCLUDE_SCHEMA_ONLY_CLAUSE order by datname;"
 
-for DB_NAME in `psql -h "$DB_HOST" -U "$DB_USER" -At -c "$FULL_BACKUP_QUERY" postgres`
+for DB_NAME in `psql -h "$DB_HOST" -U "$DB_USERNAME" -At -c "$FULL_BACKUP_QUERY" postgres`
 do
   echo "Backing up '${DB_NAME}'..."
 
-  if ! pg_dump -Fp --host="$DB_HOST" --username="$DB_USER" --dbname="$DB_NAME" > $FINAL_DB_BACKUP_DIR"$DB_NAME".sql.in_progress; then
+  if ! pg_dump -Fp --host="$DB_HOST" --username="$DB_USERNAME" --dbname="$DB_NAME" > $FINAL_DB_BACKUP_DIR"$DB_NAME".sql.in_progress; then
     echo "[!!ERROR!!] Failed to produce plain backup database $DB_NAME" 1>&2
     exit 1
   else

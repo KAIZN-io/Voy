@@ -14,7 +14,7 @@ class Config(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     SQLALCHEMY_DATABASE_URI = 'postgresql://{user}:{password}@{host}:{port}/{dbName}'.format(
-        user     = environ.get('DB_USER'),
+        user     = environ.get('DB_USERNAME'),
         password = environ.get('DB_PASSWORD'),
         host     = environ.get('DB_HOST'),
         port     = environ.get('DB_PORT'),
@@ -22,7 +22,7 @@ class Config(object):
     )
 
     # E-Mail settings
-    MAIL_SERVER   = environ.get('MAIL_SERVER')
+    MAIL_HOST     = environ.get('MAIL_HOST')
     MAIL_PORT     = int(environ.get('MAIL_PORT'))
     MAIL_USERNAME = environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = environ.get('MAIL_PASSWORD')
