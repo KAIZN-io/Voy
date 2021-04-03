@@ -22,7 +22,7 @@ def create_app():
         'voy',
         template_folder='view/templates',
         static_url_path='',
-        static_folder='view/static/dist',
+        static_folder='view/static',
         instance_relative_config=True
     )
 

@@ -13,8 +13,8 @@
     "url": "https://gitlab.com/piotraschke.janniklas/flask_auth_app/issues"
   },
   "scripts": {
-    "build": "parcel build ./voy/view/static/img/* ./voy/view/static/js/*.js ./voy/view/static/css/*.scss --dist-dir ./voy/view/static/dist",
-    "watch": "parcel watch ./voy/view/static/img/* ./voy/view/static/js/*.js ./voy/view/static/css/*.scss --dist-dir ./voy/view/static/dist"
+    "build": "parcel build ./voy/view/assets/img/* ./voy/view/assets/js/*.js ./voy/view/assets/css/*.scss --dist-dir ./voy/view/static/bundle",
+    "watch": "parcel watch ./voy/view/assets/img/* ./voy/view/assets/js/*.js ./voy/view/assets/css/*.scss --dist-dir ./voy/view/static/bundle"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.3",
