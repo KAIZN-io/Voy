@@ -22,7 +22,7 @@ class Config(object):
     )
 
     # E-Mail settings
-    MAIL_HOST     = environ.get('MAIL_HOST')
+    MAIL_SERVER   = environ.get('MAIL_HOST')
     MAIL_PORT     = int(environ.get('MAIL_PORT'))
     MAIL_USERNAME = environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = environ.get('MAIL_PASSWORD')
