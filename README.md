@@ -87,10 +87,11 @@ When pulling changes to the database, migrations might need to be run to have yo
 Run `make db-upgrade` to execute all pending migrations.
 
 ## Command Line Interface (CLI)
-This app comes with a custom Command Line Interface (CLI). You will ahve it installed in your venv when using
-`make venv`. Otherwise, you need to install it manually with `pip3 install .`.
+This app comes with a custom Command Line Interface (CLI). To use it, you first need to install the app as a package:
 
-You can use it via the `voy` command.
+- Enter you virtual env with `. venv/bin/activate`
+- Run `pip3 install -e .` to install the app as a python package in the virtual env
+- You can now run commands with the `voy` command.
 
 # Deployment
 
@@ -118,7 +119,7 @@ You can now access the web-interface under: [localhost:5000](http://localhost:50
 The setup relies on mounting the code into the container, so code changes are relatively easy to propagate.
 However, when the python dependencies change, a rebuild of the Docker image is necessary.
 
-- Has your `setup.py` or `requirements.txt` changed?
+- Has your `requirements.txt` changed?
   1. Run `docker-compose build` to have Docker update the image with the new dependencies.
   2. Recreate the running containers with `docker-compose up -d voy`
 
