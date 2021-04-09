@@ -22,7 +22,7 @@ venv:
 # (Re-)installs python packages
 .PHONY: pip-install
 pip-install:
-	docker-compose exec p pip3 install -r requirements.txt
+	docker-compose exec voy pip3 install -r requirements.txt
 
 
 
@@ -54,7 +54,7 @@ db-revision:
 # Applies pending migrations to the database
 .PHONY: db-upgrade
 db-upgrade:
-	docker-compose exec p flask db upgrade
+	docker-compose exec voy flask db upgrade
 
 
 
