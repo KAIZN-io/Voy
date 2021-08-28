@@ -1,7 +1,7 @@
-FROM mcuadros/ofelia:v0.3.3 AS builder
+FROM mcuadros/ofelia:v0.3.4 AS builder
 
 # Use staged build so we can bump up the alpine version
-FROM alpine:3.13
+FROM alpine:3.14
 
 
 ###############################################################
@@ -9,7 +9,7 @@ FROM alpine:3.13
 ###############################################################
 
 # With the bumped up Alpine version we can noe install postgresql-client version 13.1, matching our database
-RUN apk --no-cache add ca-certificates tzdata postgresql-client=13.2-r0
+RUN apk --no-cache add ca-certificates tzdata postgresql-client=13.4-r0
 
 # this label is required to identify container with ofelia running
 LABEL ofelia.service=true
