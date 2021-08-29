@@ -1,3 +1,51 @@
-/.cache
-/node_modules
-/venv
+# OS Files
+.DS_Store
+
+# IDE
+.idea/
+.vscode
+
+# Docker
+/docker
+/docker-compose.yml
+/.dockerignore
+
+# Sensible files
+*.log
+*.sqlite
+*.sql
+*.xlsx
+.env
+.flaskenv
+backups/*
+env/
+env*
+!/migrations/env.py
+ofelia.ini
+/voy/controller/query_downloads/*
+
+# Build, Test and Cache files
+*,cover
+*.egg
+*.egg-info/
+*.pyc
+*.pyo
+*.tgz
+.cache/
+.coverage
+.coverage.*
+.parcel-cache/
+.pytest_cache/
+.tox/
+_mailinglist
+build
+docs/_build/
+htmlcov/
+instance/
+node_modules/
+venv/
+/voy/view/static/bundle
+
+# Custom
+c_test/
+notes.txt
