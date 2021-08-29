@@ -5,7 +5,7 @@ WORKDIR /usr/src/voy
 # Install system packages
 RUN apt-get update && \
     apt-get -y upgrade && \
-    apt-get -y install --no-install-recommends build-essential curl python-psycopg2 && \
+    apt-get -y install --no-install-recommends build-essential curl python-psycopg2 wkhtmltopdf && \
     curl -sL https://deb.nodesource.com/setup_16.x | bash - && apt-get install -y nodejs && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
