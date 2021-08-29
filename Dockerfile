@@ -38,9 +38,6 @@ FROM python:3.8-slim-buster AS packages
 ARG DEBIAN_FRONTEND=noninteractive
 WORKDIR /usr/src/voy
 
-# Install prerequisites
-RUN pip install wheel
-
 # Install and build packages
 COPY requirements.txt setup.py ./
 RUN pip --use-feature=in-tree-build wheel . --wheel-dir=./wheels
