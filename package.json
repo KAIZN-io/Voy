@@ -24,7 +24,7 @@
     "tablefilter": "^0.7.2"
   },
   "devDependencies": {
-    "@parcel/transformer-sass": "^2.0.0-rc-0",
+    "@parcel/transformer-sass": "^2.0.0-rc.0",
     "parcel": "^2.0.0-rc.0",
     "sass": "^1.38.2"
   }
