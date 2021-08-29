@@ -162,14 +162,16 @@ def index():
                 try:
                     TransformData.DictToPdf(query_as_dict, file_name)
                     to_console.info("{} downloaded the query table as a pdf file".format(current_user.abbrev))
-                except:
+                except Exception as e:
+                    print(e)
                     to_console.info("The query table for {} could not get transformed into a pdf file".format(current_user.abbrev))
 
             elif download_type == 'xlsx':
                 try:
                     TransformData.DictToExcel(query_as_dict, file_name)
                     to_console.info("{} downloaded the query table as an excel file".format(current_user.abbrev))
-                except:
+                except Exception as e:
+                    print(e)
                     to_console.info("The query table for {} could not get transformed into a excel file".format(current_user.abbrev))
 
             # TEMP: sleep until new pdf / excel file is really created
