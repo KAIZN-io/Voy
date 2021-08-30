@@ -2,7 +2,16 @@ from setuptools import setup, find_packages
 
 setup(
     name='voy',
-    packages=find_packages(include=['voy', 'voy.commands']),
+    packages=find_packages(include=['voy', 'voy.*']),
+    package_data={
+        'voy': [
+            'view/static/*',
+            'view/static/**/*',
+            'view/templates/*',
+            'view/templates/**/*',
+        ]
+    },
+    include_package_data=True,
     entry_points={
         'console_scripts': [
             'voy=voy.commands:cli'
