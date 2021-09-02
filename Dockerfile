@@ -44,7 +44,7 @@ WORKDIR $VOY_HOME
 
 # Install and build packages
 COPY requirements.txt setup.py ./
-RUN pip --use-feature=in-tree-build wheel . --wheel-dir=./wheels
+RUN pip --use-feature=in-tree-build wheel -r requirements.txt --wheel-dir=./wheels
 
 
 ########################################################################################################################
