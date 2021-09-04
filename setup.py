@@ -29,7 +29,7 @@ setup(
         'openpyxl~=3.0.7',
         'pandas~=1.2.5',
         'pdfkit~=0.6.1',
-        'psycopg2-binary~=2.8.6',
+        'psycopg2~=2.8.6',
         'python-dotenv~=0.15.0',
         'python-json-logger~=2.0.2',
         'PyYAML~=5.4.1',

@@ -40,6 +40,10 @@ ARG DEBIAN_FRONTEND=noninteractive
 ARG VOY_HOME
 WORKDIR $VOY_HOME
 
+# Install system packages
+RUN apt-get update
+RUN apt-get -y install --no-install-recommends build-essential libpq-dev
+
 # Install and build packages
 COPY requirements.txt setup.py ./
 RUN pip --use-feature=in-tree-build wheel -r requirements.txt --wheel-dir=./wheels
