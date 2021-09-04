@@ -14,9 +14,7 @@ RUN apt-get update
 RUN apt-get -y install --no-install-recommends curl
 RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
 RUN apt-get -y install --no-install-recommends build-essential nodejs
-# Clean up
-RUN apt-get clean
-RUN rm -rf /var/lib/apt/lists/*
+
 # Configuration
 RUN npm config set update-notifier false
 RUN npm config set fund false
