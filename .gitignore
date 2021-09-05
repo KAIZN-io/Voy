@@ -1,52 +1,53 @@
+# OS Files
 .DS_Store
-.env
-.flaskenv
-*.pyc
-*.pyo
-env/
-venv/
-env*
-!/migrations/env.py
-build/
-*.egg
-*.egg-info/
-_mailinglist
-.tox/
-.cache/
-.parcel-cache/
-.pytest_cache/
+
+# IDE
 .idea/
-docs/_build/
 .vscode
-node_modules/
-build
-*.tgz
-instance/
 
-# Backups
-/backups/*
-!/backups/.gitkeep
-/ofelia.ini
+# Docker
+/docker
+/docker-compose.yml
+/.dockerignore
 
-# Coverage reports
-htmlcov/
-.coverage
-.coverage.*
-*,cover
-
-# Custom 
-c_test/
-notes.txt
-
-# Compliance data
+# Sensible files
 *.log
 *.sqlite
 *.sql
 *.xlsx
-query_DataFrame.pdf 
-query_DataFrame.html
-
-/voy/view/static/bundle
-
+.env
+.flaskenv
+backups/*
+!/backups/.gitkeep
+env/
+env*
+!/migrations/env.py
+ofelia.ini
 /voy/controller/query_downloads/*
 !/voy/controller/query_downloads/readme.md
+
+# Build, Test and Cache files
+*,cover
+*.egg
+*.egg-info/
+*.pyc
+*.pyo
+*.tgz
+.cache/
+.coverage
+.coverage.*
+.parcel-cache/
+.pytest_cache/
+.tox/
+_mailinglist
+build
+docs/_build/
+htmlcov/
+instance/
+node_modules/
+venv/
+/voy/view/static/bundle
+
+# Custom
+c_test/
+notes.txt
