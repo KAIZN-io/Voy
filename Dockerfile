@@ -24,7 +24,7 @@ COPY package.json package-lock.json ./
 RUN npm ci
 
 # Copy over files required for building the assets
-COPY .parcelrc ./
+COPY webpack.config.js ./
 COPY voy/view/assets ./voy/view/assets
 
 # Build assets

@@ -9,7 +9,7 @@
 
   <title>{% block title %} {% endblock %}</title>
 
-  <link rel="stylesheet" href="{{ url_for('static', filename='bundle/css/main.css', v='1.0.0') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='bundle/main.css', v='1.0.0') }}" />
 
 </head>
 
@@ -20,7 +20,7 @@
 
   <!-- your logo ! -->
   <a class="navbar-brand" href="{{ url_for('qc_database.index')}}">
-    <img alt="" height="30" src="{{ url_for('static', filename='bundle/img/bootstrap-logo.png')}}" width="30">
+    <img alt="" height="30" src="{{ url_for('static', filename='bundle/images/bootstrap-logo.png')}}" width="30">
     QC-Database
   </a>
 
@@ -49,7 +49,7 @@
   <div class="topnav-right">
     <div class="dropdown">
       <a class="nav-link dropdown" data-toggle="dropdown" href="#">
-        <img alt="" height="30" src="{{ url_for('static', filename='bundle/img/hamburger_icon.svg')}}" width="30">
+        <img alt="" height="30" src="{{ url_for('static', filename='bundle/images/hamburger_icon.svg')}}" width="30">
       </a>
       <div class="dropdown-menu dropdown-menu-right">
 
@@ -89,7 +89,7 @@
   {% block content %} {% endblock %}
 </div>
 
-<script src="{{ url_for('static', filename='bundle/js/main.js', v='1.0.0') }}" type="text/javascript"></script>
+<script src="{{ url_for('static', filename='bundle/main.js', v='1.0.0') }}" type="text/javascript"></script>
 
 
 {% block js %} {% endblock %}
