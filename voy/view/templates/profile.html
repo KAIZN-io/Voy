@@ -18,7 +18,44 @@ Mein Profile
 </h1>
 
 <div class="column is-4 is-offset-4">
-  <h3 class="title">Change Password</h3>
+  <h3 class="title">Change Password
+    <a
+      data-target="#password_Modal"
+      data-toggle="modal"
+      href="#"
+      style="color: blue;">
+      <i class="fas fa-question-circle"></i>
+    </a>
+    <div
+      aria-hidden="true"
+      aria-labelledby="password_Modal"
+      class="modal fade"
+      id="password_Modal"
+      role="dialog" >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+          <div class="modal-header">
+            <h5 class="modal-title" id="password_Modal_label">password policy:</h5>
+            <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <blockquote class="blockquote">
+            <h4 class="mb-0" class="content is-large">
+              &#8805 12 charactes <br>
+              &#8805 1 upper case letter <br>
+              &#8805 1 lower case letter <br>
+              &#8805 1 number <br>
+              different to previous password <br>
+            </h4>
+          </blockquote>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </h3>
   <div class="box">
     {% with messages = get_flashed_messages() %}
     {% if messages %}
