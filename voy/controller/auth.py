@@ -18,6 +18,75 @@ auth = Blueprint('auth', __name__)
 # set auth blueprint as a root
 default_breadcrumb_root(auth, '.')
 
+def assess_password(password: str) -> bool:
+    """Check a password against a set of minimal requirements.
+
+    Args:
+        password (str): [description]
+
+    Returns:
+        bool: Whether the password meets the requirements
+    """
+
+    has_length: bool = len(password) >= 12
+    has_upper_case: bool = any(_.isupper() for _ in password)
+    has_lower_case: bool = any(_.islower() for _ in password)
+    has_number: bool = any(_.isdigit() for _ in password)
+
+    return has_length and has_upper_case and has_lower_case and has_number
+
+def process_password(user_abbrev: str, password_old: str, password1: str, password2: str,
+                    path_origin: str, path_goal: str):
+    """Process the supplied old and new password from the user
+
+    Args:
+        password_old (str): [description]
+        password1 (str): [description]
+        password2 (str): [description]
+        path_origin (str): [description]
+
+    Returns:
+        redirect: redirect to a page corresponding to the password
+    """
+
+    # filter the requested user
+    user = DB_User.query.filter_by(abbrev=user_abbrev).first()
+
+    if not user:
+        flash('Your account was not created yet. Please contact the admin for this issue.')
+        return redirect(url_for(path_origin))
+
+    else:
+        # take the user supplied password, hash it, and compare it to the hashed password in database
+        if not check_password_hash(user.password, password_old):
+            flash('You made a mistake with your old password')
+            return redirect(url_for(path_origin))
+
+        else:
+            if password1 != password2:
+                flash('Passwords are not the same')
+                return redirect(url_for(path_origin))
+            else:
+                # check whether the new password conforms to the password policy
+                if assess_password(password1):
+
+                    password = generate_password_hash(password1, method='sha256')
+
+                    if path_origin == "auth.new_password":
+                        # set the new password and activate the account
+                        DB_User.query.filter_by(abbrev=user_abbrev).update(
+                            {"password": password, "is_system_passwd": False})
+
+                    else:
+                        DB_User.query.filter_by(abbrev=user_abbrev).update(
+                            {"password": password})
+                    db.session.commit()
+
+                else:
+                    flash('Password does not meet the requirements!')
+                    return redirect(url_for(path_origin))
+
+            return redirect(url_for(path_goal))
 
 @auth.route('/login', methods=['GET'])
 def login():
@@ -32,7 +101,7 @@ def login_post():
     user = DB_User.query.filter_by(abbrev=abbrev).first()
 
     # Case 1: check whether any user or this username exits at all
-    if user == None:
+    if user is None:
         check_existing_user = DB_User.query.all()
         if len(check_existing_user) == 0:
             return redirect(url_for('auth.admin_signup'))
@@ -42,12 +111,12 @@ def login_post():
             return redirect(url_for('auth.login'))
 
     # Case 2: check if the user got inactivated
-    if user.is_active == False:
+    if not user.is_active:
         flash('Your account got inactivated. Please contact your Admin for this issue.')
         return redirect(url_for('auth.login'))
 
     # Case 3: the user is active but his password is a system password
-    if (user.is_active == True and user.is_system_passwd == True):
+    if user.is_active and user.is_system_passwd:
         return redirect(url_for('auth.new_password'))
 
     # Case 4: take the user supplied password, hash it, and compare it to the hashed password in database
@@ -134,14 +203,14 @@ def forgot_passwd_post():
 
     if user:
         # generate a system password with the lenght of 10 and hash it
-        new_passwd = passwd_generator(size=10)
+        password_new = passwd_generator(size=10)
 
         # ToDo: Remove hard-coded sender
         msg = Message('Hello', sender='no-reply@kaizn.io', recipients=[user.email])
-        msg.body = "Your new password is: {password}".format(password=new_passwd)
+        msg.body = "Your new password is: {password}".format(password=password_new)
         mail.send(msg)
 
-        password = generate_password_hash(new_passwd, method='sha256')
+        password = generate_password_hash(password_new, method='sha256')
 
         # commit the new system password to the database
         DB_User.query.filter_by(abbrev=abbrev).update(
@@ -158,36 +227,14 @@ def new_password():
 
 @auth.route('/new_password', methods=['POST'])
 def new_password_post():
-    oldPassword = request.form.get('oldPassword')
+    password_old = request.form.get('oldPassword')
     password1 = request.form.get('password1')
     password2 = request.form.get('password2')
     abbrev = request.form.get('abbreviation')
 
-    # filter the requested user
-    user = DB_User.query.filter_by(abbrev=abbrev).first()
-    if user:
-        # take the user supplied password, hash it, and compare it to the hashed password in database
-        if not check_password_hash(user.password, oldPassword):
-            flash('You made a mistake with your old password')
-            return redirect(url_for('auth.new_password'))
+    return process_password(user_abbrev=abbrev, password_old=password_old, password1=password1, password2=password2,
+                    path_origin="auth.new_password", path_goal='auth.login')
 
-        else:
-            if password1 != password2:
-                flash('Passwords are not the same')
-                return redirect(url_for('auth.new_password'))
-            else:
-                password = generate_password_hash(password1, method='sha256')
-
-                # set the new password and activate the account
-                DB_User.query.filter_by(abbrev=abbrev).update(
-                    {"password": password, "is_system_passwd": False})
-                db.session.commit()
-
-        return redirect(url_for('auth.login'))
-
-    else:
-        flash('Your account was not created yet. Please contact the admin for this issue.')
-        return redirect(url_for('auth.new_password'))
 
 @auth.route('/profile', methods=['GET'])
 @register_breadcrumb(auth, '.profile', '')
@@ -199,34 +246,30 @@ def profile():
 @auth.route('/profile', methods=['POST'])
 @login_required
 def change_password():
-    oldPassword = request.form.get('oldpassword')
+    """The user changes it's password
+
+    Returns:
+        redirect: either redirect to the index page or to the page, where the user comes from
+    """
+
+    password_old = request.form.get('oldpassword')
     password1 = request.form.get('password1')
     password2 = request.form.get('password2')
+    user_abbrev = current_user.abbrev
 
-    user = DB_User.query.filter_by(abbrev=current_user.abbrev).first()
+    return process_password(user_abbrev=user_abbrev, password_old=password_old, password1=password1, password2=password2,
+                    path_origin="auth.profile", path_goal='qc_database.index')
 
-    # take the user supplied password, hash it, and compare it to the hashed password in database
-    if not check_password_hash(user.password, oldPassword):
-        flash('You made a mistake with you old password')
-        return redirect(url_for('auth.profile'))
-
-    else:
-        if password1 != password2:
-            flash('Passwords are not the same')
-            return redirect(url_for('auth.profile'))
-        else:
-            password = generate_password_hash(password1, method='sha256')
-
-            DB_User.query.filter_by(abbrev=current_user.abbrev).update(
-                {"password": password})
-            db.session.commit()
-
-    return redirect(url_for('qc_database.index'))
 
 
 @auth.route('/logout')
 @login_required
 def logout():
+    """Logout the user
+
+    Returns:
+        redirect: redirects to the login page
+    """
     logout_user()
 
     return redirect(url_for('auth.login'))
