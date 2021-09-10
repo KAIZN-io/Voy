@@ -24,6 +24,7 @@ def init():
 
     if not is_database_empty():
         click.echo('Error: Database already initialized.')
+        click.echo('Run \'voy database clear\' to remove all data then try again.')
         return
 
     # Recreate all needed schemas
@@ -66,6 +67,25 @@ def init():
     to_user_file.info(audit_data['change_by'], extra=audit_data)
 
     click.echo("Initialized the database.")
+
+
+@database.cli.command('clear')
+@with_appcontext
+def clear():
+    """Initialize the database"""
+
+    if not click.confirm('THIS WILL DELETE ALL DATA. CONTINUE?'):
+        click.echo("Aborted.")
+        return
+
+    if not click.confirm('ARE YOU SURE?'):
+        click.echo("Aborted.")
+        return
+
+    # Remove all tables form teh database
+    db.drop_all()
+
+    click.echo("Database cleared.")
 
 
 def is_database_empty():
