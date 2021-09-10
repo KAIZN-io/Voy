@@ -32,22 +32,17 @@ def login_post():
     user = DB_User.query.filter_by(abbrev=abbrev).first()
 
     # Case 1: check whether any user or this username exits at all
-    if user == None:
-        check_existing_user = DB_User.query.all()
-        if len(check_existing_user) == 0:
-            return redirect(url_for('auth.admin_signup'))
-
-        else:
-            flash('Please check your login details and try again.')
-            return redirect(url_for('auth.login'))
+    if not user:
+        flash('Please check your login details and try again.')
+        return redirect(url_for('auth.login'))
 
     # Case 2: check if the user got inactivated
-    if user.is_active == False:
+    if not user.is_active:
         flash('Your account got inactivated. Please contact your Admin for this issue.')
         return redirect(url_for('auth.login'))
 
     # Case 3: the user is active but his password is a system password
-    if (user.is_active == True and user.is_system_passwd == True):
+    if user.is_system_passwd:
         return redirect(url_for('auth.new_password'))
 
     # Case 4: take the user supplied password, hash it, and compare it to the hashed password in database
@@ -63,59 +58,6 @@ def login_post():
 
     # After verify the validity of abbrev and password
     session.permanent = True
-
-    return redirect(url_for('qc_database.index'))
-
-
-@auth.route('/admin_signup', methods=['GET'])
-def admin_signup():
-    return render_template('admin_signup.html')
-
-
-@auth.route('/admin_signup', methods=['POST'])
-def admin_signup_post():
-    email = request.form.get('email')
-    password = request.form.get('password')
-    abbreviation = request.form.get('abbreviation')
-    role = 'Admin'
-
-    # if this returns a user, then the email already exists in database
-    user = DB_User.query.filter_by(role=role).first()
-
-    if user:
-        flash('The Admin already exists')
-        return redirect(url_for('auth.login'))
-
-    # create new user with the form data. Hash the password so plaintext version isn't saved.
-    new_user = DB_User(
-        email=email,
-        abbrev=abbreviation,
-        role=role,
-        password=generate_password_hash(password, method='sha256'),
-        is_system_passwd=False,
-        is_active=True
-    )
-
-    # add the new user to the database
-    db.session.add(new_user)
-    db.session.commit()
-
-    # add the change to the user_management db
-    user_management = User_Management(
-        email=email,
-        abbrev=abbreviation,
-        role=role,
-        change_by="Initial Signup",
-        date_time=time_stamp(),
-        action="added"
-    )
-
-    audit_data = user_management.__dict__
-
-    # NOTE: semi good solution for the extra data from sqlalchemy
-    audit_data.pop('date_time', None)
-
-    to_user_file.info(audit_data['change_by'], extra=audit_data)
 
     return redirect(url_for('qc_database.index'))
 
