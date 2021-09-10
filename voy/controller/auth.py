@@ -167,29 +167,36 @@ def new_password_post():
     # filter the requested user
     user = DB_User.query.filter_by(abbrev=abbrev).scalar()
 
-    if user:
-        # take the user supplied password, hash it, and compare it to the hashed password in database
-        if not check_password_hash(user.password, oldPassword):
-            flash('You made a mistake with your old password')
-            return redirect(url_for('auth.new_password'))
-
-        else:
-            if password1 != password2:
-                flash('Passwords are not the same')
-                return redirect(url_for('auth.new_password'))
-            else:
-                password = generate_password_hash(password1, method='sha256')
-
-                # set the new password and activate the account
-                DB_User.query.filter_by(abbrev=abbrev).update(
-                    {"password": password, "is_system_passwd": False})
-                db.session.commit()
-
-        return redirect(url_for('auth.login'))
-
-    else:
+    # Case 1: check whether any user or this username exits at all
+    if not user:
         flash('Your account was not created yet. Please contact the admin for this issue.')
         return redirect(url_for('auth.new_password'))
+
+    # Case 2: make sure that the old password is correct
+    if not check_password_hash(user.password, oldPassword):
+        flash('You made a mistake with your old password')
+        return redirect(url_for('auth.new_password'))
+
+    # Case 3: make sure the new password was entered correctly
+    if password1 != password2:
+        flash('Passwords are not the same')
+        return redirect(url_for('auth.new_password'))
+
+    # Generate password hash
+    password_hash = generate_password_hash(password1, method='sha256')
+
+    # set the new password and activate the account
+    DB_User.query. \
+        filter_by(abbrev=abbrev). \
+        update({
+            "password": password_hash,
+            "is_system_passwd": False
+        })
+
+    # Persist changes
+    db.session.commit()
+
+    return redirect(url_for('auth.login'))
 
 
 @auth_blueprint.route('/profile', methods=['GET'])
@@ -206,23 +213,32 @@ def change_password():
     password1 = request.form.get('password1')
     password2 = request.form.get('password2')
 
+    # filter the requested user
     user = DB_User.query.filter_by(abbrev=current_user.abbrev).scalar()
 
-    # take the user supplied password, hash it, and compare it to the hashed password in database
+    # Case 1: make sure that the old password is correct
     if not check_password_hash(user.password, oldPassword):
-        flash('You made a mistake with you old password')
+        flash('You made a mistake with your old password')
         return redirect(url_for('auth.profile'))
 
-    else:
-        if password1 != password2:
-            flash('Passwords are not the same')
-            return redirect(url_for('auth.profile'))
-        else:
-            password = generate_password_hash(password1, method='sha256')
+    # Case 3: make sure the new password was entered correctly
+    if password1 != password2:
+        flash('Passwords are not the same')
+        return redirect(url_for('auth.profile'))
 
-            DB_User.query.filter_by(abbrev=current_user.abbrev).update(
-                {"password": password})
-            db.session.commit()
+    # Generate password hash
+    password_hash = generate_password_hash(password1, method='sha256')
+
+    # set the new password and activate the account
+    DB_User.query. \
+        filter_by(abbrev=current_user.abbrev). \
+        update({
+            "password": password_hash,
+            "is_system_passwd": False
+        })
+
+    # Persist changes
+    db.session.commit()
 
     return redirect(url_for('qc_database.index'))
 
