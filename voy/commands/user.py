@@ -20,7 +20,10 @@ def reset(user_abbreviation):
     user = DB_User.query.filter_by(abbrev=user_abbreviation).first()
 
     if not user:
-        click.echo("A user with the abbreviation of {} does not exist".format(user_abbreviation))
+        click.echo()
+        click.echo("Error!")
+        click.echo("A user with the abbreviation of \"{}\" does not exist.".format(user_abbreviation))
+        click.echo()
         return
 
     # generate a system password with the lenght of 10 and hash it
@@ -33,6 +36,8 @@ def reset(user_abbreviation):
         {"password": new_passwd_hash, "is_system_passwd": True})
     db.session.commit()
 
-    click.echo("Reset the password of the user {}".format(user_abbreviation))
-    # print the new password
-    click.echo("The new password is : {}".format(new_passwd))
+    click.echo()
+    click.echo("Success.")
+    click.echo("Password for user \"{}\" was reset.".format(user_abbreviation))
+    click.echo("New password: {}".format(new_passwd))
+    click.echo()
