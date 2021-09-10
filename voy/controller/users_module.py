@@ -55,7 +55,7 @@ def add_user_post():
     role = request.form.get('role')
 
     # if this returns a user, then the email already exists in database
-    user = DB_User.query.filter_by(email=email).first()
+    user = DB_User.query.filter_by(email=email).scalar()
 
     if user:
         flash('Email address already exists')

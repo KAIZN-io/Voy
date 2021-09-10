@@ -30,7 +30,7 @@ def login_post():
     abbrev = request.form.get('abbreviation')
     password = request.form.get('password')
 
-    user = DB_User.query.filter_by(abbrev=abbrev).first()
+    user = DB_User.query.filter_by(abbrev=abbrev).scalar()
 
     # Case 1: check whether any user or this username exits at all
     if user == None:
@@ -131,7 +131,7 @@ def forgot_passwd_post():
     abbrev = request.form.get('abbrev')
 
     # filter the requested user
-    user = DB_User.query.filter_by(abbrev=abbrev).first()
+    user = DB_User.query.filter_by(abbrev=abbrev).scalar()
 
     if user:
         # generate a system password with the lenght of 10 and hash it
@@ -165,7 +165,8 @@ def new_password_post():
     abbrev = request.form.get('abbreviation')
 
     # filter the requested user
-    user = DB_User.query.filter_by(abbrev=abbrev).first()
+    user = DB_User.query.filter_by(abbrev=abbrev).scalar()
+
     if user:
         # take the user supplied password, hash it, and compare it to the hashed password in database
         if not check_password_hash(user.password, oldPassword):
@@ -205,7 +206,7 @@ def change_password():
     password1 = request.form.get('password1')
     password2 = request.form.get('password2')
 
-    user = DB_User.query.filter_by(abbrev=current_user.abbrev).first()
+    user = DB_User.query.filter_by(abbrev=current_user.abbrev).scalar()
 
     # take the user supplied password, hash it, and compare it to the hashed password in database
     if not check_password_hash(user.password, oldPassword):

@@ -18,7 +18,7 @@ def reset(user_abbreviation):
     """Reset a password of an user"""
 
     # filter the requested user
-    user = DB_User.query.filter_by(abbrev=user_abbreviation).first()
+    user = DB_User.query.filter_by(abbrev=user_abbreviation).scalar()
 
     if not user:
         click.echo()
