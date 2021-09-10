@@ -27,17 +27,16 @@ def reset(user_abbreviation):
         return
 
     # generate a system password with the lenght of 10 and hash it
-    new_passwd = passwd_generator(size=10)
-
-    new_passwd_hash = generate_password_hash(new_passwd, method='sha256')
+    password_new = passwd_generator(size=10)
+    password_new_hash = generate_password_hash(password_new, method='sha256')
 
     # commit the new system password to the database
     DB_User.query.filter_by(abbrev=user_abbreviation).update(
-        {"password": new_passwd_hash, "is_system_passwd": True})
+        {"password": password_new_hash, "is_system_passwd": True})
     db.session.commit()
 
     click.echo()
     click.echo("Success.")
     click.echo("Password for user \"{}\" was reset.".format(user_abbreviation))
-    click.echo("New password: {}".format(new_passwd))
+    click.echo("New password: {}".format(password_new))
     click.echo()
