@@ -105,7 +105,7 @@ def data_entry():
 def index():
     download_type = ['xlsx', 'pdf']
 
-    # get the data in a dict structur
+    # get the data in a dict structure
     # for the right person, if the query is not closed --> corrected=False
     if current_user.role == "MedOps":
         posts_data = QC_Check.query \
