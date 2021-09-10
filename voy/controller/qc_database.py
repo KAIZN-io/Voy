@@ -1,53 +1,42 @@
 import logging
 import time
-from flask import Blueprint, render_template, request, flash, redirect, url_for, session, send_file
-from flask_breadcrumbs import Breadcrumbs, register_breadcrumb, default_breadcrumb_root
+
+from flask import Blueprint, render_template, request, redirect, url_for, send_file
+from flask_breadcrumbs import register_breadcrumb, default_breadcrumb_root
 from flask_login import login_required, current_user
 from sqlalchemy import inspect
 
-from voy.model import db
 from voy.controller.Compliance_Computerized_Systems_EMA import audit_trail, time_stamp
 from voy.controller.data_analysis import TransformData
-from voy.model import QC_Check, DB_User, QC_Audit, QC_Requery
+from voy.model import QC_Check, DB_User, QC_Requery
+from voy.model import db
 
-qc_database = Blueprint('qc_database', __name__)
-
-# set qc_database blueprint as a root
-default_breadcrumb_root(qc_database, '.')
-
-"""
-this file handles the qc data 
-
-"""
 # Get loggers
 to_console = logging.getLogger('to_console')
 
-# transform the query results to a readable dict
+# Create the Blueprint
+qc_database_blueprint = Blueprint('qc_database', __name__)
+default_breadcrumb_root(qc_database_blueprint, '.')
 
 
-def as_dict(self):
-    return {c.key: getattr(self, c.key)
-            for c in inspect(self).mapper.column_attrs}
-
-
-@qc_database.route('/qc_planning', methods=('GET', 'POST'))
-@register_breadcrumb(qc_database, '.qc_planning', '')
+@qc_database_blueprint.route('/qc_planning', methods=('GET', 'POST'))
+@register_breadcrumb(qc_database_blueprint, '.qc_planning', '')
 @login_required
 def qc_planning():
-    # filter all unique study numbers 
+    # filter all unique study numbers
     study_list = db.session.query(QC_Check.study_id).distinct().all()
     study_list = [x[0] for x in study_list]
     study_list.sort()
 
     prioritized_studies = QC_Check.query.filter_by(prioritized=True).all()
 
-    # get an unique list of all prioritized studies 
+    # get an unique list of all prioritized studies
     prioritized_studies = list(set([str(i.study_id) for i in prioritized_studies]))
 
     if request.method == 'POST':
         prioritize_list = request.form.getlist('studyCheckbox')
 
-        # first reset all prioritizations  
+        # first reset all prioritizations
         QC_Check.query.update({"prioritized": False})
 
         db.session.commit()
@@ -63,8 +52,8 @@ def qc_planning():
     return render_template('qc_planning.html', studies=study_list, prioritized_studies=prioritized_studies)
 
 
-@qc_database.route('/data_entry', methods=('GET', 'POST'))
-@register_breadcrumb(qc_database, '.data_entry', '')
+@qc_database_blueprint.route('/data_entry', methods=('GET', 'POST'))
+@register_breadcrumb(qc_database_blueprint, '.data_entry', '')
 @login_required
 def data_entry():
     Source_type = ["Source", "ICF"]
@@ -110,8 +99,8 @@ def data_entry():
     return render_template('data_entry.html', Users=User_data, source_type=Source_type)
 
 
-@qc_database.route('/', methods=('GET', 'POST'))
-@register_breadcrumb(qc_database, '.', 'QC-DB')
+@qc_database_blueprint.route('/', methods=('GET', 'POST'))
+@register_breadcrumb(qc_database_blueprint, '.', 'QC-DB')
 @login_required
 def index():
     download_type = ['xlsx', 'pdf']
@@ -119,21 +108,21 @@ def index():
     # get the data in a dict structur
     # for the right person, if the query is not closed --> corrected=False
     if current_user.role == "MedOps":
-        posts_data = QC_Check.query\
+        posts_data = QC_Check.query \
             .filter_by(
-                responsible=current_user.abbrev,
-                corrected=False,
-                close=False
-            )\
-            .order_by(QC_Check.prioritized.desc())\
-            .order_by(QC_Check.created)\
+            responsible=current_user.abbrev,
+            corrected=False,
+            close=False
+        ) \
+            .order_by(QC_Check.prioritized.desc()) \
+            .order_by(QC_Check.created) \
             .all()
     else:
         # what DM / Admin sees
-        posts_data = db.session.query(QC_Check)\
-            .filter_by(close=False)\
-            .order_by(QC_Check.prioritized.desc())\
-            .order_by(QC_Check.created)\
+        posts_data = db.session.query(QC_Check) \
+            .filter_by(close=False) \
+            .order_by(QC_Check.prioritized.desc()) \
+            .order_by(QC_Check.created) \
             .all()
 
     # query all user and the corresponding roles
@@ -164,7 +153,8 @@ def index():
                     to_console.info("{} downloaded the query table as a pdf file".format(current_user.abbrev))
                 except Exception as e:
                     print(e)
-                    to_console.info("The query table for {} could not get transformed into a pdf file".format(current_user.abbrev))
+                    to_console.info(
+                        "The query table for {} could not get transformed into a pdf file".format(current_user.abbrev))
 
             elif download_type == 'xlsx':
                 try:
@@ -172,7 +162,8 @@ def index():
                     to_console.info("{} downloaded the query table as an excel file".format(current_user.abbrev))
                 except Exception as e:
                     print(e)
-                    to_console.info("The query table for {} could not get transformed into a excel file".format(current_user.abbrev))
+                    to_console.info("The query table for {} could not get transformed into a excel file".format(
+                        current_user.abbrev))
 
             # TEMP: sleep until new pdf / excel file is really created
             time.sleep(3)
@@ -209,7 +200,7 @@ def index():
     return render_template('index.html', posts=posts_data, user_requery=user_requery, Download_Type=download_type)
 
 
-@qc_database.route('/delete/<int:id>')
+@qc_database_blueprint.route('/delete/<int:id>')
 @login_required
 def delete(id):
     # give your anwser to DM
@@ -220,7 +211,7 @@ def delete(id):
     return redirect('/')
 
 
-@qc_database.route('/requery/<int:id>')
+@qc_database_blueprint.route('/requery/<int:id>')
 @login_required
 def requery_query(id):
     # requery the row from the table of the QC Check model
@@ -231,7 +222,7 @@ def requery_query(id):
     return redirect('/')
 
 
-@qc_database.route('/modal_data/<int:query_id>')
+@qc_database_blueprint.route('/modal_data/<int:query_id>')
 @login_required
 def modal_data(query_id):
     old_comment = db.session.query(QC_Requery).filter_by(
@@ -240,7 +231,7 @@ def modal_data(query_id):
     return render_template('modal_data.html', post=old_comment)
 
 
-@qc_database.route('/info_modal/<int:query_id>')
+@qc_database_blueprint.route('/info_modal/<int:query_id>')
 @login_required
 def info_modal(query_id):
     data_about_query = QC_Check.query.filter_by(id=query_id).first()
@@ -248,7 +239,7 @@ def info_modal(query_id):
     return render_template('modal_info.html', post=data_about_query)
 
 
-@qc_database.route('/close/<int:id>')
+@qc_database_blueprint.route('/close/<int:id>')
 @login_required
 def close_query(id):
     # close the row from the table of the QC Check model
@@ -259,8 +250,8 @@ def close_query(id):
     return redirect('/')
 
 
-@qc_database.route('/edit_data', methods=('GET', 'POST'))
-@register_breadcrumb(qc_database, '.edit_data', '')
+@qc_database_blueprint.route('/edit_data', methods=('GET', 'POST'))
+@register_breadcrumb(qc_database_blueprint, '.edit_data', '')
 @login_required
 def edit_data():
     # get the id of the query you want to edit
@@ -300,3 +291,9 @@ def edit_data():
         return redirect(url_for('qc_database.index'))
 
     return render_template('edit_data.html', data=old_data, Users=User_data)
+
+
+# transform the query results to a readable dict
+def as_dict(self):
+    return {c.key: getattr(self, c.key)
+            for c in inspect(self).mapper.column_attrs}

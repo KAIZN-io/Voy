@@ -1,20 +1,20 @@
-import logging
 import logging.config
+
 import yaml
 from flask import Flask
-from flask_breadcrumbs import Breadcrumbs, register_breadcrumb
+from flask_breadcrumbs import Breadcrumbs
 from flask_login import LoginManager
-from flask_sqlalchemy import SQLAlchemy
 
-from .controller import auth_blueprint, qc_database_blueprint, users_module_blueprint
 from .commands import database_cli, user_cli
-from .model import db, migrate, DB_User
+from .controller import auth_blueprint, qc_database_blueprint, users_module_blueprint
 from .mail import mail
+from .model import db, migrate, DB_User
 
 # Load logging configuration
 with open('config/logging.yaml', 'r') as stream:
     yamld = yaml.safe_load(stream)
     logging.config.dictConfig(yamld)
+
 
 def create_app():
     # Create the app

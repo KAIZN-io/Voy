@@ -1,24 +1,25 @@
 import logging
-from flask import Blueprint, render_template, redirect, url_for, request, flash, current_app, session
-from flask_breadcrumbs import Breadcrumbs, register_breadcrumb, default_breadcrumb_root
-from flask_login import login_user, logout_user, login_required, current_user
-from werkzeug.security import generate_password_hash, check_password_hash
 
-from voy.model import db
-from voy.controller.Compliance_Computerized_Systems_EMA import audit_trail, time_stamp, passwd_generator
+from flask import Blueprint, render_template, redirect, url_for, request, flash
+from flask_breadcrumbs import register_breadcrumb, default_breadcrumb_root
+from flask_login import login_required, current_user
+from werkzeug.security import generate_password_hash
+
+from voy.controller.Compliance_Computerized_Systems_EMA import time_stamp
 from voy.model import DB_User, User_Management
+from voy.model import db
 
 # Get loggers
 to_user_file = logging.getLogger('to_user_file')
 
-users_module = Blueprint('users_module', __name__)
-# set auth blueprint as a root
-default_breadcrumb_root(users_module, '.')
+# Create the Blueprint
+users_module_blueprint = Blueprint('users_module', __name__)
+default_breadcrumb_root(users_module_blueprint, '.')
 
 
-@users_module.route('/user_management')
+@users_module_blueprint.route('/user_management')
 @login_required
-@register_breadcrumb(users_module, '.user_management', '')
+@register_breadcrumb(users_module_blueprint, '.user_management', '')
 def user_management():
     # filter all user except for the admin
     User_data = DB_User.query.filter(DB_User.role != "Admin").all()
@@ -26,7 +27,7 @@ def user_management():
     return render_template('user_management.html', Users=User_data)
 
 
-@users_module.route('/inactivate/<int:id>')
+@users_module_blueprint.route('/inactivate/<int:id>')
 @login_required
 def inactivate(id):
     # change the active state to "False"
@@ -35,16 +36,17 @@ def inactivate(id):
 
     return redirect(url_for('users_module.user_management'))
 
-@users_module.route('/add_user')
+
+@users_module_blueprint.route('/add_user')
 @login_required
-@register_breadcrumb(users_module, '.user_management.add_user', '')
+@register_breadcrumb(users_module_blueprint, '.user_management.add_user', '')
 def add_user():
     # define the job roles
     job_roles = ["MedOps", "Data Entry", "Data Manager"]
     return render_template('add_user.html', Roles=job_roles)
 
 
-@users_module.route('/add_user', methods=['POST'])
+@users_module_blueprint.route('/add_user', methods=['POST'])
 @login_required
 def add_user_post():
     email = request.form.get('email')

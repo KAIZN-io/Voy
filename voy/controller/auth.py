@@ -1,30 +1,31 @@
 import logging
+
 from flask import Blueprint, render_template, redirect, url_for, request, flash, session
 from flask_breadcrumbs import register_breadcrumb, default_breadcrumb_root
 from flask_login import login_user, logout_user, login_required, current_user
 from flask_mail import Message
 from werkzeug.security import generate_password_hash, check_password_hash
 
+from voy.controller.Compliance_Computerized_Systems_EMA import time_stamp, passwd_generator
 from voy.mail import mail
-from voy.model import db
-from voy.controller.Compliance_Computerized_Systems_EMA import audit_trail, time_stamp, passwd_generator
 from voy.model import DB_User, User_Management
+from voy.model import db
 
 # Get loggers
 to_console = logging.getLogger('to_console')
 to_user_file = logging.getLogger('to_user_file')
 
-auth = Blueprint('auth', __name__)
-# set auth blueprint as a root
-default_breadcrumb_root(auth, '.')
+# Create the Blueprint
+auth_blueprint = Blueprint('auth', __name__)
+default_breadcrumb_root(auth_blueprint, '.')
 
 
-@auth.route('/login', methods=['GET'])
+@auth_blueprint.route('/login', methods=['GET'])
 def login():
     return render_template('login.html')
 
 
-@auth.route('/login', methods=['POST'])
+@auth_blueprint.route('/login', methods=['POST'])
 def login_post():
     abbrev = request.form.get('abbreviation')
     password = request.form.get('password')
@@ -67,12 +68,12 @@ def login_post():
     return redirect(url_for('qc_database.index'))
 
 
-@auth.route('/admin_signup', methods=['GET'])
+@auth_blueprint.route('/admin_signup', methods=['GET'])
 def admin_signup():
     return render_template('admin_signup.html')
 
 
-@auth.route('/admin_signup', methods=['POST'])
+@auth_blueprint.route('/admin_signup', methods=['POST'])
 def admin_signup_post():
     email = request.form.get('email')
     password = request.form.get('password')
@@ -120,12 +121,12 @@ def admin_signup_post():
     return redirect(url_for('qc_database.index'))
 
 
-@auth.route('/forgot_passwd', methods=['GET'])
+@auth_blueprint.route('/forgot_passwd', methods=['GET'])
 def forgot_passwd():
     return render_template('forgot_passwd.html')
 
 
-@auth.route('/forgot_passwd', methods=['POST'])
+@auth_blueprint.route('/forgot_passwd', methods=['POST'])
 def forgot_passwd_post():
     abbrev = request.form.get('abbrev')
 
@@ -151,12 +152,12 @@ def forgot_passwd_post():
     return redirect(url_for('auth.new_password'))
 
 
-@auth.route('/new_password', methods=['GET'])
+@auth_blueprint.route('/new_password', methods=['GET'])
 def new_password():
     return render_template('new_password.html')
 
 
-@auth.route('/new_password', methods=['POST'])
+@auth_blueprint.route('/new_password', methods=['POST'])
 def new_password_post():
     oldPassword = request.form.get('oldPassword')
     password1 = request.form.get('password1')
@@ -189,14 +190,15 @@ def new_password_post():
         flash('Your account was not created yet. Please contact the admin for this issue.')
         return redirect(url_for('auth.new_password'))
 
-@auth.route('/profile', methods=['GET'])
-@register_breadcrumb(auth, '.profile', '')
+
+@auth_blueprint.route('/profile', methods=['GET'])
+@register_breadcrumb(auth_blueprint, '.profile', '')
 @login_required
 def profile():
     return render_template('profile.html', name=current_user.abbrev)
 
 
-@auth.route('/profile', methods=['POST'])
+@auth_blueprint.route('/profile', methods=['POST'])
 @login_required
 def change_password():
     oldPassword = request.form.get('oldpassword')
@@ -224,7 +226,7 @@ def change_password():
     return redirect(url_for('qc_database.index'))
 
 
-@auth.route('/logout')
+@auth_blueprint.route('/logout')
 @login_required
 def logout():
     logout_user()

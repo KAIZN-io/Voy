@@ -1,12 +1,13 @@
 import click
 from flask import Blueprint
 from flask.cli import with_appcontext
-from voy.model import db
-from voy.model import DB_User
-from voy.controller.Compliance_Computerized_Systems_EMA import passwd_generator
 from werkzeug.security import generate_password_hash
 
+from voy.controller.Compliance_Computerized_Systems_EMA import passwd_generator
+from voy.model import DB_User
+from voy.model import db
 
+# Create the Blueprint
 user_blueprint = Blueprint('user', __name__)
 
 

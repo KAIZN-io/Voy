@@ -1,9 +1,11 @@
 import logging
+
 from voy.controller.Compliance_Computerized_Systems_EMA.time_stamp import time_stamp
 from voy.model import QC_Audit
 
 # Get loggers
 to_qc_file = logging.getLogger('to_qc_file')
+
 
 def audit_trail(user, todo, id, category, old_value, new_value):
     # user = current_user.abbrev
