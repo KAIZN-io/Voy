@@ -12,5 +12,9 @@ database_blueprint = Blueprint('database', __name__)
 @with_appcontext
 def init():
     """Initialize the database"""
+
     db.create_all()
-    click.echo("Initialized the database.")
+
+    click.echo()
+    click.echo("Database initialized.")
+    click.echo()
