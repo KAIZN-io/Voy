@@ -6,9 +6,11 @@ from voy.model import DB_User
 from voy.controller.Compliance_Computerized_Systems_EMA import passwd_generator
 from werkzeug.security import generate_password_hash
 
-user = Blueprint('user', __name__)
 
-@user.cli.command('reset')
+user_blueprint = Blueprint('user', __name__)
+
+
+@user_blueprint.cli.command('reset')
 @click.argument('user_abbreviation')
 @with_appcontext
 def reset(user_abbreviation):
