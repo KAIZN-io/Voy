@@ -9,6 +9,7 @@ from werkzeug.security import generate_password_hash
 from voy.constants import ROLE_ADMIN
 from voy.controller.Compliance_Computerized_Systems_EMA import time_stamp
 from voy.model import db, DB_User, User_Management
+from voy.model.utils import is_database_empty
 
 # Get loggers
 to_user_file = logging.getLogger('to_user_file')
@@ -22,7 +23,7 @@ database = Blueprint('database', __name__)
 def init():
     """Initialize the database"""
 
-    if not is_database_empty():
+    if not is_database_empty(db):
         click.echo('Error: Database already initialized.')
         click.echo('Run \'voy database clear\' to remove all data then try again.')
         return
@@ -86,7 +87,3 @@ def clear():
     db.drop_all()
 
     click.echo("Database cleared.")
-
-
-def is_database_empty():
-    return inspect(db.engine).get_table_names() == []
