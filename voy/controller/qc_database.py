@@ -23,18 +23,25 @@ default_breadcrumb_root(qc_database_blueprint, '.')
 @register_breadcrumb(qc_database_blueprint, '.qc_planning', '')
 @login_required
 def qc_planning():
+    """Prioritize the studies
+
+    Returns:
+        [type]: [description]
+    """
+
     # filter all unique study numbers
     study_list = db.session.query(QC_Check.study_id).distinct().all()
     study_list = [x[0] for x in study_list]
     study_list.sort()
 
-    prioritized_studies = QC_Check.query.filter_by(prioritized=True).all()
+    studies_prioritized = QC_Check.query.filter_by(prioritized=True).all()
 
     # get an unique list of all prioritized studies
-    prioritized_studies = list(set([str(i.study_id) for i in prioritized_studies]))
+    studies_prioritized = list(set([str(i.study_id) for i in studies_prioritized]))
 
     if request.method == 'POST':
-        prioritize_list = request.form.getlist('studyCheckbox')
+
+        studies_prioritize_new = request.form.getlist('studyCheckbox')
 
         # first reset all prioritizations
         QC_Check.query.update({"prioritized": False})
@@ -42,73 +49,85 @@ def qc_planning():
         db.session.commit()
 
         # then update the database with the new prioritizations:
-        for study_id in prioritize_list:
+        for study_id in studies_prioritize_new:
             QC_Check.query.filter_by(study_id=str(study_id)).update({"prioritized": True})
 
             db.session.commit()
 
         return redirect(url_for('qc_database.qc_planning'))
 
-    return render_template('qc_planning.html', studies=study_list, prioritized_studies=prioritized_studies)
+    return render_template('qc_planning.html', studies=study_list, prioritized_studies=studies_prioritized)
 
 
 @qc_database_blueprint.route('/data_entry', methods=('GET', 'POST'))
 @register_breadcrumb(qc_database_blueprint, '.data_entry', '')
 @login_required
 def data_entry():
-    Source_type = ["Source", "ICF"]
-    User_data = DB_User.query.filter_by(role="MedOps").all()
+    """add new data from the CRF check
+
+    Returns:
+        [type]: [description]
+    """
+
+    source_types = ["Source", "ICF"]
+    user_data = DB_User.query.filter_by(role="MedOps").all()
 
     if request.method == 'POST':
 
         # header data form the form
-        scr_no = request.form['scr_no']
+        study_subject_id = request.form['scr_no']
         study_id = request.form['study_id']
-        type = request.form['type']
+        source_type = request.form['type']
 
-        # data under the header data
-        todo_name = request.form.getlist('row[][name]')
-        title = request.form.getlist('row[][title]')
-        description = request.form.getlist('row[][description]')
-        page = request.form.getlist('row[][page]')
-        visit = request.form.getlist('row[][visit]')
-        created = time_stamp()
+        # the finding data
+        finding_user_name = request.form.getlist('row[][name]')
+        finding_title = request.form.getlist('row[][title]')
+        finding_description = request.form.getlist('row[][description]')
+        finding_page = request.form.getlist('row[][page]')
+        finding_visit = request.form.getlist('row[][visit]')
+        finding_time = time_stamp()
 
-        for i in range(len(todo_name)):
-            blog_entry = QC_Check(
-                procedure=title[i],
-                type=type,
+        for i in range(len(finding_user_name)):
+            data = QC_Check(
+                procedure=finding_title[i],
+                type=source_type,
                 corrected=False,
                 close=False,
                 prioritized=False,
-                description=description[i],
+                description=finding_description[i],
                 checker=current_user.abbrev,
-                created=created,
-                visit=visit[i],
-                page=page[i],
-                scr_no=scr_no,
+                created=finding_time,
+                visit=finding_visit[i],
+                page=finding_page[i],
+                scr_no=study_subject_id,
                 study_id=study_id,
-                responsible=todo_name[i]
+                responsible=finding_user_name[i]
             )
 
-            db.session.add(blog_entry)
+            db.session.add(data)
             db.session.commit()
 
         return redirect(url_for('qc_database.data_entry'))
 
-    return render_template('data_entry.html', Users=User_data, source_type=Source_type)
+    return render_template('data_entry.html', Users=user_data, source_type=source_types)
 
-
+# TODO: this function is to big !
 @qc_database_blueprint.route('/', methods=('GET', 'POST'))
 @register_breadcrumb(qc_database_blueprint, '.', 'QC-DB')
 @login_required
 def index():
-    download_type = ['xlsx', 'pdf']
+    """generate the data table inside the start page
+
+    Returns:
+        [type]: [description]
+    """
+
+    file_type = ['xlsx', 'pdf']
 
     # get the data in a dict structure
     # for the right person, if the query is not closed --> corrected=False
     if current_user.role == "MedOps":
-        posts_data = QC_Check.query \
+        data = QC_Check.query \
             .filter_by(
             responsible=current_user.abbrev,
             corrected=False,
@@ -119,7 +138,7 @@ def index():
             .all()
     else:
         # what DM / Admin sees
-        posts_data = db.session.query(QC_Check) \
+        data = db.session.query(QC_Check) \
             .filter_by(close=False) \
             .order_by(QC_Check.prioritized.desc()) \
             .order_by(QC_Check.created) \
@@ -142,23 +161,23 @@ def index():
             file_name = "Queries_{}".format(current_user.abbrev)
 
             # get the requestesd file format
-            download_type = request.form.get('download')
+            file_type = request.form.get('download')
 
             # prepare the data to get read by pandas dataframe
-            query_as_dict = [as_dict(r) for r in posts_data]
+            data_dict = [as_dict(r) for r in data]
 
-            if download_type == 'pdf':
+            if file_type == 'pdf':
                 try:
-                    TransformData.DictToPdf(query_as_dict, file_name)
+                    TransformData.DictToPdf(data_dict, file_name)
                     to_console.info("{} downloaded the query table as a pdf file".format(current_user.abbrev))
                 except Exception as e:
                     print(e)
                     to_console.info(
                         "The query table for {} could not get transformed into a pdf file".format(current_user.abbrev))
 
-            elif download_type == 'xlsx':
+            elif file_type == 'xlsx':
                 try:
-                    TransformData.DictToExcel(query_as_dict, file_name)
+                    TransformData.DictToExcel(data_dict, file_name)
                     to_console.info("{} downloaded the query table as an excel file".format(current_user.abbrev))
                 except Exception as e:
                     print(e)
@@ -168,41 +187,45 @@ def index():
             # TEMP: sleep until new pdf / excel file is really created
             time.sleep(3)
 
-            return send_file("controller/query_downloads/{}.{}".format(file_name, download_type), as_attachment=True)
+            return send_file("controller/query_downloads/{}.{}".format(file_name, file_type), as_attachment=True)
 
             # # send the data with the working request to the message broker
-            # request_amqp(query_as_dict, {"download_type": download_type})
+            # request_amqp(data_dict, {"download_type": download_type})
 
             # return send_file("controller/amqp/query_DataFrame.{}".format(download_type), as_attachment=True, attachment_filename="My_Queries.{}".format(download_type))
 
         elif request.form['button'] == 'send_requery':
-            comment = request.form['comment']
-            query_id = request.form['query_id']
+            data_comment_new = request.form['comment']
+            data_id = request.form['query_id']
 
-            new_comment = QC_Requery(
+            data_comment_new = QC_Requery(
                 abbrev=current_user.abbrev,
                 date_time=time_stamp(),
-                new_comment=comment,
-                query_id=query_id
+                new_comment=data_comment_new,
+                query_id=data_id
             )
 
-            db.session.add(new_comment)
+            db.session.add(data_comment_new)
             db.session.commit()
-            # id = db.Column(db.Integer, primary_key=True)
-            # query_id = db.Column(db.Integer)
-            # abbrev = db.Column(db.Text)
-            # date_time = db.Column(db.Text)
-            # new_comment = db.Column(db.Text)
 
             # NOTE: redirect after form submission to prevent duplicates.
             return redirect('/')
 
-    return render_template('index.html', posts=posts_data, user_requery=user_requery, Download_Type=download_type)
+    return render_template('index.html', posts=data, user_requery=user_requery, Download_Type=file_type)
 
 
 @qc_database_blueprint.route('/delete/<int:id>')
 @login_required
 def delete(id):
+    """MedOps says that the data finding is corrected
+
+    Args:
+        id ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
+
     # give your anwser to DM
     QC_Check.query.filter_by(id=id).update({"corrected": True})
 
@@ -214,7 +237,15 @@ def delete(id):
 @qc_database_blueprint.route('/requery/<int:id>')
 @login_required
 def requery_query(id):
-    # requery the row from the table of the QC Check model
+    """requery the row from the table of the QC Check model
+
+    Args:
+        id ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
+
     QC_Check.query.filter_by(id=id).update({"corrected": False})
 
     db.session.commit()
@@ -225,24 +256,50 @@ def requery_query(id):
 @qc_database_blueprint.route('/modal_data/<int:query_id>')
 @login_required
 def modal_data(query_id):
-    old_comment = db.session.query(QC_Requery).filter_by(
+    """query the comment to the data finding
+
+    Args:
+        query_id ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
+
+    data_comment = db.session.query(QC_Requery).filter_by(
         query_id=query_id).order_by(QC_Requery.id.desc()).first()
 
-    return render_template('modal_data.html', post=old_comment)
+    return render_template('modal_data.html', post=data_comment)
 
 
 @qc_database_blueprint.route('/info_modal/<int:query_id>')
 @login_required
 def info_modal(query_id):
-    data_about_query = QC_Check.query.filter_by(id=query_id).first()
+    """the meta data of the data finding
 
-    return render_template('modal_info.html', post=data_about_query)
+    Args:
+        query_id ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
+
+    data_meta = QC_Check.query.filter_by(id=query_id).first()
+
+    return render_template('modal_info.html', post=data_meta)
 
 
 @qc_database_blueprint.route('/close/<int:id>')
 @login_required
 def close_query(id):
-    # close the row from the table of the QC Check model
+    """close the data finding
+
+    Args:
+        id ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
+
     QC_Check.query.filter_by(id=id).update({"close": True})
 
     db.session.commit()
@@ -254,46 +311,56 @@ def close_query(id):
 @register_breadcrumb(qc_database_blueprint, '.edit_data', '')
 @login_required
 def edit_data():
-    # get the id of the query you want to edit
-    id = request.args.get('id', None)
+    """edit the data finding
 
-    old_data = QC_Check.query.filter_by(id=id).first().__dict__
-    User_data = DB_User.query.filter_by(role="MedOps").all()
+    Returns:
+        [type]: [description]
+    """
+
+    data_id = request.args.get('id', None)
+
+    data_old = QC_Check.query.filter_by(id=data_id).first().__dict__
+    user_data = DB_User.query.filter_by(role="MedOps").all()
 
     if request.method == 'POST':
 
         # get whole data as an dict
-        new_data = request.form.to_dict()
+        data = request.form.to_dict()
 
         # !TEMP: Bug fix for the "scr_no"
         try:
-            new_data['scr_no'] = int(new_data['scr_no'])
+            data['scr_no'] = int(data['scr_no'])
         except:
-            to_console.info("{} could not get transformed into an integer".format(new_data['scr_no']))
+            to_console.info("{} could not get transformed into an integer".format(data['scr_no']))
 
-        for category, new_value in new_data.items():
+        for category, data_value in data.items():
 
             # compare the data from the DB with the from the request.form
-            if (old_data[category] != new_data[category]):
+            if (data_old[category] != data[category]):
                 # add the data to the audit trail
-                audit_trail(current_user.abbrev, "edit", id, category,
-                            old_data[category], new_value)
+                audit_trail(current_user.abbrev, "edit", data_id, category,
+                            data_old[category], data_value)
 
                 # add new data to the data base
-                QC_Check.query.filter_by(id=id).update({category: new_value})
+                QC_Check.query.filter_by(id=data_id).update({category: data_value})
                 # set the query status to 'open'
                 db.session.commit()
 
-        QC_Check.query.filter_by(id=id).update({"corrected": False})
+        QC_Check.query.filter_by(id=data_id).update({"corrected": False})
 
         db.session.commit()
 
         return redirect(url_for('qc_database.index'))
 
-    return render_template('edit_data.html', data=old_data, Users=User_data)
+    return render_template('edit_data.html', data=data_old, Users=user_data)
 
 
-# transform the query results to a readable dict
 def as_dict(self):
+    """transform the data finding to a readable dict
+
+    Returns:
+        [type]: [description]
+    """
+
     return {c.key: getattr(self, c.key)
             for c in inspect(self).mapper.column_attrs}
