@@ -20,7 +20,7 @@ database = Blueprint('database', __name__)
 @database.cli.command('init')
 @with_appcontext
 def init():
-    """Initialize the database"""
+    """ Initialize the database with the basic table structure and creates an admin user """
 
     if not is_database_empty(db):
         click.echo('Error: Database already initialized.')
@@ -72,7 +72,7 @@ def init():
 @database.cli.command('clear')
 @with_appcontext
 def clear():
-    """Initialize the database"""
+    """ Clears all data from the database """
 
     if not click.confirm('THIS WILL DELETE ALL DATA. CONTINUE?'):
         click.echo("Aborted.")
