@@ -36,7 +36,7 @@ def init():
     admin_password = click.prompt('Enter admin password', type=str, hide_input=True)
 
     # create new user with the form data. Hash the password so plaintext version isn't saved.
-    new_user = DB_User(
+    user_new = DB_User(
         email=admin_email,
         abbrev=admin_abbreviation,
         role=ROLE_ADMIN,
@@ -46,7 +46,7 @@ def init():
     )
 
     # add the new user to the database
-    db.session.add(new_user)
+    db.session.add(user_new)
     db.session.commit()
 
     # add the change to the user_management db
