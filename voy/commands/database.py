@@ -3,7 +3,6 @@ import logging
 import click
 from flask import Blueprint
 from flask.cli import with_appcontext
-from sqlalchemy import inspect
 from werkzeug.security import generate_password_hash
 
 from voy.constants import ROLE_ADMIN
