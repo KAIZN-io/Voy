@@ -195,7 +195,7 @@ def forgot_password_new_password_post():
 
     errors = try_password_reset(
         user_abbrev=request.form.get('abbreviation'),
-        password_old=request.form.get('oldpassword'),
+        password_old=request.form.get('oldPassword'),
         password_new=request.form.get('password1'),
         password_new_repeat=request.form.get('password2')
     )
