@@ -60,7 +60,7 @@ def qc_planning():
 
         return redirect(url_for('qc_database.qc_planning'))
 
-    return render_template('qc_planning.html', studies=study_list, prioritized_studies=prioritized_studies)
+    return render_template('qc_planning.html.j2', studies=study_list, prioritized_studies=prioritized_studies)
 
 
 @qc_database.route('/data_entry', methods=('GET', 'POST'))
@@ -107,7 +107,7 @@ def data_entry():
 
         return redirect(url_for('qc_database.data_entry'))
 
-    return render_template('data_entry.html', Users=User_data, source_type=Source_type)
+    return render_template('data_entry.html.j2', Users=User_data, source_type=Source_type)
 
 
 @qc_database.route('/', methods=('GET', 'POST'))
@@ -206,7 +206,7 @@ def index():
             # NOTE: redirect after form submission to prevent duplicates.
             return redirect('/')
 
-    return render_template('index.html', posts=posts_data, user_requery=user_requery, Download_Type=download_type)
+    return render_template('index.html.j2', posts=posts_data, user_requery=user_requery, Download_Type=download_type)
 
 
 @qc_database.route('/delete/<int:id>')
@@ -237,7 +237,7 @@ def modal_data(query_id):
     old_comment = db.session.query(QC_Requery).filter_by(
         query_id=query_id).order_by(QC_Requery.id.desc()).first()
 
-    return render_template('modal_data.html', post=old_comment)
+    return render_template('modal_data.html.j2', post=old_comment)
 
 
 @qc_database.route('/info_modal/<int:query_id>')
@@ -245,7 +245,7 @@ def modal_data(query_id):
 def info_modal(query_id):
     data_about_query = QC_Check.query.filter_by(id=query_id).first()
 
-    return render_template('modal_info.html', post=data_about_query)
+    return render_template('modal_info.html.j2', post=data_about_query)
 
 
 @qc_database.route('/close/<int:id>')
@@ -299,4 +299,4 @@ def edit_data():
 
         return redirect(url_for('qc_database.index'))
 
-    return render_template('edit_data.html', data=old_data, Users=User_data)
+    return render_template('edit_data.html.j2', data=old_data, Users=User_data)
