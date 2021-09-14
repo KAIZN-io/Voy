@@ -62,13 +62,6 @@ Mein Profile
     </div>
   </h3>
   <div class="box">
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-    <div class="notification is-danger">
-      {{ messages[0] }}
-    </div>
-    {% endif %}
-    {% endwith %}
     <form action="/profile" method="POST">
       <div class="form-group">
         <div class="control">
