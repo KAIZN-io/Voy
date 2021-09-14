@@ -1,5 +1,7 @@
 <!-- templates/profile.html -->
 
+{% from "./utils/_errors.html.j2" import render_errors %}
+
 {% extends "base.html.j2" %}
 
 {% block title %}
@@ -18,6 +20,9 @@ Mein Profile
 </h1>
 
 <div class="column is-4 is-offset-4">
+
+  {{ render_errors(errors) }}
+
   <h3 class="title">Change Password
     <a
       data-target="#password_Modal"
