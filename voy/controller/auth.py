@@ -19,7 +19,7 @@ auth = Blueprint('auth', __name__)
 default_breadcrumb_root(auth, '.')
 
 # TODO: implement Python Cerberus instead
-def assess_password(password: str) -> bool:
+def is_password_compliant(password: str) -> bool:
     """Check a password against a set of minimal requirements.
 
     Args:
@@ -80,7 +80,7 @@ def try_password_reset(user_abbrev: str, password_old: str, password_new: str, p
         errors.append('Passwords are not the same')
 
     # check whether the new password conforms to the password policy
-    if assess_password(password_new):
+    if not is_password_compliant(password_new):
         # TODO: Validation errors with Python Cerberus or soemthing alike
         errors.append('Your new password does not meet the requirements.')
 
