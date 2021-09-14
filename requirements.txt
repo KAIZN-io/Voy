@@ -1,4 +1,4 @@
-alembic==1.6.5
+alembic==1.7.1
 arrow==0.17.0
 blinker==1.4
 click==7.1.2
@@ -16,13 +16,12 @@ Jinja2==2.11.3
 Mako==1.1.5
 MarkupSafe==2.0.1
 numpy==1.21.2
-openpyxl==3.0.7
+openpyxl==3.0.8
 pandas==1.2.5
 pdfkit==0.6.1
 psycopg2==2.8.6
 python-dateutil==2.8.2
 python-dotenv==0.15.0
-python-editor==1.0.4
 python-json-logger==2.0.2
 pytz==2021.1
 PyYAML==5.4.1
