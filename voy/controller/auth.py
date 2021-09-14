@@ -125,7 +125,7 @@ def login_post():
 
     # Case 3: the user is active but his password is a system password
     if user.is_system_passwd:
-        return redirect(url_for('auth.new_password'))
+        return redirect(url_for('auth.forgot_password_new_password'))
 
     # Case 4: take the user supplied password, hash it, and compare it to the hashed password in database
     if not check_password_hash(user.password, password):
