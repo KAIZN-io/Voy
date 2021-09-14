@@ -103,7 +103,7 @@ def try_password_reset(user_abbrev: str, password_old: str, password_new: str, p
 
 @auth.route('/login', methods=['GET'])
 def login():
-    return render_template('login.html')
+    return render_template('login.html.j2')
 
 
 @auth.route('/login', methods=['POST'])
@@ -151,7 +151,7 @@ def login_post():
 
 @auth.route('/admin_signup', methods=['GET'])
 def admin_signup():
-    return render_template('admin_signup.html')
+    return render_template('admin_signup.html.j2')
 
 
 @auth.route('/admin_signup', methods=['POST'])
@@ -204,7 +204,7 @@ def admin_signup_post():
 
 @auth.route('/forgot_passwd', methods=['GET'])
 def forgot_password():
-    return render_template('forgot_passwd.html')
+    return render_template('forgot_passwd.html.j2')
 
 
 @auth.route('/forgot_passwd', methods=['POST'])
@@ -240,7 +240,7 @@ def forgot_password_post():
 
 @auth.route('/new_password', methods=['GET'])
 def forgot_password_new_password():
-    return render_template('new_password.html')
+    return render_template('new_password.html.j2')
 
 
 @auth.route('/new_password', methods=['POST'])
@@ -259,7 +259,7 @@ def forgot_password_new_password_post():
     )
 
     if not is_list_empty(errors):
-        return render_template('new_password.html', errors=errors)
+        return render_template('new_password.html.j2', errors=errors)
 
     flash('Password reset successful. Please log in with your new password.')
 
@@ -270,7 +270,7 @@ def forgot_password_new_password_post():
 @register_breadcrumb(auth, '.profile', '')
 @login_required
 def profile():
-    return render_template('profile.html', name=current_user.abbrev)
+    return render_template('profile.html.j2', name=current_user.abbrev)
 
 
 @auth.route('/profile', methods=['POST'])
@@ -292,7 +292,7 @@ def change_password():
     if is_list_empty(errors):
         flash('Password reset successful.')
 
-    return render_template('profile.html', errors=errors)
+    return render_template('profile.html.j2', errors=errors)
 
 
 @auth.route('/logout')

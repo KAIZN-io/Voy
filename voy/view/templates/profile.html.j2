@@ -1,12 +1,24 @@
-{% extends "base.html" %}
+<!-- templates/profile.html -->
+
+{% extends "base.html.j2" %}
 
 {% block title %}
-Mein Profil
+Mein Profile
 {% endblock %}
 
 {% block content %}
+<div>
+  {%- for breadcrumb in breadcrumbs -%}
+  <a href="{{ breadcrumb.url }}">{{ breadcrumb.text }}</a>
+  {{ '/' if not loop.last }}
+  {%- endfor -%}
+</div>
+<h1 class="title">
+  Welcome, {{ name }}!
+</h1>
+
 <div class="column is-4 is-offset-4">
-  <h3 class="title">Welcome to KAIZN. Please change your password
+  <h3 class="title">Change Password
     <a
       data-target="#password_Modal"
       data-toggle="modal"
@@ -52,33 +64,27 @@ Mein Profil
     </div>
     {% endif %}
     {% endwith %}
-    <form action="/new_password" method="POST">
-      <div class="field">
-        <div class="control">
-          <input autofocus="" class="input is-large" name="abbreviation" placeholder="Your Abbreviation" required
-                 type="text">
-        </div>
-      </div>
+    <form action="/profile" method="POST">
       <div class="form-group">
         <div class="control">
-          <input autofocus="" class="input is-large" name="oldPassword" placeholder="The System Password"
-                 required type="password">
-        </div>
-      </div>
-      <div class="field">
-        <div class="control">
-          <input autofocus="" class="input is-large" name="password1" placeholder="Your New Password" required
+          <input autofocus="" class="input is-large" name="oldpassword" placeholder="Your Old Password" maxlength="40" required
                  type="password">
         </div>
       </div>
       <div class="field">
         <div class="control">
-          <input class="input is-large" name="password2" placeholder="Again your new Password" required type="password">
+          <input autofocus="" class="input is-large" name="password1" placeholder="Your New Password" maxlength="40" required
+                 type="password">
+        </div>
+      </div>
+      <div class="field">
+        <div class="control">
+          <input class="input is-large" name="password2" placeholder="Again your new Password" maxlength="40" required type="password">
         </div>
       </div>
       <br>
       <div class="field">
-        <button class="btn btn-primary">Change password</button>
+        <button class="btn btn-primary">Change Password</button>
     </form>
   </div>
 </div>

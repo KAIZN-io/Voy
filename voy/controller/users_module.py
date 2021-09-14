@@ -23,7 +23,7 @@ def user_management():
     # filter all user except for the admin
     User_data = DB_User.query.filter(DB_User.role != "Admin").all()
 
-    return render_template('user_management.html', Users=User_data)
+    return render_template('user_management.html.j2', Users=User_data)
 
 
 @users_module.route('/inactivate/<int:id>')
@@ -41,7 +41,7 @@ def inactivate(id):
 def add_user():
     # define the job roles
     job_roles = ["MedOps", "Data Entry", "Data Manager"]
-    return render_template('add_user.html', Roles=job_roles)
+    return render_template('add_user.html.j2', Roles=job_roles)
 
 
 @users_module.route('/add_user', methods=['POST'])
