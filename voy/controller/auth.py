@@ -19,10 +19,92 @@ to_user_file = logging.getLogger('to_user_file')
 auth_blueprint = Blueprint('auth', __name__)
 default_breadcrumb_root(auth_blueprint, '.')
 
+# TODO: implement Python Cerberus instead
+def is_password_compliant(password: str) -> bool:
+    """Check a password against a set of minimal requirements.
+
+    Args:
+        password (str): [description]
+
+    Returns:
+        bool: Whether the password meets the requirements
+    """
+
+    has_length: bool = len(password) >= 12
+    has_upper_case: bool = any(_.isupper() for _ in password)
+    has_lower_case: bool = any(_.islower() for _ in password)
+    has_number: bool = any(_.isdigit() for _ in password)
+
+    return has_length and has_upper_case and has_lower_case and has_number
+
+def is_list_empty(list: list) -> bool:
+    """check if the provided list is empty
+
+    Args:
+        list (list): [description]
+
+    Returns:
+        bool: True or False
+    """
+    return len(list)==0
+
+def try_password_reset(user_abbrev: str, password_old: str, password_new: str, password_new_repeat: str) -> list:
+    """Process the supplied old and new password from the user
+
+    Args:
+        password_old (str): [description]
+        password1 (str): [description]
+        password2 (str): [description]
+
+    Returns:
+        redirect: redirect to a page corresponding to the password
+    """
+
+    errors = []
+
+    # filter the requested user
+    user_query = DB_User.query.filter_by(abbrev=user_abbrev)
+    user = user_query.scalar()
+
+    # check if user exists
+    if not user:
+        errors.append('Your account was not created yet. Please contact the admin for this issue.')
+        # guard conditions
+        return errors
+
+    # take the user supplied password, hash it, and compare it to the hashed password in database
+    if not check_password_hash(user.password, password_old):
+        errors.append('You made a mistake with your old password')
+
+    # check if the the new entered password are the same
+    if password_new != password_new_repeat:
+        errors.append('Passwords are not the same')
+
+    # check whether the new password conforms to the password policy
+    if not is_password_compliant(password_new):
+        # TODO: Validation errors with Python Cerberus or soemthing alike
+        errors.append('Your new password does not meet the requirements.')
+
+    if not is_list_empty(errors):
+        return errors
+
+    # Generate new password hash and save it to the user
+    password_hash = generate_password_hash(password_new, method='sha256')
+
+    user_query.update({
+        "password": password_hash,
+        "is_system_passwd": False
+    })
+
+    # Persist changes
+    db.session.commit()
+
+    return errors
+
 
 @auth_blueprint.route('/login', methods=['GET'])
 def login():
-    return render_template('login.html')
+    return render_template('login.html.j2')
 
 
 @auth_blueprint.route('/login', methods=['POST'])
@@ -33,23 +115,18 @@ def login_post():
     user = DB_User.query.filter_by(abbrev=abbrev).scalar()
 
     # Case 1: check whether any user or this username exits at all
-    if user == None:
-        check_existing_user = DB_User.query.all()
-        if len(check_existing_user) == 0:
-            return redirect(url_for('auth.admin_signup'))
-
-        else:
-            flash('Please check your login details and try again.')
-            return redirect(url_for('auth.login'))
+    if not user:
+        flash('Please check your login details and try again.')
+        return redirect(url_for('auth.login'))
 
     # Case 2: check if the user got inactivated
-    if user.is_active == False:
+    if not user.is_active:
         flash('Your account got inactivated. Please contact your Admin for this issue.')
         return redirect(url_for('auth.login'))
 
     # Case 3: the user is active but his password is a system password
-    if (user.is_active == True and user.is_system_passwd == True):
-        return redirect(url_for('auth.new_password'))
+    if user.is_system_passwd:
+        return redirect(url_for('auth.forgot_password_new_password'))
 
     # Case 4: take the user supplied password, hash it, and compare it to the hashed password in database
     if not check_password_hash(user.password, password):
@@ -68,133 +145,66 @@ def login_post():
     return redirect(url_for('qc_database.index'))
 
 
-@auth_blueprint.route('/admin_signup', methods=['GET'])
-def admin_signup():
-    return render_template('admin_signup.html')
-
-
-@auth_blueprint.route('/admin_signup', methods=['POST'])
-def admin_signup_post():
-    email = request.form.get('email')
-    password = request.form.get('password')
-    abbreviation = request.form.get('abbreviation')
-    role = 'Admin'
-
-    # if this returns a user, then the email already exists in database
-    user = DB_User.query.filter_by(role=role).first()
-
-    if user:
-        flash('The Admin already exists')
-        return redirect(url_for('auth.login'))
-
-    # create new user with the form data. Hash the password so plaintext version isn't saved.
-    new_user = DB_User(
-        email=email,
-        abbrev=abbreviation,
-        role=role,
-        password=generate_password_hash(password, method='sha256'),
-        is_system_passwd=False,
-        is_active=True
-    )
-
-    # add the new user to the database
-    db.session.add(new_user)
-    db.session.commit()
-
-    # add the change to the user_management db
-    user_management = User_Management(
-        email=email,
-        abbrev=abbreviation,
-        role=role,
-        change_by="Initial Signup",
-        date_time=time_stamp(),
-        action="added"
-    )
-
-    audit_data = user_management.__dict__
-
-    # NOTE: semi good solution for the extra data from sqlalchemy
-    audit_data.pop('date_time', None)
-
-    to_user_file.info(audit_data['change_by'], extra=audit_data)
-
-    return redirect(url_for('qc_database.index'))
-
-
 @auth_blueprint.route('/forgot_passwd', methods=['GET'])
-def forgot_passwd():
-    return render_template('forgot_passwd.html')
+def forgot_password():
+    return render_template('forgot_passwd.html.j2')
 
 
 @auth_blueprint.route('/forgot_passwd', methods=['POST'])
-def forgot_passwd_post():
+def forgot_password_post():
     abbrev = request.form.get('abbrev')
 
     # filter the requested user
-    user = DB_User.query.filter_by(abbrev=abbrev).scalar()
+    user_query = DB_User.query.filter_by(abbrev=abbrev)
+    user = user_query.scalar()
 
     if user:
         # generate a system password with the lenght of 10 and hash it
-        new_passwd = passwd_generator(size=10)
+        password_new = passwd_generator(size=10)
 
         # ToDo: Remove hard-coded sender
         msg = Message('Hello', sender='no-reply@kaizn.io', recipients=[user.email])
-        msg.body = "Your new password is: {password}".format(password=new_passwd)
+        msg.body = "Your new password is: {password}".format(password=password_new)
         mail.send(msg)
 
-        password = generate_password_hash(new_passwd, method='sha256')
+        password_hash = generate_password_hash(password_new, method='sha256')
 
         # commit the new system password to the database
-        DB_User.query.filter_by(abbrev=abbrev).update(
-            {"password": password, "is_system_passwd": True})
+        user_query.update({
+            "password": password_hash,
+            "is_system_passwd": True
+        })
+
+
         db.session.commit()
 
-    return redirect(url_for('auth.new_password'))
+    return redirect(url_for('auth.forgot_password_new_password'))
 
 
 @auth_blueprint.route('/new_password', methods=['GET'])
-def new_password():
-    return render_template('new_password.html')
+def forgot_password_new_password():
+    return render_template('new_password.html.j2')
 
 
 @auth_blueprint.route('/new_password', methods=['POST'])
-def new_password_post():
-    oldPassword = request.form.get('oldPassword')
-    password1 = request.form.get('password1')
-    password2 = request.form.get('password2')
-    abbrev = request.form.get('abbreviation')
+def forgot_password_new_password_post():
+    """[summary]
 
-    # filter the requested user
-    user = DB_User.query.filter_by(abbrev=abbrev).scalar()
+    Returns:
+        [type]: [description]
+    """
 
-    # Case 1: check whether any user or this username exits at all
-    if not user:
-        flash('Your account was not created yet. Please contact the admin for this issue.')
-        return redirect(url_for('auth.new_password'))
+    errors = try_password_reset(
+        user_abbrev=request.form.get('abbreviation'),
+        password_old=request.form.get('oldPassword'),
+        password_new=request.form.get('password1'),
+        password_new_repeat=request.form.get('password2')
+    )
 
-    # Case 2: make sure that the old password is correct
-    if not check_password_hash(user.password, oldPassword):
-        flash('You made a mistake with your old password')
-        return redirect(url_for('auth.new_password'))
+    if not is_list_empty(errors):
+        return render_template('new_password.html.j2', errors=errors)
 
-    # Case 3: make sure the new password was entered correctly
-    if password1 != password2:
-        flash('Passwords are not the same')
-        return redirect(url_for('auth.new_password'))
-
-    # Generate password hash
-    password_hash = generate_password_hash(password1, method='sha256')
-
-    # set the new password and activate the account
-    DB_User.query. \
-        filter_by(abbrev=abbrev). \
-        update({
-            "password": password_hash,
-            "is_system_passwd": False
-        })
-
-    # Persist changes
-    db.session.commit()
+    flash('Password reset successful. Please log in with your new password.')
 
     return redirect(url_for('auth.login'))
 
@@ -203,49 +213,39 @@ def new_password_post():
 @register_breadcrumb(auth_blueprint, '.profile', '')
 @login_required
 def profile():
-    return render_template('profile.html', name=current_user.abbrev)
+    return render_template('profile.html.j2', name=current_user.abbrev)
 
 
 @auth_blueprint.route('/profile', methods=['POST'])
 @login_required
 def change_password():
-    oldPassword = request.form.get('oldpassword')
-    password1 = request.form.get('password1')
-    password2 = request.form.get('password2')
+    """The user changes it's password
 
-    # filter the requested user
-    user = DB_User.query.filter_by(abbrev=current_user.abbrev).scalar()
+    Returns:
+        redirect: either redirect to the index page or to the page, where the user comes from
+    """
 
-    # Case 1: make sure that the old password is correct
-    if not check_password_hash(user.password, oldPassword):
-        flash('You made a mistake with your old password')
-        return redirect(url_for('auth.profile'))
+    errors = try_password_reset(
+        user_abbrev=current_user.abbrev,
+        password_old=request.form.get('oldpassword'),
+        password_new=request.form.get('password1'),
+        password_new_repeat=request.form.get('password2')
+    )
 
-    # Case 3: make sure the new password was entered correctly
-    if password1 != password2:
-        flash('Passwords are not the same')
-        return redirect(url_for('auth.profile'))
+    if is_list_empty(errors):
+        flash('Password reset successful.')
 
-    # Generate password hash
-    password_hash = generate_password_hash(password1, method='sha256')
-
-    # set the new password and activate the account
-    DB_User.query. \
-        filter_by(abbrev=current_user.abbrev). \
-        update({
-            "password": password_hash,
-            "is_system_passwd": False
-        })
-
-    # Persist changes
-    db.session.commit()
-
-    return redirect(url_for('qc_database.index'))
+    return render_template('profile.html.j2', errors=errors)
 
 
 @auth_blueprint.route('/logout')
 @login_required
 def logout():
+    """Logout the user
+
+    Returns:
+        redirect: redirects to the login page
+    """
     logout_user()
 
     return redirect(url_for('auth.login'))

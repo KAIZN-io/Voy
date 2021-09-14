@@ -56,7 +56,7 @@ def qc_planning():
 
         return redirect(url_for('qc_database.qc_planning'))
 
-    return render_template('qc_planning.html', studies=study_list, prioritized_studies=studies_prioritized)
+    return render_template('qc_planning.html.j2', studies=study_list, prioritized_studies=studies_prioritized)
 
 
 @qc_database_blueprint.route('/data_entry', methods=('GET', 'POST'))
@@ -109,7 +109,8 @@ def data_entry():
 
         return redirect(url_for('qc_database.data_entry'))
 
-    return render_template('data_entry.html', Users=user_data, source_type=source_types)
+    return render_template('data_entry.html.j2', Users=user_data, source_type=source_types)
+
 
 # TODO: this function is to big !
 @qc_database_blueprint.route('/', methods=('GET', 'POST'))
@@ -211,7 +212,7 @@ def index():
             # NOTE: redirect after form submission to prevent duplicates.
             return redirect('/')
 
-    return render_template('index.html', posts=data, user_requery=user_requery, Download_Type=file_type)
+    return render_template('index.html.j2', posts=data, user_requery=user_requery, Download_Type=file_type)
 
 
 @qc_database_blueprint.route('/delete/<int:id>')
@@ -268,7 +269,7 @@ def modal_data(query_id):
     data_comment = db.session.query(QC_Requery).filter_by(
         query_id=query_id).order_by(QC_Requery.id.desc()).first()
 
-    return render_template('modal_data.html', post=data_comment)
+    return render_template('modal_data.html.j2', post=data_comment)
 
 
 @qc_database_blueprint.route('/info_modal/<int:query_id>')
@@ -283,9 +284,9 @@ def info_modal(query_id):
         [type]: [description]
     """
 
-    data_meta = QC_Check.query.filter_by(id=query_id).first()
+    data_meta = QC_Check.query.filter_by(id=query_id).scalar()
 
-    return render_template('modal_info.html', post=data_meta)
+    return render_template('modal_info.html.j2', post=data_meta)
 
 
 @qc_database_blueprint.route('/close/<int:id>')
@@ -352,7 +353,7 @@ def edit_data():
 
         return redirect(url_for('qc_database.index'))
 
-    return render_template('edit_data.html', data=data_old, Users=user_data)
+    return render_template('edit_data.html.j2', data=data_old, Users=user_data)
 
 
 def as_dict(self):
