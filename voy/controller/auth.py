@@ -103,7 +103,7 @@ def try_password_reset(user_abbrev: str, password_old: str, password_new: str, p
 
 @auth.route('/login', methods=['GET'])
 def login():
-    return render_template('login.html.j2')
+    return render_template('pages/login.html.j2')
 
 
 @auth.route('/login', methods=['POST'])
