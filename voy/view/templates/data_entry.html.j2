@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base.html.j2' %}
 
 {% block title %}
 Data Entry
@@ -85,7 +85,7 @@ Data Entry
       <td>
         <div class="form-group">
               <textarea class="form-control" name="row[][description]"
-                        placeholder="Please describe your finding"            
+                        placeholder="Please describe your finding"
                         maxlength="100"
                         required>{{ request.form['description'] }}</textarea>
         </div>
@@ -114,7 +114,7 @@ Data Entry
     <button class="btn btn-primary" id="remove_row" type="button">remove row</button>
     <button class="btn btn-primary" id="add_row" style="float: right;" type="button">add row</button>
 
-    
+
 
   </div>
 </form>
