@@ -25,7 +25,7 @@ RUN npm ci
 
 # Copy over files required for building the assets
 COPY webpack.config.js ./
-COPY voy/view/assets ./voy/view/assets
+COPY voy/view ./voy/view
 
 # Build assets
 RUN npm run build
