@@ -1,6 +1,7 @@
 import logging
 import time
 from datetime import datetime
+from pathlib import Path
 
 from flask import Blueprint, render_template, request, redirect, url_for, send_file, current_app
 from flask_breadcrumbs import register_breadcrumb, default_breadcrumb_root
@@ -203,7 +204,9 @@ def export_data():
     # get the requestesd file format
     export_file_type = request.form.get('export-file-type')
 
-    export_file_path = current_app.instance_path,
+    # Set and create export path
+    export_file_path = Path(current_app.root_path, 'data-exports')
+    export_file_path.mkdir(parents=True, exist_ok=True)
 
     # prepare the data to get read by pandas dataframe
     user_queries = get_queries_for_user(current_user)

@@ -5,7 +5,6 @@ Returns:
 """
 
 import os
-import asyncio
 
 import pandas as pd
 import pdfkit
@@ -27,7 +26,7 @@ def DictToPdf(query_as_dict: dict = {}, file_name: str = '', path: str = '.') ->
     query_DataFrame.to_html(path_tmp)
 
     # convert the html file into pdf with wkhtmltopdf
-    asyncio.run(pdfkit.from_file(path_tmp, path_output))
+    pdfkit.from_file(path_tmp, path_output)
 
     # Clean up
     os.remove(path_tmp)
