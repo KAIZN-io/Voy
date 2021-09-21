@@ -50,7 +50,7 @@ current_user.role == 'Data Entry') %}
   </thead>
 
   <tbody>
-  {% for post in posts %}
+  {% for post in user_queries %}
 
   <tr>
     <td>
@@ -59,7 +59,7 @@ current_user.role == 'Data Entry') %}
         data-id="{{post.id}}"
         data-target="#info_Modal"
         data-toggle="modal"
-        href="#" 
+        href="#"
         style="color: red;">
         <i class="fas fa-exclamation"></i>
       </a>
@@ -68,14 +68,14 @@ current_user.role == 'Data Entry') %}
         data-id="{{post.id}}"
         data-target="#info_Modal"
         data-toggle="modal"
-        href="#" 
+        href="#"
         style="color: black;">
         <i class="fas fa-exclamation"></i>
       </a>
       {% endif %}
     </td>
 
-    
+
     {% if (post.corrected == true and post.close == false) %}
     <td>
       <span class="badge badge-warning"> Requery </span>
@@ -116,7 +116,7 @@ current_user.role == 'Data Entry') %}
         data-id="{{post.id}}"
         data-target="#requery_Modal"
         data-toggle="modal"
-        href="#" 
+        href="#"
         style="color: grey;">
         <i class="far fa-comments"></i>
       </a>
@@ -125,7 +125,7 @@ current_user.role == 'Data Entry') %}
         data-id="{{post.id}}"
         data-target="#requery_Modal"
         data-toggle="modal"
-        href="#" 
+        href="#"
         style="color: green;">
         <i class="far fa-comments"></i>
       </a>
@@ -134,7 +134,7 @@ current_user.role == 'Data Entry') %}
         data-id="{{post.id}}"
         data-target="#requery_Modal"
         data-toggle="modal"
-        href="#" 
+        href="#"
         style="color: red;">
         <i class="far fa-comments"></i>
       </a>
@@ -235,17 +235,16 @@ current_user.role == 'Data Entry') %}
   </tbody>
 </table>
 
-<form method="post">
+<form method="post" action="{{ url_for('qc_database.export_data') }}" targe="_blank">
   <div class="form-group" style="display: flex; justify-content: flex-end">
 
     <label>
       Download Queries as :
-
-      <select name="download" width="300px">
-        {% for download in Download_Type %}
-        <option required value="{{ download }}">
-          {{ download }}
-        </option>
+      <select name="export-file-type" width="300px">
+        {% for value, label  in export_file_types.items() %}
+          <option required value="{{ value }}">
+            {{ label }}
+          </option>
         {% endfor %}
       </select>
     </label>
@@ -253,8 +252,10 @@ current_user.role == 'Data Entry') %}
     <button class="btn btn-primary" name="button" type="submit" value="download_button">
       Download
     </button>
+
   </div>
 </form>
+
 {% endif %}
 {% endblock %}
 

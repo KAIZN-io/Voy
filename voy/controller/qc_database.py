@@ -1,7 +1,8 @@
 import logging
 import time
+from datetime import datetime
 
-from flask import Blueprint, render_template, request, redirect, url_for, send_file
+from flask import Blueprint, render_template, request, redirect, url_for, send_file, current_app
 from flask_breadcrumbs import register_breadcrumb, default_breadcrumb_root
 from flask_login import login_required, current_user
 from sqlalchemy import inspect
@@ -10,6 +11,8 @@ from voy.controller.Compliance_Computerized_Systems_EMA import audit_trail, time
 from voy.controller.data_analysis import TransformData
 from voy.model import QC_Check, DB_User, QC_Requery
 from voy.model import db
+from voy.constants import FILE_TYPE_PDF, FILE_TYPE_XLSX, ROLE_MEDOPS
+
 
 # Get loggers
 to_console = logging.getLogger('to_console')
@@ -112,8 +115,35 @@ def data_entry():
     return render_template('data_entry.html.j2', Users=user_data, source_type=source_types)
 
 
+def get_queries_for_user(user: DB_User) -> list:
+    """gets a list of queries for the user filtered depending on their role.
+
+    Args:
+        user (DB_User): The user to get the queries for.
+
+    Returns:
+        [type]: A list of queries for the user.
+    """
+
+    query = QC_Check.query \
+        .order_by(QC_Check.prioritized.desc()) \
+        .order_by(QC_Check.created)
+
+    if user.role == ROLE_MEDOPS:
+        query.filter_by(
+            responsible=user.abbrev,
+            corrected=False,
+            close=False
+        )
+
+    else:
+        query.filter_by(close=False)
+
+    return query.all()
+
+
 # TODO: this function is to big !
-@qc_database_blueprint.route('/', methods=('GET', 'POST'))
+@qc_database_blueprint.route('/', methods=['GET', 'POST'])
 @register_breadcrumb(qc_database_blueprint, '.', 'QC-DB')
 @login_required
 def index():
@@ -123,27 +153,14 @@ def index():
         [type]: [description]
     """
 
-    file_type = ['xlsx', 'pdf']
+    export_file_types = {
+        FILE_TYPE_XLSX: 'Excel (.xlsx)',
+        FILE_TYPE_PDF:  'PDF (.pdf)',
+    }
 
     # get the data in a dict structure
     # for the right person, if the query is not closed --> corrected=False
-    if current_user.role == "MedOps":
-        data = QC_Check.query \
-            .filter_by(
-            responsible=current_user.abbrev,
-            corrected=False,
-            close=False
-        ) \
-            .order_by(QC_Check.prioritized.desc()) \
-            .order_by(QC_Check.created) \
-            .all()
-    else:
-        # what DM / Admin sees
-        data = db.session.query(QC_Check) \
-            .filter_by(close=False) \
-            .order_by(QC_Check.prioritized.desc()) \
-            .order_by(QC_Check.created) \
-            .all()
+    user_queries = get_queries_for_user(current_user)
 
     # query all user and the corresponding roles
     user_qc_requery = QC_Requery.query.with_entities(QC_Requery.query_id, QC_Requery.abbrev).all()
@@ -158,44 +175,7 @@ def index():
 
     if request.method == 'POST':
 
-        if request.form['button'] == 'download_button':
-            file_name = "Queries_{}".format(current_user.abbrev)
-
-            # get the requestesd file format
-            file_type = request.form.get('download')
-
-            # prepare the data to get read by pandas dataframe
-            data_dict = [as_dict(r) for r in data]
-
-            if file_type == 'pdf':
-                try:
-                    TransformData.DictToPdf(data_dict, file_name)
-                    to_console.info("{} downloaded the query table as a pdf file".format(current_user.abbrev))
-                except Exception as e:
-                    print(e)
-                    to_console.info(
-                        "The query table for {} could not get transformed into a pdf file".format(current_user.abbrev))
-
-            elif file_type == 'xlsx':
-                try:
-                    TransformData.DictToExcel(data_dict, file_name)
-                    to_console.info("{} downloaded the query table as an excel file".format(current_user.abbrev))
-                except Exception as e:
-                    print(e)
-                    to_console.info("The query table for {} could not get transformed into a excel file".format(
-                        current_user.abbrev))
-
-            # TEMP: sleep until new pdf / excel file is really created
-            time.sleep(3)
-
-            return send_file("controller/query_downloads/{}.{}".format(file_name, file_type), as_attachment=True)
-
-            # # send the data with the working request to the message broker
-            # request_amqp(data_dict, {"download_type": download_type})
-
-            # return send_file("controller/amqp/query_DataFrame.{}".format(download_type), as_attachment=True, attachment_filename="My_Queries.{}".format(download_type))
-
-        elif request.form['button'] == 'send_requery':
+        if request.form['button'] == 'send_requery':
             data_comment_new = request.form['comment']
             data_id = request.form['query_id']
 
@@ -212,7 +192,43 @@ def index():
             # NOTE: redirect after form submission to prevent duplicates.
             return redirect('/')
 
-    return render_template('index.html.j2', posts=data, user_requery=user_requery, Download_Type=file_type)
+    return render_template('index.html.j2', user_queries=user_queries, user_requery=user_requery, export_file_types=export_file_types)
+
+
+@qc_database_blueprint.route('/export-data', methods=['POST'])
+@login_required
+def export_data():
+    export_file_name = "Queries_{}_{}".format(current_user.abbrev, datetime.now().strftime("%Y-%m-%d_%H-%M-%S"))
+
+    # get the requestesd file format
+    export_file_type = request.form.get('export-file-type')
+
+    export_file_path = current_app.instance_path,
+
+    # prepare the data to get read by pandas dataframe
+    user_queries = get_queries_for_user(current_user)
+
+    user_queries_dict = [as_dict(r) for r in user_queries]
+
+    try:
+
+        if export_file_type == FILE_TYPE_PDF:
+            path_output = TransformData.DictToPdf(user_queries_dict, export_file_name, export_file_path)
+        elif export_file_type == FILE_TYPE_XLSX:
+            path_output = TransformData.DictToExcel(user_queries_dict, export_file_name, export_file_path)
+        else:
+            return "Unsupported file type."
+
+        to_console.info("{} downloaded the query table as a {} file".format(current_user.abbrev, export_file_type))
+
+    except Exception as e:
+        to_console.info(e)
+        to_console.info(
+            "The query table for {} could not get transformed into a {} file".format(current_user.abbrev, export_file_type))
+
+        return "Error generating download file."
+
+    return send_file(path_output, as_attachment=True)
 
 
 @qc_database_blueprint.route('/delete/<int:id>')
