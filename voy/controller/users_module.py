@@ -8,6 +8,7 @@ from werkzeug.security import generate_password_hash
 from voy.controller.Compliance_Computerized_Systems_EMA import time_stamp
 from voy.model import DB_User, User_Management
 from voy.model import db
+from voy.constants import ROLE_ADMIN, ROLE_MEDOPS, ROLE_DATA_MANAGER, ROLE_DATA_ENTRY
 
 # Get loggers
 to_user_file = logging.getLogger('to_user_file')
@@ -22,14 +23,14 @@ default_breadcrumb_root(users_module_blueprint, '.')
 @register_breadcrumb(users_module_blueprint, '.user_management', '')
 def user_management():
     # filter all user except for the admin
-    User_data = DB_User.query.filter(DB_User.role != "Admin").all()
+    users_data = DB_User.query.filter(DB_User.role != ROLE_ADMIN).all()
 
-    return render_template('user_management.html.j2', Users=User_data)
+    return render_template('user_management.html.j2', Users=users_data)
 
 
 @users_module_blueprint.route('/inactivate/<int:id>')
 @login_required
-def inactivate(id):
+def inactivate(id: int):
     # change the active state to "False"
     DB_User.query.filter_by(id=id).update({"is_active": False})
     db.session.commit()
@@ -42,8 +43,8 @@ def inactivate(id):
 @register_breadcrumb(users_module_blueprint, '.user_management.add_user', '')
 def add_user():
     # define the job roles
-    job_roles = ["MedOps", "Data Entry", "Data Manager"]
-    return render_template('add_user.html.j2', Roles=job_roles)
+    roles = [ROLE_MEDOPS, ROLE_DATA_MANAGER, ROLE_DATA_ENTRY]
+    return render_template('add_user.html.j2', Roles=roles)
 
 
 @users_module_blueprint.route('/add_user', methods=['POST'])
@@ -91,9 +92,5 @@ def add_user_post():
     audit_data.pop('date_time', None)
 
     to_user_file.info(audit_data['change_by'], extra=audit_data)
-
-    # add the new user to the database
-    # db.session.add(user_management)
-    # db.session.commit()
 
     return redirect(url_for('users_module.user_management'))

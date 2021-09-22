@@ -12,7 +12,7 @@ from voy.controller.Compliance_Computerized_Systems_EMA import audit_trail, time
 from voy.controller.data_analysis import TransformData
 from voy.model import QC_Check, DB_User, QC_Requery
 from voy.model import db
-from voy.constants import FILE_TYPE_PDF, FILE_TYPE_XLSX, ROLE_MEDOPS
+from voy.constants import FILE_TYPE_PDF, FILE_TYPE_XLSX, ROLE_MEDOPS, SOURCE_TYPE_SOURCE, SOURCE_TYPE_ICF, EXPORT_FOLDER
 
 
 # Get loggers
@@ -73,8 +73,8 @@ def data_entry():
         [type]: [description]
     """
 
-    source_types = ["Source", "ICF"]
-    user_data = DB_User.query.filter_by(role="MedOps").all()
+    source_types = [SOURCE_TYPE_SOURCE, SOURCE_TYPE_ICF]
+    user_data = DB_User.query.filter_by(role=ROLE_MEDOPS).all()
 
     if request.method == 'POST':
 
@@ -137,6 +137,7 @@ def get_queries_for_user(user: DB_User) -> list:
             close=False
         )
 
+    # TODO: why can I see closed Queries ?
     else:
         query.filter_by(close=False)
 
@@ -205,7 +206,7 @@ def export_data():
     export_file_type = request.form.get('export-file-type')
 
     # Set and create export path
-    export_file_path = Path(current_app.root_path, 'data-exports')
+    export_file_path = Path(current_app.root_path, EXPORT_FOLDER)
     export_file_path.mkdir(parents=True, exist_ok=True)
 
     # prepare the data to get read by pandas dataframe
@@ -226,8 +227,8 @@ def export_data():
 
     except Exception as e:
         to_console.info(e)
-        to_console.info(
-            "The query table for {} could not get transformed into a {} file".format(current_user.abbrev, export_file_type))
+        to_console.info("The query table for {} could not get transformed into a {} file".format(
+                current_user.abbrev, export_file_type))
 
         return "Error generating download file."
 
@@ -236,7 +237,7 @@ def export_data():
 
 @qc_database_blueprint.route('/delete/<int:id>')
 @login_required
-def delete(id):
+def delete(id: int):
     """MedOps says that the data finding is corrected
 
     Args:
@@ -256,7 +257,7 @@ def delete(id):
 
 @qc_database_blueprint.route('/requery/<int:id>')
 @login_required
-def requery_query(id):
+def requery_query(id: int):
     """requery the row from the table of the QC Check model
 
     Args:
@@ -275,7 +276,7 @@ def requery_query(id):
 
 @qc_database_blueprint.route('/modal_data/<int:query_id>')
 @login_required
-def modal_data(query_id):
+def modal_data(query_id: int):
     """query the comment to the data finding
 
     Args:
@@ -293,7 +294,7 @@ def modal_data(query_id):
 
 @qc_database_blueprint.route('/info_modal/<int:query_id>')
 @login_required
-def info_modal(query_id):
+def info_modal(query_id: int):
     """the meta data of the data finding
 
     Args:
@@ -310,7 +311,7 @@ def info_modal(query_id):
 
 @qc_database_blueprint.route('/close/<int:id>')
 @login_required
-def close_query(id):
+def close_query(id: int):
     """close the data finding
 
     Args:
@@ -337,10 +338,10 @@ def edit_data():
         [type]: [description]
     """
 
-    data_id = request.args.get('id', None)
+    data_id: int = request.args.get('id', None)
 
     data_old = QC_Check.query.filter_by(id=data_id).first().__dict__
-    user_data = DB_User.query.filter_by(role="MedOps").all()
+    user_data = DB_User.query.filter_by(role=ROLE_MEDOPS).all()
 
     if request.method == 'POST':
 
@@ -376,7 +377,7 @@ def edit_data():
 
 
 def as_dict(self):
-    """transform the data finding to a readable dict
+    """transform the data finding into a readable dict
 
     Returns:
         [type]: [description]
