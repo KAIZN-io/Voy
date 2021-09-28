@@ -9,7 +9,7 @@ class QueryTags(TimeStampMixin, db.Model):
         db ([type]): [description]
     """
 
-    __tablename__ = 'study_tags'
+    __tablename__ = 'query_tags'
 
     id = db.Column(db.Integer, primary_key=True)
 
