@@ -1,13 +1,13 @@
 from voy.model import db
+from voy.model.mixins import TimeStampMixin
 
 
-class Queries(db.Model):
+class Queries(TimeStampMixin, db.Model):
     # ! overwrite the standard table name with 'posts', where you will commit the data to
     __tablename__ = 'queries'
 
     id = db.Column(db.Integer, primary_key=True)
     checker = db.Column(db.Text)
-    created = db.Column(db.Text)
     study_id = db.Column(db.Text)
     scr_no = db.Column(db.Integer)
     type = db.Column(db.Text)

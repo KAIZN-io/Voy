@@ -1,7 +1,8 @@
 from voy.model import db
+from voy.model.mixins import TimeStampMixin
 
 
-class Studies(db.Model):
+class Studies(TimeStampMixin, db.Model):
     """information about the studies
 
     Args:

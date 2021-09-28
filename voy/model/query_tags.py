@@ -1,7 +1,8 @@
 from voy.model import db
+from voy.model.mixins import TimeStampMixin
 
 
-class QueryTags(db.Model):
+class QueryTags(TimeStampMixin, db.Model):
     """Modelling tags to be used for adding information to queries.
 
     Args:

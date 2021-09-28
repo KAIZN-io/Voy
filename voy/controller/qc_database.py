@@ -83,7 +83,6 @@ def data_entry():
         description = request.form.getlist('row[][description]')
         page = request.form.getlist('row[][page]')
         visit = request.form.getlist('row[][visit]')
-        created = time_stamp()
 
         for i in range(len(todo_name)):
             blog_entry = Queries(
@@ -94,7 +93,6 @@ def data_entry():
                 prioritized=False,
                 description=description[i],
                 checker=current_user.abbrev,
-                created=created,
                 visit=visit[i],
                 page=page[i],
                 scr_no=scr_no,
@@ -126,14 +124,14 @@ def index():
                 close=False
             )\
             .order_by(Queries.prioritized.desc())\
-            .order_by(Queries.created)\
+            .order_by(Queries.created_at)\
             .all()
     else:
         # what DM / Admin sees
         posts_data = db.session.query(Queries)\
             .filter_by(close=False)\
             .order_by(Queries.prioritized.desc())\
-            .order_by(Queries.created)\
+            .order_by(Queries.created_at)\
             .all()
 
     # query all user and the corresponding roles
@@ -190,7 +188,6 @@ def index():
 
             new_comment = QC_Requery(
                 abbrev=current_user.abbrev,
-                date_time=time_stamp(),
                 new_comment=comment,
                 query_id=query_id
             )

@@ -55,14 +55,13 @@ def init():
         abbrev=admin_abbreviation,
         role=ROLE_ADMIN,
         change_by="Initial Signup",
-        date_time=time_stamp(),
         action="added"
     )
 
     audit_data = user_management.__dict__
 
     # NOTE: semi good solution for the extra data from sqlalchemy
-    audit_data.pop('date_time', None)
+    audit_data.pop('created_at', None)
 
     to_user_file.info(audit_data['change_by'], extra=audit_data)
 

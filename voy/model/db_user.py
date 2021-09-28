@@ -1,9 +1,10 @@
 from flask_login import UserMixin
 
 from voy.model import db
+from voy.model.mixins import TimeStampMixin
 
 
-class DB_User(UserMixin, db.Model):
+class DB_User(UserMixin, TimeStampMixin, db.Model):
     __tablename__ = 'db_user'
 
     id = db.Column(db.Integer, primary_key=True)
