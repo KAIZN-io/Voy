@@ -1,9 +1,7 @@
-from flask_login import UserMixin
-
 from voy.model import db
 
 
-class QC_Requery(UserMixin, db.Model):
+class QC_Requery(db.Model):
     __tablename__ = 'qc_requery'
 
     id = db.Column(db.Integer, primary_key=True)

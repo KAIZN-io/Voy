@@ -1,9 +1,7 @@
-from flask_login import UserMixin
-
 from voy.model import db
 
 
-class QC_Check(UserMixin, db.Model):
+class QC_Check(db.Model):
     # ! overwrite the standard table name with 'posts', where you will commit the data to
     __tablename__ = 'qc_check'
 
