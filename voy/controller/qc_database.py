@@ -8,7 +8,7 @@ from sqlalchemy import inspect
 from voy.model import db
 from voy.controller.Compliance_Computerized_Systems_EMA import audit_trail, time_stamp
 from voy.controller.data_analysis import TransformData
-from voy.model import QC_Check, DB_User, QC_Audit, QC_Requery
+from voy.model import Queries, DB_User, QC_Audit, QC_Requery
 
 qc_database = Blueprint('qc_database', __name__)
 
@@ -35,11 +35,11 @@ def as_dict(self):
 @login_required
 def qc_planning():
     # filter all unique study numbers
-    study_list = db.session.query(QC_Check.study_id).distinct().all()
+    study_list = db.session.query(Queries.study_id).distinct().all()
     study_list = [x[0] for x in study_list]
     study_list.sort()
 
-    prioritized_studies = QC_Check.query.filter_by(prioritized=True).all()
+    prioritized_studies = Queries.query.filter_by(prioritized=True).all()
 
     # get an unique list of all prioritized studies
     prioritized_studies = list(set([str(i.study_id) for i in prioritized_studies]))
@@ -48,13 +48,13 @@ def qc_planning():
         prioritize_list = request.form.getlist('studyCheckbox')
 
         # first reset all prioritizations
-        QC_Check.query.update({"prioritized": False})
+        Queries.query.update({"prioritized": False})
 
         db.session.commit()
 
         # then update the database with the new prioritizations:
         for study_id in prioritize_list:
-            QC_Check.query.filter_by(study_id=str(study_id)).update({"prioritized": True})
+            Queries.query.filter_by(study_id=str(study_id)).update({"prioritized": True})
 
             db.session.commit()
 
@@ -86,7 +86,7 @@ def data_entry():
         created = time_stamp()
 
         for i in range(len(todo_name)):
-            blog_entry = QC_Check(
+            blog_entry = Queries(
                 procedure=title[i],
                 type=type,
                 corrected=False,
@@ -119,21 +119,21 @@ def index():
     # get the data in a dict structur
     # for the right person, if the query is not closed --> corrected=False
     if current_user.role == "MedOps":
-        posts_data = QC_Check.query\
+        posts_data = Queries.query\
             .filter_by(
                 responsible=current_user.abbrev,
                 corrected=False,
                 close=False
             )\
-            .order_by(QC_Check.prioritized.desc())\
-            .order_by(QC_Check.created)\
+            .order_by(Queries.prioritized.desc())\
+            .order_by(Queries.created)\
             .all()
     else:
         # what DM / Admin sees
-        posts_data = db.session.query(QC_Check)\
+        posts_data = db.session.query(Queries)\
             .filter_by(close=False)\
-            .order_by(QC_Check.prioritized.desc())\
-            .order_by(QC_Check.created)\
+            .order_by(Queries.prioritized.desc())\
+            .order_by(Queries.created)\
             .all()
 
     # query all user and the corresponding roles
@@ -213,7 +213,7 @@ def index():
 @login_required
 def delete(id):
     # give your anwser to DM
-    QC_Check.query.filter_by(id=id).update({"corrected": True})
+    Queries.query.filter_by(id=id).update({"corrected": True})
 
     db.session.commit()
 
@@ -224,7 +224,7 @@ def delete(id):
 @login_required
 def requery_query(id):
     # requery the row from the table of the QC Check model
-    QC_Check.query.filter_by(id=id).update({"corrected": False})
+    Queries.query.filter_by(id=id).update({"corrected": False})
 
     db.session.commit()
 
@@ -243,7 +243,7 @@ def modal_data(query_id):
 @qc_database.route('/info_modal/<int:query_id>')
 @login_required
 def info_modal(query_id):
-    data_about_query = QC_Check.query.filter_by(id=query_id).first()
+    data_about_query = Queries.query.filter_by(id=query_id).first()
 
     return render_template('modal_info.html.j2', post=data_about_query)
 
@@ -252,7 +252,7 @@ def info_modal(query_id):
 @login_required
 def close_query(id):
     # close the row from the table of the QC Check model
-    QC_Check.query.filter_by(id=id).update({"close": True})
+    Queries.query.filter_by(id=id).update({"close": True})
 
     db.session.commit()
 
@@ -266,7 +266,7 @@ def edit_data():
     # get the id of the query you want to edit
     id = request.args.get('id', None)
 
-    old_data = QC_Check.query.filter_by(id=id).first().__dict__
+    old_data = Queries.query.filter_by(id=id).first().__dict__
     User_data = DB_User.query.filter_by(role="MedOps").all()
 
     if request.method == 'POST':
@@ -289,11 +289,11 @@ def edit_data():
                             old_data[category], new_value)
 
                 # add new data to the data base
-                QC_Check.query.filter_by(id=id).update({category: new_value})
+                Queries.query.filter_by(id=id).update({category: new_value})
                 # set the query status to 'open'
                 db.session.commit()
 
-        QC_Check.query.filter_by(id=id).update({"corrected": False})
+        Queries.query.filter_by(id=id).update({"corrected": False})
 
         db.session.commit()
 

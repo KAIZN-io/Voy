@@ -1,9 +1,9 @@
 from voy.model import db
 
 
-class QC_Check(db.Model):
+class Queries(db.Model):
     # ! overwrite the standard table name with 'posts', where you will commit the data to
-    __tablename__ = 'qc_check'
+    __tablename__ = 'queries'
 
     id = db.Column(db.Integer, primary_key=True)
     checker = db.Column(db.Text)
