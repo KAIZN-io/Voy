@@ -8,7 +8,7 @@ from sqlalchemy import inspect
 from voy.model import db
 from voy.controller.Compliance_Computerized_Systems_EMA import audit_trail, time_stamp
 from voy.controller.data_analysis import TransformData
-from voy.model import Queries, DB_User, QC_Audit, QC_Requery
+from voy.model import Queries, DB_User, QC_Requery
 
 qc_database = Blueprint('qc_database', __name__)
 

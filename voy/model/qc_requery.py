@@ -6,6 +6,11 @@ class QC_Requery(TimeStampMixin, db.Model):
     __tablename__ = 'qc_requery'
 
     id = db.Column(db.Integer, primary_key=True)
+
+    # TODO: Make this a relation.
     query_id = db.Column(db.Integer)
+
+    # TODO: Relate to user here
     abbrev = db.Column(db.Text)
+
     new_comment = db.Column(db.Text)
