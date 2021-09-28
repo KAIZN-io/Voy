@@ -6,6 +6,6 @@ migrate = Migrate()
 
 from voy.model.db_user import DB_User
 from voy.model.qc_audit import QC_Audit
-from voy.model.queries import Queries
+from voy.model.queries import Queries, QueryTags
 from voy.model.qc_requery import QC_Requery
 from voy.model.user_management import User_Management
