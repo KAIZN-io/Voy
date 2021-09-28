@@ -16,7 +16,7 @@ qc_database = Blueprint('qc_database', __name__)
 default_breadcrumb_root(qc_database, '.')
 
 """
-this file handles the qc data 
+this file handles the qc data
 
 """
 # Get loggers
@@ -34,20 +34,20 @@ def as_dict(self):
 @register_breadcrumb(qc_database, '.qc_planning', '')
 @login_required
 def qc_planning():
-    # filter all unique study numbers 
+    # filter all unique study numbers
     study_list = db.session.query(QC_Check.study_id).distinct().all()
     study_list = [x[0] for x in study_list]
     study_list.sort()
 
     prioritized_studies = QC_Check.query.filter_by(prioritized=True).all()
 
-    # get an unique list of all prioritized studies 
+    # get an unique list of all prioritized studies
     prioritized_studies = list(set([str(i.study_id) for i in prioritized_studies]))
 
     if request.method == 'POST':
         prioritize_list = request.form.getlist('studyCheckbox')
 
-        # first reset all prioritizations  
+        # first reset all prioritizations
         QC_Check.query.update({"prioritized": False})
 
         db.session.commit()
