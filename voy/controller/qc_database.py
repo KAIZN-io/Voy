@@ -8,7 +8,7 @@ from sqlalchemy import inspect
 from voy.model import db
 from voy.controller.Compliance_Computerized_Systems_EMA import audit_trail, time_stamp
 from voy.controller.data_analysis import TransformData
-from voy.model import Queries, DB_User, QC_Requery
+from voy.model import Ticket, DB_User, QC_Requery
 
 qc_database = Blueprint('qc_database', __name__)
 
@@ -35,11 +35,11 @@ def as_dict(self):
 @login_required
 def qc_planning():
     # filter all unique study numbers
-    study_list = db.session.query(Queries.study_id).distinct().all()
+    study_list = db.session.query(Ticket.study_id).distinct().all()
     study_list = [x[0] for x in study_list]
     study_list.sort()
 
-    prioritized_studies = Queries.query.filter_by(prioritized=True).all()
+    prioritized_studies = Ticket.query.filter_by(prioritized=True).all()
 
     # get an unique list of all prioritized studies
     prioritized_studies = list(set([str(i.study_id) for i in prioritized_studies]))
@@ -48,13 +48,13 @@ def qc_planning():
         prioritize_list = request.form.getlist('studyCheckbox')
 
         # first reset all prioritizations
-        Queries.query.update({"prioritized": False})
+        Ticket.query.update({"prioritized": False})
 
         db.session.commit()
 
         # then update the database with the new prioritizations:
         for study_id in prioritize_list:
-            Queries.query.filter_by(study_id=str(study_id)).update({"prioritized": True})
+            Ticket.query.filter_by(study_id=str(study_id)).update({"prioritized": True})
 
             db.session.commit()
 
@@ -85,7 +85,7 @@ def data_entry():
         visit = request.form.getlist('row[][visit]')
 
         for i in range(len(todo_name)):
-            blog_entry = Queries(
+            blog_entry = Ticket(
                 procedure=title[i],
                 type=type,
                 corrected=False,
@@ -117,21 +117,21 @@ def index():
     # get the data in a dict structur
     # for the right person, if the query is not closed --> corrected=False
     if current_user.role == "MedOps":
-        posts_data = Queries.query\
+        posts_data = Ticket.query\
             .filter_by(
                 responsible=current_user.abbrev,
                 corrected=False,
                 close=False
             )\
-            .order_by(Queries.prioritized.desc())\
-            .order_by(Queries.created_at)\
+            .order_by(Ticket.prioritized.desc())\
+            .order_by(Ticket.created_at)\
             .all()
     else:
         # what DM / Admin sees
-        posts_data = db.session.query(Queries)\
+        posts_data = db.session.query(Ticket)\
             .filter_by(close=False)\
-            .order_by(Queries.prioritized.desc())\
-            .order_by(Queries.created_at)\
+            .order_by(Ticket.prioritized.desc())\
+            .order_by(Ticket.created_at)\
             .all()
 
     # query all user and the corresponding roles
@@ -210,7 +210,7 @@ def index():
 @login_required
 def delete(id):
     # give your anwser to DM
-    Queries.query.filter_by(id=id).update({"corrected": True})
+    Ticket.query.filter_by(id=id).update({"corrected": True})
 
     db.session.commit()
 
@@ -221,7 +221,7 @@ def delete(id):
 @login_required
 def requery_query(id):
     # requery the row from the table of the QC Check model
-    Queries.query.filter_by(id=id).update({"corrected": False})
+    Ticket.query.filter_by(id=id).update({"corrected": False})
 
     db.session.commit()
 
@@ -240,7 +240,7 @@ def modal_data(query_id):
 @qc_database.route('/info_modal/<int:query_id>')
 @login_required
 def info_modal(query_id):
-    data_about_query = Queries.query.filter_by(id=query_id).first()
+    data_about_query = Ticket.query.filter_by(id=query_id).first()
 
     return render_template('modal_info.html.j2', post=data_about_query)
 
@@ -249,7 +249,7 @@ def info_modal(query_id):
 @login_required
 def close_query(id):
     # close the row from the table of the QC Check model
-    Queries.query.filter_by(id=id).update({"close": True})
+    Ticket.query.filter_by(id=id).update({"close": True})
 
     db.session.commit()
 
@@ -263,7 +263,7 @@ def edit_data():
     # get the id of the query you want to edit
     id = request.args.get('id', None)
 
-    old_data = Queries.query.filter_by(id=id).first().__dict__
+    old_data = Ticket.query.filter_by(id=id).first().__dict__
     User_data = DB_User.query.filter_by(role="MedOps").all()
 
     if request.method == 'POST':
@@ -286,11 +286,11 @@ def edit_data():
                             old_data[category], new_value)
 
                 # add new data to the data base
-                Queries.query.filter_by(id=id).update({category: new_value})
+                Ticket.query.filter_by(id=id).update({category: new_value})
                 # set the query status to 'open'
                 db.session.commit()
 
-        Queries.query.filter_by(id=id).update({"corrected": False})
+        Ticket.query.filter_by(id=id).update({"corrected": False})
 
         db.session.commit()
 

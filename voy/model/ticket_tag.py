@@ -3,14 +3,10 @@ from voy.model.mixins import TimeStampMixin
 
 
 
-class QueriesTags(TimeStampMixin, db.Model):
-    """Modelling tags to be used for adding information to queries.
+class TicketTag(TimeStampMixin, db.Model):
+    """Modelling tags to be used for adding information to tickets."""
 
-    Args:
-        db ([type]): [description]
-    """
-
-    __tablename__ = 'queries_tags'
+    __tablename__ = 'ticket_tag'
 
     id = db.Column(db.Integer, primary_key=True)
 
@@ -21,7 +17,7 @@ class QueriesTags(TimeStampMixin, db.Model):
 
     is_active = db.Column(db.Boolean, default=True, nullable=False)
 
-    queries = db.relationship(
-        'Queries',
-        secondary='query_tag_association',
+    tickets = db.relationship(
+        'Ticket',
+        secondary='ticket_tag_association',
         back_populates='tags')

@@ -2,8 +2,8 @@ from voy.model import db
 from voy.model.mixins import TimeStampMixin
 
 
-class Queries(TimeStampMixin, db.Model):
-    __tablename__ = 'queries'
+class Ticket(TimeStampMixin, db.Model):
+    __tablename__ = 'ticket'
 
     id = db.Column(db.Integer, primary_key=True)
 
@@ -25,13 +25,13 @@ class Queries(TimeStampMixin, db.Model):
     close = db.Column(db.Boolean, default=False, nullable=False)
 
     tags = db.relationship(
-        'QueriesTags',
-        secondary='query_tag_association',
-        back_populates='queries')
+        'TicketTag',
+        secondary='ticket_tag_association',
+        back_populates='tickets')
 
 
 # Tag relationship
-db.Table('query_tag_association', db.Model.metadata,
-    db.Column('query_id', db.ForeignKey('queries.id'), primary_key=True),
-    db.Column('query_tag_id', db.ForeignKey('queries_tags.id'), primary_key=True),
+db.Table('ticket_tag_association', db.Model.metadata,
+    db.Column('ticket_id', db.ForeignKey('ticket.id'), primary_key=True),
+    db.Column('ticket_tag_id', db.ForeignKey('ticket_tag.id'), primary_key=True),
 )
