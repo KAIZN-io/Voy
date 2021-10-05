@@ -2,6 +2,13 @@ from voy.model import db
 from voy.model.mixins import TimeStampMixin
 
 
+# Tag relationship
+db.Table('ticket_tag_mapping', db.Model.metadata,
+    db.Column('ticket_id', db.ForeignKey('ticket.id'), primary_key=True),
+    db.Column('ticket_tag_id', db.ForeignKey('ticket_tag.id'), primary_key=True)
+    )
+
+
 class Ticket(TimeStampMixin, db.Model):
     __tablename__ = 'ticket'
 
@@ -26,12 +33,5 @@ class Ticket(TimeStampMixin, db.Model):
 
     tags = db.relationship(
         'TicketTag',
-        secondary='ticket_tag_association',
-        back_populates='tickets')
-
-
-# Tag relationship
-db.Table('ticket_tag_association', db.Model.metadata,
-    db.Column('ticket_id', db.ForeignKey('ticket.id'), primary_key=True),
-    db.Column('ticket_tag_id', db.ForeignKey('ticket_tag.id'), primary_key=True),
-)
+        secondary='ticket_tag_mapping',
+        backref='tickets')

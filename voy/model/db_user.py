@@ -1,7 +1,17 @@
+import arrow
+
 from flask_login import UserMixin
 
 from voy.model import db
 from voy.model.mixins import TimeStampMixin
+
+
+db.Table('study_user_mapping', db.Model.metadata,
+    db.Column('study_id', db.Integer, db.ForeignKey("studies.id"), primary_key=True),
+    db.Column('user_id', db.Integer, db.ForeignKey('db_user.id'), primary_key=True),
+    db.Column('is_qualified', db.Boolean, default=False, nullable=False),
+    db.Column('qualified_since', db.DateTime, default=arrow.utcnow().datetime, nullable=False)
+    )
 
 
 class DB_User(UserMixin, TimeStampMixin, db.Model):
@@ -17,3 +27,8 @@ class DB_User(UserMixin, TimeStampMixin, db.Model):
     role = db.Column(db.Text)
 
     is_active = db.Column(db.Boolean, default=False, nullable=False)
+
+    studies = db.relationship(
+        'Studies',
+        secondary='study_user_mapping',
+        backref='users') # how it get named in the table "Studies"

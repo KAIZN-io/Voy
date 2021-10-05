@@ -18,3 +18,7 @@ class Studies(TimeStampMixin, db.Model):
     comment = db.Column(db.Text)
 
     is_active = db.Column(db.Boolean, default=False, nullable=False)
+
+    users = db.relationship(
+        'DB_User',
+        secondary='study_user_mapping')
