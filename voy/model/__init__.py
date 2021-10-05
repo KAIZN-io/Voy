@@ -4,8 +4,8 @@ from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 migrate = Migrate()
 
-from voy.model.db_user import DB_User
-from voy.model.studies import Studies
+from voy.model.user import User
+from voy.model.study import Study
 from voy.model.qc_audit import QC_Audit
 from voy.model.ticket import Ticket
 from voy.model.ticket_tag import TicketTag

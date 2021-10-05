@@ -7,7 +7,7 @@ from werkzeug.security import generate_password_hash
 
 from voy.constants import ROLE_ADMIN
 from voy.controller.Compliance_Computerized_Systems_EMA import time_stamp
-from voy.model import db, DB_User, User_Management
+from voy.model import db, User, User_Management
 from voy.model.utils import is_database_empty
 
 # Get loggers
@@ -36,7 +36,7 @@ def init():
     admin_password = click.prompt('Enter admin password', type=str, hide_input=True)
 
     # create new user with the form data. Hash the password so plaintext version isn't saved.
-    user_new = DB_User(
+    user_new = User(
         email=admin_email,
         abbrev=admin_abbreviation,
         role=ROLE_ADMIN,

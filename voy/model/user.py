@@ -7,14 +7,14 @@ from voy.model.mixins import TimeStampMixin
 
 
 db.Table('study_user_mapping', db.Model.metadata,
-    db.Column('study_id', db.Integer, db.ForeignKey('studies.id'), primary_key=True),
-    db.Column('user_id', db.Integer, db.ForeignKey('db_user.id'), primary_key=True),
+    db.Column('study_id', db.Integer, db.ForeignKey('study.id'), primary_key=True),
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
     db.Column('is_qualified', db.Boolean, default=False, nullable=False),
     db.Column('qualified_since', db.DateTime, default=arrow.utcnow().datetime, nullable=False))
 
 
-class DB_User(UserMixin, TimeStampMixin, db.Model):
-    __tablename__ = 'db_user'
+class User(UserMixin, TimeStampMixin, db.Model):
+    __tablename__ = 'user'
 
     id = db.Column(db.Integer, primary_key=True)
 
@@ -27,7 +27,7 @@ class DB_User(UserMixin, TimeStampMixin, db.Model):
 
     is_active = db.Column(db.Boolean, default=False, nullable=False)
 
-    studies = db.relationship(
-        'Studies',
+    study = db.relationship(
+        'Study',
         secondary='study_user_mapping',
-        back_populates='users') # how it get named in the table "Studies"
+        back_populates='users') # how it get named in the table "Study"

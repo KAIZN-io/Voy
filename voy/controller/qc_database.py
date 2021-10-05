@@ -8,7 +8,7 @@ from sqlalchemy import inspect
 from voy.model import db
 from voy.controller.Compliance_Computerized_Systems_EMA import audit_trail, time_stamp
 from voy.controller.data_analysis import TransformData
-from voy.model import Ticket, DB_User, QC_Requery
+from voy.model import Ticket, User, QC_Requery
 
 qc_database = Blueprint('qc_database', __name__)
 
@@ -68,7 +68,7 @@ def qc_planning():
 @login_required
 def data_entry():
     Source_type = ["Source", "ICF"]
-    User_data = DB_User.query.filter_by(role="MedOps").all()
+    User_data = User.query.filter_by(role="MedOps").all()
 
     if request.method == 'POST':
 
@@ -136,7 +136,7 @@ def index():
 
     # query all user and the corresponding roles
     user_qc_requery = QC_Requery.query.with_entities(QC_Requery.query_id, QC_Requery.abbrev).all()
-    user_data = DB_User.query.with_entities(DB_User.abbrev, DB_User.role).all()
+    user_data = User.query.with_entities(User.abbrev, User.role).all()
     user_data = (dict(user_data))
     user_qc_requery = dict(user_qc_requery)
 
@@ -264,7 +264,7 @@ def edit_data():
     id = request.args.get('id', None)
 
     old_data = Ticket.query.filter_by(id=id).first().__dict__
-    User_data = DB_User.query.filter_by(role="MedOps").all()
+    User_data = User.query.filter_by(role="MedOps").all()
 
     if request.method == 'POST':
 

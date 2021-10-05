@@ -2,14 +2,10 @@ from voy.model import db
 from voy.model.mixins import TimeStampMixin
 
 
-class Studies(TimeStampMixin, db.Model):
-    """information about the studies
+class Study(TimeStampMixin, db.Model):
+    """information about the study"""
 
-    Args:
-        db ([type]): [description]
-    """
-
-    __tablename__ = 'studies'
+    __tablename__ = 'study'
 
     id = db.Column(db.Integer, primary_key=True)
 
@@ -20,6 +16,6 @@ class Studies(TimeStampMixin, db.Model):
     is_active = db.Column(db.Boolean, default=False, nullable=False)
 
     users = db.relationship(
-        'DB_User',
+        'User',
         secondary='study_user_mapping',
-        back_populates='studies')
+        back_populates='study')
