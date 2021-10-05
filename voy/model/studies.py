@@ -21,4 +21,5 @@ class Studies(TimeStampMixin, db.Model):
 
     users = db.relationship(
         'DB_User',
-        secondary='study_user_mapping')
+        secondary='study_user_mapping',
+        back_populates='studies')

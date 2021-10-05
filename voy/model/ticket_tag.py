@@ -19,4 +19,5 @@ class TicketTag(TimeStampMixin, db.Model):
 
     tickets = db.relationship(
         'Ticket',
-        secondary='ticket_tag_mapping')
+        secondary='ticket_tag_mapping',
+        back_populates='tags')
