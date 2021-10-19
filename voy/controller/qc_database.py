@@ -30,6 +30,7 @@ def as_dict(self):
             for c in inspect(self).mapper.column_attrs}
 
 
+# TODO: impolement the tag system and remove prioritization
 @qc_database.route('/qc_planning', methods=('GET', 'POST'))
 @register_breadcrumb(qc_database, '.qc_planning', '')
 @login_required
@@ -88,16 +89,15 @@ def data_entry():
             blog_entry = Ticket(
                 procedure=title[i],
                 type=type,
-                corrected=False,
-                close=False,
-                prioritized=False,
+                is_corrected=False,
+                is_closed=False,
                 description=description[i],
-                checker=current_user.abbrev,
+                reporter=current_user,
                 visit=visit[i],
                 page=page[i],
                 scr_no=scr_no,
                 study_id=study_id,
-                responsible=todo_name[i]
+                assignee=todo_name[i]
             )
 
             db.session.add(blog_entry)
@@ -115,22 +115,20 @@ def index():
     download_type = ['xlsx', 'pdf']
 
     # get the data in a dict structur
-    # for the right person, if the query is not closed --> corrected=False
+    # for the right person, if the query is not closed --> is_corrected=False
     if current_user.role == "MedOps":
         posts_data = Ticket.query\
             .filter_by(
-                responsible=current_user.abbrev,
-                corrected=False,
-                close=False
+                assignee=current_user,
+                is_corrected=False,
+                is_closed=False
             )\
-            .order_by(Ticket.prioritized.desc())\
             .order_by(Ticket.created_at)\
             .all()
     else:
         # what DM / Admin sees
         posts_data = db.session.query(Ticket)\
-            .filter_by(close=False)\
-            .order_by(Ticket.prioritized.desc())\
+            .filter_by(is_closed=False)\
             .order_by(Ticket.created_at)\
             .all()
 
@@ -210,7 +208,7 @@ def index():
 @login_required
 def delete(id):
     # give your anwser to DM
-    Ticket.query.filter_by(id=id).update({"corrected": True})
+    Ticket.query.filter_by(id=id).update({"is_corrected": True})
 
     db.session.commit()
 
@@ -221,7 +219,7 @@ def delete(id):
 @login_required
 def requery_query(id):
     # requery the row from the table of the QC Check model
-    Ticket.query.filter_by(id=id).update({"corrected": False})
+    Ticket.query.filter_by(id=id).update({"is_corrected": False})
 
     db.session.commit()
 
@@ -249,7 +247,7 @@ def info_modal(query_id):
 @login_required
 def close_query(id):
     # close the row from the table of the QC Check model
-    Ticket.query.filter_by(id=id).update({"close": True})
+    Ticket.query.filter_by(id=id).update({"is_closed": True})
 
     db.session.commit()
 
@@ -290,7 +288,7 @@ def edit_data():
                 # set the query status to 'open'
                 db.session.commit()
 
-        Ticket.query.filter_by(id=id).update({"corrected": False})
+        Ticket.query.filter_by(id=id).update({"is_corrected": False})
 
         db.session.commit()
 

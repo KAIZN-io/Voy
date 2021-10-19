@@ -8,6 +8,7 @@ class Study(TimeStampMixin, db.Model):
     __tablename__ = 'study'
 
     id = db.Column(db.Integer, primary_key=True)
+    tickets = db.relationship("Study", back_populates="study")
 
     internal_id = db.Column(db.Text, unique=True)
 
