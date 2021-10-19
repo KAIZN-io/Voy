@@ -15,10 +15,10 @@ class Ticket(TimeStampMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
     reporter_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    reporter = db.relationship("Reporter", back_populates="tickets")
+    reporter = db.relationship('Reporter', back_populates='tickets')
 
     study_id = db.Column(db.Integer, db.ForeignKey('study.id'))
-    study = db.relationship("Study", back_populates="tickets")
+    study = db.relationship('Study', back_populates='tickets')
 
     scr_no = db.Column(db.Integer)
     type = db.Column(db.Text)
@@ -28,7 +28,7 @@ class Ticket(TimeStampMixin, db.Model):
     description = db.Column(db.Text)
 
     assignee_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    assignee = db.relationship("Assignee", back_populates="tickets")
+    assignee = db.relationship('Assignee', back_populates='tickets')
 
     is_corrected = db.Column(db.Boolean, default=False, nullable=False)
     is_closed = db.Column(db.Boolean, default=False, nullable=False)
