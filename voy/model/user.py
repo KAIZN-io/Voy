@@ -18,8 +18,8 @@ class User(UserMixin, TimeStampMixin, db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
 
-    reported_tickets = db.relationship('Reporter', back_populates='reporter')
-    assigned_tickets = db.relationship('Assignee', back_populates='assignee')
+    reported_tickets = db.relationship('Ticket', back_populates='reporter', foreign_keys='Ticket.reporter_id')
+    assigned_tickets = db.relationship('Ticket', back_populates='assignee', foreign_keys='Ticket.assignee_id')
 
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(100))
