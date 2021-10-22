@@ -8,7 +8,7 @@ from sqlalchemy import inspect
 from voy.model import db
 from voy.controller.Compliance_Computerized_Systems_EMA import audit_trail, time_stamp
 from voy.controller.data_analysis import TransformData
-from voy.model import Ticket, User, QC_Requery
+from voy.model import Ticket, User, QC_Requery, Study
 
 qc_database = Blueprint('qc_database', __name__)
 
@@ -22,73 +22,48 @@ this file handles the qc data
 # Get loggers
 to_console = logging.getLogger('to_console')
 
-# transform the query results to a readable dict
-
-
 def as_dict(self):
+    """transform the query results to a readable dict
+
+    Returns:
+        [type]: [description]
+    """
     return {c.key: getattr(self, c.key)
             for c in inspect(self).mapper.column_attrs}
-
-
-# TODO: impolement the tag system and remove prioritization
-@qc_database.route('/qc_planning', methods=('GET', 'POST'))
-@register_breadcrumb(qc_database, '.qc_planning', '')
-@login_required
-def qc_planning():
-    # filter all unique study numbers
-    study_list = db.session.query(Ticket.study_id).distinct().all()
-    study_list = [x[0] for x in study_list]
-    study_list.sort()
-
-    prioritized_studies = Ticket.query.filter_by(prioritized=True).all()
-
-    # get an unique list of all prioritized studies
-    prioritized_studies = list(set([str(i.study_id) for i in prioritized_studies]))
-
-    if request.method == 'POST':
-        prioritize_list = request.form.getlist('studyCheckbox')
-
-        # first reset all prioritizations
-        Ticket.query.update({"prioritized": False})
-
-        db.session.commit()
-
-        # then update the database with the new prioritizations:
-        for study_id in prioritize_list:
-            Ticket.query.filter_by(study_id=str(study_id)).update({"prioritized": True})
-
-            db.session.commit()
-
-        return redirect(url_for('qc_database.qc_planning'))
-
-    return render_template('qc_planning.html.j2', studies=study_list, prioritized_studies=prioritized_studies)
 
 
 @qc_database.route('/data_entry', methods=('GET', 'POST'))
 @register_breadcrumb(qc_database, '.data_entry', '')
 @login_required
 def data_entry():
-    Source_type = ["Source", "ICF"]
-    User_data = User.query.filter_by(role="MedOps").all()
+    source_type = ["Source", "ICF"]
+    user_data = User.query.filter_by(role="MedOps").all()
 
     if request.method == 'POST':
 
         # header data form the form
         scr_no = request.form['scr_no']
         study_id = request.form['study_id']
-        type = request.form['type']
+        ticket_type = request.form['type']
 
         # data under the header data
-        todo_name = request.form.getlist('row[][name]')
+        assignee_name = request.form.getlist('row[][name]')
         title = request.form.getlist('row[][title]')
         description = request.form.getlist('row[][description]')
         page = request.form.getlist('row[][page]')
         visit = request.form.getlist('row[][visit]')
 
-        for i in range(len(todo_name)):
+        for i in range(len(assignee_name)):
+            """ from: https://stackoverflow.com/questions/33083772/sqlalchemy-attributeerror-str-object-has-no-attribute-sa-instance-state
+            User Case 1: The assignee user exists in the database
+
+            Here you should fetch the user from your table User and pass it as an argument to the Ticket constructor
+            """
+            assignee_user = User.query.filter_by(abbrev=assignee_name[i]).scalar()
+
             blog_entry = Ticket(
                 procedure=title[i],
-                type=type,
+                type=ticket_type,
                 is_corrected=False,
                 is_closed=False,
                 description=description[i],
@@ -96,8 +71,8 @@ def data_entry():
                 visit=visit[i],
                 page=page[i],
                 scr_no=scr_no,
-                study_id=study_id,
-                assignee=todo_name[i]
+                study_id=Study(id=study_id),
+                assignee=assignee_user
             )
 
             db.session.add(blog_entry)
@@ -105,7 +80,7 @@ def data_entry():
 
         return redirect(url_for('qc_database.data_entry'))
 
-    return render_template('data_entry.html.j2', Users=User_data, source_type=Source_type)
+    return render_template('data_entry.html.j2', Users=user_data, source_type=source_type)
 
 
 @qc_database.route('/', methods=('GET', 'POST'))
