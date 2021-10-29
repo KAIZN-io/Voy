@@ -32,20 +32,20 @@ def as_dict(self):
             for c in inspect(self).mapper.column_attrs}
 
 
-@qc_database.route('/data_entry', methods=('GET'))
+@qc_database.route('/data_entry', methods=['GET'])
 @register_breadcrumb(qc_database, '.data_entry', '')
 @login_required
-def data_entry():
+def form_add_tickets():
     source_type = ["Source", "ICF"]
     user_data = User.query.filter_by(role="MedOps").all()
 
     return render_template('data_entry.html.j2', Users=user_data, source_type=source_type)
 
 
-@qc_database.route('/data_entry', methods=('POST'))
+@qc_database.route('/data_entry', methods=['POST'])
 @register_breadcrumb(qc_database, '.data_entry', '')
 @login_required
-def data_entry():
+def add_tickets():
 
     # header data form the form
     scr_no = request.form['scr_no']
