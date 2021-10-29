@@ -32,6 +32,34 @@ def as_dict(self):
             for c in inspect(self).mapper.column_attrs}
 
 
+# TODO: impolement the tag system
+@qc_database.route('/add_study', methods=['POST'])
+@register_breadcrumb(qc_database, '.qc_planning', '')
+@login_required
+def qc_planning():
+    """save the new study id to the database
+
+    Returns:
+        [type]: [description]
+    """
+    study_no = request.form.get('study_no')
+    # TODO: save the study number to the database
+
+    return redirect(url_for('qc_database.qc_planning'))
+
+
+@qc_database.route('/add_study', methods=['GET'])
+@register_breadcrumb(qc_database, '.qc_planning', '')
+@login_required
+def form_qc_planning():
+    """render the html form for qc planning
+
+    Returns:
+        [type]: [description]
+    """
+    return render_template('qc_planning.html.j2')
+
+
 @qc_database.route('/data_entry', methods=['GET'])
 @register_breadcrumb(qc_database, '.form_add_tickets', '')
 @login_required
