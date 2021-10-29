@@ -20,7 +20,7 @@
 {% if (current_user.role == 'Admin' or current_user.role == 'Data Manager' or
 current_user.role == 'Data Entry') %}
 <div style="display: flex; justify-content: flex-end">
-  <a class="btn btn-primary" href="{{ url_for('qc_database.data_entry')}}" >Data Entry</a>
+  <a class="btn btn-primary" href="{{ url_for('qc_database.form_add_tickets')}}" >Data Entry</a>
 
 </div>
 {% endif %}

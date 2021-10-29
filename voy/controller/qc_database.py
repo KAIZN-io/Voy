@@ -33,7 +33,7 @@ def as_dict(self):
 
 
 @qc_database.route('/data_entry', methods=['GET'])
-@register_breadcrumb(qc_database, '.data_entry', '')
+@register_breadcrumb(qc_database, '.form_add_tickets', '')
 @login_required
 def form_add_tickets():
     source_type = ["Source", "ICF"]
@@ -43,7 +43,7 @@ def form_add_tickets():
 
 
 @qc_database.route('/data_entry', methods=['POST'])
-@register_breadcrumb(qc_database, '.data_entry', '')
+@register_breadcrumb(qc_database, '.form_add_tickets', '')
 @login_required
 def add_tickets():
 
@@ -84,7 +84,7 @@ def add_tickets():
         db.session.add(ticket)
         db.session.commit()
 
-    return redirect(url_for('qc_database.data_entry'))
+    return redirect(url_for('qc_database.form_add_tickets'))
 
 
 @qc_database.route('/', methods=('GET', 'POST'))
