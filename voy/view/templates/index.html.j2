@@ -90,7 +90,7 @@ current_user.role == 'Data Entry') %}
     </td>
     {% endif %}
 
-    <td>{{ post.study_id }}</td>
+    <td>{{ post.study.internal_id }}</td>
     <td>{{ post.scr_no }}</td>
 
     {% if post.type == "ICF" %}
