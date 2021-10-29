@@ -109,7 +109,7 @@ current_user.role == 'Data Entry') %}
     <td>{{ post.page }}</td>
     <td>{{ post.procedure }}</td>
     <td>{{ post.description }}</td>
-    <td>{{ post.created }}</td>
+    <td>{{ post.created_at.humanize() }}</td>
     <td>
       {% if post.id|string not in user_requery%}
       <a
