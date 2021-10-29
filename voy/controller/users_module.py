@@ -6,7 +6,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 from voy.model import db
 from voy.controller.Compliance_Computerized_Systems_EMA import audit_trail, time_stamp, passwd_generator
-from voy.model import DB_User, User_Management
+from voy.model import User, User_Management
 
 # Get loggers
 to_user_file = logging.getLogger('to_user_file')
@@ -21,7 +21,7 @@ default_breadcrumb_root(users_module, '.')
 @register_breadcrumb(users_module, '.user_management', '')
 def user_management():
     # filter all user except for the admin
-    User_data = DB_User.query.filter(DB_User.role != "Admin").all()
+    User_data = User.query.filter(User.role != "Admin").all()
 
     return render_template('user_management.html.j2', Users=User_data)
 
@@ -30,7 +30,7 @@ def user_management():
 @login_required
 def inactivate(id):
     # change the active state to "False"
-    DB_User.query.filter_by(id=id).update({"is_active": False})
+    User.query.filter_by(id=id).update({"is_active": False})
     db.session.commit()
 
     return redirect(url_for('users_module.user_management'))
@@ -53,14 +53,14 @@ def add_user_post():
     role = request.form.get('role')
 
     # if this returns a user, then the email already exists in database
-    user = DB_User.query.filter_by(email=email).first()
+    user = User.query.filter_by(email=email).first()
 
     if user:
         flash('Email address already exists')
         return redirect(url_for('users_module.add_user'))
 
     # create new user with the form data. Hash the password so plaintext version isn't saved.
-    new_user = DB_User(
+    new_user = User(
         email=email,
         abbrev=abbreviation,
         role=role,
@@ -79,14 +79,13 @@ def add_user_post():
         abbrev=abbreviation,
         role=role,
         change_by=current_user.abbrev,
-        date_time=time_stamp(),
         action="added"
     )
 
     audit_data = user_management.__dict__
 
     # NOTE: semi good solution for the extra data from sqlalchemy
-    audit_data.pop('date_time', None)
+    audit_data.pop('created_at', None)
 
     to_user_file.info(audit_data['change_by'], extra=audit_data)
 

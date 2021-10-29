@@ -8,7 +8,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from voy.mail import mail
 from voy.model import db
 from voy.controller.Compliance_Computerized_Systems_EMA import audit_trail, time_stamp, passwd_generator
-from voy.model import DB_User, User_Management
+from voy.model import User, User_Management
 
 # Get loggers
 to_console = logging.getLogger('to_console')
@@ -62,7 +62,7 @@ def try_password_reset(user_abbrev: str, password_old: str, password_new: str, p
     errors = []
 
     # filter the requested user
-    user_query = DB_User.query.filter_by(abbrev=user_abbrev)
+    user_query = User.query.filter_by(abbrev=user_abbrev)
     user = user_query.scalar()
 
     # check if user exists
@@ -111,7 +111,7 @@ def login_post():
     abbrev = request.form.get('abbreviation')
     password = request.form.get('password')
 
-    user = DB_User.query.filter_by(abbrev=abbrev).first()
+    user = User.query.filter_by(abbrev=abbrev).first()
 
     # Case 1: check whether any user or this username exits at all
     if not user:
@@ -154,7 +154,7 @@ def forgot_password_post():
     abbrev = request.form.get('abbrev')
 
     # filter the requested user
-    user_query = DB_User.query.filter_by(abbrev=abbrev)
+    user_query = User.query.filter_by(abbrev=abbrev)
     user = user_query.scalar()
 
     if user:

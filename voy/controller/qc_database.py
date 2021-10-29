@@ -8,7 +8,7 @@ from sqlalchemy import inspect
 from voy.model import db
 from voy.controller.Compliance_Computerized_Systems_EMA import audit_trail, time_stamp
 from voy.controller.data_analysis import TransformData
-from voy.model import QC_Check, DB_User, QC_Audit, QC_Requery
+from voy.model import Ticket, User, QC_Requery, Study
 
 qc_database = Blueprint('qc_database', __name__)
 
@@ -16,98 +16,107 @@ qc_database = Blueprint('qc_database', __name__)
 default_breadcrumb_root(qc_database, '.')
 
 """
-this file handles the qc data 
+this file handles the qc data
 
 """
 # Get loggers
 to_console = logging.getLogger('to_console')
 
-# transform the query results to a readable dict
-
-
 def as_dict(self):
+    """transform the query results to a readable dict
+
+    Returns:
+        [type]: [description]
+    """
     return {c.key: getattr(self, c.key)
             for c in inspect(self).mapper.column_attrs}
 
 
-@qc_database.route('/qc_planning', methods=('GET', 'POST'))
+# TODO: impolement the tag system
+@qc_database.route('/add_study', methods=['POST'])
 @register_breadcrumb(qc_database, '.qc_planning', '')
 @login_required
 def qc_planning():
-    # filter all unique study numbers 
-    study_list = db.session.query(QC_Check.study_id).distinct().all()
-    study_list = [x[0] for x in study_list]
-    study_list.sort()
+    """save the new study id to the database
 
-    prioritized_studies = QC_Check.query.filter_by(prioritized=True).all()
+    Returns:
+        [type]: [description]
+    """
+    # TODO: Form validation
+    internal_id = int(request.form.get('internal_id'))
 
-    # get an unique list of all prioritized studies 
-    prioritized_studies = list(set([str(i.study_id) for i in prioritized_studies]))
+    study = Study(internal_id=internal_id, is_active=True)
 
-    if request.method == 'POST':
-        prioritize_list = request.form.getlist('studyCheckbox')
+    db.session.add(study)
+    db.session.commit()
 
-        # first reset all prioritizations  
-        QC_Check.query.update({"prioritized": False})
-
-        db.session.commit()
-
-        # then update the database with the new prioritizations:
-        for study_id in prioritize_list:
-            QC_Check.query.filter_by(study_id=str(study_id)).update({"prioritized": True})
-
-            db.session.commit()
-
-        return redirect(url_for('qc_database.qc_planning'))
-
-    return render_template('qc_planning.html.j2', studies=study_list, prioritized_studies=prioritized_studies)
+    return redirect(url_for('qc_database.qc_planning'))
 
 
-@qc_database.route('/data_entry', methods=('GET', 'POST'))
-@register_breadcrumb(qc_database, '.data_entry', '')
+@qc_database.route('/add_study', methods=['GET'])
+@register_breadcrumb(qc_database, '.qc_planning', '')
 @login_required
-def data_entry():
-    Source_type = ["Source", "ICF"]
-    User_data = DB_User.query.filter_by(role="MedOps").all()
+def form_qc_planning():
+    """render the html form for qc planning
 
-    if request.method == 'POST':
+    Returns:
+        [type]: [description]
+    """
+    return render_template('qc_planning.html.j2')
 
-        # header data form the form
-        scr_no = request.form['scr_no']
-        study_id = request.form['study_id']
-        type = request.form['type']
 
-        # data under the header data
-        todo_name = request.form.getlist('row[][name]')
-        title = request.form.getlist('row[][title]')
-        description = request.form.getlist('row[][description]')
-        page = request.form.getlist('row[][page]')
-        visit = request.form.getlist('row[][visit]')
-        created = time_stamp()
+@qc_database.route('/data_entry', methods=['GET'])
+@register_breadcrumb(qc_database, '.form_add_tickets', '')
+@login_required
+def form_add_tickets():
+    source_type = ["Source", "ICF"]
+    study_list = Study.query.all()
+    staff_list_medops = User.query.filter_by(role="MedOps").all()
 
-        for i in range(len(todo_name)):
-            blog_entry = QC_Check(
-                procedure=title[i],
-                type=type,
-                corrected=False,
-                close=False,
-                prioritized=False,
-                description=description[i],
-                checker=current_user.abbrev,
-                created=created,
-                visit=visit[i],
-                page=page[i],
-                scr_no=scr_no,
-                study_id=study_id,
-                responsible=todo_name[i]
-            )
+    return render_template('data_entry.html.j2', study_list=study_list, staff_list_medops=staff_list_medops, source_type=source_type)
 
-            db.session.add(blog_entry)
-            db.session.commit()
 
-        return redirect(url_for('qc_database.data_entry'))
+@qc_database.route('/data_entry', methods=['POST'])
+@register_breadcrumb(qc_database, '.form_add_tickets', '')
+@login_required
+def add_tickets():
 
-    return render_template('data_entry.html.j2', Users=User_data, source_type=Source_type)
+    # header data form the form
+    study_id = int(request.form['study_id'])
+    study = Study.query.filter_by(id=study_id).scalar()
+    type = request.form['type']
+    scr_no = request.form['scr_no']
+
+    # data under the header data
+    visits = request.form.getlist('row[][visit]')
+    pages = request.form.getlist('row[][page]')
+    procedures = request.form.getlist('row[][procedure]')
+    descriptions = request.form.getlist('row[][description]')
+    assignee_ids = request.form.getlist('row[][assignee_id]')
+
+    for i in range(len(visits)):
+        assignee_id = int(assignee_ids[i])
+        assignee = User.query.filter_by(id=assignee_id).scalar()
+
+        ticket = Ticket(
+            study=study,
+            type=type,
+            scr_no=scr_no,
+
+            visit=visits[i],
+            page=pages[i],
+            procedure=procedures[i],
+            description=descriptions[i],
+
+            assignee=assignee,
+            reporter=current_user
+        )
+
+        db.session.add(ticket)
+
+    db.session.commit()
+
+    return redirect(url_for('qc_database.form_add_tickets'))
 
 
 @qc_database.route('/', methods=('GET', 'POST'))
@@ -117,28 +126,26 @@ def index():
     download_type = ['xlsx', 'pdf']
 
     # get the data in a dict structur
-    # for the right person, if the query is not closed --> corrected=False
+    # for the right person, if the query is not closed --> is_corrected=False
     if current_user.role == "MedOps":
-        posts_data = QC_Check.query\
+        posts_data = Ticket.query\
             .filter_by(
-                responsible=current_user.abbrev,
-                corrected=False,
-                close=False
+                assignee=current_user,
+                is_corrected=False,
+                is_closed=False
             )\
-            .order_by(QC_Check.prioritized.desc())\
-            .order_by(QC_Check.created)\
+            .order_by(Ticket.created_at)\
             .all()
     else:
         # what DM / Admin sees
-        posts_data = db.session.query(QC_Check)\
-            .filter_by(close=False)\
-            .order_by(QC_Check.prioritized.desc())\
-            .order_by(QC_Check.created)\
+        posts_data = db.session.query(Ticket)\
+            .filter_by(is_closed=False)\
+            .order_by(Ticket.created_at)\
             .all()
 
     # query all user and the corresponding roles
     user_qc_requery = QC_Requery.query.with_entities(QC_Requery.query_id, QC_Requery.abbrev).all()
-    user_data = DB_User.query.with_entities(DB_User.abbrev, DB_User.role).all()
+    user_data = User.query.with_entities(User.abbrev, User.role).all()
     user_data = (dict(user_data))
     user_qc_requery = dict(user_qc_requery)
 
@@ -190,7 +197,6 @@ def index():
 
             new_comment = QC_Requery(
                 abbrev=current_user.abbrev,
-                date_time=time_stamp(),
                 new_comment=comment,
                 query_id=query_id
             )
@@ -213,7 +219,7 @@ def index():
 @login_required
 def delete(id):
     # give your anwser to DM
-    QC_Check.query.filter_by(id=id).update({"corrected": True})
+    Ticket.query.filter_by(id=id).update({"is_corrected": True})
 
     db.session.commit()
 
@@ -224,7 +230,7 @@ def delete(id):
 @login_required
 def requery_query(id):
     # requery the row from the table of the QC Check model
-    QC_Check.query.filter_by(id=id).update({"corrected": False})
+    Ticket.query.filter_by(id=id).update({"is_corrected": False})
 
     db.session.commit()
 
@@ -243,7 +249,7 @@ def modal_data(query_id):
 @qc_database.route('/info_modal/<int:query_id>')
 @login_required
 def info_modal(query_id):
-    data_about_query = QC_Check.query.filter_by(id=query_id).first()
+    data_about_query = Ticket.query.filter_by(id=query_id).first()
 
     return render_template('modal_info.html.j2', post=data_about_query)
 
@@ -252,7 +258,7 @@ def info_modal(query_id):
 @login_required
 def close_query(id):
     # close the row from the table of the QC Check model
-    QC_Check.query.filter_by(id=id).update({"close": True})
+    Ticket.query.filter_by(id=id).update({"is_closed": True})
 
     db.session.commit()
 
@@ -265,9 +271,11 @@ def close_query(id):
 def edit_data():
     # get the id of the query you want to edit
     id = request.args.get('id', None)
+    study_list = Study.query.all()
+    old_data = Ticket.query.filter_by(id=id).first().__dict__
+    User_data = User.query.filter_by(role="MedOps").all()
 
-    old_data = QC_Check.query.filter_by(id=id).first().__dict__
-    User_data = DB_User.query.filter_by(role="MedOps").all()
+    old_data["assignee"] = User.query.filter_by(id=old_data["assignee_id"]).scalar().abbrev
 
     if request.method == 'POST':
 
@@ -281,22 +289,25 @@ def edit_data():
             to_console.info("{} could not get transformed into an integer".format(new_data['scr_no']))
 
         for category, new_value in new_data.items():
+            # TODO: Temporary solution
+            if category == "assignee":
+                # compare the data from the DB with the from the request.form
+                new_value = User.query.filter_by(abbrev=new_value).scalar().id
 
-            # compare the data from the DB with the from the request.form
             if (old_data[category] != new_data[category]):
                 # add the data to the audit trail
                 audit_trail(current_user.abbrev, "edit", id, category,
                             old_data[category], new_value)
 
                 # add new data to the data base
-                QC_Check.query.filter_by(id=id).update({category: new_value})
+                Ticket.query.filter_by(id=id).update({category: new_value})
                 # set the query status to 'open'
                 db.session.commit()
 
-        QC_Check.query.filter_by(id=id).update({"corrected": False})
+        Ticket.query.filter_by(id=id).update({"is_corrected": False})
 
         db.session.commit()
 
         return redirect(url_for('qc_database.index'))
 
-    return render_template('edit_data.html.j2', data=old_data, Users=User_data)
+    return render_template('edit_data.html.j2', data=old_data, Users=User_data, study_list=study_list)
