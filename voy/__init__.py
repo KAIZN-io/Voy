@@ -8,7 +8,7 @@ from flask_login import LoginManager
 from .commands import database_cli, user_cli
 from .controller import auth_blueprint, qc_database_blueprint, users_module_blueprint
 from .mail import mail
-from .model import db, migrate, DB_User
+from .model import db, migrate, User
 
 # Load logging configuration
 with open('config/logging.yaml', 'r') as stream:
@@ -49,7 +49,7 @@ def create_app():
     @login_manager.user_loader
     def load_user(user_id):
         # since the user_id is just the primary key of our user table, use it in the query for the user
-        return DB_User.query.get(int(user_id))
+        return User.query.get(int(user_id))
 
     # Register routing blueprints
     app.register_blueprint(auth_blueprint)

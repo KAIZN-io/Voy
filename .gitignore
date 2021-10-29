@@ -25,7 +25,7 @@ env*
 ofelia.ini
 /voy/controller/query_downloads/*
 !/voy/controller/query_downloads/readme.md
-/voy/data-export
+/voy/data-exports
 
 # Build, Test and Cache files
 *,cover

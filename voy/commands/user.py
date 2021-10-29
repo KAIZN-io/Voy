@@ -1,11 +1,11 @@
 import click
 from flask import Blueprint
 from flask.cli import with_appcontext
+from voy.model import db
+from voy.model import User
+from voy.controller.Compliance_Computerized_Systems_EMA import passwd_generator
 from werkzeug.security import generate_password_hash
 
-from voy.controller.Compliance_Computerized_Systems_EMA import passwd_generator
-from voy.model import DB_User
-from voy.model import db
 
 # Create the Blueprint
 user_blueprint = Blueprint('user', __name__)
@@ -18,7 +18,7 @@ def reset(user_abbreviation):
     """Reset a password of an user"""
 
     # filter the requested user
-    user = DB_User.query.filter_by(abbrev=user_abbreviation).scalar()
+    user = User.query.filter_by(abbrev=user_abbreviation).scalar()
 
     if not user:
         click.echo()
@@ -32,7 +32,7 @@ def reset(user_abbreviation):
     password_new_hash = generate_password_hash(password_new, method='sha256')
 
     # commit the new system password to the database
-    DB_User.query.filter_by(abbrev=user_abbreviation).update(
+    User.query.filter_by(abbrev=user_abbreviation).update(
         {"password": password_new_hash, "is_system_passwd": True})
     db.session.commit()
 

@@ -14,7 +14,6 @@ def audit_trail(user, todo, id, category, old_value, new_value):
     audit_data = QC_Audit(
         id=id,
         category=category,
-        date_time=time_stamp(),
         user=user,
         old_value=old_value,
         new_value=new_value

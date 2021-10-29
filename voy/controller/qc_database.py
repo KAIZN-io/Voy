@@ -10,113 +10,114 @@ from sqlalchemy import inspect
 
 from voy.controller.Compliance_Computerized_Systems_EMA import audit_trail, time_stamp
 from voy.controller.data_analysis import TransformData
-from voy.model import QC_Check, DB_User, QC_Requery
+from voy.model import Ticket, User, QC_Requery, Study
 from voy.model import db
 from voy.constants import FILE_TYPE_PDF, FILE_TYPE_XLSX, ROLE_MEDOPS, SOURCE_TYPE_SOURCE, SOURCE_TYPE_ICF, EXPORT_FOLDER
-
-
-# Get loggers
-to_console = logging.getLogger('to_console')
 
 # Create the Blueprint
 qc_database_blueprint = Blueprint('qc_database', __name__)
 default_breadcrumb_root(qc_database_blueprint, '.')
 
+# Get loggers
+to_console = logging.getLogger('to_console')
 
-@qc_database_blueprint.route('/qc_planning', methods=('GET', 'POST'))
+def as_dict(self):
+    """transform the query results to a readable dict
+
+    Returns:
+        [type]: [description]
+    """
+    return {c.key: getattr(self, c.key)
+            for c in inspect(self).mapper.column_attrs}
+
+
+# TODO: impolement the tag system
+@qc_database_blueprint.route('/add_study', methods=['POST'])
 @register_breadcrumb(qc_database_blueprint, '.qc_planning', '')
 @login_required
 def qc_planning():
-    """Prioritize the studies
+    """save the new study id to the database
 
     Returns:
         [type]: [description]
     """
+    # TODO: Form validation
+    internal_id = int(request.form.get('internal_id'))
 
-    # filter all unique study numbers
-    study_list = db.session.query(QC_Check.study_id).distinct().all()
-    study_list = [x[0] for x in study_list]
-    study_list.sort()
+    study = Study(internal_id=internal_id, is_active=True)
 
-    studies_prioritized = QC_Check.query.filter_by(prioritized=True).all()
+    db.session.add(study)
+    db.session.commit()
 
-    # get an unique list of all prioritized studies
-    studies_prioritized = list(set([str(i.study_id) for i in studies_prioritized]))
-
-    if request.method == 'POST':
-
-        studies_prioritize_new = request.form.getlist('studyCheckbox')
-
-        # first reset all prioritizations
-        QC_Check.query.update({"prioritized": False})
-
-        db.session.commit()
-
-        # then update the database with the new prioritizations:
-        for study_id in studies_prioritize_new:
-            QC_Check.query.filter_by(study_id=str(study_id)).update({"prioritized": True})
-
-            db.session.commit()
-
-        return redirect(url_for('qc_database.qc_planning'))
-
-    return render_template('qc_planning.html.j2', studies=study_list, prioritized_studies=studies_prioritized)
+    return redirect(url_for('qc_database.qc_planning'))
 
 
-@qc_database_blueprint.route('/data_entry', methods=('GET', 'POST'))
-@register_breadcrumb(qc_database_blueprint, '.data_entry', '')
+@qc_database_blueprint.route('/add_study', methods=['GET'])
+@register_breadcrumb(qc_database_blueprint, '.qc_planning', '')
 @login_required
-def data_entry():
-    """add new data from the CRF check
+def form_qc_planning():
+    """render the html form for qc planning
 
     Returns:
         [type]: [description]
     """
-
-    source_types = [SOURCE_TYPE_SOURCE, SOURCE_TYPE_ICF]
-    user_data = DB_User.query.filter_by(role=ROLE_MEDOPS).all()
-
-    if request.method == 'POST':
-
-        # header data form the form
-        study_subject_id = request.form['scr_no']
-        study_id = request.form['study_id']
-        source_type = request.form['type']
-
-        # the finding data
-        finding_user_name = request.form.getlist('row[][name]')
-        finding_title = request.form.getlist('row[][title]')
-        finding_description = request.form.getlist('row[][description]')
-        finding_page = request.form.getlist('row[][page]')
-        finding_visit = request.form.getlist('row[][visit]')
-        finding_time = time_stamp()
-
-        for i in range(len(finding_user_name)):
-            data = QC_Check(
-                procedure=finding_title[i],
-                type=source_type,
-                corrected=False,
-                close=False,
-                prioritized=False,
-                description=finding_description[i],
-                checker=current_user.abbrev,
-                created=finding_time,
-                visit=finding_visit[i],
-                page=finding_page[i],
-                scr_no=study_subject_id,
-                study_id=study_id,
-                responsible=finding_user_name[i]
-            )
-
-            db.session.add(data)
-            db.session.commit()
-
-        return redirect(url_for('qc_database.data_entry'))
-
-    return render_template('data_entry.html.j2', Users=user_data, source_type=source_types)
+    return render_template('qc_planning.html.j2')
 
 
-def get_queries_for_user(user: DB_User) -> list:
+@qc_database_blueprint.route('/data_entry', methods=['GET'])
+@register_breadcrumb(qc_database_blueprint, '.form_add_tickets', '')
+@login_required
+def form_add_tickets():
+    source_type = ["Source", "ICF"]
+    study_list = Study.query.all()
+    staff_list_medops = User.query.filter_by(role="MedOps").all()
+
+    return render_template('data_entry.html.j2', study_list=study_list, staff_list_medops=staff_list_medops, source_type=source_type)
+
+
+@qc_database_blueprint.route('/data_entry', methods=['POST'])
+@register_breadcrumb(qc_database_blueprint, '.form_add_tickets', '')
+@login_required
+def add_tickets():
+
+    # header data form the form
+    study_id = int(request.form['study_id'])
+    study = Study.query.filter_by(id=study_id).scalar()
+    source_type = request.form['type']
+    study_subject_id = request.form['scr_no']
+
+    # data under the header data
+    finding_visit = request.form.getlist('row[][visit]')
+    finding_page = request.form.getlist('row[][page]')
+    finding_procedures = request.form.getlist('row[][procedure]')
+    finding_description = request.form.getlist('row[][description]')
+    finding_assignee_ids = request.form.getlist('row[][assignee_id]')
+
+    for i in range(len(finding_visit)):
+        assignee_id = int(finding_assignee_ids[i])
+        assignee = User.query.filter_by(id=assignee_id).scalar()
+
+        ticket = Ticket(
+            study=study,
+            type=source_type,
+            scr_no=study_subject_id,
+
+            visit=finding_visit[i],
+            page=finding_page[i],
+            procedure=finding_procedures[i],
+            description=finding_description[i],
+
+            assignee=assignee,
+            reporter=current_user
+        )
+
+        db.session.add(ticket)
+
+    db.session.commit()
+    return redirect(url_for('qc_database.form_add_tickets'))
+
+
+def get_queries_for_user(user: User) -> list:
     """gets a list of queries for the user filtered depending on their role.
 
     Args:
@@ -126,22 +127,21 @@ def get_queries_for_user(user: DB_User) -> list:
         [type]: A list of queries for the user.
     """
 
-    query = QC_Check.query \
-        .order_by(QC_Check.prioritized.desc()) \
-        .order_by(QC_Check.created)
+    query = Ticket.query \
+        .order_by(Ticket.created_at)
 
     if user.role == ROLE_MEDOPS:
         query.filter_by(
-            responsible=user.abbrev,
-            corrected=False,
-            close=False
+            assignee=current_user,
+            is_corrected=False,
+            is_closed=False
         )
 
     # TODO: why can I see closed Queries ?
     else:
-        query.filter_by(close=False)
+        query.filter_by(is_closed=False)
 
-    return query.all()
+    return Ticket.query.all()
 
 
 # TODO: this function is to big !
@@ -166,7 +166,7 @@ def index():
 
     # query all user and the corresponding roles
     user_qc_requery = QC_Requery.query.with_entities(QC_Requery.query_id, QC_Requery.abbrev).all()
-    user_data = DB_User.query.with_entities(DB_User.abbrev, DB_User.role).all()
+    user_data = User.query.with_entities(User.abbrev, User.role).all()
     user_data = (dict(user_data))
     user_qc_requery = dict(user_qc_requery)
 
@@ -183,7 +183,6 @@ def index():
 
             data_comment_new = QC_Requery(
                 abbrev=current_user.abbrev,
-                date_time=time_stamp(),
                 new_comment=data_comment_new,
                 query_id=data_id
             )
@@ -197,6 +196,7 @@ def index():
     return render_template('index.html.j2', user_queries=user_queries, user_requery=user_requery, export_file_types=export_file_types)
 
 
+# TODO: fix the data export
 @qc_database_blueprint.route('/export-data', methods=['POST'])
 @login_required
 def export_data():
@@ -248,7 +248,7 @@ def delete(id: int):
     """
 
     # give your anwser to DM
-    QC_Check.query.filter_by(id=id).update({"corrected": True})
+    Ticket.query.filter_by(id=id).update({"is_corrected": True})
 
     db.session.commit()
 
@@ -267,7 +267,7 @@ def requery_query(id: int):
         [type]: [description]
     """
 
-    QC_Check.query.filter_by(id=id).update({"corrected": False})
+    Ticket.query.filter_by(id=id).update({"is_corrected": False})
 
     db.session.commit()
 
@@ -304,9 +304,9 @@ def info_modal(query_id: int):
         [type]: [description]
     """
 
-    data_meta = QC_Check.query.filter_by(id=query_id).scalar()
+    data_about_query = Ticket.query.filter_by(id=query_id).scalar()
 
-    return render_template('modal_info.html.j2', post=data_meta)
+    return render_template('modal_info.html.j2', post=data_about_query)
 
 
 @qc_database_blueprint.route('/close/<int:id>')
@@ -321,7 +321,8 @@ def close_query(id: int):
         [type]: [description]
     """
 
-    QC_Check.query.filter_by(id=id).update({"close": True})
+    Ticket.query.filter_by(id=id).update({"is_closed": True})
+
 
     db.session.commit()
 
@@ -337,11 +338,14 @@ def edit_data():
     Returns:
         [type]: [description]
     """
+    # get the id of the query you want to edit
+    data_id = request.args.get('id', None)
 
-    data_id: int = request.args.get('id', None)
+    study_list = Study.query.all()
+    data_old = Ticket.query.filter_by(id=data_id).first().__dict__
+    user_data = User.query.filter_by(role=ROLE_MEDOPS).all()
 
-    data_old = QC_Check.query.filter_by(id=data_id).first().__dict__
-    user_data = DB_User.query.filter_by(role=ROLE_MEDOPS).all()
+    data_old["assignee"] = User.query.filter_by(id=data_old["assignee_id"]).scalar().abbrev
 
     if request.method == 'POST':
 
@@ -354,34 +358,26 @@ def edit_data():
         except:
             to_console.info("{} could not get transformed into an integer".format(data['scr_no']))
 
-        for category, data_value in data.items():
+        for category, new_value in data.items():
+            # TODO: Temporary solution
+            if category == "assignee":
+                # compare the data from the DB with the from the request.form
+                new_value = User.query.filter_by(abbrev=new_value).scalar().id
 
-            # compare the data from the DB with the from the request.form
             if (data_old[category] != data[category]):
                 # add the data to the audit trail
                 audit_trail(current_user.abbrev, "edit", data_id, category,
-                            data_old[category], data_value)
+                            data_old[category], new_value)
 
                 # add new data to the data base
-                QC_Check.query.filter_by(id=data_id).update({category: data_value})
+                Ticket.query.filter_by(id=data_id).update({category: new_value})
                 # set the query status to 'open'
                 db.session.commit()
 
-        QC_Check.query.filter_by(id=data_id).update({"corrected": False})
+        Ticket.query.filter_by(id=data_id).update({"is_corrected": False})
 
         db.session.commit()
 
         return redirect(url_for('qc_database.index'))
 
-    return render_template('edit_data.html.j2', data=data_old, Users=user_data)
-
-
-def as_dict(self):
-    """transform the data finding into a readable dict
-
-    Returns:
-        [type]: [description]
-    """
-
-    return {c.key: getattr(self, c.key)
-            for c in inspect(self).mapper.column_attrs}
+    return render_template('edit_data.html.j2', data=data_old, Users=user_data, study_list=study_list)

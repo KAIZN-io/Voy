@@ -5,37 +5,36 @@ content %}
   <a href="{{ breadcrumb.url }}">{{ breadcrumb.text }}</a>
   {{ '/' if not loop.last }} {%- endfor -%}
 </div>
-<h1>QC Planning</h1>
 
-<form method="post">
+<div class="column is-4 is-offset-4">
+  <h1>New study:</h1>
 
-  <p>Prioritize these studies: </p>
 
-  {% for study in studies %}  
-  {% if study|string in prioritized_studies %}
-  <input type="checkbox" id="{{ study }}" name="studyCheckbox" value="{{ study }}" checked="checked">
-  {% else %}
-  <input type="checkbox" id="{{ study }}" name="studyCheckbox" value="{{ study }}">
-
-  {% endif %}
-
-  <label for="{{ study }}"> {{ study }}</label><br>
-  {% endfor %}
-
-  <div class="form-group">
-    <button
-      class="btn btn-primary"
-      style="float: left"
-      type="submit"
-    >
-    Prioritize
-    </button>
+  <div class="box">
+    {% with messages = get_flashed_messages() %} {% if messages %}
+    <div class="alert alert-success">{{ messages[0] }}</div>
+    {% endif %} {% endwith %}
+    <form action="/add_study" method="POST">
+      <div class="field">
+        <div class="control">
+          <input
+            autofocus=""
+            class="input is-large"
+            name="internal_id"
+            placeholder="Study Number"
+            required
+            minlength="6"
+            maxlength="6"
+            type="number"
+          />
+        </div>
+      </div>
+      <br>
+      <button class="btn btn-primary">
+        submit
+      </button>
+    </form>
+    <a href="{{ url_for('qc_database.qc_planning')}}">abort</a>
   </div>
-</form>
-
-{% endblock %} {% block js %}
-<script
-  src="{{ url_for('static', filename='bundle/data_entry.js') }}"
-  type="text/javascript"
-></script>
+</div>
 {% endblock %}
