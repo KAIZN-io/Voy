@@ -25,7 +25,7 @@ Data Entry
 
         {% for study in study_list %}
           <option value="{{ study.id }}">
-            {{ study.internal_id }} {% if not user.is_active %} (inactive) {% endif %}
+            {{ study.internal_id }} {% if not study.is_active %} (inactive) {% endif %}
           </option>
         {% endfor %}
 
