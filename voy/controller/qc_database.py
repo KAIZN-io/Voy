@@ -82,41 +82,39 @@ def form_add_tickets():
 def add_tickets():
 
     # header data form the form
+    study_id = int(request.form['study_id'])
+    study = Study.query.filter_by(id=study_id).scalar()
+    type = request.form['type']
     scr_no = request.form['scr_no']
-    study_id = request.form['study_id']
-    ticket_type = request.form['type']
 
     # data under the header data
-    assignee_name = request.form.getlist('row[][name]')
-    title = request.form.getlist('row[][title]')
-    description = request.form.getlist('row[][description]')
-    page = request.form.getlist('row[][page]')
-    visit = request.form.getlist('row[][visit]')
+    visits = request.form.getlist('row[][visit]')
+    pages = request.form.getlist('row[][page]')
+    procedures = request.form.getlist('row[][procedure]')
+    descriptions = request.form.getlist('row[][description]')
+    assignee_ids = request.form.getlist('row[][assignee_id]')
 
-    for i in range(len(assignee_name)):
-        """ from: https://stackoverflow.com/questions/33083772/sqlalchemy-attributeerror-str-object-has-no-attribute-sa-instance-state
-        User Case 1: The assignee user exists in the database
-
-        Here you should fetch the user from your table User and pass it as an argument to the Ticket constructor
-        """
-        assignee_user = User.query.filter_by(abbrev=assignee_name[i]).scalar()
+    for i in range(len(visits)):
+        assignee_id = int(assignee_ids[i])
+        assignee = User.query.filter_by(id=assignee_id).scalar()
 
         ticket = Ticket(
-            procedure=title[i],
-            type=ticket_type,
-            is_corrected=False,
-            is_closed=False,
-            description=description[i],
-            reporter=current_user,
-            visit=visit[i],
-            page=page[i],
+            study=study,
+            type=type,
             scr_no=scr_no,
-            study_id=Study(id=study_id),
-            assignee=assignee_user
+
+            visit=visits[i],
+            page=pages[i],
+            procedure=procedures[i],
+            description=descriptions[i],
+
+            assignee=assignee,
+            reporter=current_user
         )
 
         db.session.add(ticket)
-        db.session.commit()
+
+    db.session.commit()
 
     return redirect(url_for('qc_database.form_add_tickets'))
 

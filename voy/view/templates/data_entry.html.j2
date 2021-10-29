@@ -19,7 +19,7 @@ Data Entry
     <div class="form-group col-md-6">
       <label for="study_id">Study ID</label>
 
-      <select class="form-control" name="row[][name]" required width="300px">
+      <select class="form-control" name="study_id" required width="300px">
         <option disabled selected value> -- select an option --</option>
         <option disabled="disabled">----</option>
 
@@ -83,7 +83,7 @@ Data Entry
       </td>
       <td>
         <div class="form-group">
-          <input class="form-control" name="row[][title]"
+          <input class="form-control" name="row[][procedure]"
                  placeholder="VS / ECG / ... ?" type="text" maxlength="20"
                  value="{{ request.form['title'] }}" required></input>
         </div>
@@ -99,7 +99,7 @@ Data Entry
       </td>
       <td>
         <div class="form-group">
-          <select class="form-control" name="row[][name]" required width="300px">
+          <select class="form-control" name="row[][assignee_id]" required width="300px">
             <option disabled selected value> -- select an option --</option>
             <option disabled="disabled">----</option>
 
