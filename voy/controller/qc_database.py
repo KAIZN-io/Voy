@@ -32,55 +32,59 @@ def as_dict(self):
             for c in inspect(self).mapper.column_attrs}
 
 
-@qc_database.route('/data_entry', methods=('GET', 'POST'))
+@qc_database.route('/data_entry', methods=('GET'))
 @register_breadcrumb(qc_database, '.data_entry', '')
 @login_required
 def data_entry():
     source_type = ["Source", "ICF"]
     user_data = User.query.filter_by(role="MedOps").all()
 
-    if request.method == 'POST':
-
-        # header data form the form
-        scr_no = request.form['scr_no']
-        study_id = request.form['study_id']
-        ticket_type = request.form['type']
-
-        # data under the header data
-        assignee_name = request.form.getlist('row[][name]')
-        title = request.form.getlist('row[][title]')
-        description = request.form.getlist('row[][description]')
-        page = request.form.getlist('row[][page]')
-        visit = request.form.getlist('row[][visit]')
-
-        for i in range(len(assignee_name)):
-            """ from: https://stackoverflow.com/questions/33083772/sqlalchemy-attributeerror-str-object-has-no-attribute-sa-instance-state
-            User Case 1: The assignee user exists in the database
-
-            Here you should fetch the user from your table User and pass it as an argument to the Ticket constructor
-            """
-            assignee_user = User.query.filter_by(abbrev=assignee_name[i]).scalar()
-
-            blog_entry = Ticket(
-                procedure=title[i],
-                type=ticket_type,
-                is_corrected=False,
-                is_closed=False,
-                description=description[i],
-                reporter=current_user,
-                visit=visit[i],
-                page=page[i],
-                scr_no=scr_no,
-                study_id=Study(id=study_id),
-                assignee=assignee_user
-            )
-
-            db.session.add(blog_entry)
-            db.session.commit()
-
-        return redirect(url_for('qc_database.data_entry'))
-
     return render_template('data_entry.html.j2', Users=user_data, source_type=source_type)
+
+
+@qc_database.route('/data_entry', methods=('POST'))
+@register_breadcrumb(qc_database, '.data_entry', '')
+@login_required
+def data_entry():
+
+    # header data form the form
+    scr_no = request.form['scr_no']
+    study_id = request.form['study_id']
+    ticket_type = request.form['type']
+
+    # data under the header data
+    assignee_name = request.form.getlist('row[][name]')
+    title = request.form.getlist('row[][title]')
+    description = request.form.getlist('row[][description]')
+    page = request.form.getlist('row[][page]')
+    visit = request.form.getlist('row[][visit]')
+
+    for i in range(len(assignee_name)):
+        """ from: https://stackoverflow.com/questions/33083772/sqlalchemy-attributeerror-str-object-has-no-attribute-sa-instance-state
+        User Case 1: The assignee user exists in the database
+
+        Here you should fetch the user from your table User and pass it as an argument to the Ticket constructor
+        """
+        assignee_user = User.query.filter_by(abbrev=assignee_name[i]).scalar()
+
+        ticket = Ticket(
+            procedure=title[i],
+            type=ticket_type,
+            is_corrected=False,
+            is_closed=False,
+            description=description[i],
+            reporter=current_user,
+            visit=visit[i],
+            page=page[i],
+            scr_no=scr_no,
+            study_id=Study(id=study_id),
+            assignee=assignee_user
+        )
+
+        db.session.add(ticket)
+        db.session.commit()
+
+    return redirect(url_for('qc_database.data_entry'))
 
 
 @qc_database.route('/', methods=('GET', 'POST'))
