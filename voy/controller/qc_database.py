@@ -37,9 +37,10 @@ def as_dict(self):
 @login_required
 def form_add_tickets():
     source_type = ["Source", "ICF"]
-    user_data = User.query.filter_by(role="MedOps").all()
+    study_list = Study.query.all()
+    staff_list_medops = User.query.filter_by(role="MedOps").all()
 
-    return render_template('data_entry.html.j2', Users=user_data, source_type=source_type)
+    return render_template('data_entry.html.j2', study_list=study_list, staff_list_medops=staff_list_medops, source_type=source_type)
 
 
 @qc_database.route('/data_entry', methods=['POST'])

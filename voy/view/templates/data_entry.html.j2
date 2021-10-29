@@ -18,12 +18,18 @@ Data Entry
 
     <div class="form-group col-md-6">
       <label for="study_id">Study ID</label>
-      <input class="form-control" name="study_id"
-             required
-             maxlength="20"
-             type="text"
-             value="{{ request.form['study_id'] }}"></input>
 
+      <select class="form-control" name="row[][name]" required width="300px">
+        <option disabled selected value> -- select an option --</option>
+        <option disabled="disabled">----</option>
+
+        {% for study in study_list %}
+          <option value="{{ study.id }}">
+            {{ study.internal_id }} {% if not user.is_active %} (inactive) {% endif %}
+          </option>
+        {% endfor %}
+
+      </select>
     </div>
     <div class="form-group col-md-4">
       <label for="type">Document-Type :</label>
@@ -96,12 +102,14 @@ Data Entry
           <select class="form-control" name="row[][name]" required width="300px">
             <option disabled selected value> -- select an option --</option>
             <option disabled="disabled">----</option>
-            <!-- if user is not active yet, display it -->
-            {% for user in Users %}
-            <option value="{{ user.abbrev }}">{{ user.abbrev }} {% if user.is_active == false %} (inactive) {% endif %}
-            </option>
 
+            {% for user in staff_list_medops %}
+              <option value="{{ user.id }}">
+                <!-- if user is not active yet, display it -->
+                {{ user.abbrev }} {% if not user.is_active %} (inactive) {% endif %}
+              </option>
             {% endfor %}
+
           </select>
         </div>
       </td>
