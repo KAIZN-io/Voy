@@ -18,15 +18,19 @@ Edit Data
 
     <div class="form-group col-md-6">
       <label for="study_id">Study ID</label>
-      <div class="form-group">
-        <input class="form-control" name="study_id"
-               required
-               maxlength="20"
-               type="text"
-               value="{{ data.study_id }}">
-      </div>
-    </div>
 
+      <select class="form-control" name="study_id" required width="300px">
+        <option SELECTED value="{{ data.study_id }}">{{ data.study_id }}</option>
+        <option disabled="disabled">----</option>
+
+        {% for study in study_list %}
+          <option value="{{ study.id }}">
+            {{ study.internal_id }} {% if not study.is_active %} (inactive) {% endif %}
+          </option>
+        {% endfor %}
+
+      </select>
+    </div>
     <div class="form-group col-md-4">
       <label for="type">Document-Type :</label>
       <select class="form-control" name="type" required>
@@ -97,8 +101,8 @@ Edit Data
         </td>
         <td>
           <div class="form-group">
-            <select name="responsible" width="300px">
-              <option SELECTED value="{{data.responsible}}">{{data.responsible}}</option>
+            <select name="assignee" width="300px">
+              <option SELECTED value="{{data.assignee}}">{{data.assignee}}</option>
               <option disabled="disabled">----</option>
 
               {% for user in Users %}

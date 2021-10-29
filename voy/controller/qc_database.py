@@ -271,9 +271,11 @@ def close_query(id):
 def edit_data():
     # get the id of the query you want to edit
     id = request.args.get('id', None)
-
+    study_list = Study.query.all()
     old_data = Ticket.query.filter_by(id=id).first().__dict__
     User_data = User.query.filter_by(role="MedOps").all()
+
+    old_data["assignee"] = User.query.filter_by(id=old_data["assignee_id"]).scalar().abbrev
 
     if request.method == 'POST':
 
@@ -287,8 +289,11 @@ def edit_data():
             to_console.info("{} could not get transformed into an integer".format(new_data['scr_no']))
 
         for category, new_value in new_data.items():
+            # TODO: Temporary solution
+            if category == "assignee":
+                # compare the data from the DB with the from the request.form
+                new_value = User.query.filter_by(abbrev=new_value).scalar().id
 
-            # compare the data from the DB with the from the request.form
             if (old_data[category] != new_data[category]):
                 # add the data to the audit trail
                 audit_trail(current_user.abbrev, "edit", id, category,
@@ -305,4 +310,4 @@ def edit_data():
 
         return redirect(url_for('qc_database.index'))
 
-    return render_template('edit_data.html.j2', data=old_data, Users=User_data)
+    return render_template('edit_data.html.j2', data=old_data, Users=User_data, study_list=study_list)
