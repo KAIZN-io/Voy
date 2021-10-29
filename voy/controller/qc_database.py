@@ -42,8 +42,13 @@ def qc_planning():
     Returns:
         [type]: [description]
     """
-    study_no = request.form.get('study_no')
-    # TODO: save the study number to the database
+    # TODO: Form validation
+    internal_id = int(request.form.get('internal_id'))
+
+    study = Study(internal_id=internal_id, is_active=True)
+
+    db.session.add(study)
+    db.session.commit()
 
     return redirect(url_for('qc_database.qc_planning'))
 
