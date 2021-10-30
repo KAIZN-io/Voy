@@ -121,7 +121,7 @@ def get_queries_for_user(user: User) -> list:
     """gets a list of queries for the user filtered depending on their role.
 
     Args:
-        user (DB_User): The user to get the queries for.
+        user (User): The user to get the queries for.
 
     Returns:
         [type]: A list of queries for the user.
