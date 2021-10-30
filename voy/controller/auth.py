@@ -10,6 +10,8 @@ from voy.controller.Compliance_Computerized_Systems_EMA import time_stamp, passw
 from voy.mail import mail
 from voy.model import db
 from voy.model import User, User_Management
+from voy.utilities import is_list_empty
+
 
 # Get loggers
 to_console = logging.getLogger('to_console')
@@ -37,16 +39,6 @@ def is_password_compliant(password: str) -> bool:
 
     return has_length and has_upper_case and has_lower_case and has_number
 
-def is_list_empty(list: list) -> bool:
-    """check if the provided list is empty
-
-    Args:
-        list (list): [description]
-
-    Returns:
-        bool: True or False
-    """
-    return len(list)==0
 
 def try_password_reset(user_abbrev: str, password_old: str, password_new: str, password_new_repeat: str) -> list:
     """Process the supplied old and new password from the user
