@@ -42,8 +42,11 @@
 
     </ul>
   </div>
+
   {% if (current_user.is_authenticated) and (current_user.role == 'Admin' or current_user.role == 'Data Manager') %}
-  <a class="nav-link" href="{{ url_for('qc_database_controller.qc_planning')}}">Planning</a>
+    <a class="nav-link" href="{{ url_for('study_controller.new') }}">
+      Add Study
+    </a>
   {% endif %}
 
   <!-- in the right corner of the nav bar -->

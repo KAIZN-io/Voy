@@ -14,7 +14,7 @@ content %}
     {% with messages = get_flashed_messages() %} {% if messages %}
     <div class="alert alert-success">{{ messages[0] }}</div>
     {% endif %} {% endwith %}
-    <form action="/add_study" method="POST">
+    <form action="{{ url_for('study_controller.new_post') }}" method="POST">
       <div class="field">
         <div class="control">
           <input
@@ -34,7 +34,7 @@ content %}
         submit
       </button>
     </form>
-    <a href="{{ url_for('qc_database_controller.qc_planning')}}">abort</a>
+    <a href="{{ url_for('study_controller.new')}}">abort</a>
   </div>
 </div>
 {% endblock %}
