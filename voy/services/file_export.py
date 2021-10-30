@@ -1,17 +1,10 @@
-"""save your data in a data file
-
-Returns:
-    [type]: [description]
-"""
-
 import os
 
 import pandas as pd
 import pdfkit
 
 
-
-def DictToPdf(query_as_dict: dict = {}, file_name: str = '', path: str = '.') -> str:
+def exportDictAsPdf(query_as_dict: dict = {}, file_name: str = '', path: str = '.') -> str:
     """
     Convertes a dictionary to a PDF
     """
@@ -34,7 +27,7 @@ def DictToPdf(query_as_dict: dict = {}, file_name: str = '', path: str = '.') ->
     return path_output
 
 
-def DictToExcel(query_as_dict: dict = {}, file_name: str = '', path: str = '.') -> str:
+def exportDictAsExcel(query_as_dict: dict = {}, file_name: str = '', path: str = '.') -> str:
     """
     Convertes a dictionary to an Excel file
     """

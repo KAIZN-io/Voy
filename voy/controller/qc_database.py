@@ -9,7 +9,7 @@ from flask_login import login_required, current_user
 from sqlalchemy import inspect
 
 from voy.compliance.ema import add_to_audit_trail
-from voy.controller.data_analysis import TransformData
+from voy.services.file_export import exportDictAsExcel, exportDictAsPdf
 from voy.model import Ticket, User, QC_Requery, Study
 from voy.model import db
 from voy.constants import FILE_TYPE_PDF, FILE_TYPE_XLSX, ROLE_MEDOPS, SOURCE_TYPE_SOURCE, SOURCE_TYPE_ICF, EXPORT_FOLDER
@@ -217,9 +217,9 @@ def export_data():
     try:
 
         if export_file_type == FILE_TYPE_PDF:
-            path_output = TransformData.DictToPdf(user_queries_dict, export_file_name, export_file_path)
+            path_output = exportDictAsPdf(user_queries_dict, export_file_name, export_file_path)
         elif export_file_type == FILE_TYPE_XLSX:
-            path_output = TransformData.DictToExcel(user_queries_dict, export_file_name, export_file_path)
+            path_output = exportDictAsExcel(user_queries_dict, export_file_name, export_file_path)
         else:
             return "Unsupported file type."
 
