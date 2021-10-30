@@ -4,7 +4,7 @@ from flask_login import login_required, current_user
 from flask_mail import Message
 from werkzeug.security import generate_password_hash
 
-from voy.controller.Compliance_Computerized_Systems_EMA import passwd_generator
+from voy.compliance.ema import generate_password
 from voy.mail import mail
 from voy.model import User, db
 from voy.services.user import try_password_reset
@@ -55,7 +55,7 @@ def request_password_reset_post():
 
     if user:
         # Generate a system password with the length of 10 and hash it
-        password_new = passwd_generator(size=10)
+        password_new = generate_password(size=10)
 
         # TODO: Remove hard-coded sender
         msg = Message('Hello', sender='no-reply@kaizn.io', recipients=[user.email])

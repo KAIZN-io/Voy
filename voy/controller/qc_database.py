@@ -8,7 +8,7 @@ from flask_breadcrumbs import register_breadcrumb, default_breadcrumb_root
 from flask_login import login_required, current_user
 from sqlalchemy import inspect
 
-from voy.controller.Compliance_Computerized_Systems_EMA import audit_trail, time_stamp
+from voy.compliance.ema import add_to_audit_trail
 from voy.controller.data_analysis import TransformData
 from voy.model import Ticket, User, QC_Requery, Study
 from voy.model import db
@@ -366,7 +366,7 @@ def edit_data():
 
             if (data_old[category] != data[category]):
                 # add the data to the audit trail
-                audit_trail(current_user.abbrev, "edit", data_id, category,
+                add_to_audit_trail(current_user.abbrev, "edit", data_id, category,
                             data_old[category], new_value)
 
                 # add new data to the data base

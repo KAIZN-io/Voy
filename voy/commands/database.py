@@ -6,7 +6,6 @@ from flask.cli import with_appcontext
 from werkzeug.security import generate_password_hash
 
 from voy.constants import ROLE_ADMIN
-from voy.controller.Compliance_Computerized_Systems_EMA import time_stamp
 from voy.model import db, User, User_Management
 from voy.model.utilities import is_database_empty
 

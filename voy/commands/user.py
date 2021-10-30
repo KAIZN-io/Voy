@@ -3,7 +3,7 @@ from flask import Blueprint
 from flask.cli import with_appcontext
 from voy.model import db
 from voy.model import User
-from voy.controller.Compliance_Computerized_Systems_EMA import passwd_generator
+from voy.compliance.ema import generate_password
 from werkzeug.security import generate_password_hash
 
 
@@ -28,7 +28,7 @@ def reset(user_abbreviation):
         return
 
     # generate a system password with the lenght of 10 and hash it
-    password_new = passwd_generator(size=10)
+    password_new = generate_password(size=10)
     password_new_hash = generate_password_hash(password_new, method='sha256')
 
     # commit the new system password to the database

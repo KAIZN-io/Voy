@@ -6,7 +6,6 @@ from flask_login import login_required, current_user
 from werkzeug.security import generate_password_hash
 
 from voy.model import db
-from voy.controller.Compliance_Computerized_Systems_EMA import audit_trail, time_stamp, passwd_generator
 from voy.model import User, User_Management
 from voy.constants import ROLE_ADMIN, ROLE_MEDOPS, ROLE_DATA_MANAGER, ROLE_DATA_ENTRY
 

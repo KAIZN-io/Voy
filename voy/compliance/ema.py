@@ -1,13 +1,15 @@
+import random
+import string
+
 import logging
 
-from voy.controller.Compliance_Computerized_Systems_EMA.time_stamp import time_stamp
 from voy.model import QC_Audit
 
 # Get loggers
 to_qc_file = logging.getLogger('to_qc_file')
 
 
-def audit_trail(user, todo, id, category, old_value, new_value):
+def add_to_audit_trail(user, todo, id, category, old_value, new_value):
     # user = current_user.abbrev
 
     # the data in the model in form of a dict structure
@@ -29,3 +31,7 @@ def audit_trail(user, todo, id, category, old_value, new_value):
         to_qc_file.info(audit_data['new_value'], extra=audit_data)
 
     return "added to audit trail"
+
+
+def generate_password(size=6, chars=string.ascii_uppercase + string.digits):
+    return ''.join(random.choice(chars) for _ in range(size))
