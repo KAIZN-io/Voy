@@ -4,6 +4,7 @@ from voy.model import User, db
 from voy.utilities import is_list_empty
 
 
+# TODO: Shouldn't this be in the compliance package?
 # TODO: Validation with Python Cerberus
 def is_password_compliant(password: str) -> bool:
     """Check a password against a set of minimal requirements.
