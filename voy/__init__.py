@@ -7,7 +7,7 @@ from flask_login import LoginManager
 
 from .commands import database_cli, user_cli
 from .controller import authentication_blueprint, user_blueprint, qc_database_blueprint, users_module_blueprint, \
-    study_blueprint
+    study_blueprint, ticket_blueprint
 from .mail import mail
 from .model import db, migrate, User
 
@@ -56,6 +56,7 @@ def create_app():
     # Register routing blueprints
     app.register_blueprint(authentication_blueprint)
     app.register_blueprint(study_blueprint)
+    app.register_blueprint(ticket_blueprint)
     app.register_blueprint(user_blueprint)
     app.register_blueprint(qc_database_blueprint)
     app.register_blueprint(users_module_blueprint)

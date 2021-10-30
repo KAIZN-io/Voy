@@ -31,59 +31,6 @@ def as_dict(self):
             for c in inspect(self).mapper.column_attrs}
 
 
-@qc_database_blueprint.route('/data_entry', methods=['GET'])
-@register_breadcrumb(qc_database_blueprint, '.form_add_tickets', '')
-@login_required
-def form_add_tickets():
-    source_type = ["Source", "ICF"]
-    study_list = Study.query.all()
-    staff_list_medops = User.query.filter_by(role="MedOps").all()
-
-    return render_template('data_entry.html.j2', study_list=study_list, staff_list_medops=staff_list_medops, source_type=source_type)
-
-
-@qc_database_blueprint.route('/data_entry', methods=['POST'])
-@register_breadcrumb(qc_database_blueprint, '.form_add_tickets', '')
-@login_required
-def add_tickets():
-
-    # header data form the form
-    study_id = int(request.form['study_id'])
-    study = Study.query.filter_by(id=study_id).scalar()
-    source_type = request.form['type']
-    study_subject_id = request.form['source_number']
-
-    # data under the header data
-    finding_visit = request.form.getlist('row[][visit]')
-    finding_page = request.form.getlist('row[][page]')
-    finding_procedures = request.form.getlist('row[][procedure]')
-    finding_description = request.form.getlist('row[][description]')
-    finding_assignee_ids = request.form.getlist('row[][assignee_id]')
-
-    for i in range(len(finding_visit)):
-        assignee_id = int(finding_assignee_ids[i])
-        assignee = User.query.filter_by(id=assignee_id).scalar()
-
-        ticket = Ticket(
-            study=study,
-            type=source_type,
-            source_number=study_subject_id,
-
-            visit=finding_visit[i],
-            page=finding_page[i],
-            procedure=finding_procedures[i],
-            description=finding_description[i],
-
-            assignee=assignee,
-            reporter=current_user
-        )
-
-        db.session.add(ticket)
-
-    db.session.commit()
-    return redirect(url_for('qc_database_controller.form_add_tickets'))
-
-
 def get_queries_for_user(user: User) -> list:
     """gets a list of queries for the user filtered depending on their role.
 
@@ -202,6 +149,7 @@ def export_data():
     return send_file(path_output, as_attachment=True)
 
 
+# TODO: Move this action to the ticket controller
 @qc_database_blueprint.route('/delete/<int:id>')
 @login_required
 def delete(id: int):
@@ -222,6 +170,7 @@ def delete(id: int):
     return redirect('/')
 
 
+# TODO: Move this action to the ticket controller
 @qc_database_blueprint.route('/requery/<int:id>')
 @login_required
 def requery_query(id: int):
@@ -241,6 +190,7 @@ def requery_query(id: int):
     return redirect('/')
 
 
+# TODO: Move this action to the ticket controller
 @qc_database_blueprint.route('/modal_data/<int:ticket_id>')
 @login_required
 def modal_data(ticket_id: int):
@@ -252,6 +202,7 @@ def modal_data(ticket_id: int):
     return render_template('modal_data.html.j2', post=comments)
 
 
+# TODO: Move this action to the ticket controller
 @qc_database_blueprint.route('/info_modal/<int:query_id>')
 @login_required
 def info_modal(query_id: int):
@@ -264,11 +215,12 @@ def info_modal(query_id: int):
         [type]: [description]
     """
 
-    data_about_query = Ticket.query.filter_by(id=query_id).scalar()
+    data_about_query = Ticket.query.get(query_id)
 
     return render_template('modal_info.html.j2', post=data_about_query)
 
 
+# TODO: Move this action to the ticket controller
 @qc_database_blueprint.route('/close/<int:id>')
 @login_required
 def close_query(id: int):
@@ -287,57 +239,3 @@ def close_query(id: int):
     db.session.commit()
 
     return redirect('/')
-
-
-@qc_database_blueprint.route('/edit_data', methods=('GET', 'POST'))
-@register_breadcrumb(qc_database_blueprint, '.edit_data', '')
-@login_required
-def edit_data():
-    """edit the data finding
-
-    Returns:
-        [type]: [description]
-    """
-    # get the id of the query you want to edit
-    data_id = request.args.get('id', None)
-
-    study_list = Study.query.all()
-    data_old = Ticket.query.filter_by(id=data_id).first().__dict__
-    user_data = User.query.filter_by(role=ROLE_MEDOPS).all()
-
-    data_old["assignee"] = User.query.filter_by(id=data_old["assignee_id"]).scalar().abbreviation
-
-    if request.method == 'POST':
-
-        # get whole data as an dict
-        data = request.form.to_dict()
-
-        # !TEMP: Bug fix for the "source_number"
-        try:
-            data['source_number'] = int(data['source_number'])
-        except:
-            to_console.info("{} could not get transformed into an integer".format(data['source_number']))
-
-        for category, new_value in data.items():
-            # TODO: Temporary solution
-            if category == "assignee":
-                # compare the data from the DB with the from the request.form
-                new_value = User.query.filter_by(abbreviation=new_value).scalar().id
-
-            if (data_old[category] != data[category]):
-                # add the data to the audit trail
-                add_to_audit_trail(current_user.abbreviation, "edit", data_id, category,
-                            data_old[category], new_value)
-
-                # add new data to the data base
-                Ticket.query.filter_by(id=data_id).update({category: new_value})
-                # set the query status to 'open'
-                db.session.commit()
-
-        Ticket.query.filter_by(id=data_id).update({"is_corrected": False})
-
-        db.session.commit()
-
-        return redirect(url_for('qc_database_controller.index'))
-
-    return render_template('edit_data.html.j2', data=data_old, Users=user_data, study_list=study_list)
