@@ -6,9 +6,10 @@ from flask_breadcrumbs import Breadcrumbs
 from flask_login import LoginManager
 
 from .commands import database_cli, user_cli
-from .controller import auth_blueprint, qc_database_blueprint, users_module_blueprint
+from .controller import authentication_blueprint, user_blueprint, qc_database_blueprint, users_module_blueprint
 from .mail import mail
 from .model import db, migrate, User
+
 
 # Load logging configuration
 with open('config/logging.yaml', 'r') as stream:
@@ -43,7 +44,7 @@ def create_app():
 
     # Initialize the login manager
     login_manager = LoginManager()
-    login_manager.login_view = 'auth.login'
+    login_manager.login_view = 'authentication.login'
     login_manager.init_app(app)
 
     @login_manager.user_loader
@@ -52,7 +53,8 @@ def create_app():
         return User.query.get(int(user_id))
 
     # Register routing blueprints
-    app.register_blueprint(auth_blueprint)
+    app.register_blueprint(authentication_blueprint)
+    app.register_blueprint(user_blueprint)
     app.register_blueprint(qc_database_blueprint)
     app.register_blueprint(users_module_blueprint)
 
