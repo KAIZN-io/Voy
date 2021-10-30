@@ -206,7 +206,7 @@ def export_data():
     export_file_type = request.form.get('export-file-type')
 
     # Set and create export path
-    export_file_path = Path(current_app.root_path, EXPORT_FOLDER)
+    export_file_path = Path(current_app.root_path, '..', EXPORT_FOLDER)
     export_file_path.mkdir(parents=True, exist_ok=True)
 
     # prepare the data to get read by pandas dataframe
