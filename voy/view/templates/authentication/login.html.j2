@@ -10,7 +10,7 @@ Login
 <div class="column is-4 is-offset-4">
   <h3 class="title">Login</h3>
   <div class="box">
-    <form action="{{ url_for('authentication.login_post') }}" method="POST">
+    <form action="{{ url_for('authentication_controller.login_post') }}" method="POST">
       <div class="field">
         <div class="control">
           <input autofocus class="input is-large" name="user_abbreviation" placeholder="Your Abbreviation" required
@@ -24,7 +24,7 @@ Login
       </div>
       <br>
       <button class="btn btn-primary">Login</button>
-      <a href="{{ url_for('user.request_password_reset') }}">forgot my password</a>
+      <a href="{{ url_for('user_controller.request_password_reset') }}">forgot my password</a>
     </form>
   </div>
 </div>

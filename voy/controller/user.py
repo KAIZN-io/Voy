@@ -10,8 +10,9 @@ from voy.model import User, db
 from voy.services.user import try_password_reset
 from voy.utilities import is_list_empty
 
+
 # Create the Blueprint
-user_blueprint = Blueprint('user', __name__)
+user_blueprint = Blueprint('user_controller', __name__)
 default_breadcrumb_root(user_blueprint, '.')
 
 
@@ -96,4 +97,4 @@ def reset_password_post():
 
     flash('Password reset successful. Please log in with your new password.')
 
-    return redirect(url_for('authentication.login'))
+    return redirect(url_for('authentication_controller.login'))

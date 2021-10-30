@@ -14,7 +14,7 @@ from voy.constants import ROLE_ADMIN, ROLE_MEDOPS, ROLE_DATA_MANAGER, ROLE_DATA_
 to_user_file = logging.getLogger('to_user_file')
 
 # Create the Blueprint
-users_module_blueprint = Blueprint('users_module', __name__)
+users_module_blueprint = Blueprint('users_module_controller', __name__)
 default_breadcrumb_root(users_module_blueprint, '.')
 
 
@@ -35,7 +35,7 @@ def inactivate(id: int):
     User.query.filter_by(id=id).update({"is_active": False})
     db.session.commit()
 
-    return redirect(url_for('users_module.user_management'))
+    return redirect(url_for('users_module_controller.user_management'))
 
 
 @users_module_blueprint.route('/add_user')
@@ -60,7 +60,7 @@ def add_user_post():
 
     if user:
         flash('Email address already exists')
-        return redirect(url_for('users_module.add_user'))
+        return redirect(url_for('users_module_controller.add_user'))
 
     # create new user with the form data. Hash the password so plaintext version isn't saved.
     new_user = User(
@@ -92,4 +92,4 @@ def add_user_post():
 
     to_user_file.info(audit_data['change_by'], extra=audit_data)
 
-    return redirect(url_for('users_module.user_management'))
+    return redirect(url_for('users_module_controller.user_management'))

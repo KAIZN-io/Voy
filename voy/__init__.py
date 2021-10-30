@@ -44,7 +44,7 @@ def create_app():
 
     # Initialize the login manager
     login_manager = LoginManager()
-    login_manager.login_view = 'authentication.login'
+    login_manager.login_view = 'authentication_controller.login'
     login_manager.init_app(app)
 
     @login_manager.user_loader

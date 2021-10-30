@@ -8,7 +8,7 @@ from werkzeug.security import generate_password_hash
 
 
 # Create the Blueprint
-user_blueprint = Blueprint('user_cli', __name__)
+user_blueprint = Blueprint('user', __name__)
 
 
 @user_blueprint.cli.command('reset')

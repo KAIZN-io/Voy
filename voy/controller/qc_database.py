@@ -15,7 +15,7 @@ from voy.model import db
 from voy.constants import FILE_TYPE_PDF, FILE_TYPE_XLSX, ROLE_MEDOPS, SOURCE_TYPE_SOURCE, SOURCE_TYPE_ICF, EXPORT_FOLDER
 
 # Create the Blueprint
-qc_database_blueprint = Blueprint('qc_database', __name__)
+qc_database_blueprint = Blueprint('qc_database_controller', __name__)
 default_breadcrumb_root(qc_database_blueprint, '.')
 
 # Get loggers
@@ -49,7 +49,7 @@ def qc_planning():
     db.session.add(study)
     db.session.commit()
 
-    return redirect(url_for('qc_database.qc_planning'))
+    return redirect(url_for('qc_database_controller.qc_planning'))
 
 
 @qc_database_blueprint.route('/add_study', methods=['GET'])
@@ -114,7 +114,7 @@ def add_tickets():
         db.session.add(ticket)
 
     db.session.commit()
-    return redirect(url_for('qc_database.form_add_tickets'))
+    return redirect(url_for('qc_database_controller.form_add_tickets'))
 
 
 def get_queries_for_user(user: User) -> list:
@@ -378,6 +378,6 @@ def edit_data():
 
         db.session.commit()
 
-        return redirect(url_for('qc_database.index'))
+        return redirect(url_for('qc_database_controller.index'))
 
     return render_template('edit_data.html.j2', data=data_old, Users=user_data, study_list=study_list)
