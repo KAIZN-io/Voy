@@ -10,7 +10,7 @@ formatters:
     class: pythonjsonlogger.jsonlogger.JsonFormatter
     datefmt: "%d-%b-%Y %H:%M:%S"
   cro_user:
-    format: "[%(asctime)s] %(email)s %(abbrev)s %(role)s %(action)s %(change_by)s"
+    format: "[%(asctime)s] %(email)s %(abbreviation)s %(role)s %(action)s %(change_by)s"
     class: pythonjsonlogger.jsonlogger.JsonFormatter
     datefmt: "%d-%b-%Y %H:%M:%S"
 

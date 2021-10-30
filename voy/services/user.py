@@ -28,7 +28,7 @@ def try_password_reset(user_abbreviation: str, password_old: str, password_new: 
     errors = []
 
     # Filter the requested user
-    user_query = User.query.filter_by(abbrev=user_abbreviation)
+    user_query = User.query.filter_by(abbreviation=user_abbreviation)
     user = user_query.scalar()
 
     # Check if user exists
@@ -59,7 +59,7 @@ def try_password_reset(user_abbreviation: str, password_old: str, password_new: 
 
     user_query.update({
         "password": password_hash,
-        "is_system_passwd": False
+        "is_system_password": False
     })
 
     # Persist changes

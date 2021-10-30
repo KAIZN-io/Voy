@@ -10,7 +10,7 @@ to_qc_file = logging.getLogger('to_qc_file')
 
 
 def add_to_audit_trail(user, todo, id, category, old_value, new_value):
-    # user = current_user.abbrev
+    # user = current_user.abbreviation
 
     # the data in the model in form of a dict structure
     audit_data = QC_Audit(

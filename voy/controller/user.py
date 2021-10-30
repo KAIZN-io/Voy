@@ -20,14 +20,14 @@ default_breadcrumb_root(user_blueprint, '.')
 @register_breadcrumb(user_blueprint, '.profile', '')
 @login_required
 def profile():
-    return render_template('user/profile.html.j2', user_abbreviation=current_user.abbrev)
+    return render_template('user/profile.html.j2', user_abbreviation=current_user.abbreviation)
 
 
 @user_blueprint.route('/profile', methods=['POST'])
 @login_required
 def profile_post():
     errors = try_password_reset(
-        user_abbreviation=current_user.abbrev,
+        user_abbreviation=current_user.abbreviation,
         password_old=request.form.get('password_old'),
         password_new=request.form.get('password_new'),
         password_new_repetition=request.form.get('password_new_repetition')
@@ -50,7 +50,7 @@ def request_password_reset_post():
     user_abbreviation = request.form.get('user_abbreviation')
 
     # filter the requested user
-    user_query = User.query.filter_by(abbrev=user_abbreviation)
+    user_query = User.query.filter_by(abbreviation=user_abbreviation)
     user = user_query.scalar()
 
     if user:
@@ -67,7 +67,7 @@ def request_password_reset_post():
         # commit the new system password to the database
         user_query.update({
             "password": password_new_hash,
-            "is_system_passwd": True
+            "is_system_password": True
         })
 
         db.session.commit()

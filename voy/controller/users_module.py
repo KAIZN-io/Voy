@@ -64,10 +64,10 @@ def add_user_post():
     # create new user with the form data. Hash the password so plaintext version isn't saved.
     new_user = User(
         email=email,
-        abbrev=abbreviation,
+        abbreviation=abbreviation,
         role=role,
         password=generate_password_hash(password, method='sha256'),
-        is_system_passwd=True,
+        is_system_password=True,
         is_active=True
     )
 
@@ -78,9 +78,9 @@ def add_user_post():
     # add the change to the user_management db
     user_management = User_Management(
         email=email,
-        abbrev=abbreviation,
+        abbreviation=abbreviation,
         role=role,
-        change_by=current_user.abbrev,
+        change_by=current_user.abbreviation,
         action="added"
     )
 

@@ -35,12 +35,12 @@ block content %} {% if current_user.is_authenticated %}
     {% else %}
     <td>
       <span class="badge badge-success"> Active </span>
-      {% if user.is_system_passwd == true%}
+      {% if user.is_system_password == true%}
       <span class="badge badge-danger"> sPasswd </span>
       {% endif %}
     </td>
     {% endif %}
-    <td>{{ user.abbrev }}</td>
+    <td>{{ user.abbreviation }}</td>
     <td>{{ user.role }}</td>
     <td>
     {% if user.is_active == true%}
@@ -75,12 +75,12 @@ block content %} {% if current_user.is_authenticated %}
     {% else %}
     <td>
       <span class="badge badge-success"> Active </span>
-      {% if user.is_system_passwd == true%}
+      {% if user.is_system_password == true%}
       <span class="badge badge-danger"> sPasswd </span>
       {% endif %}
     </td>
     {% endif %}
-    <td>{{ user.abbrev }}</td>
+    <td>{{ user.abbreviation }}</td>
     <td>{{ user.role }}</td>
     <td>
       {% if user.is_active == true%}

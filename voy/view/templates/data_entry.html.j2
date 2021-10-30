@@ -45,9 +45,9 @@ Data Entry
     </div>
 
     <div class="form-group col-md-2">
-      <label for="scr_no">Scr No</label>
-      <input class="form-control" name="scr_no" required
-             type="number" min="0" max="99999999" value="{{ request.form['scr_no'] }}"></input>
+      <label for="source_number">Scr No</label>
+      <input class="form-control" name="source_number" required
+             type="number" min="0" max="99999999" value="{{ request.form['source_number'] }}"></input>
     </div>
   </div>
   <br>
@@ -106,7 +106,7 @@ Data Entry
             {% for user in staff_list_medops %}
               <option value="{{ user.id }}">
                 <!-- if user is not active yet, display it -->
-                {{ user.abbrev }} {% if not user.is_active %} (inactive) {% endif %}
+                {{ user.abbreviation }} {% if not user.is_active %} (inactive) {% endif %}
               </option>
             {% endfor %}
 

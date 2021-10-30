@@ -21,7 +21,7 @@ def login_post():
     user_abbreviation = request.form.get('user_abbreviation')
     user_password = request.form.get('user_password')
 
-    user = User.query.filter_by(abbrev=user_abbreviation).scalar()
+    user = User.query.filter_by(abbreviation=user_abbreviation).scalar()
 
     # Check whether any user or this username exits at all
     if not user:
@@ -41,7 +41,7 @@ def login_post():
         return redirect(url_for('authentication_controller.login'))
 
     # Case 3: the user is active but his user_password is a system user_password
-    if user.is_system_passwd:
+    if user.is_system_password:
         return redirect(url_for('user_controller.reset_password'))
 
     # If all the checks pass, then we can login the user.

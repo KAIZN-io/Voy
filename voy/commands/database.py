@@ -37,10 +37,10 @@ def init():
     # create new user with the form data. Hash the password so plaintext version isn't saved.
     user_new = User(
         email=admin_email,
-        abbrev=admin_abbreviation,
+        abbreviation=admin_abbreviation,
         role=ROLE_ADMIN,
         password=generate_password_hash(admin_password, method='sha256'),
-        is_system_passwd=False,
+        is_system_password=False,
         is_active=True
     )
 
@@ -51,7 +51,7 @@ def init():
     # add the change to the user_management db
     user_management = User_Management(
         email=admin_email,
-        abbrev=admin_abbreviation,
+        abbreviation=admin_abbreviation,
         role=ROLE_ADMIN,
         change_by="Initial Signup",
         action="added"

@@ -11,6 +11,6 @@ class QC_Requery(TimeStampMixin, db.Model):
     query_id = db.Column(db.Integer)
 
     # TODO: Relate to user here
-    abbrev = db.Column(db.Text)
+    abbreviation = db.Column(db.Text)
 
     new_comment = db.Column(db.Text)

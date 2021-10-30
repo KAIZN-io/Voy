@@ -41,12 +41,12 @@ Edit Data
     </div>
 
     <div class="form-group col-md-2">
-      <label for="scr_no">Scr No</label>
+      <label for="source_number">Scr No</label>
       <div class="form-group">
-        <input class="form-control" name="scr_no"
+        <input class="form-control" name="source_number"
                required
                type="number" min="0" max="99999999"
-               value="{{ data.scr_no }}">
+               value="{{ data.source_number }}">
       </div>
     </div>
     <table class="table" data-ticket-table id="data_entry_table" novalidate>
@@ -106,7 +106,7 @@ Edit Data
               <option disabled="disabled">----</option>
 
               {% for user in Users %}
-              <option value="{{ user.abbrev }}">{{ user.abbrev }}</option>
+              <option value="{{ user.abbreviation }}">{{ user.abbreviation }}</option>
               {% endfor %}
             </select>
           </div>

@@ -84,7 +84,7 @@ def add_tickets():
     study_id = int(request.form['study_id'])
     study = Study.query.filter_by(id=study_id).scalar()
     source_type = request.form['type']
-    study_subject_id = request.form['scr_no']
+    study_subject_id = request.form['source_number']
 
     # data under the header data
     finding_visit = request.form.getlist('row[][visit]')
@@ -100,7 +100,7 @@ def add_tickets():
         ticket = Ticket(
             study=study,
             type=source_type,
-            scr_no=study_subject_id,
+            source_number=study_subject_id,
 
             visit=finding_visit[i],
             page=finding_page[i],
@@ -165,8 +165,8 @@ def index():
     user_queries = get_queries_for_user(current_user)
 
     # query all user and the corresponding roles
-    user_qc_requery = QC_Requery.query.with_entities(QC_Requery.query_id, QC_Requery.abbrev).all()
-    user_data = User.query.with_entities(User.abbrev, User.role).all()
+    user_qc_requery = QC_Requery.query.with_entities(QC_Requery.query_id, QC_Requery.abbreviation).all()
+    user_data = User.query.with_entities(User.abbreviation, User.role).all()
     user_data = (dict(user_data))
     user_qc_requery = dict(user_qc_requery)
 
@@ -182,7 +182,7 @@ def index():
             data_id = request.form['query_id']
 
             data_comment_new = QC_Requery(
-                abbrev=current_user.abbrev,
+                abbreviation=current_user.abbreviation,
                 new_comment=data_comment_new,
                 query_id=data_id
             )
@@ -200,7 +200,7 @@ def index():
 @qc_database_blueprint.route('/export-data', methods=['POST'])
 @login_required
 def export_data():
-    export_file_name = "Queries_{}_{}".format(current_user.abbrev, datetime.now().strftime("%Y-%m-%d_%H-%M-%S"))
+    export_file_name = "Queries_{}_{}".format(current_user.abbreviation, datetime.now().strftime("%Y-%m-%d_%H-%M-%S"))
 
     # get the requestesd file format
     export_file_type = request.form.get('export-file-type')
@@ -223,12 +223,12 @@ def export_data():
         else:
             return "Unsupported file type."
 
-        to_console.info("{} downloaded the query table as a {} file".format(current_user.abbrev, export_file_type))
+        to_console.info("{} downloaded the query table as a {} file".format(current_user.abbreviation, export_file_type))
 
     except Exception as e:
         to_console.info(e)
         to_console.info("The query table for {} could not get transformed into a {} file".format(
-                current_user.abbrev, export_file_type))
+                current_user.abbreviation, export_file_type))
 
         return "Error generating download file."
 
@@ -345,28 +345,28 @@ def edit_data():
     data_old = Ticket.query.filter_by(id=data_id).first().__dict__
     user_data = User.query.filter_by(role=ROLE_MEDOPS).all()
 
-    data_old["assignee"] = User.query.filter_by(id=data_old["assignee_id"]).scalar().abbrev
+    data_old["assignee"] = User.query.filter_by(id=data_old["assignee_id"]).scalar().abbreviation
 
     if request.method == 'POST':
 
         # get whole data as an dict
         data = request.form.to_dict()
 
-        # !TEMP: Bug fix for the "scr_no"
+        # !TEMP: Bug fix for the "source_number"
         try:
-            data['scr_no'] = int(data['scr_no'])
+            data['source_number'] = int(data['source_number'])
         except:
-            to_console.info("{} could not get transformed into an integer".format(data['scr_no']))
+            to_console.info("{} could not get transformed into an integer".format(data['source_number']))
 
         for category, new_value in data.items():
             # TODO: Temporary solution
             if category == "assignee":
                 # compare the data from the DB with the from the request.form
-                new_value = User.query.filter_by(abbrev=new_value).scalar().id
+                new_value = User.query.filter_by(abbreviation=new_value).scalar().id
 
             if (data_old[category] != data[category]):
                 # add the data to the audit trail
-                add_to_audit_trail(current_user.abbrev, "edit", data_id, category,
+                add_to_audit_trail(current_user.abbreviation, "edit", data_id, category,
                             data_old[category], new_value)
 
                 # add new data to the data base

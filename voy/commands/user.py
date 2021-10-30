@@ -18,7 +18,7 @@ def reset(user_abbreviation):
     """Reset a password of an user"""
 
     # filter the requested user
-    user = User.query.filter_by(abbrev=user_abbreviation).scalar()
+    user = User.query.filter_by(abbreviation=user_abbreviation).scalar()
 
     if not user:
         click.echo()
@@ -32,8 +32,8 @@ def reset(user_abbreviation):
     password_new_hash = generate_password_hash(password_new, method='sha256')
 
     # commit the new system password to the database
-    User.query.filter_by(abbrev=user_abbreviation).update(
-        {"password": password_new_hash, "is_system_passwd": True})
+    User.query.filter_by(abbreviation=user_abbreviation).update(
+        {"password": password_new_hash, "is_system_password": True})
     db.session.commit()
 
     click.echo()

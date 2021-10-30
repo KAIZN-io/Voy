@@ -17,18 +17,18 @@ class Ticket(TimeStampMixin, db.Model):
     reporter_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     reporter = db.relationship('User', back_populates='reported_tickets', foreign_keys='Ticket.reporter_id')
 
+    assignee_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    assignee = db.relationship('User', back_populates='assigned_tickets', foreign_keys='Ticket.assignee_id')
+
     study_id = db.Column(db.Integer, db.ForeignKey('study.id'))
     study = db.relationship('Study', back_populates='tickets')
 
-    scr_no = db.Column(db.Integer)
+    source_number = db.Column(db.Integer)
     type = db.Column(db.Text)
     visit = db.Column(db.Text)
     page = db.Column(db.Text)
     procedure = db.Column(db.Text)
     description = db.Column(db.Text)
-
-    assignee_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    assignee = db.relationship('User', back_populates='assigned_tickets', foreign_keys='Ticket.assignee_id')
 
     is_corrected = db.Column(db.Boolean, default=False, nullable=False)
     is_closed = db.Column(db.Boolean, default=False, nullable=False)
