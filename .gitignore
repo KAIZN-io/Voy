@@ -10,7 +10,7 @@
 /docker-compose.yml
 /.dockerignore
 
-# Sensible files
+# Sensitive files
 *.log
 *.sqlite
 *.sql
