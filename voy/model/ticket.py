@@ -5,8 +5,7 @@ from voy.model.mixins import TimeStampMixin
 # Tag relationship
 db.Table('ticket_tag_mapping', db.Model.metadata,
     db.Column('ticket_id', db.ForeignKey('ticket.id'), primary_key=True),
-    db.Column('ticket_tag_id', db.ForeignKey('ticket_tag.id'), primary_key=True)
-    )
+    db.Column('ticket_tag_id', db.ForeignKey('ticket_tag.id'), primary_key=True))
 
 
 class Ticket(TimeStampMixin, db.Model):
@@ -32,6 +31,8 @@ class Ticket(TimeStampMixin, db.Model):
 
     is_corrected = db.Column(db.Boolean, default=False, nullable=False)
     is_closed = db.Column(db.Boolean, default=False, nullable=False)
+
+    comments = db.relationship('TicketComment', back_populates='ticket')
 
     tags = db.relationship(
         'TicketTag',

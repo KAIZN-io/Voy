@@ -10,7 +10,7 @@ from sqlalchemy import inspect
 
 from voy.compliance.ema import add_to_audit_trail
 from voy.services.file_export import exportDictAsExcel, exportDictAsPdf
-from voy.model import Ticket, User, QC_Requery, Study
+from voy.model import Ticket, User, TicketComment, Study
 from voy.model import db
 from voy.constants import FILE_TYPE_PDF, FILE_TYPE_XLSX, ROLE_MEDOPS, SOURCE_TYPE_SOURCE, SOURCE_TYPE_ICF, EXPORT_FOLDER
 
@@ -165,7 +165,7 @@ def index():
     user_queries = get_queries_for_user(current_user)
 
     # query all user and the corresponding roles
-    user_qc_requery = QC_Requery.query.with_entities(QC_Requery.query_id, QC_Requery.abbreviation).all()
+    user_qc_requery = TicketComment.query.with_entities(TicketComment.ticket_id, TicketComment.commenter_id).all()
     user_data = User.query.with_entities(User.abbreviation, User.role).all()
     user_data = (dict(user_data))
     user_qc_requery = dict(user_qc_requery)
@@ -274,22 +274,15 @@ def requery_query(id: int):
     return redirect('/')
 
 
-@qc_database_blueprint.route('/modal_data/<int:query_id>')
+@qc_database_blueprint.route('/modal_data/<int:ticket_id>')
 @login_required
-def modal_data(query_id: int):
+def modal_data(ticket_id: int):
     """query the comment to the data finding
-
-    Args:
-        query_id ([type]): [description]
-
-    Returns:
-        [type]: [description]
     """
 
-    data_comment = db.session.query(QC_Requery).filter_by(
-        query_id=query_id).order_by(QC_Requery.id.desc()).first()
+    comments = Ticket.query.get(ticket_id).comments.order_by(TicketComment.created_at.desc())
 
-    return render_template('modal_data.html.j2', post=data_comment)
+    return render_template('modal_data.html.j2', post=comments)
 
 
 @qc_database_blueprint.route('/info_modal/<int:query_id>')

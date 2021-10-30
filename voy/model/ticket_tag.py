@@ -2,7 +2,6 @@ from voy.model import db
 from voy.model.mixins import TimeStampMixin
 
 
-
 class TicketTag(TimeStampMixin, db.Model):
     """Modelling tags to be used for adding information to tickets."""
 
