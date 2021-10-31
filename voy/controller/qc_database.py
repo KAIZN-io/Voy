@@ -148,48 +148,6 @@ def export_data():
 
     return send_file(path_output, as_attachment=True)
 
-
-# TODO: Move this action to the ticket controller
-@qc_database_blueprint.route('/delete/<int:id>')
-@login_required
-def delete(id: int):
-    """MedOps says that the data finding is corrected
-
-    Args:
-        id ([type]): [description]
-
-    Returns:
-        [type]: [description]
-    """
-
-    # give your anwser to DM
-    Ticket.query.filter_by(id=id).update({"is_corrected": True})
-
-    db.session.commit()
-
-    return redirect('/')
-
-
-# TODO: Move this action to the ticket controller
-@qc_database_blueprint.route('/requery/<int:id>')
-@login_required
-def requery_query(id: int):
-    """requery the row from the table of the QC Check model
-
-    Args:
-        id ([type]): [description]
-
-    Returns:
-        [type]: [description]
-    """
-
-    Ticket.query.filter_by(id=id).update({"is_corrected": False})
-
-    db.session.commit()
-
-    return redirect('/')
-
-
 # TODO: Move this action to the ticket controller
 @qc_database_blueprint.route('/modal_data/<int:ticket_id>')
 @login_required
@@ -218,24 +176,3 @@ def info_modal(query_id: int):
     data_about_query = Ticket.query.get(query_id)
 
     return render_template('modal_info.html.j2', post=data_about_query)
-
-
-# TODO: Move this action to the ticket controller
-@qc_database_blueprint.route('/close/<int:id>')
-@login_required
-def close_query(id: int):
-    """close the data finding
-
-    Args:
-        id ([type]): [description]
-
-    Returns:
-        [type]: [description]
-    """
-
-    Ticket.query.filter_by(id=id).update({"is_closed": True})
-
-
-    db.session.commit()
-
-    return redirect('/')

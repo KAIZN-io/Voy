@@ -117,3 +117,29 @@ def edit_post(ticket_id: int):
     flash('Query updated successfully.')
 
     return redirect(url_for('qc_database_controller.index'))
+
+
+# TODO: Make this a POST request; With a GET request it is too easy to just close tickets by their id. Also in terms of
+# HTTP lingo, a GET request is only meant to get something. A POST is to modify.
+@ticket_blueprint.route('/tickets/<int:ticket_id>/mark-as-corrected', methods=['GET'])
+@login_required
+def mark_as_corrected(ticket_id: int):
+
+    Ticket.query.get(ticket_id).is_corrected = True
+
+    db.session.commit()
+
+    return redirect(url_for('qc_database_controller.index'))
+
+
+# TODO: Make this a POST request; With a GET request it is too easy to just close tickets by their id. Also in terms of
+# HTTP lingo, a GET request is only meant to get something. A POST is to modify.
+@ticket_blueprint.route('/tickets/<int:ticket_id>/close', methods=['GET'])
+@login_required
+def close(ticket_id: int):
+
+    Ticket.query.get(ticket_id).is_closed = True
+
+    db.session.commit()
+
+    return redirect(url_for('qc_database_controller.index'))

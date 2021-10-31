@@ -141,7 +141,7 @@
       {% endif %}
 
       {% if current_user.role == "MedOps" %}
-        <a href="{{ url_for( 'qc_database_controller.delete', id=post.id ) }}">
+        <a href="{{ url_for( 'ticket_controller.mark_as_corrected', ticket_id=post.id ) }}">
           <i class="fas fa-check"></i>
         </a>
       {% endif %}
@@ -151,7 +151,7 @@
         <a href="{{ url_for( 'ticket_controller.edit', ticket_id=post.id ) }}" style="color: black;">
           <i class="far fa-edit"></i>
         </a>
-        <a href="{{ url_for( 'qc_database_controller.close_query', id=post.id ) }}" style="color: black;">
+        <a href="{{ url_for( 'ticket_controller.close', ticket_id=post.id ) }}" style="color: black;">
           <i class="fas fa-check"></i>
         </a>
       {% endif %}
