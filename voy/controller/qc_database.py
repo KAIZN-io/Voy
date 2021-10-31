@@ -77,7 +77,7 @@ def index():
 def export_data():
     export_file_name = "Queries_{}_{}".format(current_user.abbreviation, datetime.now().strftime("%Y-%m-%d_%H-%M-%S"))
 
-    # get the requestesd file format
+    # get the requested file format
     export_file_type = request.form.get('export-file-type')
 
     # Set and create export path
