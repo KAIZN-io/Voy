@@ -1,6 +1,5 @@
-from voy import User
 from voy.constants import ROLE_MEDOPS
-from voy.model import Ticket
+from voy.model import Ticket, User
 
 
 def get_tickets_for_user(user: User, as_dict: bool = False) -> list:
