@@ -9,46 +9,52 @@ from voy.model import db
 from voy.model import User, User_Management
 from voy.constants import ROLE_ADMIN, ROLE_MEDOPS, ROLE_DATA_MANAGER, ROLE_DATA_ENTRY
 
+
 # Get loggers
 to_user_file = logging.getLogger('to_user_file')
 
+
 # Create the Blueprint
-users_module_blueprint = Blueprint('users_module_controller', __name__)
-default_breadcrumb_root(users_module_blueprint, '.')
+user_blueprint = Blueprint('user_controller', __name__)
+default_breadcrumb_root(user_blueprint, '.')
 
 
-@users_module_blueprint.route('/user_management')
+@user_blueprint.route('/users', methods=['GET'])
 @login_required
-@register_breadcrumb(users_module_blueprint, '.user_management', '')
-def user_management():
+@register_breadcrumb(user_blueprint, '.index', '')
+def index():
+
     # filter all user except for the admin
-    users_data = User.query.filter(User.role != ROLE_ADMIN).all()
+    user_list = User.query.filter(User.role != ROLE_ADMIN).all()
 
-    return render_template('user_management.html.j2', Users=users_data)
+    return render_template('user/index.html.j2', user_list=user_list)
 
 
-@users_module_blueprint.route('/inactivate/<int:id>')
+# TODO: Make this a POST request; With a GET request it is too easy to just close tickets by their id. Also in terms of
+# HTTP lingo, a GET request is only meant to get something. A POST is to modify.
+@user_blueprint.route('/users/<int:user_id>/deactivate', methods=['GET'])
 @login_required
-def inactivate(id: int):
-    # change the active state to "False"
-    User.query.filter_by(id=id).update({"is_active": False})
+def deactivate(user_id: int):
+    User.query.get(user_id).is_active = False
+
     db.session.commit()
 
-    return redirect(url_for('users_module_controller.user_management'))
+    return redirect(url_for('user_controller.index'))
 
 
-@users_module_blueprint.route('/add_user')
+@user_blueprint.route('/users/new', methods=['GET'])
 @login_required
-@register_breadcrumb(users_module_blueprint, '.user_management.add_user', '')
-def add_user():
+@register_breadcrumb(user_blueprint, '.new', '')
+def new():
     # define the job roles
     roles = [ROLE_MEDOPS, ROLE_DATA_MANAGER, ROLE_DATA_ENTRY]
-    return render_template('add_user.html.j2', Roles=roles)
+    return render_template('user/new.html.j2', Roles=roles)
 
 
-@users_module_blueprint.route('/add_user', methods=['POST'])
+@user_blueprint.route('/users/new', methods=['POST'])
 @login_required
-def add_user_post():
+def new_post():
+
     email = request.form.get('email')
     password = request.form.get('password')
     abbreviation = request.form.get('abbreviation')
@@ -59,7 +65,7 @@ def add_user_post():
 
     if user:
         flash('Email address already exists')
-        return redirect(url_for('users_module_controller.add_user'))
+        return redirect(url_for('user_controller.new'))
 
     # create new user with the form data. Hash the password so plaintext version isn't saved.
     new_user = User(
@@ -91,4 +97,4 @@ def add_user_post():
 
     to_user_file.info(audit_data['change_by'], extra=audit_data)
 
-    return redirect(url_for('users_module_controller.user_management'))
+    return redirect(url_for('user_controller.index'))

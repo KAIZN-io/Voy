@@ -9,7 +9,9 @@ block content %} {% if current_user.is_authenticated %}
 </div>
 <h1 class="title">User Management</h1>
 
-<button class="btn btn-primary" onclick="location.href='/add_user'" style="float: left;" type="button">add User</button>
+<a class="btn btn-primary" href="{{ url_for('user_controller.new') }}" style="float: left;">
+  add User
+</a>
 <br/>
 <br/>
 
@@ -25,18 +27,18 @@ block content %} {% if current_user.is_authenticated %}
   </thead>
   <tbody>
 
-  {% for user in Users %}
+  {% for user in user_list %}
   {% if user.role == "MedOps" %}
 
   <tr>
-    {% if user.is_active == false%}
+    {% if user.is_active == false %}
     <td>
       <span class="badge badge-danger"> Inactive </span>
     </td>
     {% else %}
     <td>
       <span class="badge badge-success"> Active </span>
-      {% if user.is_system_password == true%}
+      {% if user.is_system_password == true %}
       <span class="badge badge-danger"> sPasswd </span>
       {% endif %}
     </td>
@@ -44,8 +46,8 @@ block content %} {% if current_user.is_authenticated %}
     <td>{{ user.abbreviation }}</td>
     <td>{{ user.role }}</td>
     <td>
-    {% if user.is_active == true%}
-      <a href="/inactivate/{{user.id}}">inactivate</a>
+    {% if user.is_active %}
+      <a href="{{ url_for('user_controller.deactivate', user_id=user.id) }}">inactivate</a>
     {% endif %}
     </td>
 
@@ -66,7 +68,7 @@ block content %} {% if current_user.is_authenticated %}
   </tr>
   </thead>
   <tbody>
-  {% for user in Users %}
+  {% for user in user_list %}
   {% if (user.role == "Data Entry" or user.role == "Data Manager") %}
   <tr>
     {% if user.is_active == false%}
@@ -84,9 +86,9 @@ block content %} {% if current_user.is_authenticated %}
     <td>{{ user.abbreviation }}</td>
     <td>{{ user.role }}</td>
     <td>
-      {% if user.is_active == true%}
-      <a href="/inactivate/{{user.id}}">inactivate</a>
-      {% endif %}
+    {% if user.is_active %}
+      <a href="{{ url_for('user_controller.deactivate', user_id=user.id) }}">inactivate</a>
+    {% endif %}
 
     </td>
   </tr>

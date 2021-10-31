@@ -13,7 +13,7 @@ content %}
     {% with messages = get_flashed_messages() %} {% if messages %}
     <div class="alert alert-success">{{ messages[0] }}</div>
     {% endif %} {% endwith %}
-    <form action="/add_user" method="POST">
+    <form action="{{ url_for('user_controller.new_post') }}" method="POST">
       <div class="field">
         <div class="control">
           <input
@@ -67,7 +67,7 @@ content %}
         submit
       </button>
     </form>
-    <a href="{{ url_for('users_module_controller.user_management')}}">abort</a>
+    <a href="{{ url_for('user_controller.index')}}">abort</a>
   </div>
 </div>
 {% endblock %}

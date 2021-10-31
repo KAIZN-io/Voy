@@ -64,7 +64,7 @@
         {% endif %}
         {% if (current_user.is_authenticated) and (current_user.role == 'Admin' or current_user.role == 'Data Manager')
         %}
-        <a class="dropdown-item" href="{{ url_for('users_module_controller.user_management') }}">
+        <a class="dropdown-item" href="{{ url_for('user_controller.index') }}">
           User Management
         </a>
         {% endif %}

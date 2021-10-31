@@ -17,7 +17,7 @@ ticket_comment_blueprint = Blueprint('ticket_comment_controller', __name__)
 default_breadcrumb_root(ticket_comment_blueprint, '.')
 
 
-@ticket_comment_blueprint.route('/tickets/<int:ticket_id>/comments/modal-content')
+@ticket_comment_blueprint.route('/tickets/<int:ticket_id>/comments/modal-content', methods=['GET'])
 @login_required
 def modal_content(ticket_id: int):
     return render_template('ticket/comment/modal-content.html.j2',
