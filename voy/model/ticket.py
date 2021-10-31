@@ -32,7 +32,9 @@ class Ticket(TimeStampMixin, db.Model):
     is_corrected = db.Column(db.Boolean, default=False, nullable=False)
     is_closed = db.Column(db.Boolean, default=False, nullable=False)
 
-    comments = db.relationship('TicketComment', back_populates='ticket')
+    comments = db.relationship('TicketComment',
+                               back_populates='ticket',
+                               lazy='dynamic')
 
     tags = db.relationship(
         'TicketTag',

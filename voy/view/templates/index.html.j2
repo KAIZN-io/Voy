@@ -50,8 +50,7 @@
   </thead>
 
   <tbody>
-  {% for post in user_queries %}
-
+  {% for post in user_tickets %}
   <tr>
     <td>
       {% if post.prioritized == true%}
@@ -111,34 +110,14 @@
     <td>{{ post.description }}</td>
     <td>{{ post.created_at.humanize() }}</td>
     <td>
-      {% if post.id|string not in user_requery%}
       <a
-        data-id="{{post.id}}"
-        data-target="#requery_Modal"
+        data-ticket-id="{{ post.id }}"
+        data-target="#modal_ticket_comment"
         data-toggle="modal"
         href="#"
         style="color: grey;">
         <i class="far fa-comments"></i>
       </a>
-      {% elif current_user.role == user_requery[post.id|string]%}
-      <a
-        data-id="{{post.id}}"
-        data-target="#requery_Modal"
-        data-toggle="modal"
-        href="#"
-        style="color: green;">
-        <i class="far fa-comments"></i>
-      </a>
-      {% else %}
-      <a
-        data-id="{{post.id}}"
-        data-target="#requery_Modal"
-        data-toggle="modal"
-        href="#"
-        style="color: red;">
-        <i class="far fa-comments"></i>
-      </a>
-      {% endif %}
 
       {% if current_user.role == "MedOps" %}
         <a href="{{ url_for( 'ticket_controller.mark_as_corrected', ticket_id=post.id ) }}">
@@ -155,85 +134,62 @@
           <i class="fas fa-check"></i>
         </a>
       {% endif %}
-
-      <div
-        aria-hidden="true"
-        aria-labelledby="requery_ModalLabel"
-        class="modal fade"
-        id="requery_Modal"
-        role="dialog" >
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-
-            <div class="modal-header">
-              <h5 class="modal-title" id="requery_ModalLabel">Requery Dialog</h5>
-              <button aria-label="Close" class="close" data-dismiss="modal" type="button">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-
-            <!-- for the case, whether old comments are available -->
-            <div class="modal-body_1">
-            </div>
-
-            <div class="modal-body">
-              <form method="post">
-
-                <input
-                  type="text"
-                  class="form-control"
-                  name="query_id"
-                  readonly
-                  value="{{ request.form['query_id'] }}" />
-
-                <input
-                  type="text"
-                  class="form-control"
-                  name="comment"
-                  placeholder="your comment"
-                  required
-                  value="{{ request.form['comment'] }}" />
-
-                <div class="modal-footer">
-                  <button class="btn btn-secondary" data-dismiss="modal" type="button">
-                    Close
-                  </button>
-                  <button class="btn btn-primary" name="button" type="submit" value="send_requery">
-                    Send message
-                  </button>
-                </div>
-
-              </form>
-            </div>
-
-          </div>
-        </div>
-      </div>
-      <div
-        aria-hidden="true"
-        aria-labelledby="info_ModalLabel"
-        class="modal fade"
-        id="info_Modal"
-        role="dialog" >
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-
-            <div class="modal-header">
-              <h5 class="modal-title" id="info_ModalLabel">Info Dialog</h5>
-              <button aria-label="Close" class="close" data-dismiss="modal" type="button">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body_2">
-            </div>
-          </div>
-        </div>
-      </div>
     </td>
   </tr>
   {% endfor %}
   </tbody>
 </table>
+
+<!-- Ticket Comment Modal -->
+<div
+  class="modal fade"
+  id="modal_ticket_comment">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+
+        <h5 class="modal-title">
+          Requery Dialog
+        </h5>
+
+        <button class="close" data-dismiss="modal" type="button">
+          <span>&times;</span>
+        </button>
+
+      </div>
+
+      <!-- filled by JS -->
+      <div class="modal-body modal-comment-body">
+        <div class="d-flex align-center">
+          <div class="spinner-border mx-auto" role="status"></div>
+        </div>
+      </div>
+
+
+      <form method="post">
+        <div class="modal-body">
+          <textarea
+            class="form-control"
+            name="content"
+            required></textarea>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-dismiss="modal" type="button">
+            Close
+          </button>
+          <button class="btn btn-primary" name="button" type="submit">
+            Add Comment
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>
+
 
 <form method="post" action="{{ url_for('qc_database_controller.export_data') }}" targe="_blank">
   <div class="form-group" style="display: flex; justify-content: flex-end">
@@ -241,7 +197,7 @@
     <label>
       Download Queries as :
       <select name="export-file-type" width="300px">
-        {% for value, label  in export_file_types.items() %}
+        {% for value, label  in available_export_file_types.items() %}
           <option required value="{{ value }}">
             {{ label }}
           </option>
@@ -260,5 +216,5 @@
 {% endblock %}
 
 {% block js %}
-<script src="{{ url_for('static', filename='bundle/index.js', v='1.0.117') }}" type="text/javascript"></script>
+  <script src="{{ url_for('static', filename='bundle/index.js', v='1.0.117') }}" type="text/javascript"></script>
 {% endblock %}
