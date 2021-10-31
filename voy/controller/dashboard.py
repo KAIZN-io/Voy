@@ -15,12 +15,12 @@ to_console = logging.getLogger('to_console')
 
 
 # Create the Blueprint
-qc_database_blueprint = Blueprint('qc_database_controller', __name__)
-default_breadcrumb_root(qc_database_blueprint, '.')
+dashboard_blueprint = Blueprint('dashboard_controller', __name__)
+default_breadcrumb_root(dashboard_blueprint, '.')
 
 
-@qc_database_blueprint.route('/', methods=['GET'])
-@register_breadcrumb(qc_database_blueprint, '.', 'QC-DB')
+@dashboard_blueprint.route('/', methods=['GET'])
+@register_breadcrumb(dashboard_blueprint, '.', 'QC-DB')
 @login_required
 def index():
     available_export_file_types = {
@@ -28,12 +28,12 @@ def index():
         FILE_TYPE_PDF:  'PDF (.pdf)',
     }
 
-    return render_template('index.html.j2',
+    return render_template('dashboard/index.html.j2',
                            user_tickets=get_tickets_for_user(current_user),
                            available_export_file_types=available_export_file_types)
 
 
-@qc_database_blueprint.route('/export-data', methods=['POST'])
+@dashboard_blueprint.route('/export-data', methods=['POST'])
 @login_required
 def export_data():
 

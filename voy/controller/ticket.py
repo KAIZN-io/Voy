@@ -116,7 +116,7 @@ def edit_post(ticket_id: int):
 
     flash('Query updated successfully.')
 
-    return redirect(url_for('qc_database_controller.index'))
+    return redirect(url_for('dashboard_controller.index'))
 
 
 # TODO: Make this a POST request; With a GET request it is too easy to just close tickets by their id. Also in terms of
@@ -129,7 +129,7 @@ def mark_as_corrected(ticket_id: int):
 
     db.session.commit()
 
-    return redirect(url_for('qc_database_controller.index'))
+    return redirect(url_for('dashboard_controller.index'))
 
 
 # TODO: Make this a POST request; With a GET request it is too easy to just close tickets by their id. Also in terms of
@@ -142,4 +142,4 @@ def close(ticket_id: int):
 
     db.session.commit()
 
-    return redirect(url_for('qc_database_controller.index'))
+    return redirect(url_for('dashboard_controller.index'))

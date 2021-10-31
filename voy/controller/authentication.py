@@ -49,7 +49,7 @@ def login_post():
 
     session.permanent = True
 
-    return redirect(url_for('qc_database_controller.index'))
+    return redirect(url_for('dashboard_controller.index'))
 
 
 @authentication_blueprint.route('/logout')

@@ -36,4 +36,4 @@ def new_post(ticket_id: int):
     db.session.add(comment_new)
     db.session.commit()
 
-    return redirect(url_for('qc_database_controller.index'))
+    return redirect(url_for('dashboard_controller.index'))

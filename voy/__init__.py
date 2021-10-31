@@ -6,7 +6,7 @@ from flask_breadcrumbs import Breadcrumbs
 from flask_login import LoginManager
 
 from .commands import database_cli, user_cli
-from .controller import authentication_blueprint, profile_blueprint, qc_database_blueprint, user_blueprint, \
+from .controller import authentication_blueprint, profile_blueprint, dashboard_blueprint, user_blueprint, \
     study_blueprint, ticket_blueprint, ticket_comment_blueprint
 from .mail import mail
 from .model import db, migrate, User
@@ -55,12 +55,12 @@ def create_app():
 
     # Register routing blueprints
     app.register_blueprint(authentication_blueprint)
+    app.register_blueprint(dashboard_blueprint)
     app.register_blueprint(profile_blueprint)
     app.register_blueprint(study_blueprint)
     app.register_blueprint(ticket_blueprint)
     app.register_blueprint(ticket_comment_blueprint)
     app.register_blueprint(user_blueprint)
-    app.register_blueprint(qc_database_blueprint)
 
     # Register CLI blueprints
     app.register_blueprint(database_cli)
