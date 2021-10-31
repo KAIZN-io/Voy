@@ -1,42 +1,53 @@
 import os
+from pathlib import Path
 
-import pandas as pd
 import pdfkit
+from pandas import DataFrame
+
+from voy.constants import FILE_TYPE_PDF, FILE_TYPE_XLSX
 
 
-def exportDictAsPdf(query_as_dict: dict = {}, file_name: str = '', path: str = '.') -> str:
+def export_dict_list(dict_list: list, file_path: Path, file_name: str, file_type: str) -> str:
+    # Make sure the output path exists
+    file_path.mkdir(parents=True, exist_ok=True)
+
+    # Convert the dict list to a Pandas Data Frame
+    dict_list_data_frame = DataFrame(dict_list)
+
+    if file_type == FILE_TYPE_PDF:
+        return export_data_frame_as_pdf(dict_list_data_frame, file_path, file_name)
+    elif file_type == FILE_TYPE_XLSX:
+        return export_data_frame_as_excel(dict_list_data_frame, file_path, file_name)
+    else:
+        raise ValueError('Unsupported file type.')
+
+
+def export_data_frame_as_pdf(data_frame: DataFrame, file_path: Path, file_name: str) -> str:
+    """ Converts a list of Tickets to a PDF
     """
-    Convertes a dictionary to a PDF
-    """
 
-    path_tmp    = os.path.join(path, "{}.html".format(file_name))
-    path_output = os.path.join(path, "{}.pdf".format(file_name))
+    # Generate the temporary and output path
+    path_tmp = os.path.join(file_path, "{}.html".format(file_name))
+    path_output = os.path.join(file_path, "{}.pdf".format(file_name))
 
-    # read the query data to the dataframe
-    query_DataFrame = pd.DataFrame(query_as_dict)
-
-    # query_DataFrame.to_html("/server/.log_files/query_DataFrame.html")
-    query_DataFrame.to_html(path_tmp)
-
-    # convert the html file into pdf with wkhtmltopdf
+    # Convert the DataFrame to HTML and then render the HTML to a PDF.
+    data_frame.to_html(path_tmp)
     pdfkit.from_file(path_tmp, path_output)
 
-    # Clean up
+    # Clean up; Remove the temporary HTML file.
     os.remove(path_tmp)
 
     return path_output
 
 
-def exportDictAsExcel(query_as_dict: dict = {}, file_name: str = '', path: str = '.') -> str:
+def export_data_frame_as_excel(data_frame: DataFrame, file_path: Path, file_name: str) -> str:
+    """ Converts a list of Tickets to an Excel file
     """
-    Convertes a dictionary to an Excel file
-    """
 
-    path_output = os.path.join(path, "{}.xlsx".format(file_name))
+    # Generate the output path
+    path_output = os.path.join(file_path, "{}.xlsx".format(file_name))
 
-    # read the query data to the dataframe
-    query_DataFrame = pd.DataFrame(query_as_dict)
-
-    query_DataFrame.to_excel(path_output)
+    # Convert the DataFrame to an Excel file
+    data_frame.to_excel(path_output)
 
     return path_output

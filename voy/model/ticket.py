@@ -1,3 +1,5 @@
+from sqlalchemy import inspect
+
 from voy.model import db
 from voy.model.mixins import TimeStampMixin
 
@@ -40,3 +42,22 @@ class Ticket(TimeStampMixin, db.Model):
         'TicketTag',
         secondary='ticket_tag_mapping',
         back_populates='tickets')
+
+    def to_dict(self):
+        """transform the query results to a dict
+        """
+
+        return {column.key: getattr(self, column.key)
+                for column in inspect(self).mapper.column_attrs}
+
+    def to_export_dict(self):
+        """transform the query results to a human readable dict
+        """
+
+        export_dict = self.to_dict()
+
+        # TODO: Set correct timezone here.
+        export_dict['created_at'] = export_dict['created_at'].format('YYYY-MM-DD HH:mm:ss')
+        export_dict['updated_at'] = export_dict['updated_at'].format('YYYY-MM-DD HH:mm:ss')
+
+        return export_dict
