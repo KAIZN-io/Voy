@@ -140,55 +140,9 @@
   </tbody>
 </table>
 
+
 <!-- Ticket Comment Modal -->
-<div
-  class="modal fade"
-  id="modal_ticket_comment">
-  <div class="modal-dialog">
-    <div class="modal-content">
-
-      <div class="modal-header">
-
-        <h5 class="modal-title">
-          Requery Dialog
-        </h5>
-
-        <button class="close" data-dismiss="modal" type="button">
-          <span>&times;</span>
-        </button>
-
-      </div>
-
-      <!-- filled by JS -->
-      <div class="modal-body modal-comment-body">
-        <div class="d-flex align-center">
-          <div class="spinner-border mx-auto" role="status"></div>
-        </div>
-      </div>
-
-
-      <form method="post">
-        <div class="modal-body">
-          <textarea
-            class="form-control"
-            name="content"
-            required></textarea>
-        </div>
-
-        <div class="modal-footer">
-          <button class="btn btn-secondary" data-dismiss="modal" type="button">
-            Close
-          </button>
-          <button class="btn btn-primary" name="button" type="submit">
-            Add Comment
-          </button>
-        </div>
-
-      </form>
-
-    </div>
-  </div>
-</div>
+{% include "ticket/comment/modal.html.j2" %}
 
 
 <form method="post" action="{{ url_for('qc_database_controller.export_data') }}" targe="_blank">
