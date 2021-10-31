@@ -42,7 +42,7 @@ def login_post():
 
     # Case 3: the user is active but his user_password is a system user_password
     if user.is_system_password:
-        return redirect(url_for('user_controller.reset_password'))
+        return redirect(url_for('profile_controller.reset_password'))
 
     # If all the checks pass, then we can login the user.
     login_user(user)
