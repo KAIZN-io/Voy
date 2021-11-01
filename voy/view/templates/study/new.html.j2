@@ -1,0 +1,40 @@
+{% extends 'layout.html.j2' %} {% block title %} QC Planning {% endblock %} {% block
+content %}
+<div>
+  {%- for breadcrumb in breadcrumbs -%}
+  <a href="{{ breadcrumb.url }}">{{ breadcrumb.text }}</a>
+  {{ '/' if not loop.last }} {%- endfor -%}
+</div>
+
+<div class="column is-4 is-offset-4">
+  <h1>New study:</h1>
+
+
+  <div class="box">
+    {% with messages = get_flashed_messages() %} {% if messages %}
+    <div class="alert alert-success">{{ messages[0] }}</div>
+    {% endif %} {% endwith %}
+    <form action="{{ url_for('study_controller.new_post') }}" method="POST">
+      <div class="field">
+        <div class="control">
+          <input
+            autofocus=""
+            class="input is-large"
+            name="internal_id"
+            placeholder="Study Number"
+            required
+            minlength="6"
+            maxlength="6"
+            type="number"
+          />
+        </div>
+      </div>
+      <br>
+      <button class="btn btn-primary">
+        submit
+      </button>
+    </form>
+    <a href="{{ url_for('study_controller.new')}}">abort</a>
+  </div>
+</div>
+{% endblock %}

@@ -23,9 +23,9 @@ class User(UserMixin, TimeStampMixin, db.Model):
 
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(100))
-    is_system_passwd = db.Column(db.Boolean, default=False, nullable=False,)
+    is_system_password = db.Column(db.Boolean, default=False, nullable=False,)
 
-    abbrev = db.Column(db.String(5), unique=True)
+    abbreviation = db.Column(db.String(5), unique=True)
     role = db.Column(db.Text)
 
     is_active = db.Column(db.Boolean, default=False, nullable=False)

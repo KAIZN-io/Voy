@@ -1,0 +1,13 @@
+{% for comment in ticket.comments %}
+  <blockquote class="blockquote">
+
+    <p class="mb-0">
+      {{ comment.content }}
+    </p>
+
+    <footer class="blockquote-footer">
+      {{ comment.commenter.abbreviation }}, {{ comment.created_at.humanize() }}
+    </footer>
+
+  </blockquote>
+{% endfor %}

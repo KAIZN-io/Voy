@@ -1,20 +1,22 @@
-import logging
 import logging.config
+
 import yaml
 from flask import Flask
-from flask_breadcrumbs import Breadcrumbs, register_breadcrumb
+from flask_breadcrumbs import Breadcrumbs
 from flask_login import LoginManager
-from flask_sqlalchemy import SQLAlchemy
 
-from .controller import auth_blueprint, qc_database_blueprint, users_module_blueprint
 from .commands import database_cli, user_cli
-from .model import db, migrate, User
+from .controller import authentication_blueprint, profile_blueprint, dashboard_blueprint, user_blueprint, \
+    study_blueprint, ticket_blueprint, ticket_comment_blueprint
 from .mail import mail
+from .model import db, migrate, User
+
 
 # Load logging configuration
 with open('config/logging.yaml', 'r') as stream:
     yamld = yaml.safe_load(stream)
     logging.config.dictConfig(yamld)
+
 
 def create_app():
     # Create the app
@@ -43,7 +45,7 @@ def create_app():
 
     # Initialize the login manager
     login_manager = LoginManager()
-    login_manager.login_view = 'auth.login'
+    login_manager.login_view = 'authentication_controller.login'
     login_manager.init_app(app)
 
     @login_manager.user_loader
@@ -52,9 +54,13 @@ def create_app():
         return User.query.get(int(user_id))
 
     # Register routing blueprints
-    app.register_blueprint(auth_blueprint)
-    app.register_blueprint(qc_database_blueprint)
-    app.register_blueprint(users_module_blueprint)
+    app.register_blueprint(authentication_blueprint)
+    app.register_blueprint(dashboard_blueprint)
+    app.register_blueprint(profile_blueprint)
+    app.register_blueprint(study_blueprint)
+    app.register_blueprint(ticket_blueprint)
+    app.register_blueprint(ticket_comment_blueprint)
+    app.register_blueprint(user_blueprint)
 
     # Register CLI blueprints
     app.register_blueprint(database_cli)

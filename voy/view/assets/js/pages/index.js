@@ -4,37 +4,45 @@ import TableFilter from 'tablefilter';
 /**
  * Code for handling the modal of the data table
  */
-$('#requery_Modal').on('show.bs.modal', function (event) {
-  let button   = $(event.relatedTarget) // Button that triggered the modal
-  let query_id = button.data('id') // Extract info from data-* attributes
-  let $modal   = $(this);
-  let $title   = $modal.find('.modal-title');
-  let $content = $modal.find('.modal-body_1');
+$('#modal_ticket_comment').on('show.bs.modal', function (event) {
+  const button      = $(event.relatedTarget)
+  const ticket_id   = button.data('ticket-id')
 
-  // Set query id as value
-  $modal.find('input[name="query_id"]').val(query_id);
+  const $modal          = $(this);
+  const $title          = $modal.find('.modal-title');
+  const $content        = $modal.find('.modal-comment-body');
 
+  const $addCommentForm         = $modal.find('form');
+  console.log($addCommentForm);
+  const $addCommentFormTextarea = $addCommentForm.find('textarea');
+  const $addCommentFormSubmit   = $addCommentForm.find('button[type="submit"]');
+
+  //
+  // Reset the form
   // Update the modal Title
-  $title.text(`Requery Dialog | Query ID: ${query_id}`);
+  $title.text(`Requery Dialog | Query ID: ${ticket_id}`);
+  // Display loading indicator
+  $content.html('<div class="d-flex align-center"><div class="spinner-border mx-auto" role="status"></div></div>');
+  // Update the form action
+  $addCommentForm.attr('action', `/tickets/${ticket_id}/comments/new`);
+  // Clear textarea
+  $addCommentFormTextarea.val('');
+  // Disable inputs
+  $addCommentFormTextarea.attr('disabled', true);
+  $addCommentFormSubmit.attr('disabled', true);
 
-  // AJAX request -> load data for the modal
- $.get(`/modal_data/${query_id}`)
-    // and push it into the modal
-    .done(data => $content.html(data));
-})
+  //
+  // Load the data for the modal
+  $.get(`/tickets/${ticket_id}/comments/modal-content`)
+    .done(data => {
+      // Put the loaded html into the modal
+      $content.html(data);
 
-// get more infos about this query
-$('#info_Modal').on('show.bs.modal', function (event) {
-  let button   = $(event.relatedTarget) // Button that triggered the modal
-  let query_id = button.data('id') // Extract info from data-* attributes
-  let $modal   = $(this);
-  let $content = $modal.find('.modal-body_2');
-
-  // AJAX request -> load data for the modal
-  $.get(`/info_modal/${query_id}`)
-    // and push it into the modal
-    .done(data => $content.html(data));
-})
+      // Enable inputs
+      $addCommentFormTextarea.attr('disabled', false);
+      $addCommentFormSubmit.attr('disabled', false);
+    });
+});
 
 
 /**

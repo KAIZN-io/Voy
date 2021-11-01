@@ -1,0 +1,100 @@
+<!-- TODO: move this into the user controller and folder -->
+{% extends 'layout.html.j2' %} {% block title %} User Managment {% endblock %} {%
+block content %} {% if current_user.is_authenticated %}
+<div>
+  {%- for breadcrumb in breadcrumbs -%}
+  <a href="{{ breadcrumb.url }}">{{ breadcrumb.text }}</a>
+  {{ '/' if not loop.last }}
+  {%- endfor -%}
+</div>
+<h1 class="title">User Management</h1>
+
+<a class="btn btn-primary" href="{{ url_for('user_controller.new') }}" style="float: left;">
+  add User
+</a>
+<br/>
+<br/>
+
+<h4>MedOps</h4>
+<table class="table table-hover">
+  <thead class="thead-light">
+  <tr>
+    <th scope="col">Status</th>
+    <th scope="col">User</th>
+    <th scope="col">Role</th>
+    <th scope="col">Inactivate</th>
+  </tr>
+  </thead>
+  <tbody>
+
+  {% for user in user_list %}
+  {% if user.role == "MedOps" %}
+
+  <tr>
+    {% if user.is_active == false %}
+    <td>
+      <span class="badge badge-danger"> Inactive </span>
+    </td>
+    {% else %}
+    <td>
+      <span class="badge badge-success"> Active </span>
+      {% if user.is_system_password == true %}
+      <span class="badge badge-danger"> sPasswd </span>
+      {% endif %}
+    </td>
+    {% endif %}
+    <td>{{ user.abbreviation }}</td>
+    <td>{{ user.role }}</td>
+    <td>
+    {% if user.is_active %}
+      <a href="{{ url_for('user_controller.deactivate', user_id=user.id) }}">inactivate</a>
+    {% endif %}
+    </td>
+
+  </tr>
+  {% endif %}
+  {% endfor %}
+  </tbody>
+</table>
+<br>
+<h4>DM</h4>
+<table class="table table-hover">
+  <thead class="thead-light">
+  <tr>
+    <th scope="col">Status</th>
+    <th scope="col">User</th>
+    <th scope="col">Role</th>
+    <th scope="col">Inactivate</th>
+  </tr>
+  </thead>
+  <tbody>
+  {% for user in user_list %}
+  {% if (user.role == "Data Entry" or user.role == "Data Manager") %}
+  <tr>
+    {% if user.is_active == false%}
+    <td>
+      <span class="badge badge-danger"> Inactive </span>
+    </td>
+    {% else %}
+    <td>
+      <span class="badge badge-success"> Active </span>
+      {% if user.is_system_password == true%}
+      <span class="badge badge-danger"> sPasswd </span>
+      {% endif %}
+    </td>
+    {% endif %}
+    <td>{{ user.abbreviation }}</td>
+    <td>{{ user.role }}</td>
+    <td>
+    {% if user.is_active %}
+      <a href="{{ url_for('user_controller.deactivate', user_id=user.id) }}">inactivate</a>
+    {% endif %}
+
+    </td>
+  </tr>
+  {% endif %}
+  {% endfor %}
+  </tbody>
+</table>
+
+{% endif %} {% endblock %}

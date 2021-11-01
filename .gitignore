@@ -10,7 +10,7 @@
 /docker-compose.yml
 /.dockerignore
 
-# Sensible files
+# Sensitive files
 *.log
 *.sqlite
 *.sql
@@ -23,8 +23,7 @@ env/
 env*
 !/migrations/env.py
 ofelia.ini
-/voy/controller/query_downloads/*
-!/voy/controller/query_downloads/readme.md
+/data-exports
 
 # Build, Test and Cache files
 *,cover

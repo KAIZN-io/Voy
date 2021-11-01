@@ -6,18 +6,17 @@ from flask.cli import with_appcontext
 from werkzeug.security import generate_password_hash
 
 from voy.constants import ROLE_ADMIN
-from voy.controller.Compliance_Computerized_Systems_EMA import time_stamp
 from voy.model import db, User, User_Management
-from voy.model.utils import is_database_empty
+from voy.model.utilities import is_database_empty
 
 # Get loggers
 to_user_file = logging.getLogger('to_user_file')
 
 # Create the Blueprint
-database = Blueprint('database', __name__)
+database_blueprint = Blueprint('database', __name__)
 
 
-@database.cli.command('init')
+@database_blueprint.cli.command('init')
 @with_appcontext
 def init():
     """ Initialize the database with the basic table structure and creates an admin user """
@@ -38,10 +37,10 @@ def init():
     # create new user with the form data. Hash the password so plaintext version isn't saved.
     user_new = User(
         email=admin_email,
-        abbrev=admin_abbreviation,
+        abbreviation=admin_abbreviation,
         role=ROLE_ADMIN,
         password=generate_password_hash(admin_password, method='sha256'),
-        is_system_passwd=False,
+        is_system_password=False,
         is_active=True
     )
 
@@ -52,7 +51,7 @@ def init():
     # add the change to the user_management db
     user_management = User_Management(
         email=admin_email,
-        abbrev=admin_abbreviation,
+        abbreviation=admin_abbreviation,
         role=ROLE_ADMIN,
         change_by="Initial Signup",
         action="added"
@@ -68,7 +67,7 @@ def init():
     click.echo("Initialized the database.")
 
 
-@database.cli.command('clear')
+@database_blueprint.cli.command('clear')
 @with_appcontext
 def clear():
     """ Clears all data from the database """

@@ -22,7 +22,7 @@ env/
 env*
 !/migrations/env.py
 ofelia.ini
-/voy/controller/query_downloads/*
+/data-exports
 
 # Build, Test and Cache files
 *,cover

@@ -3,35 +3,41 @@ from flask import Blueprint
 from flask.cli import with_appcontext
 from voy.model import db
 from voy.model import User
-from voy.controller.Compliance_Computerized_Systems_EMA import passwd_generator
+from voy.compliance.ema import generate_password
 from werkzeug.security import generate_password_hash
 
-user = Blueprint('user', __name__)
 
-@user.cli.command('reset')
+# Create the Blueprint
+user_blueprint = Blueprint('user', __name__)
+
+
+@user_blueprint.cli.command('reset')
 @click.argument('user_abbreviation')
 @with_appcontext
 def reset(user_abbreviation):
     """Reset a password of an user"""
 
     # filter the requested user
-    user = User.query.filter_by(abbrev=user_abbreviation).first()
+    user = User.query.filter_by(abbreviation=user_abbreviation).scalar()
 
-    if user:
-        # generate a system password with the lenght of 10 and hash it
-        new_passwd = passwd_generator(size=10)
+    if not user:
+        click.echo()
+        click.echo("Error!")
+        click.echo("A user with the abbreviation of \"{}\" does not exist.".format(user_abbreviation))
+        click.echo()
+        return
 
-        new_passwd_hash = generate_password_hash(new_passwd, method='sha256')
+    # generate a system password with the lenght of 10 and hash it
+    password_new = generate_password(size=10)
+    password_new_hash = generate_password_hash(password_new, method='sha256')
 
-        # commit the new system password to the database
-        User.query.filter_by(abbrev=user_abbreviation).update(
-            {"password": new_passwd_hash, "is_system_passwd": True})
-        db.session.commit()
+    # commit the new system password to the database
+    User.query.filter_by(abbreviation=user_abbreviation).update(
+        {"password": password_new_hash, "is_system_password": True})
+    db.session.commit()
 
-        click.echo("Reset the password of the user {}".format(user_abbreviation))
-        # print the new password
-        click.echo("The new password is : {}".format(new_passwd))
-
-    else:
-        click.echo("A user with the abbreviation of {} does not exist".format(user_abbreviation))
-
+    click.echo()
+    click.echo("Success.")
+    click.echo("Password for user \"{}\" was reset.".format(user_abbreviation))
+    click.echo("New password: {}".format(password_new))
+    click.echo()
