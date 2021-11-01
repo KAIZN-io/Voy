@@ -7,6 +7,7 @@ def get_tickets_for_user(user: User, as_dict: bool = False) -> list:
 
     Args:
         user (User): The user to get the queries for.
+        as_dict (bool): Whether the data should be SQL-Alchemy native or a simple dict.
 
     Returns:
         [type]: A list of queries for the user.
