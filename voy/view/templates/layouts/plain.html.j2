@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
+
+  <title>{% block title %}{% endblock %} - Voy</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='bundle/main.css', v='1.0.0') }}" />
+
+</head>
+
+<body class="{% block body_class %}{% endblock %}">
+
+{% if self.header() %}
+  <header>
+    {% block header %}{% endblock %}
+  </header>
+{% endif %}
+
+<main>
+  {% block main %}{% endblock %}
+</main>
+
+<footer class="footer py-5">
+
+  {% block footer %}
+    <div class="content has-text-right mb-0 is-size-7">
+      <p>
+        <strong>Voy</strong> by <a href="https://kaizn.io">KAIZN</a>.The source code is licensed
+        <a href="http://www.apache.org/licenses/">Apache License Version 2.0</a>.
+      </p>
+    </div>
+  {% endblock %}
+
+  <script src="{{ url_for('static', filename='bundle/main.js', v='1.0.0') }}" type="text/javascript"></script>
+  {% block js %}{% endblock %}
+
+</footer>
+
+</body>
+</html>
+
