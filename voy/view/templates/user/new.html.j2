@@ -1,10 +1,11 @@
-{% extends 'layout.html.j2' %} {% block title %} Create Users {% endblock %} {% block
-content %}
-<div>
-  {%- for breadcrumb in breadcrumbs -%}
-  <a href="{{ breadcrumb.url }}">{{ breadcrumb.text }}</a>
-  {{ '/' if not loop.last }} {%- endfor -%}
-</div>
+{% extends 'layout.html.j2' %}
+
+{% block title %} Create Users {% endblock %}
+
+{% block content %}
+
+{% include "utils/_breadcrumbs.html.j2" %}
+
 <div class="column is-4 is-offset-4">
   <h1 class="title">Create Users</h1>
 

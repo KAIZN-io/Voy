@@ -3,12 +3,9 @@
 {% block title %}Data Entry{% endblock %}
 
 {% block content %}
-<div>
-  {%- for breadcrumb in breadcrumbs -%}
-  <a href="{{ breadcrumb.url }}">{{ breadcrumb.text }}</a>
-  {{ '/' if not loop.last }}
-  {%- endfor -%}
-</div>
+
+{% include "utils/_breadcrumbs.html.j2" %}
+
 <h1>Data Entry</h1>
 
 <form class="needs-validation" method="post" novalidate action="{{ url_for('ticket_controller.new_post') }}">

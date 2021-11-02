@@ -6,12 +6,7 @@
 
 {% if current_user.is_authenticated %}
 
-<div>
-  {%- for breadcrumb in breadcrumbs -%}
-  <a href="{{ breadcrumb.url }}">{{ breadcrumb.text }}</a>
-  {{ '/' if not loop.last }}
-  {%- endfor -%}
-</div>
+{% from "./utils/_errors.html.j2" import render_errors %}
 
 <h1 class="title">
   QUERIES

@@ -5,12 +5,9 @@ Edit Data
 {% endblock %}
 
 {% block content %}
-<div>
-  {%- for breadcrumb in breadcrumbs -%}
-  <a href="{{ breadcrumb.url }}">{{ breadcrumb.text }}</a>
-  {{ '/' if not loop.last }}
-  {%- endfor -%}
-</div>
+
+{% include "utils/_breadcrumbs.html.j2" %}
+
 <h1>Edit Data</h1>
 
 <form class="needs-validation" method="post" novalidate>

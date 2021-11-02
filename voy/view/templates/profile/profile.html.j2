@@ -1,20 +1,13 @@
-<!-- templates/profile.html -->
-
 {% from "./utils/_errors.html.j2" import render_errors %}
 
 {% extends 'layout.html.j2' %}
 
-{% block title %}
-Mein Profile
-{% endblock %}
+{% block title %}Mein Profile{% endblock %}
 
 {% block content %}
-<div>
-  {%- for breadcrumb in breadcrumbs -%}
-  <a href="{{ breadcrumb.url }}">{{ breadcrumb.text }}</a>
-  {{ '/' if not loop.last }}
-  {%- endfor -%}
-</div>
+
+{% include "utils/_breadcrumbs.html.j2" %}
+
 <h1 class="title">
   Welcome, {{ name }}!
 </h1>
