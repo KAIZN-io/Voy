@@ -6,7 +6,11 @@
 
   <title>{% block title %}{% endblock %} - Voy</title>
 
-  <link rel="stylesheet" href="{{ url_for('static', filename='bundle/main.css', v='1.0.0') }}" />
+  {% block main_styles %}
+      <link rel="stylesheet" href="{{ url_for('static', filename='bundle/main.css', v='1.0.0') }}" />
+  {% endblock %}
+
+  {% block styles %}{% endblock %}
 
 </head>
 
@@ -33,10 +37,13 @@
     </div>
   {% endblock %}
 
-  <script src="{{ url_for('static', filename='bundle/main.js', v='1.0.0') }}" type="text/javascript"></script>
-  {% block js %}{% endblock %}
-
 </footer>
+
+{% block main_scripts %}
+  <script src="{{ url_for('static', filename='bundle/main.js', v='1.0.0') }}" type="text/javascript"></script>
+{% endblock %}
+
+{% block scripts %}{% endblock %}
 
 </body>
 </html>

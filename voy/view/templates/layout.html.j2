@@ -6,7 +6,11 @@
 
   <title>{% block title %} {% endblock %}</title>
 
-  <link rel="stylesheet" href="{{ url_for('static', filename='bundle/main.css', v='1.0.0') }}" />
+  {% block main_styles %}
+      <link rel="stylesheet" href="{{ url_for('static', filename='bundle/main.css', v='1.0.0') }}" />
+  {% endblock %}
+
+  {% block styles %}{% endblock %}
 
 </head>
 
@@ -90,10 +94,12 @@
   {% block content %} {% endblock %}
 </div>
 
-<script src="{{ url_for('static', filename='bundle/main.js', v='1.0.0') }}" type="text/javascript"></script>
+{% block main_scripts %}
+  <script src="{{ url_for('static', filename='bundle/main.js', v='1.0.0') }}" type="text/javascript"></script>
+{% endblock %}
 
+{% block scripts %}{% endblock %}
 
-{% block js %} {% endblock %}
 <nav class="navbar fixed-bottom navbar-light padding-top bg-light">
   <a class="navbar-brand" href="#"></a>
 </nav>
