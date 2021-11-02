@@ -8,7 +8,13 @@
 
 
 {% block main %}
-  <div class="is-flex is-align-items-center is-justify-content-center h-full">
+  <div class="is-flex is-flex-direction-column is-align-items-center is-justify-content-center h-full">
+
+    {% if get_flashed_messages() %}
+      <div class="login-prompt mb-5">
+        {% include "utils/_flash-bulma.html.j2" %}
+      </div>
+    {% endif %}
 
     <div class="login-prompt box">
 
