@@ -1,0 +1,29 @@
+@import 'bulma/bulma.sass';
+@import "@fortawesome/fontawesome-free/css/all.css";
+
+// Template styles
+@import "../../templates/authentication/login.html.scss";
+
+
+html, body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1 1 auto;
+}
+
+footer {
+  flex: 0 0 auto;
+
+}
+
+// Helper
+.h-full {
+  height: 100%;
+}

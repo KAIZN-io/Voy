@@ -1,0 +1,13 @@
+.page-login {
+  background-color: $info;
+}
+
+.login-prompt {
+  width: 26rem;
+
+  &__input {
+    &--abbreviation {
+      text-transform: uppercase;
+    }
+  }
+}

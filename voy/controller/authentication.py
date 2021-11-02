@@ -62,6 +62,6 @@ def logout():
     """
     logout_user()
 
-    flash("See you! You logged out successfully.")
+    flash('You logged out successfully. See you!', 'success')
 
     return redirect(url_for('authentication_controller.login'))

@@ -1,31 +1,64 @@
-<!-- templates/login.html -->
+{% extends "layout-plain-bulma.html.j2" %}
 
-{% extends 'layout.html.j2' %}
 
-{% block title %}
-Login
-{% endblock %}
+{% block title %}Login{% endblock %}
 
-{% block content %}
-<div class="column is-4 is-offset-4">
-  <h3 class="title">Login</h3>
-  <div class="box">
-    <form action="{{ url_for('authentication_controller.login_post') }}" method="POST">
-      <div class="field">
-        <div class="control">
-          <input autofocus class="input is-large" name="user_abbreviation" placeholder="Your Abbreviation" required
-                 type="text">
-        </div>
+
+{% block body_class %}page-login{% endblock %}
+
+
+{% block main %}
+  <div class="is-flex is-flex-direction-column is-align-items-center is-justify-content-center h-full">
+
+    {% if get_flashed_messages() %}
+      <div class="login-prompt mb-5">
+        {% include "utils/_flash-bulma.html.j2" %}
       </div>
-      <div class="field">
-        <div class="control">
-          <input class="input is-large" name="user_password" placeholder="Your Password" required type="password">
+    {% endif %}
+
+    <div class="login-prompt box">
+
+      <h1 class="title">
+        Voy Login
+      </h1>
+
+      <form action="/login" method="POST">
+
+        <div class="field mb-5">
+          <label class="label">
+            Your Abbreviation
+          </label>
+          <div class="control">
+            <input type="text" class="login-prompt__input--abbreviation input is-medium" name="user_abbreviation" placeholder="XMP" autofocus="autofocus" required />
+          </div>
         </div>
-      </div>
-      <br>
-      <button class="btn btn-primary">Login</button>
-      <a href="{{ url_for('profile_controller.request_password_reset') }}">forgot my password</a>
-    </form>
+
+        <div class="field mb-5">
+          <label class="label">
+            Your Password
+          </label>
+          <div class="control">
+            <input type="password" class="input is-medium" name="user_password" required />
+          </div>
+        </div>
+
+        <div class="field mb-5">
+          <div class="control">
+            <button class="button is-primary is-medium">Login</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="control has-text-right">
+            <a href="/forgot_passwd">I forgot my password</a>
+          </div>
+        </div>
+
+      </form>
+
+    </div>
+
   </div>
+
 </div>
 {% endblock %}
