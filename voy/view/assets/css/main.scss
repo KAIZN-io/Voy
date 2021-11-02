@@ -1,27 +1,2 @@
-// @import "bootstrap/dist/css/bootstrap.css";
+@import "bootstrap/dist/css/bootstrap.css";
 @import "@fortawesome/fontawesome-free/css/all.css";
-@import "bulma";
-@import "../../templates/pages/login.html.scss";
-
-html, body {
-  height: 100%;
-}
-
-body {
-  display: flex;
-  flex-direction: column;
-}
-
-main {
-  flex: 1 1 auto;
-}
-
-footer {
-  flex: 0 0 auto;
-
-}
-
-// Helper
-.h-full {
-  height: 100%;
-}

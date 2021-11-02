@@ -1,0 +1,9 @@
+{% extends 'layout-plain.html.j2' %}
+
+{% block main_styles %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='bundle/main-bulma.css', v='1.0.0') }}" />
+{% endblock %}
+
+{% block main_scripts %}
+  <script src="{{ url_for('static', filename='bundle/main-bulma.js', v='1.0.0') }}" type="text/javascript"></script>
+{% endblock %}
