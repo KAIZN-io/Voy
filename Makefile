@@ -76,3 +76,13 @@ db-snapshot:
 .PHONY: db-restore
 db-restore:
 	docker-compose exec -T db psql --username=$(DB_USERNAME) --dbname=$(DB_NAME) < ./backups/snapshot.sql
+
+
+########################################################################################################################
+# PRODUCTION                                                                                                             #
+########################################################################################################################
+
+# Starts the production setup
+.PHONY: start-production
+start-production:
+	docker-compose -f docker-compose.production.yaml up -d
