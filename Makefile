@@ -83,6 +83,12 @@ db-restore:
 ########################################################################################################################
 
 # Starts the production setup
+.PHONY: init-production
+init-production:
+	docker-compose -f docker-compose.production.yml up -d
+	docker-compose -f docker-compose.production.yml exec voy voy database init
+
+# Starts the production setup
 .PHONY: start-production
 start-production:
 	docker-compose -f docker-compose.production.yml up -d
