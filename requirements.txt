@@ -16,7 +16,7 @@ Jinja2==2.11.3
 Mako==1.1.5
 MarkupSafe==2.0.1
 numpy==1.21.2
-openpyxl==3.0.8
+openpyxl==3.0.9
 pandas==1.2.5
 pdfkit==0.6.1
 psycopg2==2.8.6
