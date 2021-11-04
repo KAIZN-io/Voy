@@ -68,7 +68,6 @@ services:
     image: project-p/voy
     build:
       context: .
-    command: ["flask", "run", "--host=0.0.0.0"]
     environment:
       - DB_HOST
       - DB_PORT

@@ -46,6 +46,7 @@ RUN apt-get -y install --no-install-recommends build-essential libpq-dev
 
 # Install and build packages
 COPY requirements.txt setup.py ./
+RUN pip --use-feature=in-tree-build wheel gunicorn --wheel-dir=./wheels
 RUN pip --use-feature=in-tree-build wheel -r requirements.txt --wheel-dir=./wheels
 
 
@@ -68,7 +69,8 @@ RUN apt-get update && \
 COPY --from=packages $VOY_HOME ./
 
 # Install prepared dependencies and Voy
-RUN pip install --no-cache-dir --no-index --find-links=./wheels -r requirements.txt && \
+RUN pip install --no-cache-dir --no-index --find-links=./wheels gunicorn && \
+    pip install --no-cache-dir --no-index --find-links=./wheels -r requirements.txt && \
     pip install --no-cache-dir --no-index --find-links=./wheels -e .
 
 # Copy over the bundled assets from the previous build step
