@@ -23,6 +23,7 @@ env*
 !/migrations/env.py
 ofelia.ini
 /data-exports
+/.letsencrypt
 
 # Build, Test and Cache files
 *,cover
