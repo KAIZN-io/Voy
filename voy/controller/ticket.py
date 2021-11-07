@@ -7,7 +7,7 @@ from flask_breadcrumbs import register_breadcrumb, default_breadcrumb_root
 from flask_login import login_required, current_user
 
 from voy.compliance.ema import add_to_audit_trail
-from voy.constants import ROLE_MEDOPS, AVAILABLE_SOURCE_TYPES
+from voy.constants import ROLE_MEDOPS, AVAILABLE_SOURCE_TYPES, FLASH_TYPE_SUCCESS
 from voy.model import Ticket, User, Study
 from voy.model import db
 
@@ -68,7 +68,7 @@ def new_post():
 
     db.session.commit()
 
-    flash('Queries created successfully.')
+    flash('Queries created successfully.', FLASH_TYPE_SUCCESS)
 
     # Stay on the page so that the user can add more tickets.
     return redirect(url_for('ticket_controller.new'))
@@ -114,7 +114,7 @@ def edit_post(ticket_id: int):
 
     db.session.commit()
 
-    flash('Query updated successfully.')
+    flash('Query updated successfully.', FLASH_TYPE_SUCCESS)
 
     return redirect(url_for('dashboard_controller.index'))
 

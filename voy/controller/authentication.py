@@ -1,8 +1,9 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash, session
 from flask_breadcrumbs import default_breadcrumb_root
-from flask_login import login_user, login_required, logout_user
+from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.security import check_password_hash
 
+from voy.constants import FLASH_TYPE_ERROR, FLASH_TYPE_WARNING, FLASH_TYPE_SUCCESS
 from voy.model import User
 
 
@@ -29,19 +30,19 @@ def login_post():
 
     # Check whether any user or this username exits at all
     if not user:
-        flash('Please check your login details and try again.')
+        flash('Please check your login details and try again.', FLASH_TYPE_ERROR)
         return redirect(url_for('authentication_controller.login'))
 
     # Validate the password
     # We need to do this here, as we do not want to display any other error messages that might expose user information
     # when the users authentication is not valid.
     if not check_password_hash(user.password, user_password):
-        flash('Please check your login details and try again.')
+        flash('Please check your login details and try again.', FLASH_TYPE_ERROR)
         return redirect(url_for('authentication_controller.login'))
 
     # Check if the user got inactivated
     if not user.is_active:
-        flash('Your account got inactivated. Please contact your Admin for this issue.')
+        flash('Your account got inactivated. Please contact your Admin for this issue.', FLASH_TYPE_WARNING)
         return redirect(url_for('authentication_controller.login'))
 
     # Case 3: the user is active but his user_password is a system user_password
@@ -66,6 +67,6 @@ def logout():
     """
     logout_user()
 
-    flash('You logged out successfully. See you!', 'success')
+    flash('You logged out successfully. See you!', FLASH_TYPE_SUCCESS)
 
     return redirect(url_for('authentication_controller.login'))

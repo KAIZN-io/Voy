@@ -4,6 +4,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_breadcrumbs import register_breadcrumb, default_breadcrumb_root
 from flask_login import login_required
 
+from voy.constants import FLASH_TYPE_SUCCESS
 from voy.model import Study
 from voy.model import db
 
@@ -42,6 +43,6 @@ def new_post():
     db.session.add(study)
     db.session.commit()
 
-    flash('A new study was created.')
+    flash('A new study was created.', FLASH_TYPE_SUCCESS)
 
     return redirect(url_for('study_controller.new'))

@@ -5,6 +5,7 @@ from flask_mail import Message
 from werkzeug.security import generate_password_hash
 
 from voy.compliance.ema import generate_password
+from voy.constants import FLASH_TYPE_SUCCESS
 from voy.mail import mail
 from voy.model import User, db
 from voy.services.user import try_password_reset
@@ -34,7 +35,7 @@ def profile_post():
     )
 
     if is_list_empty(errors):
-        flash('Password reset successful.')
+        flash('Password reset successful.', FLASH_TYPE_SUCCESS)
 
     return render_template('profile/profile.html.j2', errors=errors)
 
@@ -73,7 +74,7 @@ def request_password_reset_post():
         db.session.commit()
 
     # In any case, flash a success message. This way one can not find valid user abbreviations by brute force.
-    flash('Success! An email with a new password is on it\'s way to you.', 'success')
+    flash('Success! An email with a new password is on it\'s way to you.', FLASH_TYPE_SUCCESS)
 
     return render_template('profile/request-password-reset.html.j2')
 
@@ -95,6 +96,6 @@ def reset_password_post():
     if not is_list_empty(errors):
         return render_template('profile/reset-password.html.j2', errors=errors)
 
-    flash('Password reset successful. Please log in with your new password.')
+    flash('Password reset successful. Please log in with your new password.', FLASH_TYPE_SUCCESS)
 
     return redirect(url_for('authentication_controller.login'))
