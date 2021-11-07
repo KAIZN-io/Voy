@@ -3,9 +3,7 @@
 
 {% block title %}Login{% endblock %}
 
-
 {% block body_class %}page-login{% endblock %}
-
 
 {% block main %}
   <div class="is-flex is-flex-direction-column is-align-items-center is-justify-content-center h-full">
@@ -22,7 +20,7 @@
         Voy Login
       </h1>
 
-      <form action="/login" method="POST">
+      <form action="{{ url_for('authentication_controller.login_post') }}" method="POST">
 
         <div class="field mb-5">
           <label class="label">
