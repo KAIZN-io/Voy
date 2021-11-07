@@ -7,7 +7,7 @@ from werkzeug.security import generate_password_hash
 
 from voy.model import db
 from voy.model import User, User_Management
-from voy.constants import ROLE_ADMIN, ROLE_MEDOPS, ROLE_DATA_MANAGER, ROLE_DATA_ENTRY, FLASH_TYPE_ERROR
+from voy.constants import ROLE_ADMIN, ROLE_MEDOPS, ROLE_DATA_MANAGER, ROLE_DATA_ENTRY, FLASH_TYPE_DANGER
 
 # Get loggers
 to_user_file = logging.getLogger('to_user_file')
@@ -63,7 +63,7 @@ def new_post():
     user = User.query.filter_by(email=email).scalar()
 
     if user:
-        flash('A User with that email address already exists', FLASH_TYPE_ERROR)
+        flash('A User with that email address already exists', FLASH_TYPE_DANGER)
         return redirect(url_for('user_controller.new'))
 
     # create new user with the form data. Hash the password so plaintext version isn't saved.
