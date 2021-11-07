@@ -26,7 +26,7 @@ def index():
     # filter all user except for the admin
     user_list = User.query.filter(User.role != ROLE_ADMIN).all()
 
-    return render_template('user/index.html.j2', user_list=user_list)
+    return render_template('controller/user/index.html.j2', user_list=user_list)
 
 
 # TODO: Make this a POST request; With a GET request it is too easy to just close tickets by their id. Also in terms of
@@ -47,7 +47,7 @@ def deactivate(user_id: int):
 def new():
     # define the job roles
     roles = [ROLE_MEDOPS, ROLE_DATA_MANAGER, ROLE_DATA_ENTRY]
-    return render_template('user/new.html.j2', Roles=roles)
+    return render_template('controller/user/new.html.j2', Roles=roles)
 
 
 @user_blueprint.route('/users/new', methods=['POST'])

@@ -24,7 +24,7 @@ default_breadcrumb_root(ticket_blueprint, '.')
 @register_breadcrumb(ticket_blueprint, '.new', '')
 @login_required
 def new():
-    return render_template('ticket/new.html.j2',
+    return render_template('controller/ticket/new.html.j2',
                            study_list=Study.query.all(),
                            staff_list_medops=User.query.filter_by(role=ROLE_MEDOPS).all(),
                            available_source_types=AVAILABLE_SOURCE_TYPES)
@@ -77,7 +77,7 @@ def new_post():
 @ticket_blueprint.route('/tickets/<int:ticket_id>/edit', methods=['GET'])
 @login_required
 def edit(ticket_id: int):
-    return render_template('ticket/edit.html.j2',
+    return render_template('controller/ticket/edit.html.j2',
                            study_list=Study.query.all(),
                            staff_list_medops=User.query.filter_by(role=ROLE_MEDOPS).all(),
                            ticket_data=Ticket.query.get(ticket_id))

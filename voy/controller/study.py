@@ -22,7 +22,7 @@ default_breadcrumb_root(study_blueprint, '.')
 @register_breadcrumb(study_blueprint, '.new', '')
 @login_required
 def new():
-    return render_template('study/new.html.j2')
+    return render_template('controller/study/new.html.j2')
 
 
 # TODO: implement the tag system

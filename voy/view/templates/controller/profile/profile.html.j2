@@ -1,14 +1,22 @@
-{% from "./utils/_errors.html.j2" import render_errors %}
+{% from "utilities/_errors.html.j2" import render_errors %}
 
 {% extends 'layout.html.j2' %}
 
-{% block title %}
-Mein Profil
-{% endblock %}
+{% block title %}Mein Profile{% endblock %}
 
 {% block content %}
+
+{% include "utilities/_breadcrumbs.html.j2" %}
+
+<h1 class="title">
+  Welcome, {{ name }}!
+</h1>
+
 <div class="column is-4 is-offset-4">
-  <h3 class="title">Welcome to KAIZN. Please change your password
+
+  {{ render_errors(errors) }}
+
+  <h3 class="title">Change Password
     <a
       data-target="#password_Modal"
       data-toggle="modal"
@@ -47,44 +55,27 @@ Mein Profil
     </div>
   </h3>
   <div class="box">
-
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        <div class="notification is-danger">
-          {{ messages[0] }}
-        </div>
-      {% endif %}
-    {% endwith %}
-
-    {{ render_errors(errors) }}
-
-    <form action="{{ url_for('profile_controller.reset_password_post') }}" method="POST">
-      <div class="field">
-        <div class="control">
-          <input autofocus="" class="input is-large" name="user_abbreviation" placeholder="Your Abbreviation" required
-                 type="text">
-        </div>
-      </div>
+    <form action="{{ url_for('profile_controller.profile_post') }}" method="POST">
       <div class="form-group">
         <div class="control">
-          <input autofocus="" class="input is-large" name="password_old" placeholder="The System Password"
-                 required type="password">
-        </div>
-      </div>
-      <div class="field">
-        <div class="control">
-          <input autofocus="" class="input is-large" name="password_new" placeholder="Your New Password" required
+          <input autofocus="" class="input is-large" name="password_old" placeholder="Your Old Password" maxlength="40" required
                  type="password">
         </div>
       </div>
       <div class="field">
         <div class="control">
-          <input class="input is-large" name="password_new_repetition" placeholder="Again your new Password" required type="password">
+          <input autofocus="" class="input is-large" name="password_new" placeholder="Your New Password" maxlength="40" required
+                 type="password">
+        </div>
+      </div>
+      <div class="field">
+        <div class="control">
+          <input class="input is-large" name="password_new_repetition" placeholder="Again your new Password" maxlength="40" required type="password">
         </div>
       </div>
       <br>
       <div class="field">
-        <button class="btn btn-primary">Change password</button>
+        <button class="btn btn-primary">Change Password</button>
     </form>
   </div>
 </div>

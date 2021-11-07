@@ -6,7 +6,7 @@
 
 {% if current_user.is_authenticated %}
 
-{% from "./utils/_errors.html.j2" import render_errors %}
+{% from "utilities/_errors.html.j2" import render_errors %}
 
 <h1 class="title">
   QUERIES
@@ -137,7 +137,7 @@
 
 
 <!-- Ticket Comment Modal -->
-{% include "ticket/comment/modal.html.j2" %}
+{% include "controller/ticket/comment/modal.html.j2" %}
 
 
 <form method="post" action="{{ url_for('dashboard_controller.export_data') }}" targe="_blank">
