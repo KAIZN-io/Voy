@@ -13,6 +13,10 @@ default_breadcrumb_root(authentication_blueprint, '.')
 
 @authentication_blueprint.route('/login', methods=['GET'])
 def login():
+    # If the user is already logged in, we don't need any of this.
+    if current_user.is_authenticated:
+        return redirect(url_for('dashboard_controller.index'))
+
     return render_template('authentication/login.html.j2')
 
 
