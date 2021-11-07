@@ -1,4 +1,4 @@
-{% extends 'layout-plain-bulma.html.j2' %}
+{% extends 'layout-plain.html.j2' %}
 
 {% block body_class %}page-prompt{% endblock %}
 
@@ -7,7 +7,7 @@
 
     {% if get_flashed_messages() %}
       <div class="prompt mb-5">
-        {% include "utils/_flash-bulma.html.j2" %}
+        {% include "utils/_flash.html.j2" %}
       </div>
     {% endif %}
 

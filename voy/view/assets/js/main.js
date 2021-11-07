@@ -1,6 +1,5 @@
 // Packages
 import $ from 'jquery';
-import 'bootstrap';
 
 // Styles
 import '../css/main.scss'
