@@ -1,13 +1,11 @@
 from voy.model import db
-from voy.model.mixins import TimeStampMixin
+from voy.model.mixins import TimeStampMixin, UuidPrimaryKeyMixin
 
 
-class TicketTag(TimeStampMixin, db.Model):
+class TicketTag(UuidPrimaryKeyMixin, TimeStampMixin, db.Model):
     """Modelling tags to be used for adding information to tickets."""
 
     __tablename__ = 'ticket_tag'
-
-    id = db.Column(db.Integer, primary_key=True)
 
     title = db.Column(db.String(30), unique=True)
     description = db.Column(db.String(500))

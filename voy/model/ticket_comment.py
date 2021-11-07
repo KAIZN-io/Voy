@@ -1,16 +1,16 @@
+from sqlalchemy.dialects.postgresql import UUID
+
 from voy.model import db
-from voy.model.mixins import TimeStampMixin
+from voy.model.mixins import TimeStampMixin, UuidPrimaryKeyMixin
 
 
-class TicketComment(TimeStampMixin, db.Model):
+class TicketComment(UuidPrimaryKeyMixin, TimeStampMixin, db.Model):
     __tablename__ = 'ticket_comment'
 
-    id = db.Column(db.Integer, primary_key=True)
-
-    ticket_id = db.Column(db.Integer, db.ForeignKey('ticket.id'))
+    ticket_uuid = db.Column(UUID(as_uuid=True), db.ForeignKey('ticket.uuid'))
     ticket = db.relationship('Ticket', back_populates='comments')
 
-    commenter_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    commenter = db.relationship('User', foreign_keys='TicketComment.commenter_id')
+    commenter_uuid = db.Column(UUID(as_uuid=True), db.ForeignKey('user.uuid'))
+    commenter = db.relationship('User', foreign_keys='TicketComment.commenter_uuid')
 
     content = db.Column(db.Text)

@@ -12,14 +12,14 @@
   <div class="form-row">
 
     <div class="form-group col-md-6">
-      <label for="study_id">Study ID</label>
+      <label for="study_uuid">Study ID</label>
 
-      <select class="form-control" name="study_id" required width="300px">
+      <select class="form-control" name="study_uuid" required width="300px">
         <option disabled selected value> -- select an option --</option>
         <option disabled="disabled">----</option>
 
         {% for study in study_list %}
-          <option value="{{ study.id }}">
+          <option value="{{ study.uuid }}">
             {{ study.internal_id }} {% if not study.is_active %} (inactive) {% endif %}
           </option>
         {% endfor %}
@@ -95,12 +95,12 @@
       </td>
       <td>
         <div class="form-group">
-          <select class="form-control" name="row[][assignee_id]" required width="300px">
+          <select class="form-control" name="row[][assignee_uuid]" required width="300px">
             <option disabled selected value> -- select an option --</option>
             <option disabled="disabled">----</option>
 
             {% for user in staff_list_medops %}
-              <option value="{{ user.id }}">
+              <option value="{{ user.uuid }}">
                 <!-- if user is not active yet, display it -->
                 {{ user.abbreviation }} {% if not user.is_active %} (inactive) {% endif %}
               </option>

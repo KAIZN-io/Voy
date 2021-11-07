@@ -3,7 +3,7 @@
  */
 $('#modal_ticket_comment').on('show.bs.modal', function (event) {
   const button      = $(event.relatedTarget)
-  const ticket_id   = button.data('ticket-id')
+  const ticket_uuid = button.data('ticket-uuid')
 
   const $modal          = $(this);
   const $title          = $modal.find('.modal-title');
@@ -17,11 +17,11 @@ $('#modal_ticket_comment').on('show.bs.modal', function (event) {
   //
   // Reset the form
   // Update the modal Title
-  $title.text(`Requery Dialog | Query ID: ${ticket_id}`);
+  $title.text(`Requery Dialog | Query ID: ${ticket_uuid}`);
   // Display loading indicator
   $content.html('<div class="d-flex align-center"><div class="spinner-border mx-auto" role="status"></div></div>');
   // Update the form action
-  $addCommentForm.attr('action', `/tickets/${ticket_id}/comments/new`);
+  $addCommentForm.attr('action', `/tickets/${ticket_uuid}/comments/new`);
   // Clear textarea
   $addCommentFormTextarea.val('');
   // Disable inputs
@@ -30,7 +30,7 @@ $('#modal_ticket_comment').on('show.bs.modal', function (event) {
 
   //
   // Load the data for the modal
-  $.get(`/tickets/${ticket_id}/comments/modal-content`)
+  $.get(`/tickets/${ticket_uuid}/comments/modal-content`)
     .done(data => {
       // Put the loaded html into the modal
       $content.html(data);
