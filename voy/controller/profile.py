@@ -73,7 +73,7 @@ def request_password_reset_post():
         db.session.commit()
 
     # In any case, flash a success message. This way one can not find valid user abbreviations by brute force.
-    flash('Success! An email with a new password is on it\'s way to you.')
+    flash('Success! An email with a new password is on it\'s way to you.', 'success')
 
     return render_template('profile/request-password-reset.html.j2')
 
