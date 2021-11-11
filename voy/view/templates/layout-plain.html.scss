@@ -1,0 +1,15 @@
+.layout {
+  display: grid;
+  grid-template:
+    "main" auto
+    "footer" 66px
+    / auto;
+
+  &__main {
+    grid-area: main;
+  }
+
+  &__footer {
+    grid-area: footer;
+  }
+}

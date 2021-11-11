@@ -14,7 +14,7 @@
 
 </head>
 
-<body class="{% block body_class %}{% endblock %}">
+<body class="layout {% block body_class %}{% endblock %}">
 
 {% if self.header() %}
   <header>
@@ -22,12 +22,11 @@
   </header>
 {% endif %}
 
-<main>
+<main class="layout__main">
   {% block main %}{% endblock %}
 </main>
 
-<footer class="footer py-5">
-
+<footer class="layout__footer footer py-5">
   {% block footer %}
     <div class="container content has-text-right mb-0 is-size-7">
       <p>

@@ -4,23 +4,12 @@
 // Template styles
 @import "../../templates/";
 
+// Component styles
+@import "./components/prompt";
+
 
 html, body {
   height: 100%;
-}
-
-body {
-  display: flex;
-  flex-direction: column;
-}
-
-main {
-  flex: 1 1 auto;
-}
-
-footer {
-  flex: 0 0 auto;
-
 }
 
 // Helper
