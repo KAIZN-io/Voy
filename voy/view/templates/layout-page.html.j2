@@ -1,0 +1,24 @@
+{% extends 'layout-plain.html.j2' %}
+
+
+{% block body_class %}layout--page{% endblock %}
+
+{% block navigation %}
+  <div class="layout__navigation panel mb-0">
+
+    <p class="panel-heading">
+      Voy
+    </p>
+
+    <div class="panel-block">
+      {% include "layout/menu.html.j2" %}
+    </div>
+
+  </div>
+{% endblock %}
+
+{% block main %}
+  <div class="container">
+    {% block content %}{% endblock %}
+  </div>
+{% endblock %}

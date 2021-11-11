@@ -16,10 +16,8 @@
 
 <body class="layout {% block body_class %}{% endblock %}">
 
-{% if self.header() %}
-  <header>
-    {% block header %}{% endblock %}
-  </header>
+{% if self.navigation() %}
+  {% block navigation %}{% endblock %}
 {% endif %}
 
 <main class="layout__main">

@@ -1,0 +1,19 @@
+.layout.layout--page {
+  display: grid;
+
+  grid-template:
+  "navigation   main" auto
+  "navigation footer" 66px
+  / 300px     auto;
+
+  .layout {
+    &__navigation {
+      grid-area: navigation;
+
+      &,
+      .panel-heading {
+        border-radius: unset;
+      }
+    }
+  }
+}
