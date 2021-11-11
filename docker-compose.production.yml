@@ -91,12 +91,12 @@ services:
       - "traefik.docker.network=traefik_network"
 
       - "traefik.http.routers.voy.entrypoints=http"
-      - "traefik.http.routers.voy.rule=Host(`demo.kaizn.io`)"
+      - "traefik.http.routers.voy.rule=Host(`${VOY_HOST}`)"
       - "traefik.http.routers.voy.middlewares=voy@docker"
       - "traefik.http.middlewares.voy.redirectscheme.scheme=https"
 
       - "traefik.http.routers.voy_https.entrypoints=https"
-      - "traefik.http.routers.voy_https.rule=Host(`demo.kaizn.io`)"
+      - "traefik.http.routers.voy_https.rule=Host(`${VOY_HOST}`)"
       - "traefik.http.routers.voy_https.tls.certresolver=letsencrypt"
 
       - "traefik.http.services.voy.loadbalancer.server.port=5000"
