@@ -13,7 +13,7 @@
     "url": "https://gitlab.com/piotraschke.janniklas/flask_auth_app/issues"
   },
   "scripts": {
-    "dev": "encore dev --watch",
+    "dev": "encore dev-server  --port 5002",
     "build": "encore production"
   },
   "dependencies": {

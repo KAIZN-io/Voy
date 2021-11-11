@@ -7,7 +7,7 @@
   <title>{% block title %}{% endblock %} - Voy</title>
 
   {% block main_styles %}
-      <link rel="stylesheet" href="{{ url_for('static', filename='bundle/main.css', v='1.0.0') }}" />
+      <link rel="stylesheet" href="{{ asset('bundle/main.css') }}" />
   {% endblock %}
 
   {% block styles %}{% endblock %}
@@ -31,7 +31,8 @@
 </footer>
 
 {% block main_scripts %}
-  <script src="{{ url_for('static', filename='bundle/main.js', v='1.0.0') }}" type="text/javascript"></script>
+  <script src="{{ asset('bundle/runtime.js') }}" type="text/javascript"></script>
+  <script src="{{ asset('bundle/main.js') }}" type="text/javascript"></script>
 {% endblock %}
 
 {% block scripts %}{% endblock %}

@@ -1,4 +1,6 @@
+import json
 import logging.config
+from pathlib import Path
 
 import yaml
 from flask import Flask
@@ -66,4 +68,20 @@ def create_app():
     app.register_blueprint(database_cli)
     app.register_blueprint(user_cli)
 
+    # Register templating functions
+    app.jinja_env.globals.update(
+        asset=create_resolve_asset_path_function(
+            Path(app.root_path, 'view/static/bundle/manifest.json')))
+
     return app
+
+
+def create_resolve_asset_path_function(asset_manifest_path):
+    def resolve_asset_path(asset_name):
+        with open(asset_manifest_path, 'r') as asset_manifest_handle:
+            asset_manifest_data = asset_manifest_handle.read()
+            asset_manifest = json.loads(asset_manifest_data)
+
+            return asset_manifest[asset_name]
+
+    return resolve_asset_path
