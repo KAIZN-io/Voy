@@ -34,7 +34,7 @@ def new_post():
     """
 
     # TODO: Form validation
-    internal_id = int(request.form.get('internal_id'))
+    internal_id = request.form.get('internal_id')
 
     study = Study(
         internal_id=internal_id,

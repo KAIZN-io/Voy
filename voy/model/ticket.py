@@ -1,8 +1,7 @@
 from sqlalchemy import inspect
 
 from voy.model import db
-from voy.model.mixins import TimeStampMixin
-
+from voy.model.mixins import TimeStampMixin, DictMixin
 
 # Tag relationship
 db.Table('ticket_tag_mapping', db.Model.metadata,
@@ -10,7 +9,7 @@ db.Table('ticket_tag_mapping', db.Model.metadata,
     db.Column('ticket_tag_id', db.ForeignKey('ticket_tag.id'), primary_key=True))
 
 
-class Ticket(TimeStampMixin, db.Model):
+class Ticket(DictMixin, TimeStampMixin, db.Model):
     __tablename__ = 'ticket'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -43,13 +42,6 @@ class Ticket(TimeStampMixin, db.Model):
         secondary='ticket_tag_mapping',
         back_populates='tickets')
 
-    def to_dict(self):
-        """transform the query results to a dict
-        """
-
-        return {column.key: getattr(self, column.key)
-                for column in inspect(self).mapper.column_attrs}
-
     def to_export_dict(self):
         """transform the query results to a human readable dict
         """
@@ -59,5 +51,7 @@ class Ticket(TimeStampMixin, db.Model):
         # TODO: Set correct timezone here.
         export_dict['created_at'] = export_dict['created_at'].format('YYYY-MM-DD HH:mm:ss')
         export_dict['updated_at'] = export_dict['updated_at'].format('YYYY-MM-DD HH:mm:ss')
+
+        # TODO: Instead of ids, set the actual user abbreviations here.
 
         return export_dict
