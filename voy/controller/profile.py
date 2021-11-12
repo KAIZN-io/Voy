@@ -16,7 +16,7 @@ from voy.utilities import is_list_empty
 profile_blueprint = Blueprint('profile_controller', __name__)
 default_breadcrumb_root(profile_blueprint, '.')
 
-
+# TODO: Rename this to `index`
 @profile_blueprint.route('/profile', methods=['GET'])
 @register_breadcrumb(profile_blueprint, '.profile', '')
 @login_required
