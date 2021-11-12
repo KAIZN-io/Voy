@@ -5,8 +5,11 @@
   </p>
 
   <ul class="menu-list">
-    <li><a>Dashboard</a></li>
-    <li><a>Customers</a></li>
+    <li>
+      <a href="{{ url_for('dashboard_controller.index') }}">
+        Dashboard
+      </a>
+    </li>
   </ul>
 
   <p class="menu-label">
@@ -14,28 +17,37 @@
   </p>
 
   <ul class="menu-list">
-    <li><a>Team Settings</a></li>
-    <li>
-      <a class="is-active">Manage Your Team</a>
-      <ul>
-        <li><a>Members</a></li>
-        <li><a>Plugins</a></li>
-        <li><a>Add a member</a></li>
-      </ul>
-    </li>
-    <li><a>Invitations</a></li>
-    <li><a>Cloud Storage Environment Settings</a></li>
-    <li><a>Authentication</a></li>
+    {% if (current_user.is_authenticated) and (current_user.role == 'Admin' or current_user.role == 'Data Manager') %}
+      <li>
+        <a href="{{ url_for('study_controller.new') }}">
+          Studies
+        </a>
+      </li>
+    {% endif %}
+    {% if (current_user.is_authenticated) and (current_user.role == 'Admin' or current_user.role == 'Data Manager') %}
+      <li>
+        <a href="{{ url_for('study_controller.new') }}">
+          Users
+        </a>
+      </li>
+    {% endif %}
   </ul>
 
   <p class="menu-label">
-    Transactions
+    Account
   </p>
 
   <ul class="menu-list">
-    <li><a>Payments</a></li>
-    <li><a>Transfers</a></li>
-    <li><a>Balance</a></li>
+    <li>
+      <a href="{{ url_for('profile_controller.profile') }}">
+        Profile
+      </a>
+    </li>
+    <li>
+      <a href="{{ url_for('authentication_controller.logout') }}">
+        Logout
+      </a>
+    </li>
   </ul>
 
 </nav>
