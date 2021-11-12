@@ -20,7 +20,7 @@ default_breadcrumb_root(dashboard_blueprint, '.')
 
 
 @dashboard_blueprint.route('/', methods=['GET'])
-@register_breadcrumb(dashboard_blueprint, '.', 'QC-DB')
+@register_breadcrumb(dashboard_blueprint, '.', 'Dashboard')
 @login_required
 def index():
     available_export_file_types = {

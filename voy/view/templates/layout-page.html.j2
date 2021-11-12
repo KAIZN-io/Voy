@@ -19,6 +19,25 @@
 
 {% block main %}
   <div class="container">
+
+    <section class="hero">
+
+      <div class="hero-body pb-0">
+
+        <h1 class="title is-size-1">
+          {% block page_title %}{% endblock %}
+        </h1>
+
+        {% if self.navigation() %}
+          <p class="subtitle">
+            {% block page_sub_title %}{% endblock %}
+          </p>
+        {% endif %}
+
+      </div>
+
+    </section>
+
     {% block content %}{% endblock %}
   </div>
 {% endblock %}
