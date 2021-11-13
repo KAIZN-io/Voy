@@ -1,84 +1,72 @@
+{% extends 'layout-page.html.j2' %}
+
+
+{% from "components/section.html.j2" import render_section %}
+
 {% from "utilities/_errors.html.j2" import render_errors %}
 
-{% extends 'layout.html.j2' %}
 
-{% block title %}Mein Profile{% endblock %}
+{#############################################################################}
+{# META                                                                      #}
+{#############################################################################}
+
+{% block title %}Profile{% endblock %}
+
+{% block page_title %}Profile{% endblock %}
+
+
+{#############################################################################}
+{# CONTENT                                                                   #}
+{#############################################################################}
 
 {% block content %}
 
-{% include "utilities/_breadcrumbs.html.j2" %}
+  {% with %}
 
-<h1 class="title">
-  Welcome, {{ name }}!
-</h1>
+    {% call render_section(
+      title='Change your Password') %}
+      <form action="{{ url_for('profile_controller.reset_password_post') }}" method="POST">
 
-<div class="column is-4 is-offset-4">
+        {{ render_errors(errors) }}
 
-  {{ render_errors(errors) }}
-
-  <h3 class="title">Change Password
-    <a
-      data-target="#password_Modal"
-      data-toggle="modal"
-      href="#"
-      style="color: blue;">
-      <i class="fas fa-question-circle"></i>
-    </a>
-    <div
-      aria-hidden="true"
-      aria-labelledby="password_Modal"
-      class="modal fade"
-      id="password_Modal"
-      role="dialog" >
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-
-          <div class="modal-header">
-            <h5 class="modal-title" id="password_Modal_label">password policy:</h5>
-            <button aria-label="Close" class="close" data-dismiss="modal" type="button">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <blockquote class="blockquote">
-            <h4 class="mb-0" class="content is-large">
-              &#8805 12 charactes <br>
-              &#8805 1 upper case letter <br>
-              &#8805 1 lower case letter <br>
-              &#8805 1 number <br>
-              different to previous password <br>
-            </h4>
-          </blockquote>
-
+        <div class="field mb-5">
+          <label class="label">
+            Your old Password
+          </label>
+          <div class="control">
+            <input type="password" class="input is-medium" name="password_old" required />
           </div>
         </div>
-      </div>
-    </div>
-  </h3>
-  <div class="box">
-    <form action="{{ url_for('profile_controller.profile_post') }}" method="POST">
-      <div class="form-group">
-        <div class="control">
-          <input autofocus="" class="input is-large" name="password_old" placeholder="Your Old Password" maxlength="40" required
-                 type="password">
+
+        <div class="field mb-5">
+          <label class="label">
+            Your new Password
+          </label>
+          <div class="control">
+            <input type="password" class="input is-medium" name="password_new" required />
+          </div>
         </div>
-      </div>
-      <div class="field">
-        <div class="control">
-          <input autofocus="" class="input is-large" name="password_new" placeholder="Your New Password" maxlength="40" required
-                 type="password">
+
+        <div class="field mb-5">
+          <label class="label">
+            Your new Password, again
+          </label>
+          <div class="control">
+            <input type="password" class="input is-medium" name="password_new_repetition" required />
+          </div>
         </div>
-      </div>
-      <div class="field">
-        <div class="control">
-          <input class="input is-large" name="password_new_repetition" placeholder="Again your new Password" maxlength="40" required type="password">
+
+        <div class="field mb-5">
+          <div class="control">
+            <button class="button is-primary is-medium">Change Password</button>
+          </div>
         </div>
-      </div>
-      <br>
-      <div class="field">
-        <button class="btn btn-primary">Change Password</button>
-    </form>
-  </div>
-</div>
+
+      </form>
+    {% endcall %}
+
+  {% endwith %}
+
 {% endblock %}
 
 
