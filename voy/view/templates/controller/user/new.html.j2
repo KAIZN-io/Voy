@@ -1,73 +1,84 @@
-{% extends 'layout.html.j2' %}
+{% extends 'layout-page.html.j2' %}
 
-{% block title %} Create Users {% endblock %}
+
+{% from "components/section.html.j2" import render_section %}
+
+{% from "utilities/_errors.html.j2" import render_errors %}
+
+
+{#############################################################################}
+{# META                                                                      #}
+{#############################################################################}
+
+{% block title %}Add User{% endblock %}
+
+{% block page_title %}Add a new User{% endblock %}
+
+
+{#############################################################################}
+{# CONTENT                                                                   #}
+{#############################################################################}
 
 {% block content %}
 
-{% include "utilities/_breadcrumbs.html.j2" %}
+  {% with %}
 
-<div class="column is-4 is-offset-4">
-  <h1 class="title">Create Users</h1>
+    {% call render_section() %}
+      <form action="{{ url_for('user_controller.new_post') }}" method="POST">
 
-  <div class="box">
-    {% with messages = get_flashed_messages() %} {% if messages %}
-    <div class="alert alert-success">{{ messages[0] }}</div>
-    {% endif %} {% endwith %}
-    <form action="{{ url_for('user_controller.new_post') }}" method="POST">
-      <div class="field">
-        <div class="control">
-          <input
-            autofocus=""
-            class="input is-large"
-            name="email"
-            placeholder="eMail"
-            required
-            maxlength="50"
-            type="email"
-          />
+        {{ render_errors(errors) }}
+
+        <div class="field mb-5">
+          <label class="label">
+            Their Abbreviation
+          </label>
+          <div class="control">
+            <input type="test" class="input is-medium" name="abbreviation" maxlength="5" autofocus required />
+          </div>
         </div>
-      </div>
-      <div class="field">
-        <select name="role" width="300px">
-          {% for role in Roles %}
-          <option required value="{{ role }}">{{ role }}</option>
 
-          {% endfor %}
-        </select>
-      </div>
-
-      <div class="field">
-        <div class="control">
-          <input
-            autofocus=""
-            class="input is-large"
-            name="abbreviation"
-            placeholder="Abbreviation"
-            required
-            maxlength="5"
-            type="text"
-          />
+        <div class="field mb-5">
+          <label class="label">
+            Their E-Mail
+          </label>
+          <div class="control">
+            <input type="email" class="input is-medium" name="email" autofocus required />
+          </div>
         </div>
-      </div>
 
-      <div class="field">
-        <div class="control">
-          <input
-            class="input is-large"
-            name="password"
-            placeholder="Password"
-            maxlength="40"
-            required
-            type="password"
-          />
+        <div class="field mb-5">
+          <label class="label">
+            Their Role
+          </label>
+          <div class="control">
+            <div class="select is-medium">
+              <select name="role">
+                {% for role in Roles %}
+                  <option required value="{{ role }}">
+                    {{ role }}
+                  </option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
         </div>
-      </div>
-      <br>
-      <button class="btn btn-primary">
-        submit
-      </button>
-    </form>
-    <a href="{{ url_for('user_controller.index')}}">abort</a>
-  </div>
-</div>
+
+        {# TODO: Add a hint about the user then receiving a mail with a link to complete their signup. #}
+
+        <div class="field mb-5">
+          <div class="control">
+            <button class="button is-primary is-medium">Add User</button>
+          </div>
+        </div>
+
+      </form>
+    {% endcall %}
+
+  {% endwith %}
+
 {% endblock %}
+
+
+{#############################################################################}
+{# MACROS                                                                    #}
+{#############################################################################}
