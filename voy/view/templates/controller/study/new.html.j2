@@ -1,40 +1,56 @@
-{% extends 'layout.html.j2' %}
+{% extends 'layout-page.html.j2' %}
 
-{% block title %} QC Planning {% endblock %}
+
+{% from "components/section.html.j2" import render_section %}
+
+{% from "utilities/_errors.html.j2" import render_errors %}
+
+
+{#############################################################################}
+{# META                                                                      #}
+{#############################################################################}
+
+{% block title %}Add Study{% endblock %}
+
+{% block page_title %}Add a new Study{% endblock %}
+
+
+{#############################################################################}
+{# CONTENT                                                                   #}
+{#############################################################################}
 
 {% block content %}
 
-{% include "utilities/_breadcrumbs.html.j2" %}
+  {% with %}
 
-<div class="column is-4 is-offset-4">
-  <h1>New study:</h1>
+    {% call render_section() %}
+      <form action="{{ url_for('study_controller.new_post') }}" method="POST">
 
+        {{ render_errors(errors) }}
 
-  <div class="box">
-    {% with messages = get_flashed_messages() %} {% if messages %}
-    <div class="alert alert-success">{{ messages[0] }}</div>
-    {% endif %} {% endwith %}
-    <form action="{{ url_for('study_controller.new_post') }}" method="POST">
-      <div class="field">
-        <div class="control">
-          <input
-            autofocus=""
-            class="input is-large"
-            name="internal_id"
-            placeholder="Study Number"
-            required
-            minlength="6"
-            maxlength="6"
-            type="number"
-          />
+        <div class="field mb-5">
+          <label class="label">
+            Study Identifier
+          </label>
+          <div class="control">
+            <input type="password" class="input is-medium" name="internal_id" autofocus required />
+          </div>
         </div>
-      </div>
-      <br>
-      <button class="btn btn-primary">
-        submit
-      </button>
-    </form>
-    <a href="{{ url_for('study_controller.new')}}">abort</a>
-  </div>
-</div>
+
+        <div class="field mb-5">
+          <div class="control">
+            <button class="button is-primary is-medium">Add Study</button>
+          </div>
+        </div>
+
+      </form>
+    {% endcall %}
+
+  {% endwith %}
+
 {% endblock %}
+
+
+{#############################################################################}
+{# MACROS                                                                    #}
+{#############################################################################}
