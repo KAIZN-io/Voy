@@ -1,8 +1,13 @@
 // Packages
-import $ from 'jquery';
+import Alpine from 'alpinejs';
+import trap from '@alpinejs/trap';
+
 
 // Styles
-import '../css/main.scss'
+import '../css/main.scss';
 
-// define global variable (here only for TableFilter)
-window.$ = window.jQuery = $;
+
+// Register Apline globally and start it
+window.Alpine = Alpine;
+Alpine.plugin(trap);
+Alpine.start();
