@@ -1,6 +1,8 @@
 {% extends 'layout-page.html.j2' %}
 
 
+{% from "components/section.html.j2" import render_section %}
+
 {#############################################################################}
 {# META                                                                      #}
 {#############################################################################}
@@ -21,108 +23,101 @@
 {#############################################################################}
 
 {% block content %}
-  <section class="section">
 
-    <div class="is-flex is-align-items-flex-end is-justify-content-space-between mb-6">
+  {% with %}
 
-      <div>
-        <h2 class="title">
-          Queries
-        </h2>
+    {% set actions %}
+      {% if (current_user.role == 'Admin' or current_user.role == 'Data Manager' or current_user.role == 'Data Entry') %}
+        <a class="button is-primary" href="{{ url_for('ticket_controller.new') }}">
+          <span class="icon">
+            <i class="fas fa-plus"></i>
+          </span>
+          <span>
+            New Query
+          </span>
+        </a>
+      {% endif %}
+    {% endset %}
 
-        <h3 class="subtitle">
-          Here's todays list of Queries for you.
-        </h3>
-      </div>
+    {% call render_section(
+      title='Queries',
+      sub_title='Here\'s todays list of Queries for you',
+      actions=actions) %}
+      <table class="dashboard__tickets table table is-striped table is-hoverable is-fullwidth">
 
-      <div>
-        {% if (current_user.role == 'Admin' or current_user.role == 'Data Manager' or current_user.role == 'Data Entry') %}
-          <a class="button is-primary" href="{{ url_for('ticket_controller.new') }}">
-            <span class="icon">
-              <i class="fas fa-plus"></i>
-            </span>
-            <span>
-              New Query
-            </span>
-          </a>
-        {% endif %}
-      </div>
+        <thead>
+          <tr>
+            <th scope="col">Info</th>
+            <th scope="col">Status</th>
+            <th scope="col">Study ID</th>
+            <th scope="col">Scr No</th>
+            <th scope="col">Type</th>
+            <th scope="col">Visit</th>
+            <th scope="col">Page</th>
+            <th scope="col">Procedure</th>
+            <th scope="col">Description</th>
+            <th scope="col">Created on</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
 
-    </div>
+        <tbody>
+          {% for ticket in user_tickets %}
+            {{ render_ticket(ticket) }}
+          {% endfor %}
+        </tbody>
 
-    <table class="dashboard__tickets table table is-striped table is-hoverable is-fullwidth">
+      </table>
 
-      <thead>
-        <tr>
-          <th scope="col">Info</th>
-          <th scope="col">Status</th>
-          <th scope="col">Study ID</th>
-          <th scope="col">Scr No</th>
-          <th scope="col">Type</th>
-          <th scope="col">Visit</th>
-          <th scope="col">Page</th>
-          <th scope="col">Procedure</th>
-          <th scope="col">Description</th>
-          <th scope="col">Created on</th>
-          <th scope="col">Actions</th>
-        </tr>
-      </thead>
+      <hr />
 
-      <tbody>
-        {% for ticket in user_tickets %}
-          {{ render_ticket(ticket) }}
-        {% endfor %}
-      </tbody>
+      <form method="post" action="{{ url_for('dashboard_controller.export_data') }}" targe="_blank">
+        <div class="level">
+          <div class="level-left"></div>
+          <div class="level-right">
 
-    </table>
-
-    <hr />
-
-    <form method="post" action="{{ url_for('dashboard_controller.export_data') }}" targe="_blank">
-      <div class="level">
-        <div class="level-left"></div>
-        <div class="level-right">
-
-          <div class="level-item has-text-right">
-            <label for="export-file-type">
-              Download Queries as:
-            </label>
-          </div>
-
-          <div class="level-item">
-            <div class="field has-addons">
-
-              <div class="control">
-                <div class="select">
-                  <select id="export-file-type" name="export-file-type">
-                    {% for value, label  in available_export_file_types.items() %}
-                      <option required value="{{ value }}">
-                        {{ label }}
-                      </option>
-                    {% endfor %}
-                  </select>
-                </div>
-              </div>
-
-              <div class="control">
-                <button class="button is-info" type="submit">
-                  <span class="icon">
-                    <i class="fas fa-download"></i>
-                  </span>
-                  <span>
-                    Export
-                  </span>
-                </button>
-              </div>
-
+            <div class="level-item has-text-right">
+              <label for="export-file-type">
+                Download Queries as:
+              </label>
             </div>
+
+            <div class="level-item">
+              <div class="field has-addons">
+
+                <div class="control">
+                  <div class="select">
+                    <select id="export-file-type" name="export-file-type">
+                      {% for value, label  in available_export_file_types.items() %}
+                        <option required value="{{ value }}">
+                          {{ label }}
+                        </option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+
+                <div class="control">
+                  <button class="button is-info" type="submit">
+                    <span class="icon">
+                      <i class="fas fa-download"></i>
+                    </span>
+                    <span>
+                      Export
+                    </span>
+                  </button>
+                </div>
+
+              </div>
+            </div>
+
           </div>
-
         </div>
-      </div>
-    </form>
+      </form>
+    {% endcall %}
 
-  </section>
+  {% endwith %}
+
 {% endblock %}
 
 {% block modals %}
