@@ -1,7 +1,15 @@
 {% with messages = get_flashed_messages(with_categories=true) %}
   {% for category, message in messages %}
-    <div class="notification is-{{ category }}">
+    <div
+      class="notification is-{{ category }}"
+      x-data="{ isShowing: true }"
+      x-show="isShowing"
+      x-transition>
+
       {{ message }}
+
+      <button class="delete" @click="isShowing = false"></button>
+
     </div>
   {% endfor %}
 {% endwith %}
