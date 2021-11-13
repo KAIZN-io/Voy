@@ -1,21 +1,24 @@
 {% extends 'layout-page.html.j2' %}
 
 
+{#############################################################################}
+{# META                                                                      #}
+{#############################################################################}
+
 {% block title %}Dashboard{% endblock %}
+
+{% block page_title %}Dashboard{% endblock %}
+
+{% block body_class %}dashboard{% endblock %}
 
 {% block scripts %}
   <script src="{{ asset('bundle/index.js') }}" type="text/javascript"></script>
 {% endblock %}
 
-{% block body_class %}dashboard{% endblock %}
 
-{% block page_title %}
-  Dashboard
-{% endblock %}
-
-{% block page_actions %}
-
-{% endblock %}
+{#############################################################################}
+{# CONTENT                                                                   #}
+{#############################################################################}
 
 {% block content %}
   <section class="section">
@@ -125,6 +128,11 @@
 {% block modals %}
   {% include "controller/ticket/comment/modal.html.j2" %}
 {% endblock %}
+
+
+{#############################################################################}
+{# MACROS                                                                    #}
+{#############################################################################}
 
 {% macro render_ticket(ticket) %}
    <tr class="ticket">
