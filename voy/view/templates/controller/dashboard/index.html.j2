@@ -197,12 +197,11 @@
     {# Actions #}
     <td class="ticket__action">
 
-      <button
-        data-ticket-id="{{ ticket.id }}"
-        data-target="#modal_ticket_comment"
-        data-toggle="modal"
+      <button x-data
         class="button is-info is-light"
-        title="Show comments">
+        title="Show Comments"
+
+        @click="$dispatch('show-ticket-comments')">
         <span class="icon">
           <i class="far fa-comments"></i>
         </span>

@@ -1,0 +1,24 @@
+<div
+  {# We have the `is-active` class permanently added. The showing and hiding of the modal is done by Alpine. #}
+  class="modal-ticket-comments modal is-active"
+  {# This is to prevent the modal from flashing on initial page load. #}
+  style="display: none;"
+
+  x-data="modal_ticket_comments"
+  x-show="isOpen"
+  x-trap="isOpen"
+  x-transition.opacity
+
+  @show-ticket-comments.document="open()">
+
+  <div class="modal-background" @click="close()"></div>
+
+  <div class="modal-content">
+    <div class="box">
+      This is a test
+    </div>
+  </div>
+
+  <button class="modal-close is-large" aria-label="close" @click="close()"></button>
+
+ </div>
