@@ -7,7 +7,8 @@ const TRANSITION_DURATION = 220;
 
 
 Alpine.data('modal_ticket_comments', () => ({
-  isOpen: false,
+  isOpen:         false,
+  isInitializing: true,
 
   ticketId: undefined,
   renderedComments: undefined,
@@ -16,7 +17,8 @@ Alpine.data('modal_ticket_comments', () => ({
    * Resets the modal to it's initial state.
    */
    reset() {
-    this.isOpen = false;
+    this.isOpen         = false;
+    this.isInitializing = true;
 
     this.ticketId         = undefined;
     this.renderedComments = undefined;
@@ -83,10 +85,12 @@ Alpine.data('modal_ticket_comments', () => ({
    * @returns {Promise} A Promise that resolves when the component status was
    *   updates.
    */
-  updateComments() {
+  initializeComments() {
     return this.loadComments()
       // Update the modal content
-      .then( renderedComments => this.renderedComments = renderedComments );
+      .then( renderedComments => this.renderedComments = renderedComments )
+      // Wait for the changes to be rendered
+      .then( () => this.waitForRender() );
   },
 
   /**
@@ -94,11 +98,32 @@ Alpine.data('modal_ticket_comments', () => ({
    *
    * @param {Event} event The event that was triggered to open the modal.
    */
-  open(event) {
+  async open(event) {
+    // Setting inital values
     this.ticketId = event.detail.ticketId;
+    this.isInitializing = true;
+
+    // Start the request for loading comments as early as possible, but store
+    // the promise for later use.
+    const initializeCommentsPromise = this.initializeComments();
+
+    // Register callback for finishing initialization, when comments are loaded.
+    initializeCommentsPromise
+      .then( () => this.isInitializing = false );
+
+    // Wait for the initial values to be rendered. So nothing jumps around after
+    // opening the modal.
+    await this.waitForRender();
+
+    // Wait for the comments to load, but no more than 150ms. This way, either
+    // the modal opens completely initialized or we show the modal with a
+    // loading animation.
+    await Promise.race([
+      initializeCommentsPromise,
+      resolveAfterTimeout(100)
+    ]);
 
     this.show();
-    this.updateComments();
   },
 
   /**

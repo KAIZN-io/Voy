@@ -22,8 +22,20 @@
     </header>
 
     <section
-      class="modal-card-body"
-      x-html="renderedComments">
+      class="modal-card-body p-0 is-clipped is-relative">
+
+      <div
+        class="modal-card-body h-full"
+        x-html="renderedComments">
+      </div>
+
+      <div
+        class="is-soft-flex is-overlay is-justify-content-center is-align-items-center has-background-light"
+        x-show="isOpen && isInitializing"
+        x-transition.opacity.duration.220ms>
+        {% include "utilities/_spinner.html.j2" %}
+      </div>
+
     </section>
 
     <footer class="modal-card-foot">
