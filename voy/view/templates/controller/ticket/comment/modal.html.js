@@ -7,9 +7,10 @@ const TRANSITION_DURATION = 220;
 
 
 Alpine.data('modal_ticket_comments', () => ({
-  isOpen:         false,
-  isVisible:      false,
-  isInitializing: false,
+  isOpen:          false,
+  isVisible:       false,
+  isInitializing:  false,
+  isAddingComment: false,
 
   ticketId: undefined,
   renderedComments: undefined,
@@ -20,9 +21,10 @@ Alpine.data('modal_ticket_comments', () => ({
    * Resets the modal to it's initial state.
    */
    reset() {
-    this.isOpen         = false;
-    this.isVisible      = false;
-    this.isInitializing = false;
+    this.isOpen          = false;
+    this.isVisible       = false;
+    this.isInitializing  = false;
+    this.isAddingComment = false;
 
     this.ticketId         = undefined;
     this.renderedComments = undefined;
@@ -94,18 +96,73 @@ Alpine.data('modal_ticket_comments', () => ({
   /**
    * Loads and displays the rendered comments for the current ticket.
    *
-   * @returns {Promise} A Promise that resolves when the component status was
-   *   updates.
+   * @returns {Promise} A Promise that resolves when the component state was
+   *   updated.
    */
-  initializeComments() {
+  refreshComments() {
+    // Load the rendered comments form the backend.
     return this.loadComments()
       // Update the modal content
       .then( renderedComments => this.renderedComments = renderedComments )
       // Wait for the changes to be rendered
       .then( () => this.waitForRender() )
-      // Jump to the most recent comment, so the user does not need to scroll
-      // there.
+  },
+
+  /**
+   * Loads and displays the rendered comments and scrolls to the most recent
+   * one.
+   *
+   * @returns {Promise} A Promise that resolves when the comments are rendered
+   *   and scrolled all the way to the most recent one at the bottom.
+   */
+  initializeComments() {
+    // Load and render comments and jump to the most recent one.
+    return this.refreshComments()
       .then( () => this.scrollToMostRecentComment() );
+  },
+
+  /**
+   * Makes a call to the backend to add a comment to the current ticket.
+   *
+   * It takes the data from the new comment form and posts it to the backent.
+   *
+   * @returns {Promise} A promise for the backend call.
+   */
+  saveNewComment() {
+    return fetch(`/tickets/${this.ticketId}/comments/new`, {
+      method: 'POST',
+      body: new FormData(this.$refs.newCommentForm),
+    })
+      .catch( error => console.error(error) );
+  },
+
+  /**
+   * Adds a new comment to the current ticket.
+   *
+   * Makes sure the state is updated for the UI to show some loading indication.
+   * Saves the new comment, reloads all comments, clears the form and finally
+   * smooth scrolls to the new comment.
+   *
+   */
+  async addComment() {
+    // Set state so that UI is updated accordingly
+    this.isAddingComment = true;
+
+    // Save the new comment.
+    await this.saveNewComment();
+
+    // Refresh the comments so the new comment is visible.
+    await this.refreshComments();
+
+    // Clear the form for adding a new comment and update component state
+    this.$refs.newCommentForm.reset();
+    this.isAddingComment = false;
+
+    // Wait for alpine to render the changes
+    await this.waitForRender();
+
+    // Smooth scroll to the comment that was just added.
+    this.scrollToMostRecentComment('smooth');
   },
 
   /**

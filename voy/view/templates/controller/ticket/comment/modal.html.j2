@@ -39,9 +39,43 @@
 
     </section>
 
-    <footer class="modal-card-foot">
-      <button class="button is-success">Save changes</button>
-      <button class="button">Cancel</button>
+    <footer class="modal-card-foot is-block">
+      <form
+        x-ref="newCommentForm"
+        @submit.prevent="addComment()">
+
+        <div class="field">
+          <div class="control">
+            <textarea
+              class="textarea"
+              name="content"
+              placeholder="Start typing..."
+              :disabled="isInitializing || isAddingComment"
+              required></textarea>
+          </div>
+        </div>
+
+        <div class="field is-grouped">
+          <div class="control">
+            <button
+              type="submit"
+              class="button is-primary"
+              :disabled="isInitializing || isAddingComment">
+              Add Comment
+            </button>
+          </div>
+          <div class="control">
+            <button
+              type="button"
+              class="button is-danger is-light"
+              @click="close($event)"
+              :disabled="isInitializing || isAddingComment">
+              Close
+            </button>
+          </div>
+        </div>
+
+      </form>
     </footer>
 
   </div>
