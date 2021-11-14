@@ -1,13 +1,13 @@
-// Packages
-import Alpine from 'alpinejs';
-import trap from '@alpinejs/trap';
+//
+// Packages / Libraries
+// No Packages yet...
 
 
-// Styles
-import '../css/main.scss';
+//
+// Basic and Shared Scripts
+import './vendor/alpinejs';
 
 
-// Register Apline globally and start it
-window.Alpine = Alpine;
-Alpine.plugin(trap);
-Alpine.start();
+//
+// Template Scripts
+import '../../templates/_index';

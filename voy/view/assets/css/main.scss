@@ -1,18 +1,20 @@
-@import 'bulma/bulma';
+//
+// Packages and Libraries
+@import "bulma/bulma";
 @import "@fortawesome/fontawesome-free/css/all.css";
 
-// Template styles
-@import "../../templates/";
 
-// Component styles
+//
+// Basic and Shared Styles
+@import "./base.scss";
+@import "./helper.scss";
+
+
+//
+// Component Styles
 @import "./components/prompt";
 
 
-html, body {
-  height: 100%;
-}
-
-// Helper
-.h-full {
-  height: 100%;
-}
+//
+// Template Styles
+@import "../../templates/";

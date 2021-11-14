@@ -23,7 +23,7 @@ Encore
      * Each entry will result in one JavaScript file (e.g. app.js)
      * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
      */
-    .addEntry('main',       './voy/view/assets/js/main.js')
+    .addEntry('main',       [ './voy/view/assets/js/main.js', './voy/view/assets/css/main.scss' ])
     .addEntry('edit_data',  './voy/view/assets/js/pages/edit_data.js')
     .addEntry('data_entry', './voy/view/assets/js/pages/data_entry.js')
 
