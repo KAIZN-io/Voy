@@ -9,7 +9,7 @@ const TRANSITION_DURATION = 220;
 Alpine.data('modal_ticket_comments', () => ({
   isOpen:         false,
   isVisible:      false,
-  isInitializing: true,
+  isInitializing: false,
 
   ticketId: undefined,
   renderedComments: undefined,
@@ -22,7 +22,7 @@ Alpine.data('modal_ticket_comments', () => ({
    reset() {
     this.isOpen         = false;
     this.isVisible      = false;
-    this.isInitializing = true;
+    this.isInitializing = false;
 
     this.ticketId         = undefined;
     this.renderedComments = undefined;
@@ -127,6 +127,9 @@ Alpine.data('modal_ticket_comments', () => ({
    * @param {Event} event The event that was triggered to open the modal.
    */
   async open(event) {
+    // Make sure no old data is sticking around.
+    this.reset();
+
     // Setting inital values
     this.ticketId = event.detail.ticketId;
 
