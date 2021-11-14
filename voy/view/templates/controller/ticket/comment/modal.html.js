@@ -13,6 +13,20 @@ Alpine.data('modal_ticket_comments', () => ({
   renderedComments: undefined,
 
   /**
+   * Get a promise that resolves after the next alpine tick.
+   *
+   * This can be used when one needs to wait for some changes to the components
+   * state to take effect.
+   *
+   * @returns {Promise} A promise that resolves after the next Alpine tick.
+   */
+  waitForRender() {
+    return new Promise((resolve) => {
+      this.$nextTick(resolve);
+    });
+  },
+
+  /**
    * Makes the modal visible.
    *
    * @returns Promise A promise that resolves after the transition for showing
@@ -21,7 +35,10 @@ Alpine.data('modal_ticket_comments', () => ({
   show() {
     this.isOpen = true;
 
-    return resolveAfterTimeout(TRANSITION_DURATION);
+    // Wait for the changes to be rendered, then resolve after the transition
+    // animation.
+    return this.waitForRender()
+      .then( () => resolveAfterTimeout(TRANSITION_DURATION) );
   },
 
   /**
@@ -33,7 +50,10 @@ Alpine.data('modal_ticket_comments', () => ({
   hide() {
     this.isOpen = false;
 
-    return resolveAfterTimeout(TRANSITION_DURATION);
+    // Wait for the changes to be rendered, then resolve after the transition
+    // animation.
+    return this.waitForRender()
+      .then( () => resolveAfterTimeout(TRANSITION_DURATION) );
   },
 
   /**
