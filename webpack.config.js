@@ -24,7 +24,6 @@ Encore
      * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
      */
     .addEntry('main',       './voy/view/assets/js/main.js')
-    .addEntry('index',      './voy/view/assets/js/pages/index.js')
     .addEntry('edit_data',  './voy/view/assets/js/pages/edit_data.js')
     .addEntry('data_entry', './voy/view/assets/js/pages/data_entry.js')
 
