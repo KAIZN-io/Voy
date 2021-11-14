@@ -13,6 +13,16 @@ Alpine.data('modal_ticket_comments', () => ({
   renderedComments: undefined,
 
   /**
+   * Resets the modal to it's initial state.
+   */
+   reset() {
+    this.isOpen = false;
+
+    this.ticketId         = undefined;
+    this.renderedComments = undefined;
+  },
+
+  /**
    * Get a promise that resolves after the next alpine tick.
    *
    * This can be used when one needs to wait for some changes to the components
@@ -54,16 +64,6 @@ Alpine.data('modal_ticket_comments', () => ({
     // animation.
     return this.waitForRender()
       .then( () => resolveAfterTimeout(TRANSITION_DURATION) );
-  },
-
-  /**
-   * Resets the modal to it's initial state.
-   */
-  reset() {
-    this.isOpen = false;
-
-    this.ticketId         = undefined;
-    this.renderedComments = undefined;
   },
 
   /**
