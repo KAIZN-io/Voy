@@ -8,6 +8,7 @@ const TRANSITION_DURATION = 220;
 
 Alpine.data('modal_ticket_comments', () => ({
   isOpen:         false,
+  isVisible:      false,
   isInitializing: true,
 
   ticketId: undefined,
@@ -18,6 +19,7 @@ Alpine.data('modal_ticket_comments', () => ({
    */
    reset() {
     this.isOpen         = false;
+    this.isVisible      = false;
     this.isInitializing = true;
 
     this.ticketId         = undefined;
@@ -45,7 +47,7 @@ Alpine.data('modal_ticket_comments', () => ({
    *   the modal is completed.
    */
   show() {
-    this.isOpen = true;
+    this.isVisible = true;
 
     // Wait for the changes to be rendered, then resolve after the transition
     // animation.
@@ -60,7 +62,7 @@ Alpine.data('modal_ticket_comments', () => ({
    *  the modal is completed.
    */
   hide() {
-    this.isOpen = false;
+    this.isVisible = false;
 
     // Wait for the changes to be rendered, then resolve after the transition
     // animation.
@@ -90,7 +92,23 @@ Alpine.data('modal_ticket_comments', () => ({
       // Update the modal content
       .then( renderedComments => this.renderedComments = renderedComments )
       // Wait for the changes to be rendered
-      .then( () => this.waitForRender() );
+      .then( () => this.waitForRender() )
+      // Jump to the most recent comment, so the user does not need to scroll
+      // there.
+      .then( () => this.scrollToMostRecentComment() );
+  },
+
+  /**
+   * Scrolls to the most recent comment. The way of scrolling can be controlled
+   * by the behavior parameter.
+   *
+   * @param {string} behavior How to scroll? 'smooth' or 'auto' (hard jump).
+   */
+  scrollToMostRecentComment(behavior = 'auto') {
+    this.$refs.comments.scrollTo({
+      top: this.$refs.comments.scrollHeight,
+      behavior,
+    });
   },
 
   /**
@@ -101,6 +119,8 @@ Alpine.data('modal_ticket_comments', () => ({
   async open(event) {
     // Setting inital values
     this.ticketId = event.detail.ticketId;
+
+    this.isOpen         = true;
     this.isInitializing = true;
 
     // Start the request for loading comments as early as possible, but store
