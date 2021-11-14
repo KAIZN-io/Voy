@@ -14,6 +14,8 @@ Alpine.data('modal_ticket_comments', () => ({
   ticketId: undefined,
   renderedComments: undefined,
 
+  _requestAbortController: undefined,
+
   /**
    * Resets the modal to it's initial state.
    */
@@ -76,7 +78,15 @@ Alpine.data('modal_ticket_comments', () => ({
    * @returns {string} The rendered comment HTML.
    */
   loadComments() {
-    return fetch(`/tickets/${this.ticketId}/comments/modal-content`)
+    // Make sure there are no ongoing requests
+    this._requestAbortController?.abort();
+
+    // Generate a new AbortController that is not aborted. The current one might be.
+    this._requestAbortController = new AbortController();
+
+    return fetch(`/tickets/${this.ticketId}/comments/modal-content`, {
+      signal: this._requestAbortController.signal,
+    })
       .then( response => response.text() )
       .catch( error => console.error(error) );
   },
@@ -150,6 +160,9 @@ Alpine.data('modal_ticket_comments', () => ({
    * Closes the modal and resets it's data to the initial state.
    */
   close() {
+    // Stop onging requests immediately
+    this._requestAbortController?.abort();
+
     // Wait for the modal to transition out, then reset the contents of it.
     // This way the user does not see an empty modal transitioning out.
     this.hide()
