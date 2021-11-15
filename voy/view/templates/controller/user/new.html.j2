@@ -12,7 +12,7 @@
 
 {% block title %}Add User{% endblock %}
 
-{% block page_title %}Add a new User{% endblock %}
+{% block page_title %}Users{% endblock %}
 
 
 {#############################################################################}
@@ -23,7 +23,9 @@
 
   {% with %}
 
-    {% call render_section() %}
+    {% call render_section(
+      title='New User',
+      sub_title='Someone joining your team?') %}
       <form action="{{ url_for('user_controller.new_post') }}" method="POST">
 
         {{ render_errors(errors) }}

@@ -24,7 +24,8 @@
   {% with %}
 
     {% call render_section(
-      title='Change your Password') %}
+      title='Password',
+      sub_title='Stay safe, change your password here') %}
       <form action="{{ url_for('profile_controller.reset_password_post') }}" method="POST">
 
         {{ render_errors(errors) }}

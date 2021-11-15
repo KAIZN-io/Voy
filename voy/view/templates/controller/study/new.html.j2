@@ -12,7 +12,7 @@
 
 {% block title %}Add Study{% endblock %}
 
-{% block page_title %}Add a new Study{% endblock %}
+{% block page_title %}Studies{% endblock %}
 
 
 {#############################################################################}
@@ -23,7 +23,9 @@
 
   {% with %}
 
-    {% call render_section() %}
+    {% call render_section(
+      title='New Study',
+      sub_title='Got a new Study you are working on?') %}
       <form action="{{ url_for('study_controller.new_post') }}" method="POST">
 
         {{ render_errors(errors) }}
