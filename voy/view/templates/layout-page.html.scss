@@ -2,9 +2,9 @@
   display: grid;
 
   grid-template:
-  "navigation   main" auto
+  "navigation   main" 1fr
   "navigation footer" 66px
-  / 300px     auto;
+  / 300px     1fr;
 
   .layout {
 
