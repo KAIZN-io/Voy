@@ -8,6 +8,7 @@ from flask_breadcrumbs import Breadcrumbs
 from flask_login import LoginManager
 
 from .commands import database_cli, user_cli
+from .constants import FLASH_TYPE_WARNING
 from .controller import authentication_blueprint, profile_blueprint, dashboard_blueprint, user_blueprint, \
     study_blueprint, ticket_blueprint, ticket_comment_blueprint
 from .mail import mail
@@ -48,6 +49,7 @@ def create_app():
     # Initialize the login manager
     login_manager = LoginManager()
     login_manager.login_view = 'authentication_controller.login'
+    login_manager.login_message_category = FLASH_TYPE_WARNING
     login_manager.init_app(app)
 
     @login_manager.user_loader
