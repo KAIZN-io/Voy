@@ -24,7 +24,10 @@ default_breadcrumb_root(user_blueprint, '.')
 def index():
 
     # filter all user except for the admin
-    user_list = User.query.filter(User.role != ROLE_ADMIN).all()
+    user_list = User.query \
+        .filter(User.role != ROLE_ADMIN) \
+        .order_by(User.abbreviation.desc()) \
+        .all()
 
     return render_template('controller/user/index.html.j2', user_list=user_list)
 
@@ -35,6 +38,18 @@ def index():
 @login_required
 def deactivate(user_id: int):
     User.query.get(user_id).is_active = False
+
+    db.session.commit()
+
+    return redirect(url_for('user_controller.index'))
+
+
+# TODO: Make this a POST request; With a GET request it is too easy to just close tickets by their id. Also in terms of
+# HTTP lingo, a GET request is only meant to get something. A POST is to modify.
+@user_blueprint.route('/users/<int:user_id>/activate', methods=['GET'])
+@login_required
+def activate(user_id: int):
+    User.query.get(user_id).is_active = True
 
     db.session.commit()
 

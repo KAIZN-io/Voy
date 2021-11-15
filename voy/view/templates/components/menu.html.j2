@@ -26,7 +26,7 @@
     {% endif %}
     {% if (current_user.is_authenticated) and (current_user.role == 'Admin' or current_user.role == 'Data Manager') %}
       <li>
-        <a href="{{ url_for('study_controller.new') }}">
+        <a href="{{ url_for('user_controller.index') }}">
           Users
         </a>
       </li>

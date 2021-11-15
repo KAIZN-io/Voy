@@ -1,101 +1,127 @@
-{% extends 'layout.html.j2' %}
+{% extends 'layout-page.html.j2' %}
 
-{% block title %} User Managment {% endblock %}
+
+{% from "components/section.html.j2" import render_section %}
+
+
+{#############################################################################}
+{# META                                                                      #}
+{#############################################################################}
+
+{% block title %}Users{% endblock %}
+
+{% block page_title %}Users{% endblock %}
+
+{% block body_class %}users{% endblock %}
+
+
+{#############################################################################}
+{# CONTENT                                                                   #}
+{#############################################################################}
 
 {% block content %}
 
-{% if current_user.is_authenticated %}
+  {% with %}
 
-{% include "utilities/_breadcrumbs.html.j2" %}
+    {% set actions %}
+      {% if current_user.role == 'Admin' or current_user.role == 'Data Manager' %}
+        <a class="button is-primary" href="{{ url_for('user_controller.new') }}">
+          <span class="icon">
+            <i class="fas fa-plus"></i>
+          </span>
+          <span>
+            New User
+          </span>
+        </a>
+      {% endif %}
+    {% endset %}
 
-<h1 class="title">User Management</h1>
+    {% call render_section(
+      title='Users',
+      actions=actions) %}
+      <table class="users__table table is-striped is-hoverable is-fullwidth">
 
-<a class="btn btn-primary" href="{{ url_for('user_controller.new') }}" style="float: left;">
-  add User
-</a>
-<br/>
-<br/>
+        <thead class="thead-light">
+          <tr>
+            <th scope="col">Status</th>
+            <th scope="col">User</th>
+            <th scope="col">Role</th>
+            <th scope="col">Created at</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
 
-<h4>MedOps</h4>
-<table class="table table-hover">
-  <thead class="thead-light">
-  <tr>
-    <th scope="col">Status</th>
-    <th scope="col">User</th>
-    <th scope="col">Role</th>
-    <th scope="col">Inactivate</th>
-  </tr>
-  </thead>
-  <tbody>
+        <tbody>
+          {% for user in user_list %}
+            {{ render_user(user) }}
+          {% endfor %}
+        </tbody>
 
-  {% for user in user_list %}
-  {% if user.role == "MedOps" %}
+      </table>
+    {% endcall %}
 
-  <tr>
-    {% if user.is_active == false %}
+  {% endwith %}
+
+{% endblock %}
+
+
+{#############################################################################}
+{# MACROS                                                                    #}
+{#############################################################################}
+
+{% macro render_user(user) %}
+  <tr class="user">
+
     <td>
-      <span class="badge badge-danger"> Inactive </span>
-    </td>
-    {% else %}
-    <td>
-      <span class="badge badge-success"> Active </span>
-      {% if user.is_system_password == true %}
-      <span class="badge badge-danger"> sPasswd </span>
+      {% if user.is_active %}
+        <span class="tag is-success is-light">
+          Active
+        </span>
+      {% else %}
+        <span class="tag is-danger is-light">
+          Deactivated
+        </span>
       {% endif %}
     </td>
-    {% endif %}
-    <td>{{ user.abbreviation }}</td>
-    <td>{{ user.role }}</td>
-    <td>
-    {% if user.is_active %}
-      <a href="{{ url_for('user_controller.deactivate', user_id=user.id) }}">inactivate</a>
-    {% endif %}
+
+    <td class="is-family-monospace">
+      {{ user.abbreviation|upper }}
     </td>
 
-  </tr>
-  {% endif %}
-  {% endfor %}
-  </tbody>
-</table>
-<br>
-<h4>DM</h4>
-<table class="table table-hover">
-  <thead class="thead-light">
-  <tr>
-    <th scope="col">Status</th>
-    <th scope="col">User</th>
-    <th scope="col">Role</th>
-    <th scope="col">Inactivate</th>
-  </tr>
-  </thead>
-  <tbody>
-  {% for user in user_list %}
-  {% if (user.role == "Data Entry" or user.role == "Data Manager") %}
-  <tr>
-    {% if user.is_active == false%}
     <td>
-      <span class="badge badge-danger"> Inactive </span>
+      {{ user.role }}
     </td>
-    {% else %}
+
     <td>
-      <span class="badge badge-success"> Active </span>
-      {% if user.is_system_password == true%}
-      <span class="badge badge-danger"> sPasswd </span>
+      {{ user.created_at.humanize() }}
+    </td>
+
+    <td class="user__actions">
+      {% if user.is_active %}
+        <a
+          href="{{ url_for('user_controller.deactivate', user_id=user.id) }}"
+          class="button is-info is-light">
+          <span class="icon">
+            <i class="far fa-times-circle"></i>
+          </span>
+          <span>
+            Deactivate
+          </span>
+        </a>
+      {% else %}
+        <a
+          href="{{ url_for('user_controller.activate', user_id=user.id) }}"
+          class="button is-info is-light">
+          <span class="icon">
+            <i class="far fa-check-circle"></i>
+          </span>
+          <span>
+            Activate
+          </span>
+        </a>
       {% endif %}
     </td>
-    {% endif %}
-    <td>{{ user.abbreviation }}</td>
-    <td>{{ user.role }}</td>
-    <td>
-    {% if user.is_active %}
-      <a href="{{ url_for('user_controller.deactivate', user_id=user.id) }}">inactivate</a>
-    {% endif %}
 
-    </td>
   </tr>
-  {% endif %}
-  {% endfor %}
-  </tbody>
-</table>
 
-{% endif %} {% endblock %}
+{% endmacro %}
