@@ -1,130 +1,215 @@
-{% extends 'layout.html.j2' %}
+{% extends 'layout-page.html.j2' %}
 
-{% block title %}Data Entry{% endblock %}
+{% from "components/section.html.j2" import render_section %}
+
+{% from "utilities/_errors.html.j2" import render_errors %}
+
+
+{#############################################################################}
+{# META                                                                      #}
+{#############################################################################}
+
+{% block title %}Add Queries{% endblock %}
+
+{% block page_title %}Queries{% endblock %}
+
+
+{#############################################################################}
+{# CONTENT                                                                   #}
+{#############################################################################}
 
 {% block content %}
 
-{% include "utilities/_breadcrumbs.html.j2" %}
+  {% with %}
 
-<h1>Data Entry</h1>
+    {% call render_section(
+      title='New Queries',
+      sub_title='Doing a Check? Add your Findings here') %}
+      <form
+        x-data="ticket_new"
 
-<form class="needs-validation" method="post" novalidate action="{{ url_for('ticket_controller.new_post') }}">
-  <div class="form-row">
+        action="{{ url_for('ticket_controller.new_post') }}"
+        method="POST">
 
-    <div class="form-group col-md-6">
-      <label for="study_id">Study ID</label>
+        {{ render_errors(errors) }}
 
-      <select class="form-control" name="study_id" required width="300px">
-        <option disabled selected value> -- select an option --</option>
-        <option disabled="disabled">----</option>
+        <h2 class="title is-4">General Information</h2>
 
-        {% for study in study_list %}
-          <option value="{{ study.id }}">
-            {{ study.internal_id }} {% if not study.is_active %} (inactive) {% endif %}
-          </option>
-        {% endfor %}
+        <div class="columns">
 
-      </select>
-    </div>
-    <div class="form-group col-md-4">
-      <label for="type">Document-Type :</label>
-      <select class="form-control" name="source_type" required>
-        <option disabled selected value> -- select an option --</option>
-        <option disabled="disabled">----</option>
+          <div class="column">
+            <div class="field mb-5">
+              <label class="label" for="study_id">
+                Study
+              </label>
+              <div class="control">
+                <div class="select is-medium is-fullwidth">
+                  <select name="study_id" required>
 
-        {% for source_type in available_source_types %}
-          <option value="{{ source_type }}">
-            {{ source_type }}
-          </option>
-        {% endfor %}
-      </select>
-    </div>
+                    <option disabled selected>
+                      Select a Study
+                    </option>
 
-    <div class="form-group col-md-2">
-      <label for="source_number">Scr No</label>
-      <input class="form-control" name="source_number" required
-             type="number" min="0" max="99999999" value="{{ request.form['source_number'] }}"></input>
-    </div>
-  </div>
-  <br>
+                    {% for study in study_list %}
+                      <option value="{{ study.id }}">
+                        {{ study.internal_id }}
+                      </option>
+                    {% endfor %}
 
-  <table class="table" data-ticket-table id="data_entry_table" novalidate>
-    <thead class="thead-light">
-    <tr>
-      <th scope="col">Visit</th>
-      <th scope="col">Page</th>
-      <th scope="col">Procedure</th>
-      <th scope="col">Description</th>
-      <th scope="col">Responsible</th>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
 
-    </tr>
-    </thead>
-    <tbody>
-    <!-- ein attribut, den es nur für uns gibt 'data-ticket-row' -->
-    <tr data-ticket-row>
-      <td>
-        <div class="form-group">
-        <input class="form-control" name="row[][visit]"
-               placeholder="which visit?" type="text" maxlength="10"
-               value="{{ request.form['visit'] }}" required></input>
-        </div>
-      </td>
+          <div class="column">
+            <div class="field mb-5">
+              <label class="label" for="source_number">
+                Source Number
+              </label>
+              <div class="control">
+                <input type="number" min="0" class="input is-medium" name="source_number" required />
+              </div>
+            </div>
+          </div>
 
-      <td>
-        <div class="form-group">
-          <input class="form-control" name="row[][page]"
-                 placeholder="which page?" type="text" maxlength="10"
-                 value="{{ request.form['page'] }}" required></input>
-        </div>
-      </td>
-      <td>
-        <div class="form-group">
-          <input class="form-control" name="row[][procedure]"
-                 placeholder="VS / ECG / ... ?" type="text" maxlength="20"
-                 value="{{ request.form['title'] }}" required></input>
-        </div>
-      </td>
-      <td>
-        <div class="form-group">
-              <textarea class="form-control" name="row[][description]"
-                        placeholder="Please describe your finding"
-                        maxlength="100"
-                        required>{{ request.form['description'] }}</textarea>
+          <div class="column">
+            <div class="field mb-5">
+              <div class="label">
+                Document-Type
+              </div>
+              <div class="control">
+                {% for source_type in available_source_types %}
+                  <label class="radio button is-medium is-info is-light">
+                    <input type="radio" name="source_type" value="{{ source_type }}" required />
+                    {{ source_type }}
+                  </label>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+
         </div>
 
-      </td>
-      <td>
-        <div class="form-group">
-          <select class="form-control" name="row[][assignee_id]" required width="300px">
-            <option disabled selected value> -- select an option --</option>
-            <option disabled="disabled">----</option>
+        <h2 class="title is-4">Queries</h2>
 
-            {% for user in staff_list_medops %}
-              <option value="{{ user.id }}">
-                <!-- if user is not active yet, display it -->
-                {{ user.abbreviation }} {% if not user.is_active %} (inactive) {% endif %}
-              </option>
-            {% endfor %}
+        <table class="table is-striped is-hoverable is-fullwidth mb-6">
+          <thead class="thead-light">
+            <tr>
+              <th scope="col">Visit</th>
+              <th scope="col">Page</th>
+              <th scope="col">Procedure</th>
+              <th scope="col">Description</th>
+              <th scope="col">Assignee</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <template x-for="ticket in tickets" :key="ticket.uuid">
+              <tr>
 
-          </select>
-        </div>
-      </td>
-    </tr>
-    </tbody>
+                <td>
+                  <div class="control">
+                    <input
+                      name="ticket[][visit]"
+                      class="input"
+                      type="text"
+                      maxlength="10"
+                      required />
+                  </div>
+                </td>
 
-  </table>
-  <div class="form-group">
-    <button class="btn btn-primary" id="submit_table" style="margin-left: 50%" type="submit">Submit</button>
-    <button class="btn btn-primary" id="remove_row" type="button">remove row</button>
-    <button class="btn btn-primary" id="add_row" style="float: right;" type="button">add row</button>
+                <td>
+                  <div class="control">
+                    <input
+                      name="ticket[][page]"
+                      class="input"
+                      type="text"
+                      maxlength="10"
+                      required />
+                  </div>
+                </td>
 
+                <td>
+                  <div class="control">
+                    <input
+                      name="ticket[][procedure]"
+                      class="input"
+                      type="text"
+                      maxlength="20"
+                      required />
+                  </div>
+                </td>
 
+                <td>
+                  <textarea
+                    name="ticket[][description]"
+                    maxlength="100"
+                    class="textarea"></textarea>
+                </td>
 
-  </div>
-</form>
+                <td>
+                  <div class="control">
+                    <div class="select is-fullwidth">
+                      <select name="ticket[][assignee_id]" required>
+
+                        <option disabled selected>
+                          Select Someone
+                        </option>
+
+                        {% for user in staff_list_medops %}
+                          <option value="{{ user.id }}">
+                            {{ user.abbreviation }}
+                          </option>
+                        {% endfor %}
+
+                      </select>
+                    </div>
+                  </div>
+                </td>
+
+                <td>
+                  <button
+                    class="button is-danger is-light"
+                    type="button"
+
+                    @click="removeTicketByUuid(ticket.uuid)">
+                    <i class="far fa-times-circle"></i>
+                  </button>
+                </td>
+
+              </tr>
+            </template>
+          </tbody>
+        </table>
+
+        <button
+          class="button is-success is-medium is-light mr-3"
+          type="button"
+
+          @click="addTicket()">
+          <span class="icon">
+            <i class="fas fa-plus"></i>
+          </span>
+          <span>
+            Add Query
+          </span>
+        </button>
+
+        <button
+          class="button is-primary is-medium"
+          type="submit">
+          Submit Queries
+        </button>
+
+      </form>
+    {% endcall %}
+
+  {% endwith %}
 
 {% endblock %}
 
-{% block scripts %}
-  <script src="{{ asset('bundle/data_entry.js') }}" type="text/javascript"></script>
-{% endblock %}
+
+{#############################################################################}
+{# MACROS                                                                    #}
+{#############################################################################}

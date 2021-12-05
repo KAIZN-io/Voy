@@ -36,15 +36,15 @@ def new_post():
     # header data form the form
     study_id = int(request.form['study_id'])
     study = Study.query.filter_by(id=study_id).scalar()
-    source_type = request.form['source_type']
     source_number = request.form['source_number']
+    source_type = request.form['source_type']
 
     # data under the header data
-    visits = request.form.getlist('row[][visit]')
-    pages = request.form.getlist('row[][page]')
-    procedures = request.form.getlist('row[][procedure]')
-    descriptions = request.form.getlist('row[][description]')
-    assignee_ids = request.form.getlist('row[][assignee_id]')
+    visits = request.form.getlist('ticket[][visit]')
+    pages = request.form.getlist('ticket[][page]')
+    procedures = request.form.getlist('ticket[][procedure]')
+    descriptions = request.form.getlist('ticket[][description]')
+    assignee_ids = request.form.getlist('ticket[][assignee_id]')
 
     for i in range(len(visits)):
         assignee_id = int(assignee_ids[i])
@@ -52,8 +52,8 @@ def new_post():
 
         ticket = Ticket(
             study=study,
-            type=source_type,
             source_number=source_number,
+            type=source_type,
 
             visit=visits[i],
             page=pages[i],

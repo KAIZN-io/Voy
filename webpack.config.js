@@ -25,7 +25,6 @@ Encore
      */
     .addEntry('main',       [ './voy/view/assets/js/main.js', './voy/view/assets/css/main.scss' ])
     .addEntry('edit_data',  './voy/view/assets/js/pages/edit_data.js')
-    .addEntry('data_entry', './voy/view/assets/js/pages/data_entry.js')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     //.splitEntryChunks()
