@@ -1,126 +1,204 @@
-{% extends 'layout.html.j2' %}
+{% extends 'layout-page.html.j2' %}
 
-{% block title %}
-Edit Data
-{% endblock %}
+
+{% from "components/section.html.j2" import render_section %}
+
+{% from "utilities/_errors.html.j2" import render_errors %}
+
+
+{#############################################################################}
+{# META                                                                      #}
+{#############################################################################}
+
+{% block title %}Edit Query{% endblock %}
+
+{% block page_title %}Queries{% endblock %}
+
+
+{#############################################################################}
+{# CONTENT                                                                   #}
+{#############################################################################}
 
 {% block content %}
 
-{% include "utilities/_breadcrumbs.html.j2" %}
+  {% with %}
 
-<h1>Edit Data</h1>
+    {% call render_section(
+      title='Edit Query #' ~ ticket.id,
+      sub_title='Made an error? No worries, fix it here. I\'ll keep track of the changes for you') %}
+      <form
+        action="{{ url_for('ticket_controller.edit_post', ticket_id=ticket.id) }}"
+        method="POST">
 
-<form class="needs-validation" method="post" novalidate>
-  <div class="form-row">
+        {{ render_errors(errors) }}
 
-    <div class="form-group col-md-6">
-      <label for="study_id">Study ID</label>
+        <h2 class="title is-4">General Information</h2>
 
-      <select class="form-control" name="study_id" required width="300px">
-        <option SELECTED value="{{ ticket_data.study_id }}">{{ ticket_data.study.internal_id }}</option>
-        <option disabled="disabled">----</option>
+        <div class="columns">
 
-        {% for study in study_list %}
-          <option value="{{ study.id }}">
-            {{ study.internal_id }} {% if not study.is_active %} (inactive) {% endif %}
-          </option>
-        {% endfor %}
+          <div class="column">
+            <div class="field mb-5">
+              <label class="label" for="study_id">
+                Study
+              </label>
+              <div class="control">
+                <div class="select is-medium is-fullwidth">
+                  <select name="study_id" required>
 
-      </select>
-    </div>
-    <div class="form-group col-md-4">
-      <label for="type">Document-Type :</label>
-      <select class="form-control" name="type" required>
-          <option value="Source"{% if ticket_data.type=="Source" %} selected="selected"{% endif %}>Source</option>
-            <option value="ICF"{% if ticket_data.type=="ICF" %} selected="selected"{% endif %}>ICF</option>
+                    {% for study in study_list %}
+                      <option
+                        value="{{ study.id }}"
+                        {{ "selected" if study.id == ticket.study_id }}>
+                        {{ study.internal_id }}
+                      </option>
+                    {% endfor %}
 
-      </select>
-    </div>
-
-    <div class="form-group col-md-2">
-      <label for="source_number">Scr No</label>
-      <div class="form-group">
-        <input class="form-control" name="source_number"
-               required
-               type="number" min="0" max="99999999"
-               value="{{ ticket_data.source_number }}">
-      </div>
-    </div>
-    <table class="table" data-ticket-table id="data_entry_table" novalidate>
-      <thead class="thead-light">
-      <tr>
-        <th scope="col">Visit</th>
-        <th scope="col">Page</th>
-        <th scope="col">Procedure</th>
-        <th scope="col">Description</th>
-        <th scope="col">Responsible</th>
-
-      </tr>
-      </thead>
-      <tbody>
-      <tr>
-        <td>
-          <div class="form-group">
-            <input class="form-control" name="visit"
-                   required
-                   type="text"
-                   maxlength="10"
-                   value="{{ ticket_data.visit }}">
+                  </select>
+                </div>
+              </div>
+            </div>
           </div>
-        </td>
 
-        <td>
-          <div class="form-group">
-            <input class="form-control" name="page"
-                   required
-                   type="text"
-                   maxlength="10"
-                   value="{{ ticket_data.page }}">
+          <div class="column">
+            <div class="field mb-5">
+              <label class="label" for="source_number">
+                Source Number
+              </label>
+              <div class="control">
+                <input
+                  name="source_number"
+                  class="input is-medium"
+                  value="{{ ticket.source_number }}"
+                  type="number"
+                  min="0"
+                  required />
+              </div>
+            </div>
           </div>
-        </td>
-        <td>
-          <div class="form-group">
-            <input class="form-control" name="procedure"
-                   required
-                   type="text"
-                   maxlength="20"
-                   value="{{ ticket_data.procedure }}">
-          </div>
-        </td>
-        <td>
-          <div class="form-group">
-            <input class="form-control" name="description"
-                   required
-                   maxlength="100"
-                   type="text"
-                   value="{{ ticket_data.description }}">
-          </div>
-        </td>
-        <td>
-          <div class="form-group">
-            <select name="assignee_id" width="300px">
-              <option SELECTED value="{{ ticket_data.assignee_id }}">{{ ticket_data.assignee.abbreviation }}</option>
-              <option disabled="disabled">----</option>
 
-              {% for user in staff_list_medops %}
-                <option value="{{ user.id }}">
-                  <!-- if user is not active yet, display it -->
-                  {{ user.abbreviation }} {% if not user.is_active %} (inactive) {% endif %}
-                </option>
-              {% endfor %}
-            </select>
+          <div class="column">
+            <div class="field mb-5">
+              <div class="label">
+                Document-Type
+              </div>
+              <div class="control">
+                {% for source_type in available_source_types %}
+                  <label class="radio button is-medium is-info is-light">
+                    <input
+                      name="type"
+                      value="{{ source_type }}"
+                      type="radio"
+                      required
+                      {{ "checked" if source_type == ticket.type }}/>
+                    {{ source_type }}
+                  </label>
+                {% endfor %}
+              </div>
+            </div>
           </div>
-        </td>
-      </tr>
 
-    </table>
-    <div class="form-group">
-      <button class="btn btn-primary" id="submit_table" style="margin-left: 50%" type="submit">Submit</button>
-    </div>
-</form>
+        </div>
+
+        <h2 class="title is-4">Query Information</h2>
+
+        <table class="table is-striped is-hoverable is-fullwidth mb-6">
+          <thead class="thead-light">
+            <tr>
+              <th scope="col">Visit</th>
+              <th scope="col">Page</th>
+              <th scope="col">Procedure</th>
+              <th scope="col">Description</th>
+              <th scope="col">Assignee</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+
+              <td>
+                <div class="control">
+                  <input
+                    name="visit"
+                    class="input"
+                    value="{{ ticket.visit }}"
+                    type="text"
+                    maxlength="10"
+                    required />
+                </div>
+              </td>
+
+              <td>
+                <div class="control">
+                  <input
+                    name="page"
+                    class="input"
+                    value="{{ ticket.page }}"
+                    type="text"
+                    maxlength="10"
+                    required />
+                </div>
+              </td>
+
+              <td>
+                <div class="control">
+                  <input
+                    name="procedure"
+                    class="input"
+                    value="{{ ticket.procedure }}"
+                    type="text"
+                    maxlength="20"
+                    required />
+                </div>
+              </td>
+
+              <td>
+                <textarea
+                  name="description"
+                  maxlength="100"
+                  class="textarea">{{ ticket.description }}</textarea>
+              </td>
+
+              <td>
+                <div class="control">
+                  <div class="select is-fullwidth">
+                    <select name="assignee_id" required>
+
+                      {% for user in staff_list_medops %}
+                        <option
+                          value="{{ user.id }}"
+                          {{ "selected" if user.id == ticket.assignee_id }}>
+                          {{ user.abbreviation }}
+                        </option>
+                      {% endfor %}
+
+                    </select>
+                  </div>
+                </div>
+              </td>
+
+            </tr>
+          </tbody>
+        </table>
+
+        <button
+          class="button is-primary is-medium mr-3"
+          type="submit">
+          Save
+        </button>
+
+        <a
+          href="{{ url_for('dashboard_controller.index') }}"
+          class="button is-danger is-light is-medium">
+          Abort
+        </a>
+
+      </form>
+    {% endcall %}
+
+  {% endwith %}
 
 {% endblock %}
 
-{% block scripts %}
-  <script src="{{ asset('bundle/edit_data.js') }}" type="text/javascript"></script>
-{% endblock %}
+
+{#############################################################################}
+{# MACROS                                                                    #}
+{#############################################################################}

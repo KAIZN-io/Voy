@@ -80,7 +80,8 @@ def edit(ticket_id: int):
     return render_template('controller/ticket/edit.html.j2',
                            study_list=Study.query.all(),
                            staff_list_medops=User.query.filter_by(role=ROLE_MEDOPS).all(),
-                           ticket_data=Ticket.query.get(ticket_id))
+                           available_source_types=AVAILABLE_SOURCE_TYPES,
+                           ticket=Ticket.query.get(ticket_id))
 
 
 @ticket_blueprint.route('/tickets/<int:ticket_id>/edit', methods=['POST'])
