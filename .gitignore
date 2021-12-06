@@ -5,11 +5,6 @@
 .idea/
 .vscode
 
-# Docker
-/docker
-/docker-compose.yml
-/.dockerignore
-
 # Sensitive files
 *.log
 *.sqlite
