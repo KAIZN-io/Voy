@@ -16,12 +16,12 @@ from voy.utilities import is_list_empty
 profile_blueprint = Blueprint('profile_controller', __name__)
 default_breadcrumb_root(profile_blueprint, '.')
 
-
+# TODO: Rename this to `index`
 @profile_blueprint.route('/profile', methods=['GET'])
 @register_breadcrumb(profile_blueprint, '.profile', '')
 @login_required
 def profile():
-    return render_template('profile/profile.html.j2', user_abbreviation=current_user.abbreviation)
+    return render_template('controller/profile/profile.html.j2', user_abbreviation=current_user.abbreviation)
 
 
 @profile_blueprint.route('/profile', methods=['POST'])
@@ -37,12 +37,12 @@ def profile_post():
     if is_list_empty(errors):
         flash('Password reset successful.', FLASH_TYPE_SUCCESS)
 
-    return render_template('profile/profile.html.j2', errors=errors)
+    return render_template('controller/profile/profile.html.j2', errors=errors)
 
 
 @profile_blueprint.route('/request-password-reset', methods=['GET'])
 def request_password_reset():
-    return render_template('profile/request-password-reset.html.j2')
+    return render_template('controller/profile/request-password-reset.html.j2')
 
 
 # TODO: instead of generating a new password and sending it via email, use hmac.
@@ -76,12 +76,12 @@ def request_password_reset_post():
     # In any case, flash a success message. This way one can not find valid user abbreviations by brute force.
     flash('Success! An email with a new password is on it\'s way to you.', FLASH_TYPE_SUCCESS)
 
-    return render_template('profile/request-password-reset.html.j2')
+    return render_template('controller/profile/request-password-reset.html.j2')
 
 
 @profile_blueprint.route('/reset-password', methods=['GET'])
 def reset_password():
-    return render_template('profile/reset-password.html.j2')
+    return render_template('controller/profile/reset-password.html.j2')
 
 
 @profile_blueprint.route('/reset-password', methods=['POST'])
@@ -94,7 +94,7 @@ def reset_password_post():
     )
 
     if not is_list_empty(errors):
-        return render_template('profile/reset-password.html.j2', errors=errors)
+        return render_template('controller/profile/reset-password.html.j2', errors=errors)
 
     flash('Password reset successful. Please log in with your new password.', FLASH_TYPE_SUCCESS)
 

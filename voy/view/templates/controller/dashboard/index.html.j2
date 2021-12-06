@@ -1,0 +1,247 @@
+{% extends 'layout-page.html.j2' %}
+
+
+{% from "components/section.html.j2" import render_section %}
+
+
+{#############################################################################}
+{# META                                                                      #}
+{#############################################################################}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block page_title %}Dashboard{% endblock %}
+
+{% block body_class %}dashboard{% endblock %}
+
+
+{#############################################################################}
+{# CONTENT                                                                   #}
+{#############################################################################}
+
+{% block content %}
+
+  {% with %}
+
+    {% set actions %}
+      {% if (current_user.role == 'Admin' or current_user.role == 'Data Manager' or current_user.role == 'Data Entry') %}
+        <a class="button is-primary" href="{{ url_for('ticket_controller.new') }}">
+          <span class="icon">
+            <i class="fas fa-plus"></i>
+          </span>
+          <span>
+            New Query
+          </span>
+        </a>
+      {% endif %}
+    {% endset %}
+
+    {% call render_section(
+      title='Queries',
+      sub_title='Here\'s todays list of Queries for you',
+      actions=actions) %}
+      <table class="dashboard__tickets table is-striped is-hoverable is-fullwidth">
+
+        <thead>
+          <tr>
+            <th scope="col">Info</th>
+            <th scope="col">Status</th>
+            <th scope="col">Study ID</th>
+            <th scope="col">Scr No</th>
+            <th scope="col">Type</th>
+            <th scope="col">Visit</th>
+            <th scope="col">Page</th>
+            <th scope="col">Procedure</th>
+            <th scope="col">Description</th>
+            <th scope="col">Created on</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for ticket in user_tickets %}
+            {{ render_ticket(ticket) }}
+          {% endfor %}
+        </tbody>
+
+      </table>
+
+      <hr />
+
+      <form method="post" action="{{ url_for('dashboard_controller.export_data') }}" targe="_blank">
+        <div class="level">
+          <div class="level-left"></div>
+          <div class="level-right">
+
+            <div class="level-item has-text-right">
+              <label for="export-file-type">
+                Download Queries as:
+              </label>
+            </div>
+
+            <div class="level-item">
+              <div class="field has-addons">
+
+                <div class="control">
+                  <div class="select">
+                    <select id="export-file-type" name="export-file-type">
+                      {% for value, label  in available_export_file_types.items() %}
+                        <option required value="{{ value }}">
+                          {{ label }}
+                        </option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+
+                <div class="control">
+                  <button class="button is-info" type="submit">
+                    <span class="icon">
+                      <i class="fas fa-download"></i>
+                    </span>
+                    <span>
+                      Export
+                    </span>
+                  </button>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </form>
+    {% endcall %}
+
+  {% endwith %}
+
+{% endblock %}
+
+{% block modals %}
+  {% include "controller/ticket/comment/modal.html.j2" %}
+{% endblock %}
+
+
+{#############################################################################}
+{# MACROS                                                                    #}
+{#############################################################################}
+
+{% macro render_ticket(ticket) %}
+   <tr class="ticket">
+
+    {# Priority #}
+    <td>
+      <i class="fas fa-exclamation" style="color: {{ 'red' if ticket.prioritized else 'black' }};"></i>
+    </td>
+
+    {# Status #}
+    {# TODO: Make some kind of ticket status #}
+    {% if ticket.is_corrected and not ticket.is_closed %}
+      <td>
+        <span class="tag is-warning">Requery</span>
+      </td>
+    {% elif ticket.is_closed %}
+      <td>
+        <span class="tag is-success">Closed</span>
+      </td>
+    {% else %}
+      <td>
+        <span class="tag is-danger">Open</span>
+      </td>
+    {% endif %}
+
+    {# Internal Id #}
+    <td class="is-family-monospace">
+      {{ ticket.study.internal_id }}
+    </td>
+
+    {# Source number #}
+    <td>
+      {{ ticket.source_number }}
+    </td>
+
+      {# Type #}
+    <td>
+      {% if ticket.type == "ICF" %}
+        <span class="tag is-info is-light">
+          ICF
+        </span>
+      {% elif ticket.type == "Source" %}
+        <span class="tag is-secondary is-light">
+          Source
+        </span>
+      {% else %}
+        {{ ticket.type }}
+      {% endif %}
+    </td>
+
+    <td>
+      {{ ticket.visit }}
+    </td>
+
+    <td>
+      {{ ticket.page }}
+    </td>
+
+    <td>
+      {{ ticket.procedure }}
+    </td>
+
+    <td class="ticket__description">
+      {{ ticket.description }}
+    </td>
+
+    <td>
+      {{ ticket.created_at.humanize()}}
+    </td>
+
+    {# Actions #}
+    <td class="ticket__action">
+
+      <button x-data
+        class="button is-info is-light"
+        title="Show Comments"
+
+        @click="$dispatch('show-ticket-comments', { ticketId: {{ ticket.id }} })">
+        <span class="icon">
+          <i class="far fa-comments"></i>
+        </span>
+      </button>
+
+      {% if current_user.role == "MedOps" %}
+        <a
+          href="{{ url_for( 'ticket_controller.mark_as_corrected', ticket_id=ticket.id ) }}"
+          class="button is-success"
+          title="Mark as Corrected">
+          <span class="icon">
+            <i class="far fa-check"></i>
+          </span>
+        </a>
+      {% endif %}
+
+      <!-- close the query if you have the right role permission -->
+      {% if (current_user.role == "Admin" or current_user.role == "Data Entry" or current_user.role == "Data Manager") %}
+
+        <a
+          href="{{ url_for( 'ticket_controller.edit', ticket_id=ticket.id ) }}"
+          class="button is-warning is-light"
+          title="Edit Query">
+          <span class="icon">
+            <i class="far fa-edit"></i>
+          </span>
+        </a>
+
+        <a
+          href="{{ url_for( 'ticket_controller.close', ticket_id=ticket.id ) }}"
+          class="button is-success"
+          title="Makr as Done">
+          <span class="icon">
+            <i class="fas fa-check"></i>
+          </span>
+        </a>
+
+      {% endif %}
+
+    </td>
+  </tr>
+{% endmacro %}

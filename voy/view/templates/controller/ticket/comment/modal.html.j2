@@ -1,0 +1,85 @@
+<div
+  {# We have the `is-active` class permanently added. The showing and hiding of the modal is done by Alpine. #}
+  class="modal-ticket-comments modal is-active transition-opacity"
+  :class="{ 'has-opacity-0': !isVisible }"
+  {# This is to prevent the modal from flashing on initial page load. #}
+  style="display: none;"
+
+  x-data="modal_ticket_comments"
+  x-show="isOpen"
+  x-trap="isOpen"
+
+  @show-ticket-comments.document="open($event)">
+
+  <div class="modal-background" @click="close()"></div>
+
+  <div class="modal-ticket-comments__content modal-card">
+
+    <header class="modal-card-head">
+      <p
+        class="modal-card-title"
+        x-text="`Comments for Query #${ticketId}`"></p>
+    </header>
+
+    <section
+      class="modal-card-body p-0 is-clipped is-relative">
+
+      <div
+        class="modal-card-body h-full"
+        x-ref="comments"
+        x-html="renderedComments">
+      </div>
+
+      <div
+        class="is-soft-flex is-overlay is-justify-content-center is-align-items-center has-background-light"
+        x-show="isOpen && isInitializing"
+        x-transition.opacity.duration.220ms>
+        {% include "utilities/_spinner.html.j2" %}
+      </div>
+
+    </section>
+
+    <footer class="modal-card-foot is-block">
+      <form
+        x-ref="newCommentForm"
+        @submit.prevent="addComment()">
+
+        <div class="field">
+          <div class="control">
+            <textarea
+              class="textarea"
+              name="content"
+              placeholder="Start typing..."
+              :disabled="isInitializing || isAddingComment"
+              required></textarea>
+          </div>
+        </div>
+
+        <div class="field is-grouped">
+          <div class="control">
+            <button
+              type="submit"
+              class="button is-primary"
+              :disabled="isInitializing || isAddingComment">
+              Add Comment
+            </button>
+          </div>
+          <div class="control">
+            <button
+              type="button"
+              class="button is-danger is-light"
+              @click="close($event)"
+              :disabled="isInitializing || isAddingComment">
+              Close
+            </button>
+          </div>
+        </div>
+
+      </form>
+    </footer>
+
+  </div>
+
+  <button class="modal-close is-large" aria-label="close" @click="close()"></button>
+
+ </div>

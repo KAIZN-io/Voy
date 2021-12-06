@@ -18,7 +18,7 @@ def login():
     if current_user.is_authenticated:
         return redirect(url_for('dashboard_controller.index'))
 
-    return render_template('authentication/login.html.j2')
+    return render_template('controller/authentication/login.html.j2')
 
 
 @authentication_blueprint.route('/login', methods=['POST'])

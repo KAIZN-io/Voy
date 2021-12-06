@@ -1,0 +1,16 @@
+{% for comment in ticket.comments %}
+  <div class="media">
+    <div class="media-content">
+      <div class="content">
+        <p>
+          <strong>
+            {{ comment.commenter.abbreviation }}
+          </strong>
+          <small>{{ comment.created_at.humanize() }}</small>
+          <br>
+          {{ comment.content }}
+        </p>
+      </div>
+    </div>
+  </div>
+{% endfor %}

@@ -1,4 +1,6 @@
+import json
 import logging.config
+from pathlib import Path
 
 import yaml
 from flask import Flask
@@ -6,6 +8,7 @@ from flask_breadcrumbs import Breadcrumbs
 from flask_login import LoginManager
 
 from .commands import database_cli, user_cli
+from .constants import FLASH_TYPE_WARNING
 from .controller import authentication_blueprint, profile_blueprint, dashboard_blueprint, user_blueprint, \
     study_blueprint, ticket_blueprint, ticket_comment_blueprint
 from .mail import mail
@@ -46,6 +49,7 @@ def create_app():
     # Initialize the login manager
     login_manager = LoginManager()
     login_manager.login_view = 'authentication_controller.login'
+    login_manager.login_message_category = FLASH_TYPE_WARNING
     login_manager.init_app(app)
 
     @login_manager.user_loader
@@ -66,4 +70,20 @@ def create_app():
     app.register_blueprint(database_cli)
     app.register_blueprint(user_cli)
 
+    # Register templating functions
+    app.jinja_env.globals.update(
+        asset=create_resolve_asset_path_function(
+            Path(app.root_path, 'view/static/bundle/manifest.json')))
+
     return app
+
+
+def create_resolve_asset_path_function(asset_manifest_path):
+    def resolve_asset_path(asset_name):
+        with open(asset_manifest_path, 'r') as asset_manifest_handle:
+            asset_manifest_data = asset_manifest_handle.read()
+            asset_manifest = json.loads(asset_manifest_data)
+
+            return asset_manifest[asset_name]
+
+    return resolve_asset_path

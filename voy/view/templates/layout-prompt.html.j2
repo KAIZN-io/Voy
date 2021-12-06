@@ -1,0 +1,19 @@
+{% extends 'layout-plain.html.j2' %}
+
+{% block layout_class %}layout--prompt{% endblock %}
+
+{% block main %}
+  <div class="is-flex is-flex-direction-column is-align-items-center is-justify-content-center h-full">
+
+    {% if get_flashed_messages() %}
+      <div class="prompt mb-5">
+        {% include "utilities/_flash.html.j2" %}
+      </div>
+    {% endif %}
+
+    <div class="prompt box">
+      {% block content %}{% endblock %}
+    </div>
+
+  </div>
+{% endblock %}

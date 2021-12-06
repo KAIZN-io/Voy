@@ -1,0 +1,45 @@
+{% extends 'layout-plain.html.j2' %}
+
+
+{% block layout_class %}layout--page{% endblock %}
+
+{% block navigation %}
+  <div class="layout__navigation panel mb-0">
+
+    <p class="panel-heading">
+      Voy
+    </p>
+
+    <div class="panel-block">
+      {% include "components/menu.html.j2" %}
+    </div>
+
+  </div>
+{% endblock %}
+
+{% block main %}
+  <div class="container">
+
+    {% include "utilities/_flash.html.j2" %}
+
+    <section class="hero">
+
+      <div class="hero-body pb-0">
+
+        <h1 class="title is-size-1">
+          {% block page_title %}{% endblock %}
+        </h1>
+
+        {% if self.navigation() %}
+          <p class="subtitle">
+            {% block page_sub_title %}{% endblock %}
+          </p>
+        {% endif %}
+
+      </div>
+
+    </section>
+
+    {% block content %}{% endblock %}
+  </div>
+{% endblock %}

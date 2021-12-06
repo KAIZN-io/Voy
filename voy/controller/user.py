@@ -24,9 +24,12 @@ default_breadcrumb_root(user_blueprint, '.')
 def index():
 
     # filter all user except for the admin
-    user_list = User.query.filter(User.role != ROLE_ADMIN).all()
+    user_list = User.query \
+        .filter(User.role != ROLE_ADMIN) \
+        .order_by(User.abbreviation.desc()) \
+        .all()
 
-    return render_template('user/index.html.j2', user_list=user_list)
+    return render_template('controller/user/index.html.j2', user_list=user_list)
 
 
 # TODO: Make this a POST request; With a GET request it is too easy to just close tickets by their id. Also in terms of
@@ -41,13 +44,25 @@ def deactivate(user_id: int):
     return redirect(url_for('user_controller.index'))
 
 
+# TODO: Make this a POST request; With a GET request it is too easy to just close tickets by their id. Also in terms of
+# HTTP lingo, a GET request is only meant to get something. A POST is to modify.
+@user_blueprint.route('/users/<int:user_id>/activate', methods=['GET'])
+@login_required
+def activate(user_id: int):
+    User.query.get(user_id).is_active = True
+
+    db.session.commit()
+
+    return redirect(url_for('user_controller.index'))
+
+
 @user_blueprint.route('/users/new', methods=['GET'])
 @login_required
 @register_breadcrumb(user_blueprint, '.new', '')
 def new():
     # define the job roles
     roles = [ROLE_MEDOPS, ROLE_DATA_MANAGER, ROLE_DATA_ENTRY]
-    return render_template('user/new.html.j2', Roles=roles)
+    return render_template('controller/user/new.html.j2', Roles=roles)
 
 
 @user_blueprint.route('/users/new', methods=['POST'])
