@@ -1,7 +1,7 @@
 .layout {
   display: grid;
   grid-template:
-    "main" auto
+    "main" 1fr
     "footer" 66px
     / auto;
 
