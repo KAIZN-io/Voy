@@ -44,7 +44,6 @@
 
         <thead>
           <tr>
-            <th scope="col">Info</th>
             <th scope="col">Status</th>
             <th scope="col">Study ID</th>
             <th scope="col">Scr No</th>
@@ -128,11 +127,6 @@
 
 {% macro render_ticket(ticket) %}
    <tr class="ticket">
-
-    {# Priority #}
-    <td>
-      <i class="fas fa-exclamation" style="color: {{ 'red' if ticket.prioritized else 'black' }};"></i>
-    </td>
 
     {# Status #}
     {# TODO: Make some kind of ticket status #}
