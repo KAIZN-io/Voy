@@ -23,7 +23,7 @@
 
   {% with %}
 
-    {% set actions %}
+    {# {% set actions %}
       {% if (current_user.role == 'Admin' or current_user.role == 'Data Manager' or current_user.role == 'Data Entry') %}
         <a class="button is-primary" href="{{ url_for('ticket_controller.new') }}">
           <span class="icon">
@@ -34,7 +34,7 @@
           </span>
         </a>
       {% endif %}
-    {% endset %}
+    {% endset %} #}
 
     {% call render_section(
       title='Queries',
