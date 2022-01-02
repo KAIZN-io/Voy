@@ -33,5 +33,6 @@ setup(
         'python-dotenv~=0.15.0',
         'python-json-logger~=2.0.2',
         'PyYAML~=5.4.1',
+        'uuid~=1.30'
     ],
 )

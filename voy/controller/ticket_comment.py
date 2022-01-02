@@ -17,18 +17,18 @@ ticket_comment_blueprint = Blueprint('ticket_comment_controller', __name__)
 default_breadcrumb_root(ticket_comment_blueprint, '.')
 
 
-@ticket_comment_blueprint.route('/tickets/<int:ticket_id>/comments/modal-content', methods=['GET'])
+@ticket_comment_blueprint.route('/tickets/<string:ticket_uuid>/comments/modal-content', methods=['GET'])
 @login_required
-def modal_content(ticket_id: int):
+def modal_content(ticket_uuid: str):
     return render_template('controller/ticket/comment/modal-content.html.j2',
-                           ticket=Ticket.query.get(ticket_id))
+                           ticket=Ticket.query.get(ticket_uuid))
 
 
-@ticket_comment_blueprint.route('/tickets/<int:ticket_id>/comments/new', methods=['POST'])
+@ticket_comment_blueprint.route('/tickets/<string:ticket_uuid>/comments/new', methods=['POST'])
 @login_required
-def new_post(ticket_id: int):
+def new_post(ticket_uuid: str):
     comment_new = TicketComment(
-        ticket = Ticket.query.get(ticket_id),
+        ticket = Ticket.query.get(ticket_uuid),
         commenter = current_user,
         content = request.form['content']
     )

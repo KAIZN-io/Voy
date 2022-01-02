@@ -34,8 +34,8 @@ def new():
 @login_required
 def new_post():
     # header data form the form
-    study_id = int(request.form['study_id'])
-    study = Study.query.filter_by(id=study_id).scalar()
+    study_uuid = request.form['study_uuid']
+    study = Study.query.get(study_uuid)
     source_number = request.form['source_number']
     source_type = request.form['source_type']
 
@@ -44,11 +44,11 @@ def new_post():
     pages = request.form.getlist('ticket[][page]')
     procedures = request.form.getlist('ticket[][procedure]')
     descriptions = request.form.getlist('ticket[][description]')
-    assignee_ids = request.form.getlist('ticket[][assignee_id]')
+    assignee_uuids = request.form.getlist('ticket[][assignee_uuid]')
 
     for i in range(len(visits)):
-        assignee_id = int(assignee_ids[i])
-        assignee = User.query.filter_by(id=assignee_id).scalar()
+        assignee_uuid = assignee_uuids[i]
+        assignee = User.query.get(assignee_uuid)
 
         ticket = Ticket(
             study=study,
@@ -74,29 +74,29 @@ def new_post():
     return redirect(url_for('ticket_controller.new'))
 
 
-@ticket_blueprint.route('/tickets/<int:ticket_id>/edit', methods=['GET'])
+@ticket_blueprint.route('/tickets/<string:ticket_uuid>/edit', methods=['GET'])
 @login_required
-def edit(ticket_id: int):
+def edit(ticket_uuid: str):
     return render_template('controller/ticket/edit.html.j2',
                            study_list=Study.query.all(),
                            staff_list_medops=User.query.filter_by(role=ROLE_MEDOPS).all(),
                            available_source_types=AVAILABLE_SOURCE_TYPES,
-                           ticket=Ticket.query.get(ticket_id))
+                           ticket=Ticket.query.get(ticket_uuid))
 
 
-@ticket_blueprint.route('/tickets/<int:ticket_id>/edit', methods=['POST'])
+@ticket_blueprint.route('/tickets/<string:ticket_uuid>/edit', methods=['POST'])
 @login_required
-def edit_post(ticket_id: int):
+def edit_post(ticket_uuid: str):
     # Get the ticket
-    ticket = Ticket.query.get(ticket_id)
+    ticket = Ticket.query.get(ticket_uuid)
 
     # Get the old ticket data. We need this alter for checking what has changed
     ticket_data_old = ticket.__dict__
 
     # Get data from the form and sanitize it
     ticket_data_new = request.form.to_dict()
-    ticket_data_new['study_id'] = int(ticket_data_new['study_id'])
-    ticket_data_new['assignee_id'] = int(ticket_data_new['assignee_id'])
+    ticket_data_new['study_uuid'] = ticket_data_new['study_uuid']
+    ticket_data_new['assignee_uuid'] = ticket_data_new['assignee_uuid']
 
     # Log the updates to the ticket
     for key, value_new in ticket_data_new.items():
@@ -104,11 +104,11 @@ def edit_post(ticket_id: int):
 
         if value_new != value_old:
             # add the data to the audit trail
-            add_to_audit_trail(current_user.abbreviation, "edit", ticket_id, key,
+            add_to_audit_trail(current_user.abbreviation, "edit", ticket_uuid, key,
                                value_old, value_new)
 
     # Update the ticket
-    Ticket.query.filter_by(id=ticket_id).update(ticket_data_new)
+    Ticket.query.filter_by(uuid=ticket_uuid).update(ticket_data_new)
 
     # Reset the is_corrected status.
     ticket.is_corrected = False
@@ -122,11 +122,11 @@ def edit_post(ticket_id: int):
 
 # TODO: Make this a POST request; With a GET request it is too easy to just close tickets by their id. Also in terms of
 # HTTP lingo, a GET request is only meant to get something. A POST is to modify.
-@ticket_blueprint.route('/tickets/<int:ticket_id>/mark-as-corrected', methods=['GET'])
+@ticket_blueprint.route('/tickets/<string:ticket_uuid>/mark-as-corrected', methods=['GET'])
 @login_required
-def mark_as_corrected(ticket_id: int):
+def mark_as_corrected(ticket_uuid: str):
 
-    Ticket.query.get(ticket_id).is_corrected = True
+    Ticket.query.get(ticket_uuid).is_corrected = True
 
     db.session.commit()
 
@@ -135,11 +135,11 @@ def mark_as_corrected(ticket_id: int):
 
 # TODO: Make this a POST request; With a GET request it is too easy to just close tickets by their id. Also in terms of
 # HTTP lingo, a GET request is only meant to get something. A POST is to modify.
-@ticket_blueprint.route('/tickets/<int:ticket_id>/close', methods=['GET'])
+@ticket_blueprint.route('/tickets/<string:ticket_uuid>/close', methods=['GET'])
 @login_required
-def close(ticket_id: int):
+def close(ticket_uuid: str):
 
-    Ticket.query.get(ticket_id).is_closed = True
+    Ticket.query.get(ticket_uuid).is_closed = True
 
     db.session.commit()
 

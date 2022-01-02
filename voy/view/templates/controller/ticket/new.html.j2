@@ -39,19 +39,19 @@
 
           <div class="column">
             <div class="field mb-5">
-              <label class="label" for="study_id">
+              <label class="label" for="study_uuid">
                 Study
               </label>
               <div class="control">
                 <div class="select is-medium is-fullwidth">
-                  <select name="study_id" required>
+                  <select name="study_uuid" required>
 
                     <option disabled selected>
                       Select a Study
                     </option>
 
                     {% for study in study_list %}
-                      <option value="{{ study.id }}">
+                      <option value="{{ study.uuid }}">
                         {{ study.internal_id }}
                       </option>
                     {% endfor %}
@@ -151,14 +151,14 @@
                 <td>
                   <div class="control">
                     <div class="select is-fullwidth">
-                      <select name="ticket[][assignee_id]" required>
+                      <select name="ticket[][assignee_uuid]" required>
 
                         <option disabled selected>
                           Select Someone
                         </option>
 
                         {% for user in staff_list_medops %}
-                          <option value="{{ user.id }}">
+                          <option value="{{ user.uuid }}">
                             {{ user.abbreviation }}
                           </option>
                         {% endfor %}

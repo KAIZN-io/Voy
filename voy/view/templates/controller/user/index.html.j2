@@ -100,7 +100,7 @@
     <td class="user__actions">
       {% if user.is_active %}
         <a
-          href="{{ url_for('user_controller.deactivate', user_id=user.id) }}"
+          href="{{ url_for('user_controller.deactivate', user_uuid=user.uuid) }}"
           class="button is-info is-light">
           <span class="icon">
             <i class="far fa-times-circle"></i>
@@ -111,7 +111,7 @@
         </a>
       {% else %}
         <a
-          href="{{ url_for('user_controller.activate', user_id=user.id) }}"
+          href="{{ url_for('user_controller.activate', user_uuid=user.uuid) }}"
           class="button is-info is-light">
           <span class="icon">
             <i class="far fa-check-circle"></i>

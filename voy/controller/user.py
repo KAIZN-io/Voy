@@ -34,10 +34,10 @@ def index():
 
 # TODO: Make this a POST request; With a GET request it is too easy to just close tickets by their id. Also in terms of
 # HTTP lingo, a GET request is only meant to get something. A POST is to modify.
-@user_blueprint.route('/users/<int:user_id>/deactivate', methods=['GET'])
+@user_blueprint.route('/users/<string:user_uuid>/deactivate', methods=['GET'])
 @login_required
-def deactivate(user_id: int):
-    User.query.get(user_id).is_active = False
+def deactivate(user_uuid: str):
+    User.query.get(user_uuid).is_active = False
 
     db.session.commit()
 
@@ -46,10 +46,10 @@ def deactivate(user_id: int):
 
 # TODO: Make this a POST request; With a GET request it is too easy to just close tickets by their id. Also in terms of
 # HTTP lingo, a GET request is only meant to get something. A POST is to modify.
-@user_blueprint.route('/users/<int:user_id>/activate', methods=['GET'])
+@user_blueprint.route('/users/<string:user_uuid>/activate', methods=['GET'])
 @login_required
-def activate(user_id: int):
-    User.query.get(user_id).is_active = True
+def activate(user_uuid: str):
+    User.query.get(user_uuid).is_active = True
 
     db.session.commit()
 

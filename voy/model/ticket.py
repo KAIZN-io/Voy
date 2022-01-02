@@ -1,26 +1,25 @@
 from sqlalchemy import inspect
+from sqlalchemy.dialects.postgresql import UUID
 
 from voy.model import db
-from voy.model.mixins import TimeStampMixin, DictMixin
+from voy.model.mixins import DictMixin, TimeStampMixin, UuidPrimaryKeyMixin
 
 # Tag relationship
 db.Table('ticket_tag_mapping', db.Model.metadata,
-    db.Column('ticket_id', db.ForeignKey('ticket.id'), primary_key=True),
-    db.Column('ticket_tag_id', db.ForeignKey('ticket_tag.id'), primary_key=True))
+    db.Column('ticket_uuid', db.ForeignKey('ticket.uuid'), primary_key=True),
+    db.Column('ticket_tag_uuid', db.ForeignKey('ticket_tag.uuid'), primary_key=True))
 
 
-class Ticket(DictMixin, TimeStampMixin, db.Model):
+class Ticket(DictMixin, TimeStampMixin, UuidPrimaryKeyMixin, db.Model):
     __tablename__ = 'ticket'
 
-    id = db.Column(db.Integer, primary_key=True)
+    reporter_uuid = db.Column(UUID(as_uuid=True), db.ForeignKey('user.uuid'))
+    reporter = db.relationship('User', back_populates='reported_tickets', foreign_keys='Ticket.reporter_uuid')
 
-    reporter_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    reporter = db.relationship('User', back_populates='reported_tickets', foreign_keys='Ticket.reporter_id')
+    assignee_uuid = db.Column(UUID(as_uuid=True), db.ForeignKey('user.uuid'))
+    assignee = db.relationship('User', back_populates='assigned_tickets', foreign_keys='Ticket.assignee_uuid')
 
-    assignee_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    assignee = db.relationship('User', back_populates='assigned_tickets', foreign_keys='Ticket.assignee_id')
-
-    study_id = db.Column(db.Integer, db.ForeignKey('study.id'))
+    study_uuid = db.Column(UUID(as_uuid=True), db.ForeignKey('study.uuid'))
     study = db.relationship('Study', back_populates='tickets')
 
     source_number = db.Column(db.Integer)

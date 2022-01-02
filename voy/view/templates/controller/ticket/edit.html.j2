@@ -24,10 +24,10 @@
   {% with %}
 
     {% call render_section(
-      title='Edit Query #' ~ ticket.id,
+      title='Edit Query ' ~ ticket.uuid,
       sub_title='Made an error? No worries, fix it here. I\'ll keep track of the changes for you') %}
       <form
-        action="{{ url_for('ticket_controller.edit_post', ticket_id=ticket.id) }}"
+        action="{{ url_for('ticket_controller.edit_post', ticket_uuid=ticket.uuid) }}"
         method="POST">
 
         {{ render_errors(errors) }}
@@ -38,17 +38,17 @@
 
           <div class="column">
             <div class="field mb-5">
-              <label class="label" for="study_id">
+              <label class="label" for="study_uuid">
                 Study
               </label>
               <div class="control">
                 <div class="select is-medium is-fullwidth">
-                  <select name="study_id" required>
+                  <select name="study_uuid" required>
 
                     {% for study in study_list %}
                       <option
-                        value="{{ study.id }}"
-                        {{ "selected" if study.id == ticket.study_id }}>
+                        value="{{ study.uuid }}"
+                        {{ "selected" if study.uuid == ticket.study_uuid }}>
                         {{ study.internal_id }}
                       </option>
                     {% endfor %}
@@ -160,12 +160,12 @@
               <td>
                 <div class="control">
                   <div class="select is-fullwidth">
-                    <select name="assignee_id" required>
+                    <select name="assignee_uuid" required>
 
                       {% for user in staff_list_medops %}
                         <option
-                          value="{{ user.id }}"
-                          {{ "selected" if user.id == ticket.assignee_id }}>
+                          value="{{ user.uuid }}"
+                          {{ "selected" if user.uuid == ticket.assignee_uuid }}>
                           {{ user.abbreviation }}
                         </option>
                       {% endfor %}

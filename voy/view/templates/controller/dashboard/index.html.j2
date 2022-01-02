@@ -196,7 +196,7 @@
         class="button is-info is-light"
         title="Show Comments"
 
-        @click="$dispatch('show-ticket-comments', { ticketId: {{ ticket.id }} })">
+        @click="$dispatch('show-ticket-comments', { ticketId: '{{ ticket.uuid }}' })">
         <span class="icon">
           <i class="far fa-comments"></i>
         </span>
@@ -204,7 +204,7 @@
 
       {% if current_user.role == "MedOps" %}
         <a
-          href="{{ url_for( 'ticket_controller.mark_as_corrected', ticket_id=ticket.id ) }}"
+          href="{{ url_for( 'ticket_controller.mark_as_corrected', ticket_uuid=ticket.uuid ) }}"
           class="button is-success"
           title="Mark as Corrected">
           <span class="icon">
@@ -217,7 +217,7 @@
       {% if (current_user.role == "Admin" or current_user.role == "Data Entry" or current_user.role == "Data Manager") %}
 
         <a
-          href="{{ url_for( 'ticket_controller.edit', ticket_id=ticket.id ) }}"
+          href="{{ url_for( 'ticket_controller.edit', ticket_uuid=ticket.uuid ) }}"
           class="button is-warning is-light"
           title="Edit Query">
           <span class="icon">
@@ -226,7 +226,7 @@
         </a>
 
         <a
-          href="{{ url_for( 'ticket_controller.close', ticket_id=ticket.id ) }}"
+          href="{{ url_for( 'ticket_controller.close', ticket_uuid=ticket.uuid ) }}"
           class="button is-success"
           title="Makr as Done">
           <span class="icon">
