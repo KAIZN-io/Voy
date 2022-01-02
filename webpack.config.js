@@ -23,19 +23,15 @@ Encore
      * Each entry will result in one JavaScript file (e.g. app.js)
      * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
      */
-    .addEntry('main',       './voy/view/assets/js/main.js')
-    .addEntry('main-bulma', './voy/view/assets/js/main-bulma.js')
-    .addEntry('index',      './voy/view/assets/js/pages/index.js')
+    .addEntry('main',       [ './voy/view/assets/js/main.js', './voy/view/assets/css/main.scss' ])
     .addEntry('edit_data',  './voy/view/assets/js/pages/edit_data.js')
-    .addEntry('data_entry', './voy/view/assets/js/pages/data_entry.js')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     //.splitEntryChunks()
 
     // will require an extra script tag for runtime.js
     // but, you probably want this, unless you're building a single-page app
-    //.enableSingleRuntimeChunk()
-    .disableSingleRuntimeChunk()
+    .enableSingleRuntimeChunk()
 
     /*
      * ADDITIONAL ASSETS
@@ -55,7 +51,7 @@ Encore
     .cleanupOutputBeforeBuild()
     .enableSourceMaps(!Encore.isProduction())
     // enables hashed filenames (e.g. app.abc123.css)
-    //.enableVersioning(Encore.isProduction())
+    .enableVersioning(Encore.isProduction())
 
     // enables @babel/preset-env polyfills
     .configureBabelPresetEnv((config) => {

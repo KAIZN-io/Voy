@@ -1,0 +1,86 @@
+{% extends 'layout-page.html.j2' %}
+
+
+{% from "components/section.html.j2" import render_section %}
+
+{% from "utilities/_errors.html.j2" import render_errors %}
+
+
+{#############################################################################}
+{# META                                                                      #}
+{#############################################################################}
+
+{% block title %}Add User{% endblock %}
+
+{% block page_title %}Users{% endblock %}
+
+
+{#############################################################################}
+{# CONTENT                                                                   #}
+{#############################################################################}
+
+{% block content %}
+
+  {% with %}
+
+    {% call render_section(
+      title='New User',
+      sub_title='Someone joining your team?') %}
+      <form action="{{ url_for('user_controller.new_post') }}" method="POST">
+
+        {{ render_errors(errors) }}
+
+        <div class="field mb-5">
+          <label class="label">
+            Their Abbreviation
+          </label>
+          <div class="control">
+            <input type="test" class="input is-medium" name="abbreviation" maxlength="5" autofocus required />
+          </div>
+        </div>
+
+        <div class="field mb-5">
+          <label class="label">
+            Their E-Mail
+          </label>
+          <div class="control">
+            <input type="email" class="input is-medium" name="email" autofocus required />
+          </div>
+        </div>
+
+        <div class="field mb-5">
+          <label class="label">
+            Their Role
+          </label>
+          <div class="control">
+            <div class="select is-medium">
+              <select name="role">
+                {% for role in Roles %}
+                  <option required value="{{ role }}">
+                    {{ role }}
+                  </option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+        </div>
+
+        {# TODO: Add a hint about the user then receiving a mail with a link to complete their signup. #}
+
+        <div class="field mb-5">
+          <div class="control">
+            <button class="button is-primary is-medium">Add User</button>
+          </div>
+        </div>
+
+      </form>
+    {% endcall %}
+
+  {% endwith %}
+
+{% endblock %}
+
+
+{#############################################################################}
+{# MACROS                                                                    #}
+{#############################################################################}

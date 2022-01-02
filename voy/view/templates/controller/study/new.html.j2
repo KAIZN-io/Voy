@@ -1,0 +1,58 @@
+{% extends 'layout-page.html.j2' %}
+
+
+{% from "components/section.html.j2" import render_section %}
+
+{% from "utilities/_errors.html.j2" import render_errors %}
+
+
+{#############################################################################}
+{# META                                                                      #}
+{#############################################################################}
+
+{% block title %}Add Study{% endblock %}
+
+{% block page_title %}Studies{% endblock %}
+
+
+{#############################################################################}
+{# CONTENT                                                                   #}
+{#############################################################################}
+
+{% block content %}
+
+  {% with %}
+
+    {% call render_section(
+      title='New Study',
+      sub_title='Got a new Study you are working on?') %}
+      <form action="{{ url_for('study_controller.new_post') }}" method="POST">
+
+        {{ render_errors(errors) }}
+
+        <div class="field mb-5">
+          <label class="label">
+            Study Identifier
+          </label>
+          <div class="control">
+            <input type="password" class="input is-medium" name="internal_id" autofocus required />
+          </div>
+        </div>
+
+        <div class="field mb-5">
+          <div class="control">
+            <button class="button is-primary is-medium">Add Study</button>
+          </div>
+        </div>
+
+      </form>
+    {% endcall %}
+
+  {% endwith %}
+
+{% endblock %}
+
+
+{#############################################################################}
+{# MACROS                                                                    #}
+{#############################################################################}

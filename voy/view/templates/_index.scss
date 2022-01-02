@@ -1,1 +1,12 @@
-@import "layout-prompt-bulma.html";
+//
+// Layout Styles
+@import "layout-page.html";
+@import "layout-plain.html";
+@import "layout-prompt.html";
+
+
+//
+// Controller Styles
+@import "controller/dashboard/index.html";
+@import "controller/ticket/comment/modal.html";
+@import "controller/user/index.html";

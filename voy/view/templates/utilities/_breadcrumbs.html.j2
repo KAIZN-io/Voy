@@ -1,0 +1,7 @@
+<nav class="breadcrumb" aria-label="breadcrumbs">
+  <ul>
+    {%- for breadcrumb in breadcrumbs -%}
+      <li class="{{ 'is-active' if loop.last }}"><a href="{{ breadcrumb.url }}">{{ breadcrumb.text }}</a></li>
+    {%- endfor -%}
+  </ul>
+</nav>

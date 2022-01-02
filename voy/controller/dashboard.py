@@ -20,7 +20,7 @@ default_breadcrumb_root(dashboard_blueprint, '.')
 
 
 @dashboard_blueprint.route('/', methods=['GET'])
-@register_breadcrumb(dashboard_blueprint, '.', 'QC-DB')
+@register_breadcrumb(dashboard_blueprint, '.', 'Dashboard')
 @login_required
 def index():
     available_export_file_types = {
@@ -28,7 +28,7 @@ def index():
         FILE_TYPE_PDF:  'PDF (.pdf)',
     }
 
-    return render_template('dashboard/index.html.j2',
+    return render_template('controller/dashboard/index.html.j2',
                            user_tickets=get_tickets_for_user(current_user),
                            available_export_file_types=available_export_file_types)
 

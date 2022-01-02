@@ -1,9 +1,20 @@
-// Packages
-import $ from 'jquery';
-import 'bootstrap';
+//
+// Packages / Libraries
+// No Packages yet...
 
-// Styles
-import '../css/main.scss'
 
-// define global variable (here only for TableFilter)
-window.$ = window.jQuery = $;
+//
+// Basic and Shared Scripts
+// No such scripts yet...
+
+
+//
+// Template Scripts
+import '../../templates/_index';
+
+
+//
+// Alpine Initialization
+// We have to do this after all Alpine components are imported. Otherwise they
+// will not be recognized by Alpine.
+import './vendor/alpinejs';

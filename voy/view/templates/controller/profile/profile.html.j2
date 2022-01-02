@@ -1,0 +1,76 @@
+{% extends 'layout-page.html.j2' %}
+
+
+{% from "components/section.html.j2" import render_section %}
+
+{% from "utilities/_errors.html.j2" import render_errors %}
+
+
+{#############################################################################}
+{# META                                                                      #}
+{#############################################################################}
+
+{% block title %}Profile{% endblock %}
+
+{% block page_title %}Profile{% endblock %}
+
+
+{#############################################################################}
+{# CONTENT                                                                   #}
+{#############################################################################}
+
+{% block content %}
+
+  {% with %}
+
+    {% call render_section(
+      title='Password',
+      sub_title='Stay safe, change your password here') %}
+      <form action="{{ url_for('profile_controller.reset_password_post') }}" method="POST">
+
+        {{ render_errors(errors) }}
+
+        <div class="field mb-5">
+          <label class="label">
+            Your old Password
+          </label>
+          <div class="control">
+            <input type="password" class="input is-medium" name="password_old" required />
+          </div>
+        </div>
+
+        <div class="field mb-5">
+          <label class="label">
+            Your new Password
+          </label>
+          <div class="control">
+            <input type="password" class="input is-medium" name="password_new" required />
+          </div>
+        </div>
+
+        <div class="field mb-5">
+          <label class="label">
+            Your new Password, again
+          </label>
+          <div class="control">
+            <input type="password" class="input is-medium" name="password_new_repetition" required />
+          </div>
+        </div>
+
+        <div class="field mb-5">
+          <div class="control">
+            <button class="button is-primary is-medium">Change Password</button>
+          </div>
+        </div>
+
+      </form>
+    {% endcall %}
+
+  {% endwith %}
+
+{% endblock %}
+
+
+{#############################################################################}
+{# MACROS                                                                    #}
+{#############################################################################}

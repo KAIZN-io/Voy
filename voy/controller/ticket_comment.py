@@ -20,7 +20,7 @@ default_breadcrumb_root(ticket_comment_blueprint, '.')
 @ticket_comment_blueprint.route('/tickets/<string:ticket_uuid>/comments/modal-content', methods=['GET'])
 @login_required
 def modal_content(ticket_uuid: str):
-    return render_template('ticket/comment/modal-content.html.j2',
+    return render_template('controller/ticket/comment/modal-content.html.j2',
                            ticket=Ticket.query.get(ticket_uuid))
 
 

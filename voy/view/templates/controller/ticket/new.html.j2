@@ -1,0 +1,215 @@
+{% extends 'layout-page.html.j2' %}
+
+{% from "components/section.html.j2" import render_section %}
+
+{% from "utilities/_errors.html.j2" import render_errors %}
+
+
+{#############################################################################}
+{# META                                                                      #}
+{#############################################################################}
+
+{% block title %}Add Queries{% endblock %}
+
+{% block page_title %}Queries{% endblock %}
+
+
+{#############################################################################}
+{# CONTENT                                                                   #}
+{#############################################################################}
+
+{% block content %}
+
+  {% with %}
+
+    {% call render_section(
+      title='New Queries',
+      sub_title='Doing a Check? Add your Findings here') %}
+      <form
+        x-data="ticket_new"
+
+        action="{{ url_for('ticket_controller.new_post') }}"
+        method="POST">
+
+        {{ render_errors(errors) }}
+
+        <h2 class="title is-4">General Information</h2>
+
+        <div class="columns">
+
+          <div class="column">
+            <div class="field mb-5">
+              <label class="label" for="study_uuid">
+                Study
+              </label>
+              <div class="control">
+                <div class="select is-medium is-fullwidth">
+                  <select name="study_uuid" required>
+
+                    <option disabled selected>
+                      Select a Study
+                    </option>
+
+                    {% for study in study_list %}
+                      <option value="{{ study.uuid }}">
+                        {{ study.internal_id }}
+                      </option>
+                    {% endfor %}
+
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="column">
+            <div class="field mb-5">
+              <label class="label" for="source_number">
+                Source Number
+              </label>
+              <div class="control">
+                <input type="number" min="0" class="input is-medium" name="source_number" required />
+              </div>
+            </div>
+          </div>
+
+          <div class="column">
+            <div class="field mb-5">
+              <div class="label">
+                Document-Type
+              </div>
+              <div class="control">
+                {% for source_type in available_source_types %}
+                  <label class="radio button is-medium is-info is-light">
+                    <input type="radio" name="source_type" value="{{ source_type }}" required />
+                    {{ source_type }}
+                  </label>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <h2 class="title is-4">Queries</h2>
+
+        <table class="table is-striped is-hoverable is-fullwidth mb-6">
+          <thead class="thead-light">
+            <tr>
+              <th scope="col">Visit</th>
+              <th scope="col">Page</th>
+              <th scope="col">Procedure</th>
+              <th scope="col">Description</th>
+              <th scope="col">Assignee</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <template x-for="ticket in tickets" :key="ticket.uuid">
+              <tr>
+
+                <td>
+                  <div class="control">
+                    <input
+                      name="ticket[][visit]"
+                      class="input"
+                      type="text"
+                      maxlength="10"
+                      required />
+                  </div>
+                </td>
+
+                <td>
+                  <div class="control">
+                    <input
+                      name="ticket[][page]"
+                      class="input"
+                      type="text"
+                      maxlength="10"
+                      required />
+                  </div>
+                </td>
+
+                <td>
+                  <div class="control">
+                    <input
+                      name="ticket[][procedure]"
+                      class="input"
+                      type="text"
+                      maxlength="20"
+                      required />
+                  </div>
+                </td>
+
+                <td>
+                  <textarea
+                    name="ticket[][description]"
+                    maxlength="100"
+                    class="textarea"></textarea>
+                </td>
+
+                <td>
+                  <div class="control">
+                    <div class="select is-fullwidth">
+                      <select name="ticket[][assignee_uuid]" required>
+
+                        <option disabled selected>
+                          Select Someone
+                        </option>
+
+                        {% for user in staff_list_medops %}
+                          <option value="{{ user.uuid }}">
+                            {{ user.abbreviation }}
+                          </option>
+                        {% endfor %}
+
+                      </select>
+                    </div>
+                  </div>
+                </td>
+
+                <td>
+                  <button
+                    class="button is-danger is-light"
+                    type="button"
+
+                    @click="removeTicketByUuid(ticket.uuid)">
+                    <i class="far fa-times-circle"></i>
+                  </button>
+                </td>
+
+              </tr>
+            </template>
+          </tbody>
+        </table>
+
+        <button
+          class="button is-success is-medium is-light mr-3"
+          type="button"
+
+          @click="addTicket()">
+          <span class="icon">
+            <i class="fas fa-plus"></i>
+          </span>
+          <span>
+            Add Query
+          </span>
+        </button>
+
+        <button
+          class="button is-primary is-medium"
+          type="submit">
+          Submit Queries
+        </button>
+
+      </form>
+    {% endcall %}
+
+  {% endwith %}
+
+{% endblock %}
+
+
+{#############################################################################}
+{# MACROS                                                                    #}
+{#############################################################################}

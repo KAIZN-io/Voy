@@ -1,0 +1,17 @@
+.h-full {
+  height: 100%;
+}
+
+.is-soft-flex {
+  display: flex;
+}
+
+.has-opacity-0 {
+  opacity: 0;
+}
+
+.transition-opacity {
+  transition-property: opacity;
+  transition-duration: 220ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}

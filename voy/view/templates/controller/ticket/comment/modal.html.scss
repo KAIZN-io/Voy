@@ -1,0 +1,6 @@
+.modal-ticket-comments {
+  &__content {
+    height: calc(100vh - 180px);
+    max-height: 880px;
+  }
+}

@@ -1,0 +1,33 @@
+{% macro render_section(title=none, sub_title=none, actions=none, class=none) %}
+  <section class="section {{ class }}">
+
+      {% if title is not none %}
+        <div class="is-flex is-align-items-flex-end is-justify-content-space-between mb-6">
+
+          <div>
+
+            <h2 class="title">
+              {{ title }}
+            </h2>
+
+            {% if sub_title is not none %}
+              <h3 class="subtitle">
+                {{ sub_title }}
+              </h3>
+            {% endif %}
+
+          </div>
+
+          {% if actions is not none %}
+            <div>
+              {{ actions }}
+            </div>
+          {% endif %}
+
+        </div>
+      {% endif %}
+
+      {{ caller() }}
+
+  </section>
+{% endmacro %}

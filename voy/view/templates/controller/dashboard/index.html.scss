@@ -1,0 +1,18 @@
+.dashboard {
+
+  &__tickets {
+
+    .ticket {
+      td {
+        vertical-align: middle;
+      }
+
+      &__action {
+        text-align: right;
+
+        min-width: 140px;
+        max-width: 150px;
+      }
+    }
+  }
+}

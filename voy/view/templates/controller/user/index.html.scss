@@ -1,0 +1,18 @@
+.users {
+
+  &__table {
+
+    .user {
+      td {
+        vertical-align: middle;
+      }
+
+      &__actions {
+        text-align: right;
+
+        min-width: 140px;
+        max-width: 150px;
+      }
+    }
+  }
+}
