@@ -17,7 +17,7 @@
     "build": "encore production"
   },
   "dependencies": {
-    "@alpinejs/trap": "^3.5.1",
+    "@alpinejs/focus": "^3.8.1",
     "@fortawesome/fontawesome-free": "^5.15.4",
     "alpinejs": "^3.5.1",
     "bulma": "^0.9.3",

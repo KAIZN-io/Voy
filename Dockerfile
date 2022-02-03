@@ -3,32 +3,26 @@ ARG VOY_HOME=/usr/src/voy
 ########################################################################################################################
 # Building Assets                                                                                                      #
 ########################################################################################################################
-FROM python:3.8-slim-buster AS assets
+FROM node:16-buster-slim AS assets
 
 ARG DEBIAN_FRONTEND=noninteractive
 ARG VOY_HOME
 WORKDIR $VOY_HOME
-
-# Install system packages
-RUN apt-get update
-RUN apt-get -y install --no-install-recommends curl
-RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
-RUN apt-get -y install --no-install-recommends build-essential nodejs
 
 # Configuration
 RUN npm config set update-notifier false
 RUN npm config set fund false
 
 # Install dependencies
-COPY package.json package-lock.json ./
-RUN npm ci
+COPY package.json yarn.lock ./
+RUN yarn
 
 # Copy over files required for building the assets
 COPY webpack.config.js ./
 COPY voy/view ./voy/view
 
 # Build assets
-RUN npm run build
+RUN yarn build
 
 
 ########################################################################################################################

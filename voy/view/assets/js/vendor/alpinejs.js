@@ -1,8 +1,8 @@
 import Alpine from 'alpinejs';
-import trap from '@alpinejs/trap';
+import focus from '@alpinejs/focus';
 
 //
 // Register Apline globally and start it
 window.Alpine = Alpine;
-Alpine.plugin(trap);
+Alpine.plugin(focus);
 Alpine.start();
