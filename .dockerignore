@@ -3,7 +3,7 @@
 
 # IDE
 .idea/
-.vscode
+.vscode/
 
 # Docker
 /docker
@@ -17,7 +17,8 @@
 *.xlsx
 .env
 .flaskenv
-backups/*
+backups/
+logs/
 env/
 env*
 !/migrations/env.py
