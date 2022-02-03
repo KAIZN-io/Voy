@@ -17,8 +17,8 @@
 *.xlsx
 .env
 .flaskenv
-backups/
-logs/
+backups/*
+logs/*
 env/
 env*
 !/migrations/env.py
