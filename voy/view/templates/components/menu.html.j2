@@ -1,16 +1,33 @@
 <nav class="menu">
 
   <p class="menu-label">
-    General
+    Date-Entry
   </p>
 
   <ul class="menu-list">
+    <li>
+      <a href="{{ url_for('ticket_controller.new') }}">
+        Source-Check
+      </a>
+    </li>
+    <li>
+      <a href="{{ url_for('dashboard_controller.index') }}">
+        Re-Check
+      </a>
+    </li>
+  </ul>
+
+  {# <p class="menu-label">
+    General
+  </p> #}
+
+  {# <ul class="menu-list">
     <li>
       <a href="{{ url_for('dashboard_controller.index') }}">
         Dashboard
       </a>
     </li>
-  </ul>
+  </ul> #}
 
   {# <p class="menu-label">
     Administration

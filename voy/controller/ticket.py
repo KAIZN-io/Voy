@@ -20,7 +20,7 @@ ticket_blueprint = Blueprint('ticket_controller', __name__)
 default_breadcrumb_root(ticket_blueprint, '.')
 
 
-@ticket_blueprint.route('/tickets/new', methods=['GET'])
+@ticket_blueprint.route('/source-check', methods=['GET'])
 @register_breadcrumb(ticket_blueprint, '.new', '')
 @login_required
 def new():
@@ -30,7 +30,7 @@ def new():
                            available_source_types=AVAILABLE_SOURCE_TYPES)
 
 
-@ticket_blueprint.route('/tickets/new', methods=['POST'])
+@ticket_blueprint.route('/source-check', methods=['POST'])
 @login_required
 def new_post():
     # header data form the form

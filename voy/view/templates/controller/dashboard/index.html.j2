@@ -8,11 +8,11 @@
 {# META                                                                      #}
 {#############################################################################}
 
-{% block title %}Dashboard{% endblock %}
+{% block title %}Re-Check{% endblock %}
 
-{% block page_title %}Dashboard{% endblock %}
+{% block page_title %}Re-Check{% endblock %}
 
-{% block body_class %}dashboard{% endblock %}
+{% block body_class %}Re-Check{% endblock %}
 
 
 {#############################################################################}
@@ -36,10 +36,7 @@
       {% endif %}
     {% endset %} #}
 
-    {% call render_section(
-      title='Queries',
-      sub_title='Here\'s todays list of Queries for you',
-      actions=actions) %}
+    {% call render_section() %}
       <table class="dashboard__tickets table is-striped is-hoverable is-fullwidth">
 
         <thead>
