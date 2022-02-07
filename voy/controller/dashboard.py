@@ -19,7 +19,7 @@ dashboard_blueprint = Blueprint('dashboard_controller', __name__)
 default_breadcrumb_root(dashboard_blueprint, '.')
 
 
-@dashboard_blueprint.route('/', methods=['GET'])
+@dashboard_blueprint.route('/re-check', methods=['GET'])
 @register_breadcrumb(dashboard_blueprint, '.', 'Dashboard')
 @login_required
 def index():

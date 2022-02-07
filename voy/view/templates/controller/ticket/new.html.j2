@@ -9,9 +9,9 @@
 {# META                                                                      #}
 {#############################################################################}
 
-{% block title %}Add Queries{% endblock %}
+{% block title %}Source-Check{% endblock %}
 
-{% block page_title %}Queries{% endblock %}
+{% block page_title %}Source-Check{% endblock %}
 
 
 {#############################################################################}
@@ -22,9 +22,7 @@
 
   {% with %}
 
-    {% call render_section(
-      title='New Queries',
-      sub_title='Doing a Check? Add your Findings here') %}
+    {% call render_section() %}
       <form
         x-data="ticket_new"
 
