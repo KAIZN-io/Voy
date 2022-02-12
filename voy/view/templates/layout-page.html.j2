@@ -4,7 +4,7 @@
 {% block layout_class %}layout--page{% endblock %}
 
 {% block navigation %}
-  <div class="layout__navigation panel mb-0">
+  {# <div class="layout__navigation panel mb-0">
 
     <p class="panel-heading">
       Voy
@@ -14,7 +14,96 @@
       {% include "components/menu.html.j2" %}
     </div>
 
-  </div>
+  </div> #}
+  <nav class="navbar layout__navigation" role="navigation" aria-label="main navigation">
+    <div class="container px-6">
+
+      <div class="navbar-brand">
+        <a class="navbar-item is-size-3 has-text-weight-bold" href="{{ url_for('home_controller.index') }}">
+          Voy
+        </a>
+
+        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+
+      <div id="navbarBasicExample" class="navbar-menu">
+
+        <div class="navbar-start">
+
+          <div class="navbar-item">
+            <a class="button is-primary" href="{{ url_for('ticket_controller.new') }}">
+              Source-Check
+            </a>
+          </div>
+
+          <div class="navbar-item">
+            <a class="button is-info" href="{{ url_for('dashboard_controller.index') }}">
+              Re-Check
+            </a>
+          </div>
+
+        </div>
+
+        <div class="navbar-end">
+          <div class="navbar-item">
+
+            <div
+              class="dropdown is-active"
+              x-data="{ open: false }">
+
+              <div class="dropdown-trigger">
+                <button
+                  class="button"
+                  aria-haspopup="true"
+                  aria-controls="dropdown-menu"
+                  @click="open = !open">
+                  <span class="icon">
+                    <i class="fas fa-user"></i>
+                  </span>
+                  <span class="is-uppercase">
+                    {{ current_user.abbreviation }}
+                  </span>
+                  <span class="icon">
+                    <i class="fas fa-angle-down" aria-hidden="true"></i>
+                  </span>
+                </button>
+              </div>
+
+              <div
+                id="dropdown-menu"
+                class="dropdown-menu"
+                role="menu"
+                x-show="open"
+                x-transition
+                @click.outside="open = false">
+                <div class="dropdown-content">
+
+                  <a href="{{ url_for('profile_controller.profile') }}" class="dropdown-item">
+                    Change Password
+                  </a>
+
+                  <hr class="dropdown-divider">
+
+                  <a href="{{ url_for('authentication_controller.logout') }}" class="dropdown-item">
+                    Logout
+                  </a>
+
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </nav>
 {% endblock %}
 
 {% block main %}
