@@ -5,7 +5,7 @@ from pathlib import Path
 import yaml
 from flask import Flask
 from flask_breadcrumbs import Breadcrumbs
-from flask_login import LoginManager
+from flask_login import LoginManager, current_user
 
 from .commands import database_cli, user_cli
 from .constants import FLASH_TYPE_WARNING
@@ -70,6 +70,11 @@ def create_app():
     # Register CLI blueprints
     app.register_blueprint(database_cli)
     app.register_blueprint(user_cli)
+
+    # Inject current user into each template
+    @app.context_processor
+    def inject_user():
+        return dict(current_user=current_user)
 
     # Register templating functions
     app.jinja_env.globals.update(
