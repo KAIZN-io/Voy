@@ -5,8 +5,8 @@ from flask import Blueprint
 from flask.cli import with_appcontext
 from werkzeug.security import generate_password_hash
 
-from voy.constants import ROLE_ADMIN
-from voy.model import db, User, User_Management
+from voy.constants import ROLE_ADMIN, ROLE_MEDOPS
+from voy.model import db, User, User_Management, Study
 from voy.model.utilities import is_database_empty
 
 # Get loggers
@@ -35,7 +35,7 @@ def init():
     admin_password = click.prompt('Enter admin password', type=str, hide_input=True)
 
     # create new user with the form data. Hash the password so plaintext version isn't saved.
-    user_new = User(
+    user_admin = User(
         email=admin_email,
         abbreviation=admin_abbreviation,
         role=ROLE_ADMIN,
@@ -43,26 +43,44 @@ def init():
         is_system_password=False,
         is_active=True
     )
+    db.session.add(user_admin)
 
-    # add the new user to the database
-    db.session.add(user_new)
+    # Add sample Medops user
+    user_medops = User(
+        email='medops@kaizn.io',
+        abbreviation='MED',
+        role=ROLE_MEDOPS,
+        password=generate_password_hash('MED', method='sha256'),
+        is_system_password=False,
+        is_active=True
+    )
+    db.session.add(user_medops)
+
+    # Add a sample study
+    study = Study(
+        internal_id='123456789',
+        is_active=True
+    )
+    db.session.add(study)
+
+    # Save everything
     db.session.commit()
 
-    # add the change to the user_management db
-    user_management = User_Management(
-        email=admin_email,
-        abbreviation=admin_abbreviation,
-        role=ROLE_ADMIN,
-        change_by="Initial Signup",
-        action="added"
-    )
+    # # add the change to the user_management db
+    # user_management = User_Management(
+    #     email=admin_email,
+    #     abbreviation=admin_abbreviation,
+    #     role=ROLE_ADMIN,
+    #     change_by="Initial Signup",
+    #     action="added"
+    # )
 
-    audit_data = user_management.__dict__
+    # audit_data = user_management.__dict__
 
     # NOTE: semi good solution for the extra data from sqlalchemy
-    audit_data.pop('created_at', None)
+    # audit_data.pop('created_at', None)
 
-    to_user_file.info(audit_data['change_by'], extra=audit_data)
+    # to_user_file.info(audit_data['change_by'], extra=audit_data)
 
     click.echo("Initialized the database.")
 
