@@ -2,9 +2,10 @@
   display: grid;
 
   grid-template:
-  "navigation   main" 1fr
-  "navigation footer" 66px
-  / 300px     1fr;
+  "navigation" 56px
+  "      main" 1fr
+  "    footer" 66px
+  /       1fr;
 
   .layout {
 
