@@ -6,7 +6,6 @@ from flask.json import dump
 from flask_breadcrumbs import register_breadcrumb, default_breadcrumb_root
 from flask_login import login_required, current_user
 
-from voy.compliance.ema import add_to_audit_trail
 from voy.constants import ROLE_MEDOPS, AVAILABLE_SOURCE_TYPES, FLASH_TYPE_SUCCESS
 from voy.model import Ticket, User, Study
 from voy.model import db
@@ -97,15 +96,6 @@ def edit_post(ticket_uuid: str):
     ticket_data_new = request.form.to_dict()
     ticket_data_new['study_uuid'] = ticket_data_new['study_uuid']
     ticket_data_new['assignee_uuid'] = ticket_data_new['assignee_uuid']
-
-    # Log the updates to the ticket
-    for key, value_new in ticket_data_new.items():
-        value_old = ticket_data_old[key]
-
-        if value_new != value_old:
-            # add the data to the audit trail
-            add_to_audit_trail(current_user.abbreviation, "edit", ticket_uuid, key,
-                               value_old, value_new)
 
     # Update the ticket
     Ticket.query.filter_by(uuid=ticket_uuid).update(ticket_data_new)

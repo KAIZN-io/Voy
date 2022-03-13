@@ -6,7 +6,7 @@ from flask.cli import with_appcontext
 from werkzeug.security import generate_password_hash
 
 from voy.constants import ROLE_ADMIN, ROLE_MEDOPS
-from voy.model import db, User, User_Management, Study
+from voy.model import db, User, Study
 from voy.model.utilities import is_database_empty
 
 # Get loggers
@@ -65,22 +65,6 @@ def init():
 
     # Save everything
     db.session.commit()
-
-    # # add the change to the user_management db
-    # user_management = User_Management(
-    #     email=admin_email,
-    #     abbreviation=admin_abbreviation,
-    #     role=ROLE_ADMIN,
-    #     change_by="Initial Signup",
-    #     action="added"
-    # )
-
-    # audit_data = user_management.__dict__
-
-    # NOTE: semi good solution for the extra data from sqlalchemy
-    # audit_data.pop('created_at', None)
-
-    # to_user_file.info(audit_data['change_by'], extra=audit_data)
 
     click.echo("Initialized the database.")
 

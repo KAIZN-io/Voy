@@ -6,7 +6,7 @@ from flask_login import login_required, current_user
 from werkzeug.security import generate_password_hash
 
 from voy.model import db
-from voy.model import User, User_Management
+from voy.model import User
 from voy.constants import ROLE_ADMIN, ROLE_MEDOPS, ROLE_DATA_MANAGER, ROLE_DATA_ENTRY, FLASH_TYPE_DANGER
 
 # Get loggers
@@ -94,21 +94,5 @@ def new_post():
     # add the new user to the database
     db.session.add(new_user)
     db.session.commit()
-
-    # add the change to the user_management db
-    user_management = User_Management(
-        email=email,
-        abbreviation=abbreviation,
-        role=role,
-        change_by=current_user.abbreviation,
-        action="added"
-    )
-
-    audit_data = user_management.__dict__
-
-    # NOTE: semi good solution for the extra data from sqlalchemy
-    audit_data.pop('created_at', None)
-
-    to_user_file.info(audit_data['change_by'], extra=audit_data)
 
     return redirect(url_for('user_controller.index'))
