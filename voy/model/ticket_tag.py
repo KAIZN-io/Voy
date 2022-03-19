@@ -8,7 +8,7 @@ class TicketTag(UuidPrimaryKeyMixin, TimeStampMixin, db.Model):
     __tablename__ = 'ticket_tag'
 
     title = db.Column(db.String(30), unique=True)
-    description = db.Column(db.String(500))
+    description = db.Column(db.Text)
 
     color = db.Column(db.String(12))
 
@@ -18,3 +18,7 @@ class TicketTag(UuidPrimaryKeyMixin, TimeStampMixin, db.Model):
         'Ticket',
         secondary='ticket_tag_mapping',
         back_populates='tags')
+
+    def __repr__(self):
+        return '<Tag: %s>' % self.title
+

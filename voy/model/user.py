@@ -35,3 +35,6 @@ class User(UuidPrimaryKeyMixin, UserMixin, TimeStampMixin, db.Model):
 
     def get_id(self):
         return self.uuid
+
+    def __repr__(self):
+        return '<User: %s>' % self.abbreviation

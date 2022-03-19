@@ -18,3 +18,6 @@ class Study(UuidPrimaryKeyMixin, TimeStampMixin, db.Model):
         'User',
         secondary='study_user_mapping',
         back_populates='study')
+
+    def __repr__(self):
+        return '<Study: %s>' % self.internal_id
