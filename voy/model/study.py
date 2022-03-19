@@ -17,7 +17,7 @@ class Study(UuidPrimaryKeyMixin, TimeStampMixin, db.Model):
     users = db.relationship(
         'User',
         secondary='study_user_mapping',
-        back_populates='study')
+        back_populates='studies')
 
     def __repr__(self):
         return '<Study: %s>' % self.internal_id

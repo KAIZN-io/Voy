@@ -28,10 +28,10 @@ class User(UuidPrimaryKeyMixin, UserMixin, TimeStampMixin, db.Model):
 
     is_active = db.Column(db.Boolean, default=False, nullable=False)
 
-    study = db.relationship(
+    studies = db.relationship(
         'Study',
         secondary='study_user_mapping',
-        back_populates='users') # how it get named in the table "Study"
+        back_populates='users')
 
     def get_id(self):
         return self.uuid
