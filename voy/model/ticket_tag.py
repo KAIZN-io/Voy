@@ -1,3 +1,5 @@
+from sqlalchemy.dialects.postgresql import UUID
+
 from voy.model import db
 from voy.model.mixins import TimeStampMixin, UuidPrimaryKeyMixin
 
@@ -10,7 +12,8 @@ class TicketTag(UuidPrimaryKeyMixin, TimeStampMixin, db.Model):
     title = db.Column(db.String(30), unique=True)
     description = db.Column(db.Text)
 
-    color = db.Column(db.String(12))
+    color_uuid = db.Column(UUID(as_uuid=True), db.ForeignKey('ticket_tag_color.uuid'))
+    color = db.relationship('TicketTagColor', back_populates='tags')
 
     is_active = db.Column(db.Boolean, default=True, nullable=False)
 
