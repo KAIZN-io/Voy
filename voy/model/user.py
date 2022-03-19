@@ -27,7 +27,7 @@ class User(UuidPrimaryKeyMixin, UserMixin, TimeStampMixin, db.Model):
     abbreviation = db.Column(db.String(5), unique=True)
     role = db.Column(db.Text)
 
-    is_active = db.Column(db.Boolean, default=False, nullable=False)
+    is_active = db.Column(db.Boolean, default=True, nullable=False)
 
     studies = db.relationship(
         'Study',
