@@ -59,7 +59,9 @@ def create_app():
         return User.query.get(user_uuid)
 
 
-    admin = Admin(name='voy')
+    app.config['FLASK_ADMIN_SWATCH'] = 'flatly'
+
+    admin = Admin(name='Voy Admin', template_mode='bootstrap4')
     admin.add_view(UserView(User, db.session))
     admin.add_view(StudyView(Study, db.session))
     admin.add_view(TicketTagView(TicketTag, db.session))
