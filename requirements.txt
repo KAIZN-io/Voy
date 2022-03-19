@@ -4,6 +4,7 @@ blinker==1.4
 click==7.1.2
 et-xmlfile==1.1.0
 Flask==1.1.4
+Flask-Admin==1.6.0
 Flask-Breadcrumbs==0.5.1
 Flask-Login==0.5.0
 Flask-Mail==0.9.1
@@ -29,3 +30,4 @@ six==1.16.0
 SQLAlchemy==1.4.23
 uuid==1.30
 Werkzeug==1.0.1
+WTForms==3.0.1

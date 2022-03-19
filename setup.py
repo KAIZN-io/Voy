@@ -21,6 +21,7 @@ setup(
         # Hard requirements
         'arrow~=0.17.0',
         'Flask~=1.1.4',
+        'Flask-Admin~=1.6.0',
         'Flask-Breadcrumbs~=0.5.1',
         'Flask-Login~=0.5.0',
         'Flask-Mail~=0.9.1',
