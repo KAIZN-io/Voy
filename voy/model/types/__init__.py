@@ -1,0 +1,1 @@
+from voy.model.types.uppercase_string_type import UppercaseStringType

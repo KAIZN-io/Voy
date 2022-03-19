@@ -9,6 +9,7 @@ from werkzeug.security import generate_password_hash
 from voy.constants import ROLE_ADMIN, ROLE_MEDOPS, ROLE_DATA_ENTRY, ROLE_DATA_MANAGER
 from voy.model import db
 from voy.model.mixins import TimeStampMixin, UuidPrimaryKeyMixin
+from voy.model.types import UppercaseStringType
 
 db.Table('study_user_mapping', db.Model.metadata,
     db.Column('study_uuid', UUID(as_uuid=True), db.ForeignKey('study.uuid'), primary_key=True),
@@ -27,7 +28,7 @@ class User(UuidPrimaryKeyMixin, UserMixin, TimeStampMixin, db.Model):
     password = db.Column(db.String(100))
     is_password_reset_required = db.Column(db.Boolean, default=False, nullable=False,)
 
-    abbreviation = db.Column(db.String(5), unique=True)
+    abbreviation = db.Column(UppercaseStringType(5), unique=True)
     role = db.Column(db.Text)
 
     is_active = db.Column(db.Boolean, default=True, nullable=False)
@@ -51,6 +52,7 @@ class UserView(ModelView):
     form_excluded_columns = ('reported_tickets', 'assigned_tickets', 'password')
 
     form_overrides = dict(
+        abbreviation=StringField,
         role=SelectField)
     form_args = dict(
         role=dict(choices=[ROLE_ADMIN, ROLE_MEDOPS, ROLE_DATA_ENTRY, ROLE_DATA_MANAGER]))
