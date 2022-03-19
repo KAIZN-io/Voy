@@ -33,7 +33,7 @@ def reset(user_abbreviation):
 
     # commit the new system password to the database
     User.query.filter_by(abbreviation=user_abbreviation).update(
-        {"password": password_new_hash, "is_system_password": True})
+        {"password": password_new_hash, "is_password_reset_required": True})
     db.session.commit()
 
     click.echo()

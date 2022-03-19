@@ -22,7 +22,7 @@ class User(UuidPrimaryKeyMixin, UserMixin, TimeStampMixin, db.Model):
 
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(100))
-    is_system_password = db.Column(db.Boolean, default=False, nullable=False,)
+    is_password_reset_required = db.Column(db.Boolean, default=False, nullable=False,)
 
     abbreviation = db.Column(db.String(5), unique=True)
     role = db.Column(db.Text)

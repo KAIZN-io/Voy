@@ -87,7 +87,7 @@ def new_post():
         abbreviation=abbreviation,
         role=role,
         password=generate_password_hash(password, method='sha256'),
-        is_system_password=True,
+        is_password_reset_required=True,
         is_active=True
     )
 

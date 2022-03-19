@@ -59,7 +59,7 @@ def try_password_reset(user_abbreviation: str, password_old: str, password_new: 
 
     user_query.update({
         "password": password_hash,
-        "is_system_password": False
+        "is_password_reset_required": False
     })
 
     # Persist changes

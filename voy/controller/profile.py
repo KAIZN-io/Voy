@@ -68,7 +68,7 @@ def request_password_reset_post():
         # commit the new system password to the database
         user_query.update({
             "password": password_new_hash,
-            "is_system_password": True
+            "is_password_reset_required": True
         })
 
         db.session.commit()

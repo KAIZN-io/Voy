@@ -40,7 +40,7 @@ def init():
         abbreviation=admin_abbreviation,
         role=ROLE_ADMIN,
         password=generate_password_hash(admin_password, method='sha256'),
-        is_system_password=False,
+        is_password_reset_required=False,
         is_active=True
     )
     db.session.add(user_admin)
@@ -51,7 +51,7 @@ def init():
         abbreviation='MED',
         role=ROLE_MEDOPS,
         password=generate_password_hash('MED', method='sha256'),
-        is_system_password=False,
+        is_password_reset_required=False,
         is_active=True
     )
     db.session.add(user_medops)
