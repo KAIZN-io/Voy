@@ -3,9 +3,10 @@ import arrow
 from flask_login import UserMixin
 from sqlalchemy.dialects.postgresql import UUID
 from flask_admin.contrib.sqla import ModelView
-from wtforms import StringField
+from wtforms import SelectField, StringField
 from werkzeug.security import generate_password_hash
 
+from voy.constants import ROLE_ADMIN, ROLE_MEDOPS, ROLE_DATA_ENTRY, ROLE_DATA_MANAGER
 from voy.model import db
 from voy.model.mixins import TimeStampMixin, UuidPrimaryKeyMixin
 
@@ -48,6 +49,12 @@ class UserView(ModelView):
     column_exclude_list = ('password', 'is_password_reset_required')
 
     form_excluded_columns = ('reported_tickets', 'assigned_tickets', 'password')
+
+    form_overrides = dict(
+        role=SelectField)
+    form_args = dict(
+        role=dict(choices=[ROLE_ADMIN, ROLE_MEDOPS, ROLE_DATA_ENTRY, ROLE_DATA_MANAGER]))
+
     form_extra_fields = {
         'new_password': StringField('New Password')
     }
