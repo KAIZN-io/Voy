@@ -61,12 +61,10 @@ def create_app():
 
 
     admin = Admin()
+    admin.add_view(ModelView(User, db.session))
     admin.add_view(ModelView(Study, db.session))
-    admin.add_view(ModelView(Ticket, db.session))
-    admin.add_view(ModelView(TicketComment, db.session))
     admin.add_view(ModelView(TicketTag, db.session))
     admin.add_view(ModelView(TicketTagColor, db.session))
-    admin.add_view(ModelView(User, db.session))
     admin.init_app(app)
 
     # Register routing blueprints
