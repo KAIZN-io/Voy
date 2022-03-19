@@ -2,6 +2,7 @@ import arrow
 
 from flask_login import UserMixin
 from sqlalchemy.dialects.postgresql import UUID
+from flask_admin.contrib.sqla import ModelView
 
 from voy.model import db
 from voy.model.mixins import TimeStampMixin, UuidPrimaryKeyMixin
@@ -38,3 +39,8 @@ class User(UuidPrimaryKeyMixin, UserMixin, TimeStampMixin, db.Model):
 
     def __repr__(self):
         return '<User: %s>' % self.abbreviation
+
+
+class UserView(ModelView):
+    column_exclude_list = ('password', 'is_system_password')
+    form_excluded_columns = ('reported_tickets', 'assigned_tickets')

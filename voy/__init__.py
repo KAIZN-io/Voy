@@ -7,14 +7,13 @@ from flask import Flask
 from flask_breadcrumbs import Breadcrumbs
 from flask_login import LoginManager, current_user
 from flask_admin import Admin
-from flask_admin.contrib.sqla import ModelView
 
 from .commands import database_cli, user_cli
 from .constants import FLASH_TYPE_WARNING
 from .controller import authentication_blueprint, profile_blueprint, dashboard_blueprint, home_blueprint, \
     user_blueprint, study_blueprint, ticket_blueprint, ticket_comment_blueprint
 from .mail import mail
-from .model import db, migrate, Study, Ticket, TicketComment, TicketTag, TicketTagColor, User
+from .model import db, migrate, Study, StudyView, TicketTag, TicketTagView, TicketTagColor, TicketTagColorView, User, UserView
 
 
 # Load logging configuration
@@ -60,11 +59,11 @@ def create_app():
         return User.query.get(user_uuid)
 
 
-    admin = Admin()
-    admin.add_view(ModelView(User, db.session))
-    admin.add_view(ModelView(Study, db.session))
-    admin.add_view(ModelView(TicketTag, db.session))
-    admin.add_view(ModelView(TicketTagColor, db.session))
+    admin = Admin(name='voy')
+    admin.add_view(UserView(User, db.session))
+    admin.add_view(StudyView(Study, db.session))
+    admin.add_view(TicketTagView(TicketTag, db.session))
+    admin.add_view(TicketTagColorView(TicketTagColor, db.session))
     admin.init_app(app)
 
     # Register routing blueprints

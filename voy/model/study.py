@@ -1,3 +1,5 @@
+from flask_admin.contrib.sqla import ModelView
+
 from voy.model import db
 from voy.model.mixins import TimeStampMixin, UuidPrimaryKeyMixin
 
@@ -21,3 +23,7 @@ class Study(UuidPrimaryKeyMixin, TimeStampMixin, db.Model):
 
     def __repr__(self):
         return '<Study: %s>' % self.internal_id
+
+
+class StudyView(ModelView):
+    form_excluded_columns = ('tickets')
