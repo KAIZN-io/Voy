@@ -3,6 +3,8 @@ import arrow
 from flask_login import UserMixin
 from sqlalchemy.dialects.postgresql import UUID
 from flask_admin.contrib.sqla import ModelView
+from wtforms import StringField
+from werkzeug.security import generate_password_hash
 
 from voy.model import db
 from voy.model.mixins import TimeStampMixin, UuidPrimaryKeyMixin
@@ -42,5 +44,16 @@ class User(UuidPrimaryKeyMixin, UserMixin, TimeStampMixin, db.Model):
 
 
 class UserView(ModelView):
-    column_exclude_list = ('password', 'is_system_password')
-    form_excluded_columns = ('reported_tickets', 'assigned_tickets')
+
+    column_exclude_list = ('password', 'is_password_reset_required')
+
+    form_excluded_columns = ('reported_tickets', 'assigned_tickets', 'password')
+    form_extra_fields = {
+        'new_password': StringField('New Password')
+    }
+
+    def on_model_change(self, form, model, is_created):
+
+        # Update the password, if a new one was set.
+        if model.new_password:
+            model.password = generate_password_hash(model.new_password, method='sha256')
