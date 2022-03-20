@@ -6,7 +6,7 @@ from flask.cli import with_appcontext
 from werkzeug.security import generate_password_hash
 
 from voy.constants import ROLE_ADMIN, ROLE_MEDOPS
-from voy.model import db, User, Study
+from voy.model import db, User, Study, TicketTagColorScheme
 from voy.model.utilities import is_database_empty
 
 # Get loggers
@@ -62,6 +62,20 @@ def init():
         is_active=True
     )
     db.session.add(study)
+
+    # Add default Tag colors
+    text_light = '#ffffffff'
+    text_dark = '#000000b2'
+    db.session.add(TicketTagColorScheme(name='Black',   text_color=text_light, background_color='#0a0a0aff'))
+    db.session.add(TicketTagColorScheme(name='Dark',    text_color=text_light, background_color='#363636ff'))
+    db.session.add(TicketTagColorScheme(name='Light',   text_color=text_dark,  background_color='#f5f5f5ff'))
+    db.session.add(TicketTagColorScheme(name='White',   text_color=text_dark,  background_color='#ffffffff'))
+    db.session.add(TicketTagColorScheme(name='Primary', text_color=text_light, background_color='#00d1b2ff'))
+    db.session.add(TicketTagColorScheme(name='Link',    text_color=text_light, background_color='#485fc7ff'))
+    db.session.add(TicketTagColorScheme(name='Info',    text_color=text_light, background_color='#3e8ed0ff'))
+    db.session.add(TicketTagColorScheme(name='Success', text_color=text_light, background_color='#48c78eff'))
+    db.session.add(TicketTagColorScheme(name='Warning', text_color=text_dark,  background_color='#ffe08aff'))
+    db.session.add(TicketTagColorScheme(name='Danger',  text_color=text_light, background_color='#f14668ff'))
 
     # Save everything
     db.session.commit()

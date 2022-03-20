@@ -13,7 +13,7 @@ from .constants import FLASH_TYPE_WARNING
 from .controller import authentication_blueprint, profile_blueprint, dashboard_blueprint, home_blueprint, \
     user_blueprint, study_blueprint, ticket_blueprint, ticket_comment_blueprint
 from .mail import mail
-from .model import db, migrate, Study, StudyView, TicketTag, TicketTagView, TicketTagColor, TicketTagColorView, User, UserView
+from .model import db, migrate, Study, StudyView, TicketTag, TicketTagView, TicketTagColorScheme, TicketTagColorSchemeView, User, UserView
 
 
 # Load logging configuration
@@ -65,7 +65,7 @@ def create_app():
     admin.add_view(UserView(User, db.session))
     admin.add_view(StudyView(Study, db.session))
     admin.add_view(TicketTagView(TicketTag, db.session))
-    admin.add_view(TicketTagColorView(TicketTagColor, db.session))
+    admin.add_view(TicketTagColorSchemeView(TicketTagColorScheme, db.session))
     admin.init_app(app)
 
     # Register routing blueprints
