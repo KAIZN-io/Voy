@@ -1,7 +1,7 @@
 from sqlalchemy.dialects.postgresql import UUID
-from flask_admin.contrib.sqla import ModelView
 
 from voy.model import db
+from voy.model.flask_admin import ProtectedModelView
 from voy.model.mixins import TimeStampMixin, UuidPrimaryKeyMixin
 
 
@@ -27,5 +27,5 @@ class TicketTag(UuidPrimaryKeyMixin, TimeStampMixin, db.Model):
         return '<Tag: %s>' % self.title
 
 
-class TicketTagView(ModelView):
+class TicketTagView(ProtectedModelView):
     form_excluded_columns = ('tickets')

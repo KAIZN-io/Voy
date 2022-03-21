@@ -1,6 +1,5 @@
-from flask_admin.contrib.sqla import ModelView
-
 from voy.model import db
+from voy.model.flask_admin import ProtectedModelView
 from voy.model.mixins import TimeStampMixin, UuidPrimaryKeyMixin
 
 
@@ -25,5 +24,5 @@ class Study(UuidPrimaryKeyMixin, TimeStampMixin, db.Model):
         return '<Study: %s>' % self.internal_id
 
 
-class StudyView(ModelView):
+class StudyView(ProtectedModelView):
     form_excluded_columns = ('tickets')

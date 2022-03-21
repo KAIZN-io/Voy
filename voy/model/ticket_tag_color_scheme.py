@@ -1,6 +1,5 @@
-from flask_admin.contrib.sqla import ModelView
-
 from voy.model import db
+from voy.model.flask_admin import ProtectedModelView
 from voy.model.mixins import TimeStampMixin, UuidPrimaryKeyMixin
 
 
@@ -19,5 +18,5 @@ class TicketTagColorScheme(UuidPrimaryKeyMixin, TimeStampMixin, db.Model):
         return '<Color: %s>' % self.name
 
 
-class TicketTagColorSchemeView(ModelView):
+class TicketTagColorSchemeView(ProtectedModelView):
     form_excluded_columns = ('tags')

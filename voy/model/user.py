@@ -2,12 +2,12 @@ import arrow
 
 from flask_login import UserMixin
 from sqlalchemy.dialects.postgresql import UUID
-from flask_admin.contrib.sqla import ModelView
 from wtforms import SelectField, StringField
 from werkzeug.security import generate_password_hash
 
 from voy.constants import ROLE_ADMIN, ROLE_MEDOPS, ROLE_DATA_ENTRY, ROLE_DATA_MANAGER
 from voy.model import db
+from voy.model.flask_admin import ProtectedModelView
 from voy.model.mixins import TimeStampMixin, UuidPrimaryKeyMixin
 from voy.model.types import UppercaseStringType
 
@@ -45,7 +45,7 @@ class User(UuidPrimaryKeyMixin, UserMixin, TimeStampMixin, db.Model):
         return '<User: %s>' % self.abbreviation
 
 
-class UserView(ModelView):
+class UserView(ProtectedModelView):
 
     column_exclude_list = ('password', 'is_password_reset_required')
 
