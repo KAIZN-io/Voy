@@ -6,13 +6,14 @@ import yaml
 from flask import Flask
 from flask_breadcrumbs import Breadcrumbs
 from flask_login import LoginManager, current_user
+from flask_admin import Admin
 
 from .commands import database_cli, user_cli
 from .constants import FLASH_TYPE_WARNING
 from .controller import authentication_blueprint, profile_blueprint, dashboard_blueprint, home_blueprint, \
     user_blueprint, study_blueprint, ticket_blueprint, ticket_comment_blueprint
 from .mail import mail
-from .model import db, migrate, User
+from .model import db, migrate, Study, StudyView, TicketTag, TicketTagView, TicketTagColorScheme, TicketTagColorSchemeView, User, UserView
 
 
 # Load logging configuration
@@ -57,6 +58,16 @@ def create_app():
         # since the user_uuid is just the primary key of our user table, use it in the query for the user
         return User.query.get(user_uuid)
 
+
+    app.config['FLASK_ADMIN_SWATCH'] = 'flatly'
+
+    admin = Admin(name='Voy Admin', template_mode='bootstrap4')
+    admin.add_view(UserView(User, db.session))
+    admin.add_view(StudyView(Study, db.session))
+    admin.add_view(TicketTagView(TicketTag, db.session))
+    admin.add_view(TicketTagColorSchemeView(TicketTagColorScheme, db.session))
+    admin.init_app(app)
+
     # Register routing blueprints
     app.register_blueprint(authentication_blueprint)
     app.register_blueprint(dashboard_blueprint)
@@ -65,11 +76,11 @@ def create_app():
     app.register_blueprint(study_blueprint)
     app.register_blueprint(ticket_blueprint)
     app.register_blueprint(ticket_comment_blueprint)
-    app.register_blueprint(user_blueprint)
+    # app.register_blueprint(user_blueprint)
 
     # Register CLI blueprints
     app.register_blueprint(database_cli)
-    app.register_blueprint(user_cli)
+    # app.register_blueprint(user_cli)
 
     # Inject current user into each template
     @app.context_processor

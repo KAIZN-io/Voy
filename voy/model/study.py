@@ -1,4 +1,5 @@
 from voy.model import db
+from voy.model.flask_admin import ProtectedModelView
 from voy.model.mixins import TimeStampMixin, UuidPrimaryKeyMixin
 
 
@@ -17,4 +18,11 @@ class Study(UuidPrimaryKeyMixin, TimeStampMixin, db.Model):
     users = db.relationship(
         'User',
         secondary='study_user_mapping',
-        back_populates='study')
+        back_populates='studies')
+
+    def __repr__(self):
+        return '<Study: %s>' % self.internal_id
+
+
+class StudyView(ProtectedModelView):
+    form_excluded_columns = ('tickets')
