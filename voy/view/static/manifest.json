@@ -1,0 +1,22 @@
+{
+  "static/main.css": "http://localhost:5002/static/main.css",
+  "static/main.js": "http://localhost:5002/static/main.js",
+  "static/runtime.js": "http://localhost:5002/static/runtime.js",
+  "static/images/fa-solid-900.svg": "http://localhost:5002/static/images/fa-solid-900.7a8b4f13.svg",
+  "static/images/fa-brands-400.svg": "http://localhost:5002/static/images/fa-brands-400.2f517e09.svg",
+  "static/fonts/fa-solid-900.eot": "http://localhost:5002/static/fonts/fa-solid-900.9bbb245e.eot",
+  "static/fonts/fa-solid-900.ttf": "http://localhost:5002/static/fonts/fa-solid-900.be9ee23c.ttf",
+  "static/images/fa-regular-400.svg": "http://localhost:5002/static/images/fa-regular-400.4689f52c.svg",
+  "static/fonts/fa-brands-400.eot": "http://localhost:5002/static/fonts/fa-brands-400.23f19bb0.eot",
+  "static/fonts/fa-brands-400.ttf": "http://localhost:5002/static/fonts/fa-brands-400.527940b1.ttf",
+  "static/fonts/fa-solid-900.woff": "http://localhost:5002/static/fonts/fa-solid-900.eeccf4f6.woff",
+  "static/fonts/fa-brands-400.woff": "http://localhost:5002/static/fonts/fa-brands-400.2285773e.woff",
+  "static/fonts/fa-solid-900.woff2": "http://localhost:5002/static/fonts/fa-solid-900.1551f4f6.woff2",
+  "static/fonts/fa-brands-400.woff2": "http://localhost:5002/static/fonts/fa-brands-400.d878b0a6.woff2",
+  "static/fonts/fa-regular-400.eot": "http://localhost:5002/static/fonts/fa-regular-400.77206a6b.eot",
+  "static/fonts/fa-regular-400.ttf": "http://localhost:5002/static/fonts/fa-regular-400.491974d1.ttf",
+  "static/fonts/fa-regular-400.woff": "http://localhost:5002/static/fonts/fa-regular-400.bb58e57c.woff",
+  "static/fonts/fa-regular-400.woff2": "http://localhost:5002/static/fonts/fa-regular-400.7a333762.woff2",
+  "static/images/icons/re-check.png": "http://localhost:5002/static/images/icons/re-check.png",
+  "static/images/icons/source-check.png": "http://localhost:5002/static/images/icons/source-check.png"
+}

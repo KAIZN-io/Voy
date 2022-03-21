@@ -90,7 +90,7 @@ def create_app():
     # Register templating functions
     app.jinja_env.globals.update(
         asset=create_resolve_asset_path_function(
-            Path(app.root_path, 'view/static/bundle/manifest.json')))
+            Path(app.root_path, 'view/static/manifest.json')))
 
     return app
 

@@ -8,9 +8,9 @@ if (!Encore.isRuntimeEnvironmentConfigured()) {
 
 Encore
     // directory where compiled assets will be stored
-    .setOutputPath('./voy/view/static/bundle')
+    .setOutputPath('./voy/view/static')
     // public path used by the web server to access the output path
-    .setPublicPath('/bundle')
+    .setPublicPath('/static')
     // only needed for CDN's or sub-directory deploy
     //.setManifestKeyPrefix('build/')
 
@@ -36,7 +36,7 @@ Encore
      * ADDITIONAL ASSETS
      */
      .copyFiles({
-         from: './voy/view/assets/img',
+         from: './voy/view/assets/images',
          to: 'images/[path][name].[ext]',
      })
 
