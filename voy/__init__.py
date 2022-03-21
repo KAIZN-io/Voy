@@ -27,7 +27,7 @@ def create_app():
     app = Flask(
         'voy',
         template_folder='view/templates',
-        static_url_path='',
+        static_url_path='/static',
         static_folder='view/static',
         instance_relative_config=True
     )
