@@ -68,7 +68,7 @@ RUN pip install --no-cache-dir --no-index --find-links=./wheels gunicorn && \
     pip install --no-cache-dir --no-index --find-links=./wheels -e .
 
 # Copy over the bundled assets from the previous build step
-COPY --from=assets $VOY_HOME/voy/view/static/bundle ./voy/view/static/bundle
+COPY --from=assets $VOY_HOME/voy/view/static ./voy/view/static
 
 # Copy over code
 COPY . .
