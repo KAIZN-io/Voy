@@ -46,7 +46,7 @@ htmlcov/
 instance/
 node_modules/
 venv/
-/voy/view/static/bundle
+/voy/view/static
 
 # Custom
 c_test/
