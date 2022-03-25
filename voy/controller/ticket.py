@@ -7,7 +7,7 @@ from flask_breadcrumbs import register_breadcrumb, default_breadcrumb_root
 from flask_login import login_required, current_user
 
 from voy.constants import ROLE_MEDOPS, AVAILABLE_SOURCE_TYPES, FLASH_TYPE_SUCCESS
-from voy.model import Ticket, User, Study
+from voy.model import Ticket, TicketTag, User, Study
 from voy.model import db
 
 # Get loggers
@@ -24,9 +24,10 @@ default_breadcrumb_root(ticket_blueprint, '.')
 @login_required
 def new():
     return render_template('controller/ticket/new.html.j2',
-                           study_list=Study.query.all(),
+                           available_source_types=AVAILABLE_SOURCE_TYPES,
                            staff_list_medops=User.query.filter_by(role=ROLE_MEDOPS).all(),
-                           available_source_types=AVAILABLE_SOURCE_TYPES)
+                           study_list=Study.query.all(),
+                           ticket_tags=TicketTag.query.all())
 
 
 @ticket_blueprint.route('/source-check', methods=['POST'])

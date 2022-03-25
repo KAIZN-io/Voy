@@ -99,6 +99,7 @@
               <th scope="col">Procedure</th>
               <th scope="col">Description</th>
               <th scope="col">Assignee</th>
+              <th scope="col">Tags</th>
               <th scope="col">Actions</th>
             </tr>
           </thead>
@@ -158,6 +159,22 @@
                         {% for user in staff_list_medops %}
                           <option value="{{ user.uuid }}">
                             {{ user.abbreviation }}
+                          </option>
+                        {% endfor %}
+
+                      </select>
+                    </div>
+                  </div>
+                </td>
+
+                <td>
+                  <div class="control">
+                    <div class="select is-fullwidth">
+                      <select name="ticket[][tags]" multiple data-choice-js required>
+
+                        {% for tag in ticket_tags %}
+                          <option value="{{ tag.uuid }}">
+                            {{ tag.title }}
                           </option>
                         {% endfor %}
 
