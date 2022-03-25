@@ -21,6 +21,7 @@
     "@fortawesome/fontawesome-free": "^5.15.4",
     "alpinejs": "^3.5.1",
     "bulma": "^0.9.3",
+    "choices.js": "^10.1.0",
     "core-js": "^3.19.1",
     "spinkit": "^2.0.1",
     "uuid": "^8.3.2"
