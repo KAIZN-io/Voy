@@ -74,6 +74,13 @@ Encore
     // uncomment if you use API Platform Admin (composer require api-admin)
     //.enableReactPreset()
     //.addEntry('admin', './assets/admin.js')
+
+    .configureDevServerOptions((options) => {
+      Object.assign(options, {
+        liveReload: true,
+        watchFiles: 'voy/view/templates/**/*.j2',
+      });
+    })
 ;
 
 module.exports = Encore.getWebpackConfig();
