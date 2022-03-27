@@ -28,7 +28,7 @@ setup(
         'Flask-Migrate~=2.6.0',
         'Flask-SQLAlchemy~=2.4.4',
         'openpyxl~=3.0.7',
-        'pandas~=1.2.5',
+        'pandas~=1.4.1',
         'pdfkit~=0.6.1',
         'psycopg2~=2.8.6',
         'python-dotenv~=0.15.0',
