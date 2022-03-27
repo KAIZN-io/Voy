@@ -28,7 +28,7 @@ RUN yarn build
 ########################################################################################################################
 # Installing Packages                                                                                                  #
 ########################################################################################################################
-FROM python:3.8-slim-buster AS packages
+FROM python:3.10-slim-buster AS packages
 
 ARG DEBIAN_FRONTEND=noninteractive
 ARG VOY_HOME
@@ -47,7 +47,7 @@ RUN pip --use-feature=in-tree-build wheel -r requirements.txt --wheel-dir=./whee
 ########################################################################################################################
 # Putting it all together                                                                                              #
 ########################################################################################################################
-FROM python:3.8-slim-buster
+FROM python:3.10-slim-buster
 
 ARG DEBIAN_FRONTEND=noninteractive
 ARG VOY_HOME
