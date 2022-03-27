@@ -13,6 +13,8 @@
 
 {% block page_title %}Source-Check{% endblock %}
 
+{% block page_column_class %}is-two-thirds{% endblock %}
+
 
 {#############################################################################}
 {# CONTENT                                                                   #}
@@ -31,12 +33,13 @@
 
         {{ render_errors(errors) }}
 
+
         <h2 class="title is-4">General Information</h2>
 
         <div class="columns">
 
           <div class="column">
-            <div class="field mb-5">
+            <div class="field">
               <label class="label" for="study_uuid">
                 Study
               </label>
@@ -44,7 +47,7 @@
                 <div class="select is-medium is-fullwidth">
                   <select name="study_uuid" data-choice-js required>
 
-                    <option disabled selected>
+                    <option value="" disabled selected hidden>
                       Select a Study
                     </option>
 
@@ -71,27 +74,164 @@
             </div>
           </div>
 
-          <div class="column">
-            <div class="field mb-5">
-              <div class="label">
-                Document-Type
+        </div>
+
+
+        <h2 class="title is-4">Queries</h2>
+
+        <div class="mb-6">
+
+          <div class="card">
+
+            <header class="card-header is-align-items-center">
+
+              <p class="card-header-title">
+                Query
+              </p>
+
+              <button class="card-header-icon">
+                <span class="icon">
+                  <i class="fas fa-angle-down"></i>
+                </span>
+              </button>
+
+            </header>
+
+            <div class="card-content">
+
+              <div class="field">
+                <label class="label">Description</label>
+                <div class="control">
+                  <textarea
+                    name="ticket[][description]"
+                    placeholder="What's the matter?"
+                    maxlength="100"
+                    class="textarea"></textarea>
+                </div>
               </div>
-              <div class="control">
-                {% for source_type in available_source_types %}
-                  <label class="radio button is-medium is-info is-light">
-                    <input type="radio" name="source_type" value="{{ source_type }}" required />
-                    {{ source_type }}
-                  </label>
-                {% endfor %}
+
+              <div class="field">
+                <label class="label">Assignee</label>
+                <div class="control">
+                  <div class="select is-fullwidth">
+                    <select name="ticket[][assignee_uuid]" data-choice-js required>
+
+                      <option disabled selected>
+                        Select Someone
+                      </option>
+
+                      {% for user in staff_list_medops %}
+                        <option value="{{ user.uuid }}">
+                          {{ user.abbreviation }}
+                        </option>
+                      {% endfor %}
+
+                    </select>
+                  </div>
+                </div>
               </div>
+
+              <div class="field">
+                <label class="label">Tags</label>
+                <div class="control">
+                  <div class="select is-fullwidth">
+                    <select name="ticket[][tags]" multiple data-choice-js required>
+
+                      {% for tag in ticket_tags %}
+                        <option value="{{ tag.uuid }}">
+                          {{ tag.title }}
+                        </option>
+                      {% endfor %}
+
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="columns">
+                <div class="column">
+
+                  <div class="field">
+                    <label class="label">Visit</label>
+                    <div class="control">
+                      <input
+                        name="ticket[][visit]"
+                        class="input"
+                        type="text"
+                        maxlength="10"
+                        required />
+                    </div>
+                  </div>
+
+                </div>
+                <div class="column">
+
+                  <div class="field">
+                    <label class="label">Page</label>
+                    <div class="control">
+                      <input
+                        name="ticket[][page]"
+                        class="input"
+                        type="text"
+                        maxlength="10"
+                        required />
+                    </div>
+                  </div>
+
+                </div>
+                <div class="column">
+
+                  <div class="field">
+                    <label class="label">Procedure</label>
+                    <div class="control">
+                      <input
+                        name="ticket[][procedure]"
+                        class="input"
+                        type="text"
+                        maxlength="20"
+                        required />
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+              <div class="field is-grouped is-grouped-right">
+
+                <div class="control">
+                  <button
+                    class="button is-success"
+                    type="button"
+
+                    @click="removeTicketByUuid(ticket.uuid)">
+                    <span class="icon is-small">
+                      <i class="fa-solid fa-floppy-disk"></i>
+                    </span>
+                    <span>Save & Next</span>
+                  </button>
+                </div>
+
+                <div class="control">
+                  <button
+                    class="button is-danger is-light"
+                    type="button"
+
+                    @click="removeTicketByUuid(ticket.uuid)">
+                    <span class="icon is-small">
+                      <i class="far fa-times-circle"></i>
+                    </span>
+                    <span>Remove</span>
+                  </button>
+                </div>
+
+              </div>
+
             </div>
           </div>
 
         </div>
 
-        <h2 class="title is-4">Queries</h2>
-
-        <table class="table is-striped is-hoverable is-fullwidth mb-6">
+        {# <table class="table is-striped is-hoverable is-fullwidth mb-6">
           <thead class="thead-light">
             <tr>
               <th scope="col">Visit</th>
@@ -196,26 +336,34 @@
               </tr>
             </template>
           </tbody>
-        </table>
+        </table> #}
 
-        <button
-          class="button is-success is-medium is-light mr-3"
-          type="button"
+        <div class="field is-grouped is-grouped-right">
 
-          @click="addTicket()">
-          <span class="icon">
-            <i class="fas fa-plus"></i>
-          </span>
-          <span>
-            Add Query
-          </span>
-        </button>
+          <div class="control">
+            <button
+              class="button is-success is-medium is-light mr-3"
+              type="button"
 
-        <button
-          class="button is-primary is-medium"
-          type="submit">
-          Submit Queries
-        </button>
+              @click="addTicket()">
+              <span class="icon">
+                <i class="fas fa-plus"></i>
+              </span>
+              <span>
+                Add Query
+              </span>
+            </button>
+          </div>
+
+          <div class="control">
+            <button
+              class="button is-primary is-medium"
+              type="submit">
+              Submit Queries
+            </button>
+          </div>
+
+        </div>
 
       </form>
     {% endcall %}
