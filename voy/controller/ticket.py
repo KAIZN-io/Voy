@@ -1,5 +1,6 @@
 import json
 import logging
+import re
 
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask.json import dump
@@ -33,38 +34,59 @@ def new():
 @ticket_blueprint.route('/source-check', methods=['POST'])
 @login_required
 def new_post():
-    # header data form the form
-    study_uuid = request.form['study_uuid']
-    study = Study.query.get(study_uuid)
+
+    split_pattern = re.compile("(?:\]\[?|\[)")
+
+    form_ticket_items = filter(
+        lambda key : key.startswith('ticket'),
+        request.form.items())
+
+    tickets = {}
+
+    # Get general form data
+    study = Study.query.get(request.form['study_uuid'])
     source_number = request.form['source_number']
-    # source_type = request.form['source_type']
 
-    # data under the header data
-    visits = request.form.getlist('ticket[][visit]')
-    pages = request.form.getlist('ticket[][page]')
-    procedures = request.form.getlist('ticket[][procedure]')
-    descriptions = request.form.getlist('ticket[][description]')
-    assignee_uuids = request.form.getlist('ticket[][assignee_uuid]')
+    for field_name, value in request.form.lists():
+        # Skip all fields that are not part of the ticket-array
+        if not field_name.startswith('ticket'):
+            continue
 
-    for i in range(len(visits)):
-        assignee_uuid = assignee_uuids[i]
-        assignee = User.query.get(assignee_uuid)
+        _, index, field, _ = split_pattern.split(field_name)
 
-        ticket = Ticket(
-            study=study,
-            source_number=source_number,
-            # type=source_type,
+        ticket = None
 
-            visit=visits[i],
-            page=pages[i],
-            procedure=procedures[i],
-            description=descriptions[i],
+        if index not in tickets:
+            # Create Ticket
+            ticket = Ticket()
 
-            assignee=assignee,
-            reporter=current_user
-        )
+            # Add general data
+            ticket.study = study
+            ticket.source_number = source_number
+            ticket.reporter = current_user
 
-        db.session.add(ticket)
+            # Store in list for later reference
+            tickets[index] = ticket
+
+            # Make sure ticket is saved on commit
+            db.session.add(tickets[index])
+        else:
+            ticket = tickets[index]
+
+        match field:
+            case 'description':
+                ticket.description = value[0]
+            case 'assignee-uuid':
+                ticket.assignee = User.query.get(value[0])
+            case 'tags':
+                for tag_uuid in value:
+                    ticket.tags.append(TicketTag.query.get(tag_uuid))
+            case 'visit':
+                ticket.visit = value[0]
+            case 'page':
+                ticket.page = value[0]
+            case 'procedure':
+                ticket.procedure = value[0]
 
     db.session.commit()
 

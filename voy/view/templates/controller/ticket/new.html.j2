@@ -79,7 +79,7 @@
 
         <h2 class="title is-4">Queries</h2>
 
-        <template  x-for="ticket in tickets" :key="ticket.uuid">
+        <template  x-for="(ticket, index) in tickets" :key="ticket.uuid">
           <div class="card mb-6">
 
             {# <header class="card-header is-align-items-center">
@@ -102,7 +102,7 @@
                 <label class="label">Description</label>
                 <div class="control">
                   <textarea
-                    name="ticket[][description]"
+                    x-bind:name="`ticket[${index}][description]`"
                     placeholder="What's the matter?"
                     maxlength="100"
                     class="textarea"></textarea>
@@ -113,7 +113,7 @@
                 <label class="label">Assignee</label>
                 <div class="control">
                   <div class="select is-fullwidth">
-                    <select name="ticket[][assignee_uuid]" data-choice-js required>
+                    <select x-bind:name="`ticket[${index}][assignee_uuid]`" data-choice-js required>
 
                       <option value="">
                         Select Someone
@@ -134,7 +134,7 @@
                 <label class="label">Tags</label>
                 <div class="control">
                   <div class="select is-fullwidth">
-                    <select name="ticket[][tags]" multiple data-choice-js required>
+                    <select x-bind:name="`ticket[${index}][tags]`" multiple data-choice-js required>
 
                       <option value="">
                         Add some Tags
@@ -158,7 +158,7 @@
                     <label class="label">Visit</label>
                     <div class="control">
                       <input
-                        name="ticket[][visit]"
+                        x-bind:name="`ticket[${index}][visit]`"
                         class="input"
                         type="text"
                         maxlength="10"
@@ -173,7 +173,7 @@
                     <label class="label">Page</label>
                     <div class="control">
                       <input
-                        name="ticket[][page]"
+                        x-bind:name="`ticket[${index}][page]`"
                         class="input"
                         type="text"
                         maxlength="10"
@@ -188,7 +188,7 @@
                     <label class="label">Procedure</label>
                     <div class="control">
                       <input
-                        name="ticket[][procedure]"
+                        x-bind:name="`ticket[${index}][procedure]`"
                         class="input"
                         type="text"
                         maxlength="20"
@@ -251,7 +251,7 @@
                 <td>
                   <div class="control">
                     <input
-                      name="ticket[][visit]"
+                      x-bind:name="`ticket[${index}][visit]`"
                       class="input"
                       type="text"
                       maxlength="10"
@@ -262,7 +262,7 @@
                 <td>
                   <div class="control">
                     <input
-                      name="ticket[][page]"
+                      x-bind:name="`ticket[${index}][page]`"
                       class="input"
                       type="text"
                       maxlength="10"
@@ -273,7 +273,7 @@
                 <td>
                   <div class="control">
                     <input
-                      name="ticket[][procedure]"
+                      x-bind:name="`ticket[${index}][procedure]`"
                       class="input"
                       type="text"
                       maxlength="20"
@@ -283,7 +283,7 @@
 
                 <td>
                   <textarea
-                    name="ticket[][description]"
+                    x-bind:name="`ticket[${index}][description]`"
                     maxlength="100"
                     class="textarea"></textarea>
                 </td>
@@ -291,7 +291,7 @@
                 <td>
                   <div class="control">
                     <div class="select is-fullwidth">
-                      <select name="ticket[][assignee_uuid]" data-choice-js required>
+                      <select x-bind:name="`ticket[${index}][assignee_uuid]`" data-choice-js required>
 
                         <option disabled selected>
                           Select Someone
@@ -311,7 +311,7 @@
                 <td>
                   <div class="control">
                     <div class="select is-fullwidth">
-                      <select name="ticket[][tags]" multiple data-choice-js required>
+                      <select x-bind:name="`ticket[${index}][tags]`" multiple data-choice-js required>
 
                         {% for tag in ticket_tags %}
                           <option value="{{ tag.uuid }}">
