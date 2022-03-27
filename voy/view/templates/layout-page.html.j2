@@ -108,27 +108,32 @@
 
 {% block main %}
   <div class="container">
+    <div class="columns is-gapless is-justify-content-center">
+      <div class="colum {% block page_column_class %}{% endblock %}">
 
-    {% include "utilities/_flash.html.j2" %}
+        {% include "utilities/_flash.html.j2" %}
 
-    <section class="hero">
+        <section class="hero">
 
-      <div class="hero-body pb-0">
+          <div class="hero-body pb-0">
 
-        <h1 class="title is-size-1">
-          {% block page_title %}{% endblock %}
-        </h1>
+            <h1 class="title is-size-1">
+              {% block page_title %}{% endblock %}
+            </h1>
 
-        {% if self.navigation() %}
-          <p class="subtitle">
-            {% block page_sub_title %}{% endblock %}
-          </p>
-        {% endif %}
+            {% if self.navigation() %}
+              <p class="subtitle">
+                {% block page_sub_title %}{% endblock %}
+              </p>
+            {% endif %}
+
+          </div>
+
+        </section>
+
+        {% block content %}{% endblock %}
 
       </div>
-
-    </section>
-
-    {% block content %}{% endblock %}
+    </div>
   </div>
 {% endblock %}
