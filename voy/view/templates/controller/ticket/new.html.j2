@@ -79,9 +79,8 @@
 
         <h2 class="title is-4">Queries</h2>
 
-        <div class="mb-6">
-
-          <div class="card">
+        <template  x-for="ticket in tickets" :key="ticket.uuid">
+          <div class="card mb-6">
 
             <header class="card-header is-align-items-center">
 
@@ -89,11 +88,11 @@
                 Query
               </p>
 
-              <button class="card-header-icon">
+              {# <button class="card-header-icon">
                 <span class="icon">
                   <i class="fas fa-angle-down"></i>
                 </span>
-              </button>
+              </button> #}
 
             </header>
 
@@ -206,8 +205,7 @@
                   <button
                     class="button is-success"
                     type="button"
-
-                    @click="removeTicketByUuid(ticket.uuid)">
+                    @click="addTicket()">
                     <span class="icon is-small">
                       <i class="fa-solid fa-floppy-disk"></i>
                     </span>
@@ -232,8 +230,7 @@
 
             </div>
           </div>
-
-        </div>
+        </template>
 
         {# <table class="table is-striped is-hoverable is-fullwidth mb-6">
           <thead class="thead-light">

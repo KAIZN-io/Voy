@@ -37,7 +37,7 @@ def new_post():
     study_uuid = request.form['study_uuid']
     study = Study.query.get(study_uuid)
     source_number = request.form['source_number']
-    source_type = request.form['source_type']
+    # source_type = request.form['source_type']
 
     # data under the header data
     visits = request.form.getlist('ticket[][visit]')
@@ -53,7 +53,7 @@ def new_post():
         ticket = Ticket(
             study=study,
             source_number=source_number,
-            type=source_type,
+            # type=source_type,
 
             visit=visits[i],
             page=pages[i],
