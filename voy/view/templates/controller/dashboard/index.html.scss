@@ -1,17 +1,29 @@
 .dashboard {
-
   &__tickets {
-
     .ticket {
-      td {
-        vertical-align: middle;
+      &__header {
+        display: flex;
       }
 
-      &__action {
-        text-align: right;
+      &__id,
+      &__study-internal-id,
+      &__source-number {
+        flex: 0 0 auto;
+      }
 
-        min-width: 140px;
-        max-width: 150px;
+      &__description {
+        flex: 1 1 60%;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden
+      }
+
+      &__tags {
+        flex: 0 0 auto;
+      }
+
+      &__toggle {
+        flex: 0 0 56px;
       }
     }
   }

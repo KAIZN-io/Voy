@@ -2,6 +2,7 @@
 
 
 {% from "components/section.html.j2" import render_section %}
+{% from "utilities/_tags.j2" import render_tags %}
 
 
 {#############################################################################}
@@ -37,30 +38,6 @@
     {% endset %} #}
 
     {% call render_section() %}
-      <table class="dashboard__tickets table is-striped is-hoverable is-fullwidth">
-
-        <thead>
-          <tr>
-            <th scope="col">Status</th>
-            <th scope="col">Study ID</th>
-            <th scope="col">Scr No</th>
-            <th scope="col">Type</th>
-            <th scope="col">Visit</th>
-            <th scope="col">Page</th>
-            <th scope="col">Procedure</th>
-            <th scope="col">Description</th>
-            <th scope="col">Created on</th>
-            <th scope="col">Actions</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {% for ticket in user_tickets %}
-            {{ render_ticket(ticket) }}
-          {% endfor %}
-        </tbody>
-
-      </table>
 
       {# <hr />
 
@@ -107,6 +84,11 @@
           </div>
         </div>
       </form> #}
+      <div class="dashboard__tickets">
+        {% for ticket in user_tickets %}
+          {{ render_ticket(ticket) }}
+        {% endfor %}
+      </div>
     {% endcall %}
 
   {% endwith %}
@@ -122,7 +104,7 @@
 {# MACROS                                                                    #}
 {#############################################################################}
 
-{% macro render_ticket(ticket) %}
+{% macro render_ticket_old(ticket) %}
    <tr class="ticket">
 
     {# Status #}
@@ -235,4 +217,43 @@
 
     </td>
   </tr>
+{% endmacro %}
+
+{% macro render_ticket(ticket) %}
+  <div class="ticket card mb-2">
+
+    <header class="ticket__header card-header is-align-items-center">
+
+      <div class="ticket__id tag is-medium is-white">
+        <i class="fa-solid fa-hashtag mr-1"></i>
+        {{ ticket.study.internal_id }}
+      </div>
+
+      <div class="ticket__study-internal-id tag is-medium is-info is-light mr-3">
+        <i class="fa-regular fa-clipboard mr-1"></i>
+        {{ ticket.study.internal_id }}
+      </div>
+
+      <div class="ticket__source-number tag is-medium is-link is-light mr-3">
+        <i class="fa-solid fa-person mr-1"></i>
+        {{ ticket.source_number }}
+      </div>
+
+      <div class="ticket__description has-text-weight-normal is-single-line">
+        {{ ticket.description }}
+      </div>
+
+      <div class="has-text-weight-normal">
+        {{ render_tags(ticket.tags, limit=3) }}
+      </div>
+
+      <button class="card-header-icon" aria-label="more options">
+        <span class="icon">
+          <i class="fas fa-angle-down" aria-hidden="true"></i>
+        </span>
+      </button>
+
+    </header>
+
+  </div>
 {% endmacro %}
