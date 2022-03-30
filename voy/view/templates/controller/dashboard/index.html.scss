@@ -3,6 +3,14 @@
     .ticket {
       &__header {
         display: flex;
+        cursor: pointer;
+        &:hover {
+          background-color: $white-bis;
+        }
+      }
+
+      &__id {
+        background-color: transparent !important;
       }
 
       &__id,

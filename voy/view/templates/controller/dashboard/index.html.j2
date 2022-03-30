@@ -161,9 +161,9 @@
 {% endmacro %}
 
 {% macro render_ticket(ticket) %}
-  <div class="ticket card mb-2">
+  <div class="ticket card mb-2" x-data="{ open: true }">
 
-    <header class="ticket__header card-header is-align-items-center">
+    <header class="ticket__header card-header is-align-items-center" @click="open=!open">
 
       <div class="ticket__id tag is-medium is-white">
         <i class="fa-solid fa-hashtag mr-1"></i>
@@ -195,6 +195,67 @@
       </button>
 
     </header>
+
+    <div class="card-content" x-show="open">
+
+      <div class="columns">
+        <div class="column">
+          <p><strong>Description:</strong></p>
+          <p>
+            {{ ticket.description }}
+          </p>
+        </div>
+        <div class="column">
+          <p><strong>Assignee:</strong></p>
+          <p>
+            {{ ticket.assignee.abbreviation }}
+          </p>
+        </div>
+        <div class="column">
+          <p><strong>Visit:</strong></p>
+          <p>
+            {{ ticket.visit }}
+          </p>
+        </div>
+        <div class="column">
+          <p><strong>Page:</strong></p>
+          <p>
+            {{ ticket.page }}
+          </p>
+        </div>
+        <div class="column">
+          <p><strong>Procedure:</strong></p>
+          <p>
+            {{ ticket.procedure }}
+          </p>
+        </div>
+        <div class="column">
+          <p><strong>tags:</strong></p>
+          <p>
+            {{ render_tags(ticket.tags) }}
+          </p>
+        </div>
+        <div class="column">
+          <p><strong>created:</strong></p>
+          <p>
+            {{ ticket.created_at.humanize() }}
+          </p>
+        </div>
+        <div class="column">
+          <p><strong>comments:</strong></p>
+          <p>
+            {{ ticket.comments.all() }}
+          </p>
+        </div>
+        <div class="column">
+          <p><strong>actions:</strong></p>
+          <p>
+            edit, mark as done
+          </p>
+        </div>
+      </div>
+
+    </div>
 
   </div>
 {% endmacro %}
