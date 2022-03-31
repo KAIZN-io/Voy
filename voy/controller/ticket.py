@@ -76,7 +76,7 @@ def new_post():
         match field:
             case 'description':
                 ticket.description = value[0]
-            case 'assignee-uuid':
+            case 'assignee_uuid':
                 ticket.assignee = User.query.get(value[0])
             case 'tags':
                 for tag_uuid in value:
