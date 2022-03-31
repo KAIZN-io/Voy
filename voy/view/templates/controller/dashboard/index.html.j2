@@ -199,41 +199,72 @@
     <div class="card-content" x-show="open">
 
       <div class="columns">
-        <div class="column">
+        <div class="column is-7">
+
           <p><strong>Description:</strong></p>
           <p>
             {{ ticket.description }}
           </p>
-        </div>
-        <div class="column">
+
           <p><strong>Assignee:</strong></p>
           <p>
-            {{ ticket.assignee.abbreviation }}
+            {{ ticket.assignee }}
           </p>
-        </div>
-        <div class="column">
-          <p><strong>Visit:</strong></p>
-          <p>
-            {{ ticket.visit }}
-          </p>
-        </div>
-        <div class="column">
-          <p><strong>Page:</strong></p>
-          <p>
-            {{ ticket.page }}
-          </p>
-        </div>
-        <div class="column">
-          <p><strong>Procedure:</strong></p>
-          <p>
-            {{ ticket.procedure }}
-          </p>
-        </div>
-        <div class="column">
+
           <p><strong>tags:</strong></p>
           <p>
             {{ render_tags(ticket.tags) }}
           </p>
+
+          <div class="columns">
+            <div class="column is-4">
+              <p><strong>Visit:</strong></p>
+              <p>
+                {{ ticket.visit }}
+              </p>
+            </div>
+            <div class="column is-4">
+              <p><strong>Page:</strong></p>
+              <p>
+                {{ ticket.page }}
+              </p>
+            </div>
+            <div class="column is-4">
+              <p><strong>Procedure:</strong></p>
+              <p>
+                {{ ticket.procedure }}
+              </p>
+            </div>
+          </div>
+
+
+        </div>
+        <div class="column is-5">
+          <p><strong>comments:</strong></p>
+          <p>
+            {{ ticket.comments.all() }}
+          </p>
+        </div>
+      </div>
+
+      <div class="columns">
+        <div class="column">
+
+        </div>
+        <div class="column">
+
+        </div>
+        <div class="column">
+
+        </div>
+        <div class="column">
+
+        </div>
+        <div class="column">
+        
+        </div>
+        <div class="column">
+
         </div>
         <div class="column">
           <p><strong>created:</strong></p>
@@ -242,10 +273,7 @@
           </p>
         </div>
         <div class="column">
-          <p><strong>comments:</strong></p>
-          <p>
-            {{ ticket.comments.all() }}
-          </p>
+
         </div>
         <div class="column">
           <p><strong>actions:</strong></p>
