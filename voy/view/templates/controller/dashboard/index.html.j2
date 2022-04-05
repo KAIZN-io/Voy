@@ -26,9 +26,15 @@
 
     {% call render_section() %}
       <div class="dashboard__tickets">
-        {% for ticket in user_tickets %}
-          {{ render_ticket(ticket) }}
-        {% endfor %}
+        {% if user_tickets|length > 0 %}
+          {% for ticket in user_tickets %}
+            {{ render_ticket(ticket) }}
+          {% endfor %}
+        {% else %}
+          <div class="notification">
+            There are no queries here. Go to Source-Check to add some queries!
+          </div>
+        {% endif %}
       </div>
     {% endcall %}
 
