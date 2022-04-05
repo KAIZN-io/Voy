@@ -171,28 +171,30 @@
 
     <header class="ticket__header card-header is-align-items-center" @click="open=!open">
 
-      <div class="ticket__id tag is-medium is-white">
+      <div class="ticket__header__id tag is-medium is-white">
         <i class="fa-solid fa-hashtag mr-1"></i>
         {{ ticket.study.internal_id }}
       </div>
 
-      <div class="ticket__study-internal-id tag is-medium is-info is-light mr-3">
+      <div class="ticket__header__study-internal-id tag is-medium is-info is-light mr-3">
         <i class="fa-regular fa-clipboard mr-1"></i>
         {{ ticket.study.internal_id }}
       </div>
 
-      <div class="ticket__source-number tag is-medium is-link is-light mr-3">
+      <div class="ticket__header__source-number tag is-medium is-link is-light mr-3">
         <i class="fa-solid fa-person mr-1"></i>
         {{ ticket.source_number }}
       </div>
 
-      <div class="ticket__description has-text-weight-normal is-single-line">
+      <div class="ticket__header__description has-text-weight-normal is-single-line" x-show="!open">
         {{ ticket.description }}
       </div>
 
-      <div class="has-text-weight-normal">
+      <div class="has-text-weight-normal" x-show="!open">
         {{ render_tags(ticket.tags, limit=3) }}
       </div>
+
+      <div class="ticket__header__spacer" x-show="open"></div>
 
       <button class="card-header-icon" aria-label="more options">
         <span class="icon">
@@ -267,7 +269,7 @@
 
         </div>
         <div class="column">
-        
+
         </div>
         <div class="column">
 
