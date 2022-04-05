@@ -1,8 +1,16 @@
 //
 // Packages and Libraries
+// Bulma
+@import "vendor/bulma/form/shared.scss";
 @import "bulma/bulma";
+// Spinkit
 @import "spinkit/spinkit.css";
+// Fontawesome
 @import "@fortawesome/fontawesome-free/css/all.css";
+// Choices.js
+@import "vendor/choices.js/variables.scss";
+@import "choices.js/src/styles/choices.scss";
+@import "vendor/choices.js/overrides.scss";
 
 
 //

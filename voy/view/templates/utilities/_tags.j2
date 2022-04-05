@@ -1,0 +1,23 @@
+{% macro render_tags(tags, limit=None, class='') %}
+
+  {% set hasLimit = limit is not none and limit > 0 %}
+  {% set visibleTags = tags[:limit] if hasLimit else tags %}
+
+  <div class="tags is-flex-wrap-nowrap {{ class }}">
+
+    {% for tag in visibleTags %}
+      <div
+        class="tag"
+        style="background-color: {{ tag.color_scheme.background_color }}; color: {{ tag.color_scheme.text_color }};">
+        {{ tag.title }}
+      </div>
+    {% endfor %}
+
+    {% if hasLimit and tags|length > limit %}
+      <div class="tag is-light">
+        + {{ tags|length - limit }} more
+      </div>
+    {% endif %}
+
+  </div>
+{% endmacro %}

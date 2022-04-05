@@ -1,17 +1,37 @@
 .dashboard {
-
   &__tickets {
-
     .ticket {
-      td {
-        vertical-align: middle;
+      &__header {
+        display: flex;
+        cursor: pointer;
+        &:hover {
+          background-color: $white-bis;
+        }
       }
 
-      &__action {
-        text-align: right;
+      &__id {
+        background-color: transparent !important;
+      }
 
-        min-width: 140px;
-        max-width: 150px;
+      &__id,
+      &__study-internal-id,
+      &__source-number {
+        flex: 0 0 auto;
+      }
+
+      &__description {
+        flex: 1 1 60%;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden
+      }
+
+      &__tags {
+        flex: 0 0 auto;
+      }
+
+      &__toggle {
+        flex: 0 0 56px;
       }
     }
   }

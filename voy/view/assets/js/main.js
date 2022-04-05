@@ -18,3 +18,4 @@ import '../../templates/_index';
 // We have to do this after all Alpine components are imported. Otherwise they
 // will not be recognized by Alpine.
 import './vendor/alpinejs';
+import './vendor/choices.js';

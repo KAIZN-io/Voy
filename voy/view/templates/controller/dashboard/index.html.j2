@@ -2,6 +2,7 @@
 
 
 {% from "components/section.html.j2" import render_section %}
+{% from "utilities/_tags.j2" import render_tags %}
 
 
 {#############################################################################}
@@ -23,90 +24,12 @@
 
   {% with %}
 
-    {# {% set actions %}
-      {% if (current_user.role == 'Admin' or current_user.role == 'Data Manager' or current_user.role == 'Data Entry') %}
-        <a class="button is-primary" href="{{ url_for('ticket_controller.new') }}">
-          <span class="icon">
-            <i class="fas fa-plus"></i>
-          </span>
-          <span>
-            New Query
-          </span>
-        </a>
-      {% endif %}
-    {% endset %} #}
-
     {% call render_section() %}
-      <table class="dashboard__tickets table is-striped is-hoverable is-fullwidth">
-
-        <thead>
-          <tr>
-            <th scope="col">Status</th>
-            <th scope="col">Study ID</th>
-            <th scope="col">Scr No</th>
-            <th scope="col">Type</th>
-            <th scope="col">Visit</th>
-            <th scope="col">Page</th>
-            <th scope="col">Procedure</th>
-            <th scope="col">Description</th>
-            <th scope="col">Created on</th>
-            <th scope="col">Actions</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {% for ticket in user_tickets %}
-            {{ render_ticket(ticket) }}
-          {% endfor %}
-        </tbody>
-
-      </table>
-
-      {# <hr />
-
-      <form method="post" action="{{ url_for('dashboard_controller.export_data') }}" targe="_blank">
-        <div class="level">
-          <div class="level-left"></div>
-          <div class="level-right">
-
-            <div class="level-item has-text-right">
-              <label for="export-file-type">
-                Download Queries as:
-              </label>
-            </div>
-
-            <div class="level-item">
-              <div class="field has-addons">
-
-                <div class="control">
-                  <div class="select">
-                    <select id="export-file-type" name="export-file-type">
-                      {% for value, label  in available_export_file_types.items() %}
-                        <option required value="{{ value }}">
-                          {{ label }}
-                        </option>
-                      {% endfor %}
-                    </select>
-                  </div>
-                </div>
-
-                <div class="control">
-                  <button class="button is-info" type="submit">
-                    <span class="icon">
-                      <i class="fas fa-download"></i>
-                    </span>
-                    <span>
-                      Export
-                    </span>
-                  </button>
-                </div>
-
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </form> #}
+      <div class="dashboard__tickets">
+        {% for ticket in user_tickets %}
+          {{ render_ticket(ticket) }}
+        {% endfor %}
+      </div>
     {% endcall %}
 
   {% endwith %}
@@ -122,7 +45,7 @@
 {# MACROS                                                                    #}
 {#############################################################################}
 
-{% macro render_ticket(ticket) %}
+{% macro render_ticket_old(ticket) %}
    <tr class="ticket">
 
     {# Status #}
@@ -235,4 +158,132 @@
 
     </td>
   </tr>
+{% endmacro %}
+
+{% macro render_ticket(ticket) %}
+  <div class="ticket card mb-2" x-data="{ open: false }">
+
+    <header class="ticket__header card-header is-align-items-center" @click="open=!open">
+
+      <div class="ticket__id tag is-medium is-white">
+        <i class="fa-solid fa-hashtag mr-1"></i>
+        {{ ticket.study.internal_id }}
+      </div>
+
+      <div class="ticket__study-internal-id tag is-medium is-info is-light mr-3">
+        <i class="fa-regular fa-clipboard mr-1"></i>
+        {{ ticket.study.internal_id }}
+      </div>
+
+      <div class="ticket__source-number tag is-medium is-link is-light mr-3">
+        <i class="fa-solid fa-person mr-1"></i>
+        {{ ticket.source_number }}
+      </div>
+
+      <div class="ticket__description has-text-weight-normal is-single-line">
+        {{ ticket.description }}
+      </div>
+
+      <div class="has-text-weight-normal">
+        {{ render_tags(ticket.tags, limit=3) }}
+      </div>
+
+      <button class="card-header-icon" aria-label="more options">
+        <span class="icon">
+          <i class="fas fa-angle-down" aria-hidden="true"></i>
+        </span>
+      </button>
+
+    </header>
+
+    <div class="card-content" x-show="open">
+
+      <div class="columns">
+        <div class="column is-7">
+
+          <p><strong>Description:</strong></p>
+          <p>
+            {{ ticket.description }}
+          </p>
+
+          <p><strong>Assignee:</strong></p>
+          <p>
+            {{ ticket.assignee.abbreviation }}
+          </p>
+
+          <p><strong>tags:</strong></p>
+          <p>
+            {{ render_tags(ticket.tags) }}
+          </p>
+
+          <div class="columns">
+            <div class="column is-4">
+              <p><strong>Visit:</strong></p>
+              <p>
+                {{ ticket.visit }}
+              </p>
+            </div>
+            <div class="column is-4">
+              <p><strong>Page:</strong></p>
+              <p>
+                {{ ticket.page }}
+              </p>
+            </div>
+            <div class="column is-4">
+              <p><strong>Procedure:</strong></p>
+              <p>
+                {{ ticket.procedure }}
+              </p>
+            </div>
+          </div>
+
+
+        </div>
+        <div class="column is-5">
+          <p><strong>comments:</strong></p>
+          <p>
+            {{ ticket.comments.all() }}
+          </p>
+        </div>
+      </div>
+
+      <div class="columns">
+        <div class="column">
+
+        </div>
+        <div class="column">
+
+        </div>
+        <div class="column">
+
+        </div>
+        <div class="column">
+
+        </div>
+        <div class="column">
+        
+        </div>
+        <div class="column">
+
+        </div>
+        <div class="column">
+          <p><strong>created:</strong></p>
+          <p>
+            {{ ticket.created_at.humanize() }}
+          </p>
+        </div>
+        <div class="column">
+
+        </div>
+        <div class="column">
+          <p><strong>actions:</strong></p>
+          <p>
+            edit, mark as done
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
 {% endmacro %}
