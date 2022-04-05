@@ -1,23 +1,34 @@
-{% macro render_tags(tags, limit=None, class='') %}
-
-  {% set hasLimit = limit is not none and limit > 0 %}
-  {% set visibleTags = tags[:limit] if hasLimit else tags %}
-
+{% macro render_tags(tags, limit=None, show_empty_message=true, class='') %}
   <div class="tags is-flex-wrap-nowrap {{ class }}">
 
-    {% for tag in visibleTags %}
-      <div
-        class="tag"
-        style="background-color: {{ tag.color_scheme.background_color }}; color: {{ tag.color_scheme.text_color }};">
-        {{ tag.title }}
-      </div>
-    {% endfor %}
-
-    {% if hasLimit and tags|length > limit %}
-      <div class="tag is-light">
-        + {{ tags|length - limit }} more
+    {% if tags|length > 0 %}
+      {{ render_tag_list(tags, limit) }}
+    {% elif show_empty_message %}
+      <div class="tag">
+        Keine Tags vorhanden.
       </div>
     {% endif %}
 
   </div>
+{% endmacro %}
+
+{% macro render_tag_list(tags, limit=None) %}
+
+  {% set hasLimit = limit is not none and limit > 0 %}
+  {% set visibleTags = tags[:limit] if hasLimit else tags %}
+
+  {% for tag in visibleTags %}
+    <div
+      class="tag"
+      style="background-color: {{ tag.color_scheme.background_color }}; color: {{ tag.color_scheme.text_color }};">
+      {{ tag.title }}
+    </div>
+  {% endfor %}
+
+  {% if hasLimit and tags|length > limit %}
+    <div class="tag is-light">
+      + {{ tags|length - limit }} more
+    </div>
+  {% endif %}
+
 {% endmacro %}
