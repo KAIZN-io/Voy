@@ -161,7 +161,7 @@
 {% endmacro %}
 
 {% macro render_ticket(ticket) %}
-  <div class="ticket card mb-2" x-data="{ open: true }">
+  <div class="ticket card mb-2" x-data="{ open: false }">
 
     <header class="ticket__header card-header is-align-items-center" @click="open=!open">
 
