@@ -171,28 +171,30 @@
 
     <header class="ticket__header card-header is-align-items-center" @click="open=!open">
 
-      <div class="ticket__id tag is-medium is-white">
-        <i class="fa-solid fa-hashtag mr-1"></i>
+      {# <div class="ticket__header__id tag is-medium is-white">
+        <i class="fa-solid fa-hashtag ml-1"></i>
         {{ ticket.study.internal_id }}
-      </div>
+      </div> #}
 
-      <div class="ticket__study-internal-id tag is-medium is-info is-light mr-3">
+      <div class="ticket__header__study-internal-id tag is-medium is-info is-light ml-3">
         <i class="fa-regular fa-clipboard mr-1"></i>
         {{ ticket.study.internal_id }}
       </div>
 
-      <div class="ticket__source-number tag is-medium is-link is-light mr-3">
+      <div class="ticket__header__source-number tag is-medium is-link is-light ml-3">
         <i class="fa-solid fa-person mr-1"></i>
         {{ ticket.source_number }}
       </div>
 
-      <div class="ticket__description has-text-weight-normal is-single-line">
+      <div class="ticket__header__description has-text-weight-normal is-single-line ml-3" x-show="!open">
         {{ ticket.description }}
       </div>
 
-      <div class="has-text-weight-normal">
-        {{ render_tags(ticket.tags, limit=3) }}
+      <div class="has-text-weight-normal ml-3" x-show="!open">
+        {{ render_tags(ticket.tags, limit=3, show_empty_message=false) }}
       </div>
+
+      <div class="ticket__header__spacer" x-show="open"></div>
 
       <button class="card-header-icon" aria-label="more options">
         <span class="icon">
@@ -204,88 +206,86 @@
 
     <div class="card-content" x-show="open">
 
-      <div class="columns">
+      <div class="columns is-multiline">
         <div class="column is-7">
 
-          <p><strong>Description:</strong></p>
-          <p>
-            {{ ticket.description }}
-          </p>
-
-          <p><strong>Assignee:</strong></p>
-          <p>
-            {{ ticket.assignee.abbreviation }}
-          </p>
-
-          <p><strong>tags:</strong></p>
-          <p>
-            {{ render_tags(ticket.tags) }}
-          </p>
-
-          <div class="columns">
-            <div class="column is-4">
-              <p><strong>Visit:</strong></p>
-              <p>
-                {{ ticket.visit }}
-              </p>
-            </div>
-            <div class="column is-4">
-              <p><strong>Page:</strong></p>
-              <p>
-                {{ ticket.page }}
-              </p>
-            </div>
-            <div class="column is-4">
-              <p><strong>Procedure:</strong></p>
-              <p>
-                {{ ticket.procedure }}
-              </p>
-            </div>
+          <div class="block content">
+            <div class="title is-6 mb-1">Desctiption</div>
+            <p>
+              {{ ticket.description }}
+            </p>
           </div>
-
 
         </div>
         <div class="column is-5">
-          <p><strong>comments:</strong></p>
-          <p>
-            {{ ticket.comments.all() }}
-          </p>
-        </div>
-      </div>
 
-      <div class="columns">
-        <div class="column">
+          <div class="block content">
+            <div class="title is-6 mb-1">Tags</div>
+            <p>
+              {{ render_tags(ticket.tags) }}
+            </p>
+          </div>
 
         </div>
-        <div class="column">
+        <div class="column is-2">
+
+          <div class="block content">
+            <div class="title is-6 mb-1">Assignee</div>
+            <p>
+              {{ ticket.assignee.abbreviation or 'JNP' }}
+            </p>
+          </div>
 
         </div>
-        <div class="column">
+        <div class="column is-2">
+
+          <div class="block content">
+            <div class="title is-6 mb-1">Reporter</div>
+            <p>
+              {{ ticket.reporter.abbreviation }}
+            </p>
+          </div>
 
         </div>
-        <div class="column">
+        <div class="column is-2">
+
+          <div class="block content">
+            <div class="title is-6 mb-1">Created at</div>
+            <p>
+              {{ ticket.created_at.humanize() }}
+            </p>
+          </div>
 
         </div>
-        <div class="column">
-        
-        </div>
-        <div class="column">
+        <div class="column is-2">
+
+          <div class="block content">
+            <div class="title is-6 mb-1">Visit</div>
+            <p>
+              {{ ticket.visit }}
+            </p>
+          </div>
 
         </div>
-        <div class="column">
-          <p><strong>created:</strong></p>
-          <p>
-            {{ ticket.created_at.humanize() }}
-          </p>
-        </div>
-        <div class="column">
+        <div class="column is-2">
+
+          <div class="block content">
+            <div class="title is-6 mb-1">Page</div>
+            <p>
+              {{ ticket.page }}
+            </p>
+          </div>
 
         </div>
-        <div class="column">
-          <p><strong>actions:</strong></p>
-          <p>
-            edit, mark as done
-          </p>
+        <div class="column is-2">
+
+          <div class="block content">
+            <div class="title is-6 mb-1">Procedure</div>
+            <p>
+              {{ ticket.procedure }}
+            </p>
+          </div>
+
         </div>
       </div>
 

@@ -4,34 +4,39 @@
       &__header {
         display: flex;
         cursor: pointer;
+
         &:hover {
           background-color: $white-bis;
         }
-      }
 
-      &__id {
-        background-color: transparent !important;
-      }
+        &__id {
+          background-color: transparent !important;
+        }
 
-      &__id,
-      &__study-internal-id,
-      &__source-number {
-        flex: 0 0 auto;
-      }
+        &__id,
+        &__study-internal-id,
+        &__source-number {
+          flex: 0 0 auto;
+        }
 
-      &__description {
-        flex: 1 1 60%;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        overflow: hidden
-      }
+        &__description {
+          flex: 1 1 60%;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          overflow: hidden
+        }
 
-      &__tags {
-        flex: 0 0 auto;
-      }
+        &__tags {
+          flex: 0 0 auto;
+        }
 
-      &__toggle {
-        flex: 0 0 56px;
+        &__spacer {
+          flex: 1 1 100%;
+        }
+
+        &__toggle {
+          flex: 0 0 56px;
+        }
       }
     }
   }

@@ -130,28 +130,7 @@
                 </div>
               </div>
 
-              <div class="field">
-                <label class="label">Tags</label>
-                <div class="control">
-                  <div class="select is-fullwidth">
-                    <select x-bind:name="`ticket[${index}][tags]`" multiple data-choice-js required>
-
-                      <option value="">
-                        Add some Tags
-                      </option>
-
-                      {% for tag in ticket_tags %}
-                        <option value="{{ tag.uuid }}">
-                          {{ tag.title }}
-                        </option>
-                      {% endfor %}
-
-                    </select>
-                  </div>
-                </div>
-              </div>
-
-              <div class="columns">
+              <div class="columns mb-0">
                 <div class="column">
 
                   <div class="field">
@@ -199,19 +178,28 @@
                 </div>
               </div>
 
-              <div class="field is-grouped is-grouped-right">
-
+              <div class="field">
+                <label class="label">Tags</label>
                 <div class="control">
-                  <button
-                    class="button is-success"
-                    type="button"
-                    @click="addTicket()">
-                    <span class="icon is-small">
-                      <i class="fa-solid fa-floppy-disk"></i>
-                    </span>
-                    <span>Save & Next</span>
-                  </button>
+                  <div class="select is-fullwidth">
+                    <select x-bind:name="`ticket[${index}][tags]`" multiple data-choice-js required>
+
+                      <option value="">
+                        Add some Tags
+                      </option>
+
+                      {% for tag in ticket_tags %}
+                        <option value="{{ tag.uuid }}">
+                          {{ tag.title }}
+                        </option>
+                      {% endfor %}
+
+                    </select>
+                  </div>
                 </div>
+              </div>
+
+              <div class="field is-grouped is-grouped-right">
 
                 <div class="control">
                   <button
@@ -360,7 +348,7 @@
             <button
               class="button is-primary is-medium"
               type="submit">
-              Finish Source-Check
+              Save all
             </button>
           </div>
 
