@@ -113,7 +113,7 @@
                 <label class="label">Assignee</label>
                 <div class="control">
                   <div class="select is-fullwidth">
-                    <select x-bind:name="`ticket[${index}][assignee_uuid]`" data-choice-js required>
+                    <select x-bind:name="`ticket[${index}][assignee_uuid]`" x-init="initSelect($el)" required>
 
                       <option value="">
                         Select Someone
@@ -182,7 +182,7 @@
                 <label class="label">Tags</label>
                 <div class="control">
                   <div class="select is-fullwidth">
-                    <select x-bind:name="`ticket[${index}][tags]`" multiple data-choice-js required>
+                    <select x-bind:name="`ticket[${index}][tags]`" x-init="initSelect($el)" multiple required>
 
                       <option value="">
                         Add some Tags
