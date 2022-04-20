@@ -12,7 +12,7 @@
 
 {% block page_title %}Home{% endblock %}
 
-{% block body_class %}Home{% endblock %}
+{% block body_class %}page-home{% endblock %}
 
 
 {#############################################################################}
@@ -27,9 +27,9 @@
 
     <nav class="columns">
 
-      <div class="column">
+      <div class="column is-3">
         <a href="{{ url_for('ticket_controller.new') }}">
-          <div class="card has-background-primary has-text-white">
+          <div class="card is-square has-background-primary has-text-white">
 
             <div class="card-image px-5 pt-5">
               <figure class="image is-4by3">
@@ -45,9 +45,9 @@
         </a>
       </div>
 
-      <div class="column">
+      <div class="column is-3">
         <a href="{{ url_for('dashboard_controller.index') }}">
-          <div class="card has-background-info has-text-white">
+          <div class="card is-square has-background-info has-text-white">
 
             <div class="card-image px-5 pt-5">
               <figure class="image is-4by3">
