@@ -2,6 +2,7 @@
 
 
 {% from "components/section.html.j2" import render_section %}
+{% from "components/password-field.html.j2" import render_password_field %}
 
 {% from "utilities/_errors.html.j2" import render_errors %}
 
@@ -41,14 +42,7 @@
           </div>
         </div>
 
-        <div class="field mb-5">
-          <label class="label">
-            Your new Password
-          </label>
-          <div class="control">
-            <input type="password" class="input is-medium" name="password_new" required />
-          </div>
-        </div>
+        {{ render_password_field('Your new Password', 'password_new', 'mb-5', 'is-medium') }}
 
         <div class="field mb-5">
           <label class="label">

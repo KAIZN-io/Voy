@@ -1,9 +1,10 @@
 //
-// Layout Styles
+// Layout Scripts
 // No layout scripts yet...
 
 
 //
-// Controller Styles
+// Controller Scripts
 import './controller/ticket/comment/modal.html';
 import './controller/ticket/new.html';
+import './components/password-field.html';
