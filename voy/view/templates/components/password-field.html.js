@@ -30,6 +30,8 @@ Alpine.data('password_input', () => ({
   isTouched: false,
   areAllConditionsMet: false,
 
+  isVisible: false,
+
   init() {
     this.updateConditions('');
   },
@@ -52,6 +54,11 @@ Alpine.data('password_input', () => ({
       label: condition.label,
       isValid: condition.validator(value),
     }));
+  },
+
+  toggleVisibility() {
+    console.log('test')
+    this.isVisible = !this.isVisible;
   },
 
 }));
