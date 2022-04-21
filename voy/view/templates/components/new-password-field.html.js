@@ -43,16 +43,16 @@ Alpine.data('new_password_field', () => ({
   isVisible: false,
 
   init() {
-    this.conditions = this.getEvaluatedConditions('');
+    this.conditions = conditions.map( ({ label }) => ({ label, isValid: false }) )
   },
 
   evaluatePassword(value) {
     this.isTouched = true;
 
-    this.conditions = this.getEvaluatedConditions(value);
+    this.updateConditions(value)
     this.areAllConditionsMet = this.conditions.every( condition => condition.isValid );
 
-    this.score = this.getPasswordScore(value);
+    this.updatePasswordScore(value);
 
     // Make sure to only show that a password is fantastic, when it meets all
     // hard conditions.
@@ -63,15 +63,16 @@ Alpine.data('new_password_field', () => ({
     this.scoreMessage = scoreMessages[this.score];
   },
 
-  getPasswordScore(value) {
-    return zxcvbn(value).score;
+  updatePasswordScore(value) {
+    this.score = zxcvbn(value).score;
   },
 
-  getEvaluatedConditions(value) {
-    return conditions.map( condition => ({
-      label: condition.label,
-      isValid: condition.validator(value),
-    }));
+  updateConditions(value) {
+    // I need to iterate over the existing array, otherwise changes might not
+    // get rendered.
+    this.conditions.forEach( (condition, index) => {
+      condition.isValid = conditions[index].validator(value)
+    });
   },
 
   toggleVisibility() {
