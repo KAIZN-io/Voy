@@ -15,7 +15,7 @@
 {% macro render_tag_list(tags, limit=None) %}
 
   {% set hasLimit = limit is not none and limit > 0 %}
-  {% set visibleTags = tags[:limit] if hasLimit else tags %}
+  {% set visibleTags = tags[:limit - 1] if hasLimit else tags %}
 
   {% for tag in visibleTags %}
     <div
@@ -27,7 +27,7 @@
 
   {% if hasLimit and tags|length > limit %}
     <div class="tag is-light">
-      + {{ tags|length - limit }} more
+      + {{ tags|length - ( limit - 1 ) }} more
     </div>
   {% endif %}
 
