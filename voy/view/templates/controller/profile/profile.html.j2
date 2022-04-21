@@ -2,8 +2,8 @@
 
 
 {% from "components/section.html.j2" import render_section %}
+{% from "components/new-password-field.html.j2" import render_new_password_field %}
 {% from "components/password-field.html.j2" import render_password_field %}
-{% from "components/password-repeat-field.html.j2" import render_password_repeat_field %}
 
 {% from "utilities/_errors.html.j2" import render_errors %}
 
@@ -34,18 +34,21 @@
 
         {{ render_errors(errors) }}
 
-        <div class="field mb-5">
-          <label class="label">
-            Your old Password
-          </label>
-          <div class="control">
-            <input type="password" class="input is-medium" name="password_old" required autofocus />
-          </div>
-        </div>
+        {{ render_password_field('Your old Password', 'password_old', {
+          'classes': 'mb-5',
+          'input_classes': 'is-medium',
+          'has_autofocus': true,
+        }) }}
 
-        {{ render_password_field('Your new Password', 'password_new', 'mb-5', 'is-medium') }}
+        {{ render_new_password_field('Your new Password', 'password_new', {
+          'classes': 'mb-5',
+          'input_classes': 'is-medium',
+        }) }}
 
-        {{ render_password_repeat_field('Your new Password, again', 'password_new_repetition', 'mb-5', 'is-medium') }}
+        {{ render_password_field('Your new Password, again', 'password_new_repetition', {
+          'classes': 'mb-5',
+          'input_classes': 'is-medium',
+        }) }}
 
         <div class="field is-grouped is-grouped-right mb-5">
           <div class="control">

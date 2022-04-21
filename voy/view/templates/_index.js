@@ -4,8 +4,8 @@
 
 //
 // Component Scripts
+import './components/new-password-field.html';
 import './components/password-field.html';
-import './components/password-repeat-field.html';
 
 //
 // Controller Scripts
