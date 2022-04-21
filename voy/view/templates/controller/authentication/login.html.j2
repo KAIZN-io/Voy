@@ -1,6 +1,9 @@
 {% extends 'layout-prompt.html.j2' %}
 
 
+{% from "components/password-field.html.j2" import render_password_field %}
+
+
 {#############################################################################}
 {# META                                                                      #}
 {#############################################################################}
@@ -28,14 +31,10 @@
       </div>
     </div>
 
-    <div class="field mb-5">
-      <label class="label">
-        Your Password
-      </label>
-      <div class="control">
-        <input type="password" class="input is-medium" name="user_password" required />
-      </div>
-    </div>
+    {{ render_password_field('Your Password', 'user_password', {
+      'classes': 'mb-5',
+      'input_classes': 'is-medium',
+    }) }}
 
     <div class="field is-grouped is-grouped-right mb-5">
       <div class="control">
