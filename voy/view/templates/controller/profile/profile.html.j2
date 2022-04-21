@@ -3,6 +3,7 @@
 
 {% from "components/section.html.j2" import render_section %}
 {% from "components/password-field.html.j2" import render_password_field %}
+{% from "components/password-repeat-field.html.j2" import render_password_repeat_field %}
 
 {% from "utilities/_errors.html.j2" import render_errors %}
 
@@ -44,14 +45,7 @@
 
         {{ render_password_field('Your new Password', 'password_new', 'mb-5', 'is-medium') }}
 
-        <div class="field mb-5">
-          <label class="label">
-            Your new Password, again
-          </label>
-          <div class="control">
-            <input type="password" class="input is-medium" name="password_new_repetition" required />
-          </div>
-        </div>
+        {{ render_password_repeat_field('Your new Password, again', 'password_new_repetition', 'mb-5', 'is-medium') }}
 
         <div class="field is-grouped is-grouped-right mb-5">
           <div class="control">
