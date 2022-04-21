@@ -24,7 +24,7 @@ const conditions = [
 const scoreMessages = {
   0: 'That\'s not a password.',
   1: 'Criminally weak!',
-  2: 'I hope you are not using this for you Bank.',
+  2: 'I hope you are not using this for your bank.',
   3: 'We\'re getting somehwere.',
   4: 'Fantasitc!',
 };
