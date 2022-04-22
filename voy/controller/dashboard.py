@@ -7,7 +7,7 @@ from flask_breadcrumbs import register_breadcrumb, default_breadcrumb_root
 from flask_login import login_required, current_user
 
 from voy.constants import FILE_TYPE_PDF, FILE_TYPE_XLSX, EXPORT_FOLDER
-from voy.model import User
+from voy.model import Study, User
 from voy.repositories.user import get_tickets_for_user
 # from voy.services.file_export import export_dict_list
 
@@ -30,6 +30,7 @@ def index():
     }
 
     return render_template('controller/dashboard/index.html.j2',
+                           study_list=Study.query.all(),
                            user_list=User.query.all(),
                            user_tickets=get_tickets_for_user(current_user),
                            available_export_file_types=available_export_file_types)
