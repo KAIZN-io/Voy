@@ -30,6 +30,102 @@
       })">
 
         <div class="field">
+          <label class="label">Study</label>
+          <div class="control">
+            <div class="select is-fullwidth">
+              <select
+                x-init="initSelect($el)"
+                @change="setFilter('study_id', $el.choices.getValue().map( choice => choice.value ))"
+                multiple >
+
+                <option value="">
+                  Select a Study
+                </option>
+
+                {% for study in study_list %}
+                  <option value="{{ study.internal_id }}">
+                    {{ study.internal_id }}
+                  </option>
+                {% endfor %}
+
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Assignee</label>
+          <div class="control">
+            <div class="select is-fullwidth">
+              <select
+                x-init="initSelect($el)"
+                @change="setFilter('assignee_uuid', $el.choices.getValue().map( choice => choice.value ))"
+                multiple >
+
+                <option value="">
+                  Select Someone
+                </option>
+
+                {% for user in user_list %}
+                  <option value="{{ user.uuid }}">
+                    {{ user.abbreviation }}
+                  </option>
+                {% endfor %}
+
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Reporter</label>
+          <div class="control">
+            <div class="select is-fullwidth">
+              <select
+                x-init="initSelect($el)"
+                @change="setFilter('reporter_uuid', $el.choices.getValue().map( choice => choice.value ))"
+                multiple >
+
+                <option value="">
+                  Select Someone
+                </option>
+
+                {% for user in user_list %}
+                  <option value="{{ user.uuid }}">
+                    {{ user.abbreviation }}
+                  </option>
+                {% endfor %}
+
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Tags</label>
+          <div class="control">
+            <div class="select is-fullwidth">
+               <select
+                x-init="initSelect($el)"
+                @change="setFilter('tag_uuids', $el.choices.getValue().map( choice => choice.value ))"
+                multiple >
+
+                <option value="">
+                  Select some Tags
+                </option>
+
+                {% for tag in ticket_tag_list %}
+                  <option value="{{ tag.uuid }}">
+                    {{ tag.title }}
+                  </option>
+                {% endfor %}
+
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
           <label class="label">Search</label>
           <div class="control">
             <input class="input" type="search" @input="search($el.value)" />
@@ -246,7 +342,8 @@
 
           <div class="block content">
             <div class="title is-6 mb-1">Tags</div>
-            <p>
+            <p data-fss-field="tag_uuids" data-fss-value='{{ ticket.tags | map(attribute='uuid') | list | tojson | escape }}'>
+
               {{ render_tags(ticket.tags) }}
             </p>
           </div>
@@ -256,7 +353,7 @@
 
           <div class="block content">
             <div class="title is-6 mb-1">Assignee</div>
-            <p>
+            <p data-fss-field="assignee_uuid" data-fss-value="{{ ticket.assignee.uuid }}">
               {{ ticket.assignee.abbreviation or 'JNP' }}
             </p>
           </div>
@@ -266,7 +363,7 @@
 
           <div class="block content">
             <div class="title is-6 mb-1">Reporter</div>
-            <p>
+            <p data-fss-field="reporter_uuid" data-fss-value="{{ ticket.reporter.uuid }}">
               {{ ticket.reporter.abbreviation }}
             </p>
           </div>
