@@ -30,6 +30,30 @@
       })">
 
         <div class="field">
+          <label class="label">Assignee</label>
+          <div class="control">
+            <div class="select is-fullwidth">
+              <select
+                x-init="initSelect($el)"
+                @change="setFilter('assignee', $el.choices.getValue().map( choice => choice.value ))"
+                multiple >
+
+                <option value="">
+                  Select Someone
+                </option>
+
+                {% for user in user_list %}
+                  <option value="{{ user.uuid }}">
+                    {{ user.abbreviation }}
+                  </option>
+                {% endfor %}
+
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
           <label class="label">Search</label>
           <div class="control">
             <input class="input" type="search" @input="search($el.value)" />
@@ -256,7 +280,7 @@
 
           <div class="block content">
             <div class="title is-6 mb-1">Assignee</div>
-            <p>
+            <p data-fss-field="assignee" data-fss-value="{{ ticket.assignee.uuid }}">
               {{ ticket.assignee.abbreviation or 'JNP' }}
             </p>
           </div>
