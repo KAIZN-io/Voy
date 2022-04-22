@@ -1,5 +1,7 @@
+import hashlib
 from sqlalchemy import inspect
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.ext.hybrid import hybrid_property
 
 from voy.model import db
 from voy.model.mixins import DictMixin, TimeStampMixin, UuidPrimaryKeyMixin
@@ -40,6 +42,11 @@ class Ticket(DictMixin, TimeStampMixin, UuidPrimaryKeyMixin, db.Model):
         'TicketTag',
         secondary='ticket_tag_mapping',
         back_populates='tickets')
+
+    @hybrid_property
+    def internal_id(self):
+        uuid_hash = str.upper(hashlib.sha224(str.encode(self.uuid.hex)).hexdigest()[:6])
+        return f'{uuid_hash[:3]}-{uuid_hash[3:]}'
 
     def to_export_dict(self):
         """transform the query results to a human readable dict

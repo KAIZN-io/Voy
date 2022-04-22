@@ -171,17 +171,17 @@
 
     <header class="ticket__header card-header is-align-items-center" @click="open=!open">
 
-      {# <div class="ticket__header__id tag is-medium is-white">
-        <i class="fa-solid fa-hashtag ml-1"></i>
-        {{ ticket.study.internal_id }}
-      </div> #}
+      <div class="ticket__header__id tag is-medium is-white has-text-weight-bold is-family-monospace">
+        <i class="fa-solid fa-fingerprint mr-1"></i>
+        {{ ticket.internal_id }}
+      </div>
 
-      <div class="ticket__header__study-internal-id tag is-medium is-info is-light ml-3">
+      <div class="ticket__header__study-internal-id tag is-medium is-info is-light is-family-monospace">
         <i class="fa-regular fa-clipboard mr-1"></i>
         {{ ticket.study.internal_id }}
       </div>
 
-      <div class="ticket__header__source-number tag is-medium is-link is-light ml-3">
+      <div class="ticket__header__source-number tag is-medium is-link is-light is-family-monospace ml-3">
         <i class="fa-solid fa-person mr-1"></i>
         {{ ticket.source_number }}
       </div>
