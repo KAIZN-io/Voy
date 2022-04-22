@@ -74,13 +74,9 @@ function generateItemDataObject(item) {
     isVisible: true,
   };
 
-  item.querySelectorAll('[data-fss-field]').forEach( field => {
-    if( field.dataset.fssValue ) {
-      data[field.dataset.fssField] = field.dataset.fssValue;
-    } else {
-      data[field.dataset.fssField] = field.innerHTML.trim()
-    }
-  } );
+  item.querySelectorAll('[data-fss-field]').forEach( field =>
+    data[field.dataset.fssField] = getFieldValue(field)
+  );
 
   return data;
 }
@@ -95,6 +91,16 @@ function generateVisibilityMap(listData) {
   return visibilityMap;
 }
 
+function getFieldValue(field) {
+  let value = field.dataset.fssValue ?? field.innerHTML.trim();
+
+  if( isJsonArray(value) ) {
+    value = JSON.parse( value );
+  }
+
+  return value;
+}
+
 function filterObjectList(objects, filters) {
   const filterEntries = Object.entries( filters );
 
@@ -107,14 +113,19 @@ function filterObjectList(objects, filters) {
 
 function isObjectMatchingFilters(object, filterEntries) {
   return filterEntries.every( ([ fitlerKey, filterValue ]) => {
+    const valueArray       = toArray( object[fitlerKey] );
+    const filterValueArray = toArray( filterValue );
 
-    if(Array.isArray( filterValue )) {
-      return filterValue.includes( object[fitlerKey] );
-    }
-
-    return object[fitlerKey] === filterValue;
-
+    return valueArray.find( value => filterValueArray.includes( value ) );
   } );
+}
+
+function toArray(value) {
+  if( Array.isArray( value ) ) {
+    return value;
+  }
+
+  return [ value ];
 }
 
 function isEmpty(value) {
@@ -124,3 +135,14 @@ function isEmpty(value) {
 
   return !!value;
 }
+
+function isJsonArray(jsonString){
+    try {
+        const result = JSON.parse( jsonString );
+
+        return result && Array.isArray(result);
+
+    } catch ( error ) { }
+
+    return false;
+};
