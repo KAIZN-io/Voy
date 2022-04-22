@@ -12,7 +12,7 @@
   </div>
 {% endmacro %}
 
-{% macro render_tag_list(tags, limit=None) %}
+{% macro render_tag_list(tags, limit=none) %}
 
   {% set hasLimit = limit is not none and limit > 0 %}
   {% set tagCount = tags | length %}
