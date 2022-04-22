@@ -15,7 +15,9 @@
 {% macro render_tag_list(tags, limit=None) %}
 
   {% set hasLimit = limit is not none and limit > 0 %}
-  {% set visibleTags = tags[:limit - 1] if hasLimit else tags %}
+  {% set tagCount = tags | length %}
+
+  {% set visibleTags = tags[:limit - 1] if hasLimit and tagCount > limit else tags %}
 
   {% for tag in visibleTags %}
     <div
