@@ -71,7 +71,6 @@ function generateListDataArray(rootElement) {
 function generateItemDataObject(item) {
   const data = {
     uuid: item.dataset.fssItemUuid,
-    isVisible: true,
   };
 
   item.querySelectorAll('[data-fss-field]').forEach( field =>
@@ -79,16 +78,6 @@ function generateItemDataObject(item) {
   );
 
   return data;
-}
-
-function generateVisibilityMap(listData) {
-  const visibilityMap = {};
-
-  listData.forEach( item => {
-    visibilityMap[item.uuid] = item.isVisible;
-  } );
-
-  return visibilityMap;
 }
 
 function getFieldValue(field) {
