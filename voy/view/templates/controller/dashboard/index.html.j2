@@ -25,16 +25,29 @@
   {% with %}
 
     {% call render_section() %}
-      <div class="dashboard__tickets">
+      <div class="dashboard__tickets" x-data="fss({
+        searchKeys: ['internal_id', 'study_id', 'source_number', 'description'],
+      })">
+
+        <div class="field">
+          <label class="label">Search</label>
+          <div class="control">
+            <input class="input" type="search" @input="search($el.value)" />
+          </div>
+        </div>
+
         {% if user_tickets|length > 0 %}
-          {% for ticket in user_tickets %}
-            {{ render_ticket(ticket) }}
-          {% endfor %}
+          <ul>
+            {% for ticket in user_tickets %}
+              {{ render_ticket(ticket) }}
+            {% endfor %}
+          </ul>
         {% else %}
           <div class="notification">
             There are no queries here. Go to Source-Check to add some queries!
           </div>
         {% endif %}
+
       </div>
     {% endcall %}
 
@@ -167,23 +180,35 @@
 {% endmacro %}
 
 {% macro render_ticket(ticket) %}
-  <div class="ticket card mb-2" x-data="{ open: false }">
+  <li
+    class="ticket card mb-2"
+
+    x-data="{ uuid: '{{ ticket.uuid }}', open: false }"
+    x-show="fssItems.find( item => item.uuid === uuid)"
+
+    data-fss-item-uuid="{{ ticket.uuid }}">
 
     <header class="ticket__header card-header is-align-items-center" @click="open=!open">
 
       <div class="ticket__header__id tag is-medium is-white has-text-weight-bold is-family-monospace">
         <i class="fa-solid fa-fingerprint mr-1"></i>
-        {{ ticket.internal_id }}
+        <span data-fss-field="internal_id">
+          {{ ticket.internal_id }}
+        </span>
       </div>
 
       <div class="ticket__header__study-internal-id tag is-medium is-info is-light is-family-monospace">
         <i class="fa-regular fa-clipboard mr-1"></i>
-        {{ ticket.study.internal_id }}
+        <span data-fss-field="study_id">
+          {{ ticket.study.internal_id }}
+        </span>
       </div>
 
       <div class="ticket__header__source-number tag is-medium is-link is-light is-family-monospace ml-3">
         <i class="fa-solid fa-person mr-1"></i>
-        {{ ticket.source_number }}
+        <span data-fss-field="source_number">
+          {{ ticket.source_number }}
+        </span>
       </div>
 
       <div class="ticket__header__description has-text-weight-normal is-single-line ml-3" x-show="!open">
@@ -211,7 +236,7 @@
 
           <div class="block content">
             <div class="title is-6 mb-1">Desctiption</div>
-            <p>
+            <p data-fss-field="description">
               {{ ticket.description }}
             </p>
           </div>
@@ -291,5 +316,5 @@
 
     </div>
 
-  </div>
+  </li>
 {% endmacro %}
