@@ -5,14 +5,14 @@ import { isString, isEmpty, isUndefined, isArray, isObject, isSet } from 'lodash
 const SORT_DIRECTION_ASCENDING  = Symbol('ASC');
 const SORT_DIRECTION_DESCENDING = Symbol('DESC');
 
-export default class FilterSortSearchList {
+export default class FindFilterSortList {
 
   static wrapValueWithArray( value ) {
     return isArray(value) ? value : [ value ];
   }
 
   static getSet( value ) {
-    return new Set( FilterSortSearchList.wrapValueWithArray(value) );
+    return new Set( FindFilterSortList.wrapValueWithArray(value) );
   }
 
   static filterObjectList( objects, filters ) {
@@ -26,7 +26,7 @@ export default class FilterSortSearchList {
     const filterEntries = Object.entries( filters );
 
     return objects.filter(
-      object => FilterSortSearchList.isObjectMatchingFilters( object, filterEntries )
+      object => FindFilterSortList.isObjectMatchingFilters( object, filterEntries )
     );
   }
 
@@ -42,7 +42,7 @@ export default class FilterSortSearchList {
         return false;
       }
 
-      const valueArray = FilterSortSearchList.wrapValueWithArray( object[fitlerKey] );
+      const valueArray = FindFilterSortList.wrapValueWithArray( object[fitlerKey] );
 
       return valueArray.find( value => filterValue.has( value ) );
     } );
@@ -86,7 +86,7 @@ export default class FilterSortSearchList {
     if( isEmpty(value) ) {
       delete this._filters[key];
     } else {
-      this._filters[key] = FilterSortSearchList.getSet( value );
+      this._filters[key] = FindFilterSortList.getSet( value );
     }
   }
 
@@ -106,9 +106,9 @@ export default class FilterSortSearchList {
   getResults() {
     let items = this._getSearchResults();
 
-    items = FilterSortSearchList.filterObjectList(items, this._filters);
+    items = FindFilterSortList.filterObjectList(items, this._filters);
 
-    return FilterSortSearchList.sortObjectList(items, this._sortKey, this._sortDirection);
+    return FindFilterSortList.sortObjectList(items, this._sortKey, this._sortDirection);
   }
 
   _getSearchResults() {

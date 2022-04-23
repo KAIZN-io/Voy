@@ -25,7 +25,7 @@
   {% with %}
 
     {% call render_section() %}
-      <div class="dashboard__tickets" x-data="fss({
+      <div class="dashboard__tickets" x-data="ffs({
         searchKeys: ['internal_id', 'study_id', 'source_number', 'description'],
       })">
 
@@ -282,27 +282,27 @@
     x-data="{ uuid: '{{ ticket.uuid }}', open: false }"
     x-show="items.find( item => item.uuid === uuid)"
 
-    data-fss-item-uuid="{{ ticket.uuid }}">
+    data-ffs-item-uuid="{{ ticket.uuid }}">
 
     <header class="ticket__header card-header is-align-items-center" @click="open=!open">
 
       <div class="ticket__header__id tag is-medium is-white has-text-weight-bold is-family-monospace">
         <i class="fa-solid fa-fingerprint mr-1"></i>
-        <span data-fss-field="internal_id">
+        <span data-ffs-field="internal_id">
           {{ ticket.internal_id }}
         </span>
       </div>
 
       <div class="ticket__header__study-internal-id tag is-medium is-info is-light is-family-monospace">
         <i class="fa-regular fa-clipboard mr-1"></i>
-        <span data-fss-field="study_id">
+        <span data-ffs-field="study_id">
           {{ ticket.study.internal_id }}
         </span>
       </div>
 
       <div class="ticket__header__source-number tag is-medium is-link is-light is-family-monospace ml-3">
         <i class="fa-solid fa-person mr-1"></i>
-        <span data-fss-field="source_number">
+        <span data-ffs-field="source_number">
           {{ ticket.source_number }}
         </span>
       </div>
@@ -332,7 +332,7 @@
 
           <div class="block content">
             <div class="title is-6 mb-1">Desctiption</div>
-            <p data-fss-field="description">
+            <p data-ffs-field="description">
               {{ ticket.description }}
             </p>
           </div>
@@ -342,7 +342,7 @@
 
           <div class="block content">
             <div class="title is-6 mb-1">Tags</div>
-            <p data-fss-field="tag_uuids" data-fss-value='{{ ticket.tags | map(attribute='uuid') | list | tojson | escape }}'>
+            <p data-ffs-field="tag_uuids" data-ffs-value='{{ ticket.tags | map(attribute='uuid') | list | tojson | escape }}'>
 
               {{ render_tags(ticket.tags) }}
             </p>
@@ -353,7 +353,7 @@
 
           <div class="block content">
             <div class="title is-6 mb-1">Assignee</div>
-            <p data-fss-field="assignee_uuid" data-fss-value="{{ ticket.assignee.uuid }}">
+            <p data-ffs-field="assignee_uuid" data-ffs-value="{{ ticket.assignee.uuid }}">
               {{ ticket.assignee.abbreviation or 'JNP' }}
             </p>
           </div>
@@ -363,7 +363,7 @@
 
           <div class="block content">
             <div class="title is-6 mb-1">Reporter</div>
-            <p data-fss-field="reporter_uuid" data-fss-value="{{ ticket.reporter.uuid }}">
+            <p data-ffs-field="reporter_uuid" data-ffs-value="{{ ticket.reporter.uuid }}">
               {{ ticket.reporter.abbreviation }}
             </p>
           </div>

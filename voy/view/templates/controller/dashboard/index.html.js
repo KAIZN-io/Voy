@@ -1,41 +1,41 @@
 import Alpine from 'alpinejs';
 import Choices from "choices.js";
-import FilterSortSearchList from '~/assets/js/FilterSortSearchList';
+import FindFilterSortList from '~/assets/js/FindFilterSortList';
 
 
-Alpine.data('fss', ({ searchKeys }) => ({
+Alpine.data('ffs', ({ searchKeys }) => ({
 
   items: [],
 
-  fss: undefined,
+  ffs: undefined,
 
   init() {
     const items = generateListDataArray(this.$el);
 
-    this.fss = new FilterSortSearchList(items, { searchKeys });
-    this.items = this.fss.getResults();
+    this.ffs = new FindFilterSortList(items, { searchKeys });
+    this.items = this.ffs.getResults();
   },
 
   search(input) {
-    this.fss.setSearchTerm(input);
+    this.ffs.setSearchTerm(input);
 
     this.update();
   },
 
   setFilter(key, value) {
-    this.fss.setFilter(key, value);
+    this.ffs.setFilter(key, value);
 
     this.update();
   },
 
   setSortingOrder(key) {
-    this.fss.setSortingOrder(key);
+    this.ffs.setSortingOrder(key);
 
     this.update();
   },
 
   update() {
-    this.items = this.fss.getResults();
+    this.items = this.ffs.getResults();
   },
 
   initSelect(el) {
@@ -46,7 +46,7 @@ Alpine.data('fss', ({ searchKeys }) => ({
 
 function generateListDataArray(rootElement) {
   return Array.from(
-    rootElement.querySelectorAll('[data-fss-item-uuid]')
+    rootElement.querySelectorAll('[data-ffs-item-uuid]')
   ).map(
     item => generateItemDataObject(item)
   );
@@ -54,18 +54,18 @@ function generateListDataArray(rootElement) {
 
 function generateItemDataObject(item) {
   const data = {
-    uuid: item.dataset.fssItemUuid,
+    uuid: item.dataset.ffsItemUuid,
   };
 
-  item.querySelectorAll('[data-fss-field]').forEach( field =>
-    data[field.dataset.fssField] = getFieldValue(field)
+  item.querySelectorAll('[data-ffs-field]').forEach( field =>
+    data[field.dataset.ffsField] = getFieldValue(field)
   );
 
   return data;
 }
 
 function getFieldValue(field) {
-  let value = field.dataset.fssValue ?? field.innerHTML.trim();
+  let value = field.dataset.ffsValue ?? field.innerHTML.trim();
 
   if( isJsonArray(value) ) {
     value = JSON.parse( value );
