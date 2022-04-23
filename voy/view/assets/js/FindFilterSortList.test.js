@@ -86,11 +86,9 @@ describe('FilterSortSearchList', () => {
     });
 
     test('Sorting by a simple key works', () => {
-      const ffs = new FindFilterSortList( data );
+      const ffs = new FindFilterSortList( shuffle(data) );
       ffs.setSortingOrder( 'sort' );
       const results = ffs.getResults();
-
-      console.log(results);
 
       // Make sure the order matches
       expect(results[0].sort).toBe('A');
@@ -103,8 +101,6 @@ describe('FilterSortSearchList', () => {
       ffs.setSortingOrder( 'sort' );
       ffs.setSortingOrder( '' );
       const results = ffs.getResults();
-
-      console.log(results);
 
       // Make sure the order matches
       expect(results[0].id).toBe(0);
