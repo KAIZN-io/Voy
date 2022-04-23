@@ -26,7 +26,7 @@
 
     {% call render_section() %}
       <div class="dashboard__tickets" x-data="ffs({
-        searchKeys: ['internal_id', 'study_id', 'source_number', 'description'],
+        searchKeys: ['internal_id', 'study_id', 'source_number', 'description', 'visit', 'page', 'procedure'],
       })">
 
         <div class="field">
@@ -343,7 +343,6 @@
           <div class="block content">
             <div class="title is-6 mb-1">Tags</div>
             <p data-ffs-field="tag_uuids" data-ffs-value='{{ ticket.tags | map(attribute='uuid') | list | tojson | escape }}'>
-
               {{ render_tags(ticket.tags) }}
             </p>
           </div>
@@ -383,7 +382,7 @@
 
           <div class="block content">
             <div class="title is-6 mb-1">Visit</div>
-            <p>
+            <p data-ffs-field="visit">
               {{ ticket.visit }}
             </p>
           </div>
@@ -393,7 +392,7 @@
 
           <div class="block content">
             <div class="title is-6 mb-1">Page</div>
-            <p>
+            <p data-ffs-field="page">
               {{ ticket.page }}
             </p>
           </div>
@@ -403,7 +402,7 @@
 
           <div class="block content">
             <div class="title is-6 mb-1">Procedure</div>
-            <p>
+            <p data-ffs-field="procedure">
               {{ ticket.procedure }}
             </p>
           </div>
