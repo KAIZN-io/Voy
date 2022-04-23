@@ -52,29 +52,23 @@ Encore
      * list of features, see:
      * https://symfony.com/doc/current/frontend.html#adding-more-features
      */
+
+    // Make sure the output folder is emptied before building otherwise old
+    // files might accumulate in the output folder.
     .cleanupOutputBeforeBuild()
+
+    // Enable Source map for development
     .enableSourceMaps(!Encore.isProduction())
-    // enables hashed filenames (e.g. app.abc123.css)
+    // Enable hashed filenames in Production
     .enableVersioning(Encore.isProduction())
 
-
-    // enables Sass/SCSS support
+    // Enable Sass/SCSS support
     .enableSassLoader()
 
     // uncomment if you use TypeScript
     //.enableTypeScriptLoader()
 
-    // uncomment to get integrity="..." attributes on your script & link tags
-    // requires WebpackEncoreBundle 1.4 or higher
-    //.enableIntegrityHashes(Encore.isProduction())
-
-    // uncomment if you're having problems with a jQuery plugin
-    //.autoProvidejQuery()
-
-    // uncomment if you use API Platform Admin (composer require api-admin)
-    //.enableReactPreset()
-    //.addEntry('admin', './assets/admin.js')
-
+    // Reload when Jinja2 templates change
     .configureDevServerOptions((options) => {
       Object.assign(options, {
         liveReload: true,
