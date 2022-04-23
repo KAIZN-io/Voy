@@ -1,4 +1,5 @@
 import FindFilterSortList from "./FindFilterSortList";
+import { shuffle } from 'lodash';
 
 
 const data = [
@@ -109,6 +110,37 @@ describe('FilterSortSearchList', () => {
       expect(results[0].id).toBe(0);
       expect(results[1].id).toBe(1);
       expect(results[2].id).toBe(2);
+    });
+
+    describe('directions', () => {
+
+      test.each([
+        [ 'a',          'ascending',  [ 'A', 'B', 'C' ] ],
+        [ 'asc',        'ascending',  [ 'A', 'B', 'C' ] ],
+        [ 'ascending',  'ascending',  [ 'A', 'B', 'C' ] ],
+        [ 'A',          'ascending',  [ 'A', 'B', 'C' ] ],
+        [ 'ASC',        'ascending',  [ 'A', 'B', 'C' ] ],
+        [ 'ASCENDING',  'ascending',  [ 'A', 'B', 'C' ] ],
+        [ 'd',          'descending', [ 'C', 'B', 'A' ] ],
+        [ 'des',        'descending', [ 'C', 'B', 'A' ] ],
+        [ 'dec',        'descending', [ 'C', 'B', 'A' ] ],
+        [ 'desc',       'descending', [ 'C', 'B', 'A' ] ],
+        [ 'descending', 'descending', [ 'C', 'B', 'A' ] ],
+        [ 'D',          'descending', [ 'C', 'B', 'A' ] ],
+        [ 'DES',        'descending', [ 'C', 'B', 'A' ] ],
+        [ 'DEC',        'descending', [ 'C', 'B', 'A' ] ],
+        [ 'DESC',       'descending', [ 'C', 'B', 'A' ] ],
+        [ 'DESCENDING', 'descending', [ 'C', 'B', 'A' ] ],
+      ])('"%s" is interpreted as %s', ( direction, _, order) => {
+        const ffs = new FindFilterSortList( shuffle(data) );
+        ffs.setSortingOrder( 'sort', direction );
+        const results = ffs.getResults();
+
+        expect(results[0].sort).toBe(order[0]);
+        expect(results[1].sort).toBe(order[1]);
+        expect(results[2].sort).toBe(order[2]);
+      });
+
     });
 
   });
