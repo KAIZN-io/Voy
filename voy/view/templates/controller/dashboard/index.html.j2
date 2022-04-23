@@ -280,7 +280,7 @@
     class="ticket card mb-2"
 
     x-data="{ uuid: '{{ ticket.uuid }}', open: false }"
-    x-show="fssItems.find( item => item.uuid === uuid)"
+    x-show="items.find( item => item.uuid === uuid)"
 
     data-fss-item-uuid="{{ ticket.uuid }}">
 

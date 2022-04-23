@@ -1,58 +1,41 @@
 import Alpine from 'alpinejs';
 import Choices from "choices.js";
-import Fuse from 'fuse.js';
+import FilterSortSearchList from '../../../assets/js/FilterSortSearchList';
 
 
 Alpine.data('fss', ({ searchKeys }) => ({
 
   items: [],
-  fssItems: [],
 
-  searchInput: '',
-  filters: {},
-
-  fuse: undefined,
+  fss: undefined,
 
   init() {
-    this.items = generateListDataArray(this.$el);
-    this.fssItems = this.items;
+    const items = generateListDataArray(this.$el);
 
-    this.fuse = new Fuse(this.items, {
-      includeScore: true,
-      keys: searchKeys,
-    });
+    this.fss = new FilterSortSearchList(items, { searchKeys })
   },
 
   search(input) {
-    this.searchInput = input;
+    this.fss.setSearchTerm(input);
+
     this.update();
   },
 
   setFilter(key, value) {
-    this.filters[key] = value;
+    this.fss.setFilter(key, value);
 
-    if( isEmpty(value) ) {
-      delete this.filters[key];
-    }
+    this.update();
+  },
+
+  setSortingOrder(key) {
+    this.fss.setSortingOrder(key);
 
     this.update();
   },
 
   update() {
-    let fssItems = this.items;
-
-    if(this.searchInput.length > 0) {
-      fssItems = this.fuse.search(this.searchInput)
-        .map(
-          result => result.item
-        );
-    }
-
-    fssItems = filterObjectList(fssItems, this.filters);
-
-    this.fssItems = fssItems;
+    this.items = this.fss.getResults();
   },
-
 
   initSelect(el) {
     el.choices = new Choices(el);
@@ -88,41 +71,6 @@ function getFieldValue(field) {
   }
 
   return value;
-}
-
-function filterObjectList(objects, filters) {
-  const filterEntries = Object.entries( filters );
-
-  if( filterEntries.length === 0 ) {
-    return objects;
-  }
-
-  return objects.filter( object => isObjectMatchingFilters(object, filterEntries) );
-}
-
-function isObjectMatchingFilters(object, filterEntries) {
-  return filterEntries.every( ([ fitlerKey, filterValue ]) => {
-    const valueArray       = toArray( object[fitlerKey] );
-    const filterValueArray = toArray( filterValue );
-
-    return valueArray.find( value => filterValueArray.includes( value ) );
-  } );
-}
-
-function toArray(value) {
-  if( Array.isArray( value ) ) {
-    return value;
-  }
-
-  return [ value ];
-}
-
-function isEmpty(value) {
-  if( Array.isArray(value) ) {
-    return value.length === 0;
-  }
-
-  return !!value;
 }
 
 function isJsonArray(jsonString){
