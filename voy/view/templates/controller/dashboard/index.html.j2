@@ -25,9 +25,25 @@
   {% with %}
 
     {% call render_section() %}
-      <div class="dashboard__tickets" x-data="ffs({
-        searchKeys: ['internal_id', 'study_id', 'source_number', 'description', 'visit', 'page', 'procedure'],
-      })">
+      <script>
+        window.ffs = {
+          options: {
+            search: {
+              keys: [
+                'internal_id',
+                'study_id',
+                'source_number',
+                'description',
+                'visit',
+                'page',
+                'procedure',
+              ],
+            },
+          },
+        };
+      </script>
+
+      <div class="dashboard__tickets" x-data="item_list( window.ffs.options )">
 
         <div class="field">
           <label class="label">Study</label>

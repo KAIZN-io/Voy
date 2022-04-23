@@ -3,7 +3,7 @@ import Choices from "choices.js";
 import FindFilterSortList from '~/assets/js/FindFilterSortList';
 
 
-Alpine.data('ffs', ({ searchKeys }) => ({
+Alpine.data('item_list', ({ search }) => ({
 
   items: [],
 
@@ -12,7 +12,7 @@ Alpine.data('ffs', ({ searchKeys }) => ({
   init() {
     const items = generateListDataArray(this.$el);
 
-    this.ffs = new FindFilterSortList(items, { searchKeys });
+    this.ffs = new FindFilterSortList( items, { searchKeys: search.keys } );
     this.items = this.ffs.getResults();
   },
 
