@@ -2,10 +2,10 @@ from sqlalchemy.dialects.postgresql import UUID
 
 from voy.model import db
 from voy.model.flask_admin import ProtectedModelView
-from voy.model.mixins import TimeStampMixin, UuidPrimaryKeyMixin
+from voy.model.mixins import DictMixin, TimeStampMixin, UuidPrimaryKeyMixin
 
 
-class TicketTag(UuidPrimaryKeyMixin, TimeStampMixin, db.Model):
+class TicketTag(DictMixin, UuidPrimaryKeyMixin, TimeStampMixin, db.Model):
     """Modelling tags to be used for adding information to tickets."""
 
     __tablename__ = 'ticket_tag'
@@ -25,6 +25,22 @@ class TicketTag(UuidPrimaryKeyMixin, TimeStampMixin, db.Model):
 
     def __repr__(self):
         return '<Tag: %s>' % self.title
+
+    def __json__(self):
+
+        json_dict = self.to_dict()
+
+        del json_dict['color_scheme_uuid']
+
+        json_dict['uuid'] = self.uuid.hex
+
+        json_dict['created_at'] = self.created_at.isoformat()
+        json_dict['updated_at'] = self.updated_at.isoformat()
+
+        json_dict['text_color'] = self.color_scheme.text_color
+        json_dict['background_color'] = self.color_scheme.background_color
+
+        return json_dict
 
 
 class TicketTagView(ProtectedModelView):

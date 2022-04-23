@@ -8,7 +8,7 @@ from werkzeug.security import generate_password_hash
 from voy.constants import ROLE_ADMIN, ROLE_MEDOPS, ROLE_DATA_ENTRY, ROLE_DATA_MANAGER
 from voy.model import db
 from voy.model.flask_admin import ProtectedModelView
-from voy.model.mixins import TimeStampMixin, UuidPrimaryKeyMixin
+from voy.model.mixins import DictMixin, TimeStampMixin, UuidPrimaryKeyMixin
 from voy.model.types import UppercaseStringType
 
 db.Table('study_user_mapping', db.Model.metadata,
@@ -18,7 +18,7 @@ db.Table('study_user_mapping', db.Model.metadata,
     db.Column('qualified_since', db.DateTime, default=arrow.utcnow().datetime, nullable=False))
 
 
-class User(UuidPrimaryKeyMixin, UserMixin, TimeStampMixin, db.Model):
+class User(DictMixin, UuidPrimaryKeyMixin, UserMixin, TimeStampMixin, db.Model):
     __tablename__ = 'user'
 
     reported_tickets = db.relationship('Ticket', back_populates='reporter', foreign_keys='Ticket.reporter_uuid')
@@ -43,6 +43,20 @@ class User(UuidPrimaryKeyMixin, UserMixin, TimeStampMixin, db.Model):
 
     def __repr__(self):
         return '<User: %s>' % self.abbreviation
+
+    def __json__(self):
+
+        json_dict = self.to_dict()
+
+        del json_dict['password']
+        del json_dict['is_password_reset_required']
+
+        json_dict['uuid'] = self.uuid.hex
+
+        json_dict['created_at'] = self.created_at.isoformat()
+        json_dict['updated_at'] = self.updated_at.isoformat()
+
+        return json_dict
 
 
 class UserView(ProtectedModelView):
