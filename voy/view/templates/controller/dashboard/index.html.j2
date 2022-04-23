@@ -39,6 +39,10 @@
                 'procedure',
               ],
             },
+            sort: {
+              key: 'created_at',
+              direction: 'desc',
+            },
           },
         };
       </script>
@@ -149,7 +153,7 @@
         </div>
 
         {% if user_tickets|length > 0 %}
-          <ul>
+          <ul class="is-flex is-flex-direction-column">
             {% for ticket in user_tickets %}
               {{ render_ticket(ticket) }}
             {% endfor %}
@@ -298,6 +302,8 @@
     x-data="{ uuid: '{{ ticket.uuid }}', open: false }"
     x-show="items.find( item => item.uuid === uuid)"
 
+    :style="{ order: items.findIndex( item => item.uuid === uuid) }"
+
     data-ffs-item-uuid="{{ ticket.uuid }}">
 
     <header class="ticket__header card-header is-align-items-center" @click="open=!open">
@@ -388,7 +394,7 @@
 
           <div class="block content">
             <div class="title is-6 mb-1">Created at</div>
-            <p>
+            <p data-ffs-field="created_at" data-ffs-value="{{ ticket.created_at.timestamp }}">
               {{ ticket.created_at.humanize() }}
             </p>
           </div>

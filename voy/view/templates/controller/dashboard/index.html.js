@@ -1,9 +1,9 @@
 import Alpine from 'alpinejs';
-import Choices from "choices.js";
+import Choices from 'choices.js';
 import FindFilterSortList from '~/assets/js/FindFilterSortList';
 
 
-Alpine.data('item_list', ({ search }) => ({
+Alpine.data('item_list', ({ search, sort }) => ({
 
   items: [],
 
@@ -13,23 +13,22 @@ Alpine.data('item_list', ({ search }) => ({
     const items = generateListDataArray(this.$el);
 
     this.ffs = new FindFilterSortList( items, { searchKeys: search.keys } );
+    this.ffs.setSortingOrder( sort.key, sort.direction );
     this.items = this.ffs.getResults();
   },
 
   search(input) {
     this.ffs.setSearchTerm(input);
-
     this.update();
   },
 
   setFilter(key, value) {
     this.ffs.setFilter(key, value);
-
     this.update();
   },
 
-  setSortingOrder(key) {
-    this.ffs.setSortingOrder(key);
+  setSortingOrder(key, direction='asc') {
+    this.ffs.setSortingOrder( key, direction );
 
     this.update();
   },
