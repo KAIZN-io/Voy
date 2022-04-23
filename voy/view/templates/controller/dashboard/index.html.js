@@ -1,6 +1,6 @@
 import Alpine from 'alpinejs';
 import Choices from "choices.js";
-import FilterSortSearchList from '../../../assets/js/FilterSortSearchList';
+import FilterSortSearchList from '~/assets/js/FilterSortSearchList';
 
 
 Alpine.data('fss', ({ searchKeys }) => ({
