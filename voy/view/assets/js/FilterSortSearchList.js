@@ -1,5 +1,5 @@
 import Fuse from 'fuse.js';
-import { isString, isEmpty, isUndefined, isArray, isObject } from 'lodash';
+import { isString, isEmpty, isUndefined, isArray, isObject, isSet } from 'lodash';
 
 
 const SORT_DIRECTION_ASCENDING  = Symbol('ASC');
@@ -54,15 +54,15 @@ export default class FilterSortSearchList {
   }
 
   static sortObjectList( objects, key, direction = SORT_DIRECTION_ASCENDING ) {
-    return items;
+    return objects;
   }
 
-  constructor( items, { searchKeys } ) {
+  constructor( items, { searchKeys = [] } = {} ) {
     console.assert( Array.isArray(items) );
     console.assert( Array.isArray(searchKeys) );
 
     this._items = items;
-    this._fuse = new Fuse(this.items, { searchKeys });
+    this._fuse = new Fuse(items, { keys: searchKeys });
 
     this._searchTerm = undefined;
     this._filters = {};
@@ -71,9 +71,9 @@ export default class FilterSortSearchList {
   }
 
   setSearchTerm( searchTerm ) {
-    console.assert( isString(searchTerm) || isUndefined(key) );
+    console.assert( isString(searchTerm) || isUndefined(searchTerm) );
 
-    if( isEmpty(key) ) {
+    if( isEmpty(searchTerm) ) {
       this._searchTerm = undefined;
     } else {
       this._searchTerm = searchTerm;
@@ -102,7 +102,6 @@ export default class FilterSortSearchList {
 
     this._sortDirection = direction;
   }
-
 
   getResults() {
     let items = this._getSearchResults();

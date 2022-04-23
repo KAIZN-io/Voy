@@ -12,7 +12,8 @@ Alpine.data('fss', ({ searchKeys }) => ({
   init() {
     const items = generateListDataArray(this.$el);
 
-    this.fss = new FilterSortSearchList(items, { searchKeys })
+    this.fss = new FilterSortSearchList(items, { searchKeys });
+    this.items = this.fss.getResults();
   },
 
   search(input) {
