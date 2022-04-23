@@ -35,10 +35,11 @@ export default class FindFilterSortList {
     console.assert( isArray(filterEntries) );
 
     return filterEntries.every( ([ fitlerKey, filterValue ]) => {
-      console.assert( isString(fitlerKey) && !isEmpty(fitlerKey) );
+      console.assert( isString(fitlerKey) );
+      console.assert( !isEmpty(fitlerKey) );
       console.assert( isSet(filterValue) );
 
-      if( Object.hasOwnProperty(object, fitlerKey) ) {
+      if( object.hasOwnProperty( fitlerKey ) ) {
         return false;
       }
 
@@ -54,9 +55,11 @@ export default class FindFilterSortList {
   }
 
   static sortObjectList( objects, key, direction = SORT_DIRECTION_ASCENDING ) {
+    console.assert( [ SORT_DIRECTION_ASCENDING, SORT_DIRECTION_DESCENDING ].includes(direction) );
+
     return objects.sort( (a, b) => {
-      console.assert( Object.hasOwnProperty( a, key ) );
-      console.assert( Object.hasOwnProperty( b, key ) );
+      console.assert( a.hasOwnProperty( key ) );
+      console.assert( b.hasOwnProperty( key ) );
 
       const valueA = a[key];
       const valueB = b[key];
