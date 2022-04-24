@@ -61,3 +61,26 @@ class Ticket(DictMixin, TimeStampMixin, UuidPrimaryKeyMixin, db.Model):
         # TODO: Instead of ids, set the actual user abbreviations here.
 
         return export_dict
+
+    def __json__(self):
+
+        json_dict = self.to_dict()
+
+        json_dict['uuid'] = self.uuid.hex
+        json_dict['internal_id'] = self.internal_id
+
+        json_dict['reporter'] = self.reporter.__json__()
+        del json_dict['reporter_uuid']
+
+        json_dict['assignee'] = self.assignee.__json__()
+        del json_dict['assignee_uuid']
+
+        json_dict['study'] = self.study.__json__()
+        del json_dict['study_uuid']
+
+        json_dict['created_at'] = self.created_at.isoformat()
+        json_dict['updated_at'] = self.updated_at.isoformat()
+
+        json_dict['tags'] = [ tag.__json__() for tag in self.tags ]
+
+        return json_dict

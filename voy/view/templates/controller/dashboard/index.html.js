@@ -1,58 +1,41 @@
 import Alpine from 'alpinejs';
-import Choices from "choices.js";
-import Fuse from 'fuse.js';
+import Choices from 'choices.js';
+import FindFilterSortList from '~/assets/js/FindFilterSortList';
 
 
-Alpine.data('fss', ({ searchKeys }) => ({
+Alpine.data('item_list', ({ search, sort }) => ({
 
   items: [],
-  fssItems: [],
 
-  searchInput: '',
-  filters: {},
-
-  fuse: undefined,
+  ffs: undefined,
 
   init() {
-    this.items = generateListDataArray(this.$el);
-    this.fssItems = this.items;
+    const items = generateListDataArray(this.$el);
 
-    this.fuse = new Fuse(this.items, {
-      includeScore: true,
-      keys: searchKeys,
-    });
+    this.ffs = new FindFilterSortList( items, { searchKeys: search.keys } );
+    this.ffs.setSortingOrder( sort.key, sort.direction );
+    this.items = this.ffs.getResults();
   },
 
   search(input) {
-    this.searchInput = input;
+    this.ffs.setSearchTerm(input);
     this.update();
   },
 
   setFilter(key, value) {
-    this.filters[key] = value;
+    this.ffs.setFilter(key, value);
+    this.update();
+  },
 
-    if( isEmpty(value) ) {
-      delete this.filters[key];
-    }
+  setSortingOrder(key, direction='asc') {
+    this.ffs.setSortingOrder( key, direction );
 
     this.update();
   },
 
   update() {
-    let fssItems = this.items;
-
-    if(this.searchInput.length > 0) {
-      fssItems = this.fuse.search(this.searchInput)
-        .map(
-          result => result.item
-        );
-    }
-
-    fssItems = filterObjectList(fssItems, this.filters);
-
-    this.fssItems = fssItems;
+    this.items = this.ffs.getResults();
   },
-
 
   initSelect(el) {
     el.choices = new Choices(el);
@@ -62,7 +45,7 @@ Alpine.data('fss', ({ searchKeys }) => ({
 
 function generateListDataArray(rootElement) {
   return Array.from(
-    rootElement.querySelectorAll('[data-fss-item-uuid]')
+    rootElement.querySelectorAll('[data-ffs-item-uuid]')
   ).map(
     item => generateItemDataObject(item)
   );
@@ -70,59 +53,24 @@ function generateListDataArray(rootElement) {
 
 function generateItemDataObject(item) {
   const data = {
-    uuid: item.dataset.fssItemUuid,
+    uuid: item.dataset.ffsItemUuid,
   };
 
-  item.querySelectorAll('[data-fss-field]').forEach( field =>
-    data[field.dataset.fssField] = getFieldValue(field)
+  item.querySelectorAll('[data-ffs-field]').forEach( field =>
+    data[field.dataset.ffsField] = getFieldValue(field)
   );
 
   return data;
 }
 
 function getFieldValue(field) {
-  let value = field.dataset.fssValue ?? field.innerHTML.trim();
+  let value = field.dataset.ffsValue ?? field.innerHTML.trim();
 
   if( isJsonArray(value) ) {
     value = JSON.parse( value );
   }
 
   return value;
-}
-
-function filterObjectList(objects, filters) {
-  const filterEntries = Object.entries( filters );
-
-  if( filterEntries.length === 0 ) {
-    return objects;
-  }
-
-  return objects.filter( object => isObjectMatchingFilters(object, filterEntries) );
-}
-
-function isObjectMatchingFilters(object, filterEntries) {
-  return filterEntries.every( ([ fitlerKey, filterValue ]) => {
-    const valueArray       = toArray( object[fitlerKey] );
-    const filterValueArray = toArray( filterValue );
-
-    return valueArray.find( value => filterValueArray.includes( value ) );
-  } );
-}
-
-function toArray(value) {
-  if( Array.isArray( value ) ) {
-    return value;
-  }
-
-  return [ value ];
-}
-
-function isEmpty(value) {
-  if( Array.isArray(value) ) {
-    return value.length === 0;
-  }
-
-  return !!value;
 }
 
 function isJsonArray(jsonString){
