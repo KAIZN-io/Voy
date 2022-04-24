@@ -50,13 +50,13 @@ export default class FindFilterSortList {
       console.assert( !isEmpty(fitlerKey) );
       console.assert( isSet(filterValue) );
 
-      if( object.hasOwnProperty( fitlerKey ) ) {
+      if( !object.hasOwnProperty( fitlerKey ) ) {
         return false;
       }
 
       const valueArray = FindFilterSortList.wrapValueWithArray( object[fitlerKey] );
 
-      return valueArray.find( value => filterValue.has( value ) );
+      return valueArray.some( value => filterValue.has( value ) );
     } );
   }
 

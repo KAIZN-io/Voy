@@ -7,18 +7,21 @@ const data = [
     id: 0,
     key: 'foo',
     sort: 'C',
+    filter: '1337',
     array: [ 'foo 1', 'foo 2', 'foo 3' ],
   },
   {
     id: 1,
     key: 'bar',
     sort: 'B',
+    filter: '1337',
     array: [ 'bar 2', 'bar 2', 'bar 2' ],
   },
   {
     id: 2,
     key: 'gap',
     sort: 'A',
+    filter: '42',
     array: [ 'gap 3', 'gap 3', 'gap 3' ],
   }
 ];
@@ -68,6 +71,47 @@ describe('FilterSortSearchList', () => {
       // We dont want to test the searching library, we just want to make sure
       // to get some result back.
       expect(results).toIncludeAnyMembers(data);
+    });
+
+  });
+
+
+  describe('filtering', () => {
+
+    test('Filtering for a simple value works', () => {
+      const ffs = new FindFilterSortList( data );
+      ffs.setFilter( 'filter', '1337' );
+      const results = ffs.getResults();
+
+      // Make sure the order matches
+      expect(results[0].id).toBe(0);
+      expect(results[1].id).toBe(1);
+
+      expect(results.length).toBe(2);
+    });
+
+    test('Filtering for an array value works', () => {
+      const ffs = new FindFilterSortList( data );
+      ffs.setFilter( 'filter', '1337' );
+      const results = ffs.getResults();
+
+      // Make sure the order matches
+      expect(results[0].id).toBe(0);
+      expect(results[1].id).toBe(1);
+
+      expect(results.length).toBe(2);
+    });
+
+    test('Resetting a filter works', () => {
+      const ffs = new FindFilterSortList( data );
+      ffs.setFilter( 'filter', '1337' );
+      ffs.setFilter( 'filter', '' );
+      const results = ffs.getResults();
+
+      // Make sure the order matches
+      expect(results[0].id).toBe(0);
+      expect(results[1].id).toBe(1);
+      expect(results[2].id).toBe(2);
     });
 
   });
@@ -137,6 +181,36 @@ describe('FilterSortSearchList', () => {
         expect(results[2].sort).toBe(order[2]);
       });
 
+    });
+
+  });
+
+
+  describe('isObjectMatchingFilters', () => {
+
+    test('Is matching for simple keys', () => {
+      const object = { key: 'value' };
+      const filter = Object.entries({ key: new Set([ 'value' ]) });
+
+      expect(FindFilterSortList.isObjectMatchingFilters(object, filter)).toBe(true);
+    });
+
+    test('Is matching for array keys', () => {
+      const object = { key: [ 'value 1', 'value 2' ] };
+      const filter1 = Object.entries({ key: new Set([ 'value 1' ]) });
+      const filter2 = Object.entries({ key: new Set([ 'value 2' ]) });
+      const filter3 = Object.entries({ key: new Set([ 'value 1', 'value 2' ]) });
+
+      expect(FindFilterSortList.isObjectMatchingFilters(object, filter1)).toBe(true);
+      expect(FindFilterSortList.isObjectMatchingFilters(object, filter2)).toBe(true);
+      expect(FindFilterSortList.isObjectMatchingFilters(object, filter3)).toBe(true);
+    });
+
+    test('Is not matching when it shouldn\'t', () => {
+      const object = { answer: '1337' };
+      const filter = Object.entries({ answer: new Set([ '42' ]) });
+
+      expect(FindFilterSortList.isObjectMatchingFilters(object, filter)).toBe(false);
     });
 
   });
