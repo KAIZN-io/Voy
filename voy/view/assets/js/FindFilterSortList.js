@@ -60,11 +60,6 @@ export default class FindFilterSortList {
     } );
   }
 
-  static isValueMatchingFilter( value, filterValue ) {
-    console.assert( isArray(value) );
-    console.assert( isArray(filterValue) );
-  }
-
   static sortObjectList( objects, key, direction = SORT_DIRECTION_ASCENDING ) {
     console.assert( [ SORT_DIRECTION_ASCENDING, SORT_DIRECTION_DESCENDING ].includes(direction) );
 

@@ -37,7 +37,7 @@ describe('FilterSortSearchList', () => {
     expect(results).toBeEmpty();
   });
 
-  test('Returns the list after initialization', () => {
+  test('Returns the unmodified list after initialization', () => {
     const ffs = new FindFilterSortList( data );
     const results = ffs.getResults();
 
