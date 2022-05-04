@@ -74,6 +74,30 @@
         </div>
 
         <div class="field">
+          <label class="label">Source Number</label>
+          <div class="control">
+            <div class="select is-fullwidth">
+              <select
+                x-init="initSelect($el)"
+                @change="setFilter('source_number', $el.choices.getValue().map( choice => choice.value ))"
+                multiple >
+
+                <option value="">
+                  Select a Source Number
+                </option>
+
+                {% for source_number in source_number_list %}
+                  <option value="{{ source_number }}">
+                    {{ source_number }}
+                  </option>
+                {% endfor %}
+
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
           <label class="label">Responsible</label>
           <div class="control">
             <div class="select is-fullwidth">
