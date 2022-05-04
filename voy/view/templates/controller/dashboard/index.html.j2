@@ -98,30 +98,6 @@
         </div>
 
         <div class="field">
-          <label class="label">Reporter</label>
-          <div class="control">
-            <div class="select is-fullwidth">
-              <select
-                x-init="initSelect($el)"
-                @change="setFilter('reporter_uuid', $el.choices.getValue().map( choice => choice.value ))"
-                multiple >
-
-                <option value="">
-                  Select Someone
-                </option>
-
-                {% for user in user_list %}
-                  <option value="{{ user.uuid }}">
-                    {{ user.abbreviation }}
-                  </option>
-                {% endfor %}
-
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <div class="field">
           <label class="label">Tags</label>
           <div class="control">
             <div class="select is-fullwidth">
