@@ -102,3 +102,13 @@ class TestCountBusyDays:
         # Special cases where start date is on the weekend
         assert count_busy_days(SATURDAY, SUNDAY) == 0
         assert count_busy_days(SATURDAY, NEXT_MONDAY) == 1
+
+        # Testing edge cases with date and time
+        assert count_busy_days(
+            arrow.get(2022, 5, 2, 23, 59),
+            arrow.get(2022, 5, 3, 0, 1)
+        ) == 1
+        assert count_busy_days(
+            arrow.get(2022, 5, 2, 0, 0),
+            arrow.get(2022, 5, 2, 23, 59)
+        ) == 0
