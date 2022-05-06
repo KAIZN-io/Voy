@@ -66,6 +66,8 @@ class TestCountBusyDays:
 
 
     def test_count_busy_days(self):
+
+        # Intra week testing
         assert count_busy_days(MONDAY, MONDAY)    == 0
         assert count_busy_days(MONDAY, TUESDAY)   == 1
         assert count_busy_days(MONDAY, WEDNESDAY) == 2
@@ -74,6 +76,7 @@ class TestCountBusyDays:
         assert count_busy_days(MONDAY, SATURDAY)  == 4
         assert count_busy_days(MONDAY, SUNDAY)    == 4
 
+        # Inter week testing
         assert count_busy_days(MONDAY, NEXT_MONDAY)    == 5
         assert count_busy_days(MONDAY, NEXT_TUESDAY)   == 6
         assert count_busy_days(MONDAY, NEXT_WEDNESDAY) == 7
@@ -82,6 +85,7 @@ class TestCountBusyDays:
         assert count_busy_days(MONDAY, NEXT_SATURDAY)  == 9
         assert count_busy_days(MONDAY, NEXT_SUNDAY)    == 9
 
+        # Test over three weeks
         assert count_busy_days(MONDAY, OVER_NEXT_MONDAY)    == 10
         assert count_busy_days(MONDAY, OVER_NEXT_TUESDAY)   == 11
         assert count_busy_days(MONDAY, OVER_NEXT_WEDNESDAY) == 12
@@ -89,3 +93,12 @@ class TestCountBusyDays:
         assert count_busy_days(MONDAY, OVER_NEXT_FRIDAY)    == 14
         assert count_busy_days(MONDAY, OVER_NEXT_SATURDAY)  == 14
         assert count_busy_days(MONDAY, OVER_NEXT_SUNDAY)    == 14
+
+        # Some more diverse cases that don't start on Monday
+        assert count_busy_days(TUESDAY, FRIDAY) == 3
+        assert count_busy_days(TUESDAY, NEXT_TUESDAY) == 5
+        assert count_busy_days(FRIDAY, NEXT_MONDAY) == 1
+
+        # Special cases where start date is on the weekend
+        assert count_busy_days(SATURDAY, SUNDAY) == 0
+        assert count_busy_days(SATURDAY, NEXT_MONDAY) == 1
