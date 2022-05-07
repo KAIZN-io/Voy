@@ -27,6 +27,10 @@ Alpine.data('item_list', ({ search, sort }) => ({
     this.update();
   },
 
+  setFilterFromChangeEvent(key, event) {
+    this.setFilter(key, event.detail.value)
+  },
+
   setSortingOrder(key, direction='asc') {
     this.ffs.setSortingOrder( key, direction );
 

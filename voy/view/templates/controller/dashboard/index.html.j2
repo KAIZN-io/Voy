@@ -55,6 +55,7 @@
             <div class="select is-fullwidth">
               <select
                 x-data="choice_js"
+                @change="setFilterFromChangeEvent('study_id', $event)"
                 multiple >
 
                 <option value="">
@@ -78,7 +79,7 @@
             <div class="select is-fullwidth">
               <select
                 x-data="choice_js"
-                @change="setFilter('source_number', $el.choices.getValue().map( choice => choice.value ))"
+                @change="setFilterFromChangeEvent('source_number', $event)"
                 multiple >
 
                 <option value="">
@@ -102,7 +103,7 @@
             <div class="select is-fullwidth">
               <select
                 x-data="choice_js"
-                @change="setFilter('assignee_uuid', $el.choices.getValue().map( choice => choice.value ))"
+                @change="setFilterFromChangeEvent('assignee_uuid', $event)"
                 multiple >
 
                 <option value="">
@@ -126,7 +127,7 @@
             <div class="select is-fullwidth">
                <select
                 x-data="choice_js"
-                @change="setFilter('tag_uuids', $el.choices.getValue().map( choice => choice.value ))"
+                @change="setFilterFromChangeEvent('tag_uuids', $event)"
                 multiple >
 
                 <option value="">
