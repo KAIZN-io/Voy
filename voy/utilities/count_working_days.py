@@ -27,6 +27,8 @@ def whole_weeks_in_range(start: Arrow, end: Arrow):
 
 
 def count_working_days(start: Arrow, end: Arrow):
-    return remaining_working_days_in_week(start) + \
+    return int(
+        remaining_working_days_in_week(start) + \
         whole_weeks_in_range(start, end) * 5 + \
         passed_working_days_in_week(end)
+    )
