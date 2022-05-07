@@ -24,8 +24,4 @@ Alpine.data('ticket_new', () => ({
     this.tickets.splice(index, 1);
   },
 
-  initSelect(el) {
-    new Choices(el);
-  }
-
 }));

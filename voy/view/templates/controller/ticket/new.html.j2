@@ -45,7 +45,10 @@
               </label>
               <div class="control">
                 <div class="select is-medium is-fullwidth">
-                  <select name="study_uuid" data-choice-js required autofocus>
+                  <select
+                    x-data="choice_js"
+                    name="study_uuid"
+                    required autofocus >
 
                     <option value="">
                       Select a Study
@@ -113,7 +116,10 @@
                 <label class="label">Responsible</label>
                 <div class="control">
                   <div class="select is-fullwidth">
-                    <select x-bind:name="`ticket[${index}][assignee_uuid]`" x-init="initSelect($el)" required>
+                    <select
+                      x-data="choice_js"
+                      x-bind:name="`ticket[${index}][assignee_uuid]`"
+                      required >
 
                       <option value="">
                         Select Someone
@@ -182,7 +188,10 @@
                 <label class="label">Tags</label>
                 <div class="control">
                   <div class="select is-fullwidth">
-                    <select x-bind:name="`ticket[${index}][tags]`" x-init="initSelect($el)" multiple>
+                    <select
+                      x-data="choice_js"
+                      x-bind:name="`ticket[${index}][tags]`"
+                      multiple >
 
                       <option value="">
                         Add some Tags

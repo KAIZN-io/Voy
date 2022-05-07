@@ -54,8 +54,8 @@
           <div class="control">
             <div class="select is-fullwidth">
               <select
-                x-init="initSelect($el)"
-                @change="setFilter('study_id', $el.choices.getValue().map( choice => choice.value ))"
+                x-data="choice_js"
+                @change="setFilterFromChangeEvent('study_id', $event)"
                 multiple >
 
                 <option value="">
@@ -78,8 +78,8 @@
           <div class="control">
             <div class="select is-fullwidth">
               <select
-                x-init="initSelect($el)"
-                @change="setFilter('source_number', $el.choices.getValue().map( choice => choice.value ))"
+                x-data="choice_js"
+                @change="setFilterFromChangeEvent('source_number', $event)"
                 multiple >
 
                 <option value="">
@@ -102,8 +102,8 @@
           <div class="control">
             <div class="select is-fullwidth">
               <select
-                x-init="initSelect($el)"
-                @change="setFilter('assignee_uuid', $el.choices.getValue().map( choice => choice.value ))"
+                x-data="choice_js"
+                @change="setFilterFromChangeEvent('assignee_uuid', $event)"
                 multiple >
 
                 <option value="">
@@ -126,8 +126,8 @@
           <div class="control">
             <div class="select is-fullwidth">
                <select
-                x-init="initSelect($el)"
-                @change="setFilter('tag_uuids', $el.choices.getValue().map( choice => choice.value ))"
+                x-data="choice_js"
+                @change="setFilterFromChangeEvent('tag_uuids', $event)"
                 multiple >
 
                 <option value="">
@@ -148,12 +148,33 @@
         <div class="field">
           <label class="label">Search</label>
           <div class="control">
-            <input class="input" type="search" @input="search($el.value)" />
+            <input class="input" type="search" @input="setSearchFromInputEvent($event)" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Sort by</label>
+          <div class="control">
+            <div class="select is-fullwidth">
+               <select
+                x-data="choice_js"
+                @change="setSortFromChangeEvent($event)" >
+
+                <option value="working_days_open|asc">
+                  Newest
+                </option>
+
+                <option value="working_days_open|desc">
+                  Oldest
+                </option>
+
+              </select>
+            </div>
           </div>
         </div>
 
         {% if user_tickets|length > 0 %}
-          <ul class="is-flex is-flex-direction-column">
+          <ul class="is-flex is-flex-direction-column mt-6">
             {% for ticket in user_tickets %}
               {{ render_ticket(ticket) }}
             {% endfor %}
@@ -315,7 +336,9 @@
         </span>
       </div>
 
-      <div class="ticket__header__study-internal-id tag is-medium is-info is-light is-family-monospace">
+      {{ render_working_days_open(ticket.working_days_open) }}
+
+      <div class="ticket__header__study-internal-id tag is-medium is-info is-light is-family-monospace ml-3">
         <i class="fa-regular fa-clipboard mr-1"></i>
         <span data-ffs-field="study_id">
           {{ ticket.study.internal_id }}
@@ -435,4 +458,30 @@
     </div>
 
   </li>
+{% endmacro %}
+
+
+{% macro render_working_days_open(working_days_open) %}
+
+  {% if working_days_open >= 10 %}
+    {% set tag_class = 'is-danger' %}
+    {% set icon_class = 'fa-hourglass-end' %}
+  {% elif working_days_open >= 5 %}
+    {% set tag_class = 'is-warning' %}
+    {% set icon_class = 'fa-hourglass' %}
+  {% else %}
+    {% set tag_class = 'is-success' %}
+    {% set icon_class = 'fa-hourglass-start' %}
+  {% endif %}
+
+  <div class="ticket__header__working-days-open tag is-medium {{ tag_class }} is-light is-family-monospace">
+
+    <i class="fa-solid {{ icon_class }} mr-1"></i>
+
+    <span data-ffs-field="working_days_open">
+      {{ working_days_open }}
+    </span>
+
+  </div>
+
 {% endmacro %}
