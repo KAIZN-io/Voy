@@ -1,3 +1,4 @@
+import arrow
 import hashlib
 from sqlalchemy import inspect
 from sqlalchemy.dialects.postgresql import UUID
@@ -5,6 +6,7 @@ from sqlalchemy.ext.hybrid import hybrid_property
 
 from voy.model import db
 from voy.model.mixins import DictMixin, TimeStampMixin, UuidPrimaryKeyMixin
+from voy.utilities import count_working_days
 
 # Tag relationship
 db.Table('ticket_tag_mapping', db.Model.metadata,
@@ -48,6 +50,10 @@ class Ticket(DictMixin, TimeStampMixin, UuidPrimaryKeyMixin, db.Model):
         uuid_hash = str.upper(hashlib.sha224(str.encode(self.uuid.hex)).hexdigest()[:6])
         return f'{uuid_hash[:3]}-{uuid_hash[3:]}'
 
+    @hybrid_property
+    def working_days_open(self):
+        return count_working_days(self.created_at, arrow.now())
+
     def to_export_dict(self):
         """transform the query results to a human readable dict
         """
@@ -80,6 +86,8 @@ class Ticket(DictMixin, TimeStampMixin, UuidPrimaryKeyMixin, db.Model):
 
         json_dict['created_at'] = self.created_at.isoformat()
         json_dict['updated_at'] = self.updated_at.isoformat()
+
+        json_dict['working_days_open'] = self.working_days_open
 
         json_dict['tags'] = [ tag.__json__() for tag in self.tags ]
 
