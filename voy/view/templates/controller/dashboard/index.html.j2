@@ -152,8 +152,29 @@
           </div>
         </div>
 
+        <div class="field">
+          <label class="label">Sort by</label>
+          <div class="control">
+            <div class="select is-fullwidth">
+               <select
+                x-data="choice_js"
+                @change="setSortFromChangeEvent($event)" >
+
+                <option value="working_days_open|asc">
+                  Newest
+                </option>
+
+                <option value="working_days_open|desc">
+                  Oldest
+                </option>
+
+              </select>
+            </div>
+          </div>
+        </div>
+
         {% if user_tickets|length > 0 %}
-          <ul class="is-flex is-flex-direction-column">
+          <ul class="is-flex is-flex-direction-column mt-6">
             {% for ticket in user_tickets %}
               {{ render_ticket(ticket) }}
             {% endfor %}
