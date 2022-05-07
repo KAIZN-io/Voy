@@ -54,8 +54,7 @@
           <div class="control">
             <div class="select is-fullwidth">
               <select
-                x-init="initSelect($el)"
-                @change="setFilter('study_id', $el.choices.getValue().map( choice => choice.value ))"
+                x-data="choice_js"
                 multiple >
 
                 <option value="">
@@ -78,7 +77,7 @@
           <div class="control">
             <div class="select is-fullwidth">
               <select
-                x-init="initSelect($el)"
+                x-data="choice_js"
                 @change="setFilter('source_number', $el.choices.getValue().map( choice => choice.value ))"
                 multiple >
 
@@ -102,7 +101,7 @@
           <div class="control">
             <div class="select is-fullwidth">
               <select
-                x-init="initSelect($el)"
+                x-data="choice_js"
                 @change="setFilter('assignee_uuid', $el.choices.getValue().map( choice => choice.value ))"
                 multiple >
 
@@ -126,7 +125,7 @@
           <div class="control">
             <div class="select is-fullwidth">
                <select
-                x-init="initSelect($el)"
+                x-data="choice_js"
                 @change="setFilter('tag_uuids', $el.choices.getValue().map( choice => choice.value ))"
                 multiple >
 

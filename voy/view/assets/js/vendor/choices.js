@@ -1,12 +1,20 @@
+import Alpine from 'alpinejs';
 import Choices from "choices.js";
 
 
-document.querySelectorAll('[data-choice-js]')
-  .forEach( input => new Choices(input, {
-    callbackOnInit: function() {
-      if(this.passedElement.element.autofocus) {
-        this.showDropdown();
-        this.input.focus();
+Alpine.data('choice_js', () => ({
+
+  instance: undefined,
+
+  init() {
+    this.instance =  new Choices(this.$el, {
+      callbackOnInit: function() {
+        if(this.passedElement.element.autofocus) {
+          this.showDropdown();
+          this.input.focus();
+        }
       }
-    }
-  }) );
+    })
+  },
+
+}));

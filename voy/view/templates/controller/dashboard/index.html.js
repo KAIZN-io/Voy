@@ -37,10 +37,6 @@ Alpine.data('item_list', ({ search, sort }) => ({
     this.items = this.ffs.getResults();
   },
 
-  initSelect(el) {
-    el.choices = new Choices(el);
-  },
-
 }));
 
 function generateListDataArray(rootElement) {
