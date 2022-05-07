@@ -315,7 +315,9 @@
         </span>
       </div>
 
-      <div class="ticket__header__study-internal-id tag is-medium is-info is-light is-family-monospace">
+      {{ render_working_days_open(ticket.working_days_open) }}
+
+      <div class="ticket__header__study-internal-id tag is-medium is-info is-light is-family-monospace ml-3">
         <i class="fa-regular fa-clipboard mr-1"></i>
         <span data-ffs-field="study_id">
           {{ ticket.study.internal_id }}
@@ -435,4 +437,30 @@
     </div>
 
   </li>
+{% endmacro %}
+
+
+{% macro render_working_days_open(working_days_open) %}
+
+  {% if working_days_open >= 10 %}
+    {% set tag_class = 'is-danger' %}
+    {% set icon_class = 'fa-hourglass-end' %}
+  {% elif working_days_open >= 5 %}
+    {% set tag_class = 'is-warning' %}
+    {% set icon_class = 'fa-hourglass' %}
+  {% else %}
+    {% set tag_class = 'is-success' %}
+    {% set icon_class = 'fa-hourglass-start' %}
+  {% endif %}
+
+  <div class="ticket__header__working-days-open tag is-medium {{ tag_class }} is-light is-family-monospace">
+
+    <i class="fa-solid {{ icon_class }} mr-1"></i>
+
+    <span data-ffs-field="working_days_open">
+      {{ working_days_open }}
+    </span>
+
+  </div>
+
 {% endmacro %}
