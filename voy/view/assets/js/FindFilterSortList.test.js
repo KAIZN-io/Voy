@@ -134,7 +134,7 @@ describe('FilterSortSearchList', () => {
 
     test('Sorting by a simple key works', () => {
       const ffs = new FindFilterSortList( shuffle(data) );
-      ffs.setSortingOrder( 'sort' );
+      ffs.addSortingKey( 'sort' );
       const results = ffs.getResults();
 
       // Make sure the order matches
@@ -143,10 +143,22 @@ describe('FilterSortSearchList', () => {
       expect(results[2].sort).toBe('C');
     });
 
+    test('Sorting by multiple keys works', () => {
+      const ffs = new FindFilterSortList( shuffle(data) );
+      ffs.addSortingKey( 'category' );
+      ffs.addSortingKey( 'sort' );
+      const results = ffs.getResults();
+
+      // Make sure the order matches
+      expect(results[0].id).toBe(2);
+      expect(results[1].id).toBe(1);
+      expect(results[2].id).toBe(0);
+    });
+
     test('Resetting the sort returns the list as it was', () => {
       const ffs = new FindFilterSortList( data );
-      ffs.setSortingOrder( 'sort' );
-      ffs.setSortingOrder( '' );
+      ffs.addSortingKey( 'sort' );
+      ffs.resetSortingOrder();
       const results = ffs.getResults();
 
       // Make sure the order matches
@@ -176,7 +188,7 @@ describe('FilterSortSearchList', () => {
         [ 'DESCENDING', 'descending', [ 'C', 'B', 'A' ] ],
       ])('"%s" is interpreted as %s', ( direction, _, order) => {
         const ffs = new FindFilterSortList( shuffle(data) );
-        ffs.setSortingOrder( 'sort', direction );
+        ffs.addSortingKey( 'sort', direction );
         const results = ffs.getResults();
 
         expect(results[0].sort).toBe(order[0]);

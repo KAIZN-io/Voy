@@ -121,9 +121,9 @@ export default class FindFilterSortList {
 
     this._searchTerm = undefined;
     this._filters = {};
-    this._sortKey = undefined;
-    this._sortDirection = SORT_DIRECTION_ASCENDING;
+    this._sortingOrder = [];
   }
+
 
   setSearchTerm( searchTerm ) {
     console.assert( isString(searchTerm) );
@@ -142,6 +142,7 @@ export default class FindFilterSortList {
       this.setSearchTerm( searchTerm );
     }
   }
+
 
   setFilter( key, value ) {
     console.assert( isString(key) );
@@ -167,19 +168,25 @@ export default class FindFilterSortList {
     }
   }
 
-  setSortingOrder( key, direction = 'ASC' ) {
-    console.assert( isString(key) || isUndefined(key) );
-    console.assert( isString(direction) );
-    console.assert( SORT_DIRECTION_MAP.hasOwnProperty(direction.toLowerCase()) );
-
-    if( isEmpty(key) ) {
-      this._sortKey = undefined;
-    } else {
-      this._sortKey = key;
-    }
-
-    this._sortDirection = SORT_DIRECTION_MAP[direction.toLowerCase()];
+  resetSortingOrder() {
+    this._sortingOrder = [];
   }
+
+  addSortingKey( key, direction = 'ASC' ) {
+    console.assert( isString(key) );
+    console.assert( !isEmpty(key) );
+    console.assert( isString(direction) );
+    console.assert( !isEmpty(direction) );
+    console.assert( Object.hasOwn(SORT_DIRECTION_MAP, direction.toLowerCase()) );
+
+    this._sortingOrder.push({
+      key,
+      direction: SORT_DIRECTION_MAP[direction.toLowerCase()],
+    })
+
+    console.log(this._sortingOrder)
+  }
+
 
   getResults() {
     let items = this._getSearchResults();
@@ -188,8 +195,8 @@ export default class FindFilterSortList {
       items = FindFilterSortList.filterObjectList(items, this._filters);
     }
 
-    if( !isUndefined( this._sortKey ) ) {
-      items = FindFilterSortList.sortObjectList(items, this._sortKey, this._sortDirection);
+    if( !isEmpty( this._sortingOrder ) ) {
+      items = FindFilterSortList.sortObjectList(items, this._sortingOrder);
     }
 
     return items
