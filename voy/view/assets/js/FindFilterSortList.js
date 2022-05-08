@@ -2,10 +2,10 @@ import Fuse from 'fuse.js';
 import { isString, isEmpty, isUndefined, isArray, isObject, isSet, isNumber } from 'lodash';
 
 
-const SORT_DIRECTION_ASCENDING  = Symbol('ASC');
-const SORT_DIRECTION_DESCENDING = Symbol('DESC');
+export const SORT_DIRECTION_ASCENDING  = Symbol('ASC');
+export const SORT_DIRECTION_DESCENDING = Symbol('DESC');
 
-const SORT_DIRECTION_MAP = {
+export const SORT_DIRECTION_MAP = {
   'a': SORT_DIRECTION_ASCENDING,
   'asc': SORT_DIRECTION_ASCENDING,
   'ascending': SORT_DIRECTION_ASCENDING,
@@ -60,28 +60,56 @@ export default class FindFilterSortList {
     } );
   }
 
-  static sortObjectList( objects, key, direction = SORT_DIRECTION_ASCENDING ) {
+  static sortObjectList( objects, order ) {
+    console.assert( isArray(objects) );
+    console.assert( isArray(order) );
+
+    const length = order.length;
+
+    return objects.slice().sort( (objectA, objectB) => {
+
+      let result = 0;
+      let index = 0;
+
+      while( result === 0 && index < length ) {
+
+        const { key, direction } = order[index];
+
+        result = FindFilterSortList.compareObjectsByKey( objectA, objectB, key, direction )
+
+        index ++;
+      }
+
+      return result
+
+    } );
+  }
+
+  static compareObjectsByKey( objectA, objectB, key, direction ) {
+    console.assert( isString(key) );
+    console.assert( !isEmpty(key) );
+    console.assert( objectA.hasOwnProperty( key ) );
+    console.assert( objectB.hasOwnProperty( key ) );
     console.assert( [ SORT_DIRECTION_ASCENDING, SORT_DIRECTION_DESCENDING ].includes(direction) );
+
+    const valueA = objectA[key];
+    const valueB = objectB[key];
+
+    let result;
+
+    if( isString(valueA) ) {
+      result = valueA.localeCompare(valueB)
+    } else {
+      result = valueA - valueB;
+    }
+
+    if( result === 0 ) {
+      return 0;
+    }
 
     const directionModifier = direction === SORT_DIRECTION_ASCENDING ? 1 : -1;
 
-    return objects.sort( (a, b) => {
-      console.assert( a.hasOwnProperty( key ) );
-      console.assert( b.hasOwnProperty( key ) );
-
-      const valueA = a[key];
-      const valueB = b[key];
-
-      let result = 0;
-
-      if( isString(valueA) ) {
-        result = valueA.localeCompare(valueB)
-      } else {
-        result = valueA - valueB;
-      }
-
-      return result * directionModifier;
-    } );
+    return result * directionModifier;
   }
 
   constructor( items, { searchKeys = [] } = {} ) {

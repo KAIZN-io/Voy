@@ -1,4 +1,4 @@
-import FindFilterSortList from "./FindFilterSortList";
+import FindFilterSortList, { SORT_DIRECTION_ASCENDING, SORT_DIRECTION_DESCENDING } from "./FindFilterSortList";
 import { shuffle } from 'lodash';
 
 
@@ -6,6 +6,7 @@ const data = [
   {
     id: 0,
     key: 'foo',
+    category: 'claim',
     sort: 'C',
     filter: '1337',
     array: [ 'foo 1', 'foo 2', 'foo 3' ],
@@ -13,6 +14,7 @@ const data = [
   {
     id: 1,
     key: 'bar',
+    category: 'claim',
     sort: 'B',
     filter: '1337',
     array: [ 'bar 2', 'bar 2', 'bar 2' ],
@@ -20,6 +22,7 @@ const data = [
   {
     id: 2,
     key: 'gap',
+    category: 'answer',
     sort: 'A',
     filter: '42',
     array: [ 'gap 3', 'gap 3', 'gap 3' ],
@@ -211,6 +214,90 @@ describe('FilterSortSearchList', () => {
       const filter = Object.entries({ answer: new Set([ '42' ]) });
 
       expect(FindFilterSortList.isObjectMatchingFilters(object, filter)).toBe(false);
+    });
+
+  });
+
+
+  describe('sortObjectList', () => {
+
+    test('Returns the list as is when empty order array is given.', () => {
+      const order = [];
+
+      const results = FindFilterSortList.sortObjectList( data, order );
+
+      expect(results[0].id).toBe(0);
+      expect(results[1].id).toBe(1);
+      expect(results[2].id).toBe(2);
+    });
+
+    test('Orders by a single key.', () => {
+      const order = [
+        {
+          key: 'sort',
+          direction: SORT_DIRECTION_ASCENDING
+        }
+      ];
+
+      const results = FindFilterSortList.sortObjectList( data, order );
+
+      expect(results[0].sort).toBe('A');
+      expect(results[1].sort).toBe('B');
+      expect(results[2].sort).toBe('C');
+    });
+
+    test('Orders by multiple keys.', () => {
+      const order = [
+        {
+          key: 'category',
+          direction: SORT_DIRECTION_ASCENDING
+        },
+        {
+          key: 'sort',
+          direction: SORT_DIRECTION_ASCENDING
+        }
+      ];
+
+      const results = FindFilterSortList.sortObjectList( shuffle(data), order );
+
+      expect(results[0].sort).toBe('A')
+      expect(results[1].sort).toBe('B')
+      expect(results[2].sort).toBe('C')
+    });
+
+    test('Orders by multiple keys with different directions.', () => {
+      const order = [
+        {
+          key: 'category',
+          direction: SORT_DIRECTION_ASCENDING
+        },
+        {
+          key: 'sort',
+          direction: SORT_DIRECTION_DESCENDING
+        }
+      ];
+
+      const results = FindFilterSortList.sortObjectList( shuffle(data), order );
+
+      expect(results[0].sort).toBe('A')
+      expect(results[1].sort).toBe('C')
+      expect(results[2].sort).toBe('B')
+    });
+
+  });
+
+
+  describe('compareObjectsByKey', () => {
+
+    test('Works with string values', () => {
+      const objectA = { key: 'A' };
+      const objectB = { key: 'B' };
+
+      expect(FindFilterSortList.compareObjectsByKey( objectA, objectB, 'key', SORT_DIRECTION_ASCENDING )).toEqual(-1);
+      expect(FindFilterSortList.compareObjectsByKey( objectA, objectB, 'key', SORT_DIRECTION_DESCENDING )).toEqual(1);
+
+      expect(FindFilterSortList.compareObjectsByKey( objectA, objectA, 'key', SORT_DIRECTION_ASCENDING )).toEqual(0);
+      expect(FindFilterSortList.compareObjectsByKey( objectA, objectA, 'key', SORT_DIRECTION_DESCENDING )).toEqual(0);
     });
 
   });
