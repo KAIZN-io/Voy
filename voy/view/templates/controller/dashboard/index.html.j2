@@ -39,10 +39,16 @@
                 'procedure',
               ],
             },
-            sort: {
-              key: 'created_at',
-              direction: 'desc',
-            },
+            sort: [
+              {
+                key: 'working_days_open',
+                direction: 'asc',
+              },
+              {
+                key: 'created_at',
+                direction: 'asc',
+              },
+            ],
           },
         };
       </script>
@@ -160,11 +166,11 @@
                 x-data="choice_js"
                 @change="setSortFromChangeEvent($event)" >
 
-                <option value="working_days_open|asc">
+                <option value="working_days_open|asc, created_at|asc">
                   Newest
                 </option>
 
-                <option value="working_days_open|desc">
+                <option value="working_days_open|desc, created_at|desc">
                   Oldest
                 </option>
 

@@ -13,7 +13,7 @@ Alpine.data('item_list', ({ search, sort }) => ({
     const items = generateListDataArray(this.$el);
 
     this.ffs = new FindFilterSortList( items, { searchKeys: search.keys } );
-    this.ffs.setSortingOrder( sort.key, sort.direction );
+    sort.forEach(({ key, direction }) =>  this.ffs.addSortingKey( key, direction ) )
     this.items = this.ffs.getResults();
   },
 
@@ -35,16 +35,18 @@ Alpine.data('item_list', ({ search, sort }) => ({
     this.setFilter(key, event.detail.value)
   },
 
-  setSort(key, direction='asc') {
-    this.ffs.setSortingOrder( key, direction );
+  setSortFromChangeEvent(event) {
+    this.ffs.resetSortingOrder();
+
+    const order = event.target.value.split(',');
+
+    order.forEach( value => {
+      const [ key, direction ] = value.split('|');
+
+      this.ffs.addSortingKey( key.trim(), direction.trim() )
+    });
 
     this.update();
-  },
-
-  setSortFromChangeEvent(event) {
-    const [ key, direction ] = event.target.value.split('|');
-
-    this.setSort( key, direction )
   },
 
   update() {
