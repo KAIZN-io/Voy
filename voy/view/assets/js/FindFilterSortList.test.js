@@ -55,7 +55,7 @@ describe('FilterSortSearchList', () => {
 
     test('Search works on simple values', () => {
       const ffs = new FindFilterSortList( data, { searchKeys: [ 'key' ] } );
-      ffs.setSearchTerm( 'foo' )
+      ffs.updateSearchTerm( 'foo' )
       const results = ffs.getResults();
 
       // We dont want to test the searching library, we just want to make sure
@@ -65,7 +65,7 @@ describe('FilterSortSearchList', () => {
 
     test('Search works on array values', () => {
       const ffs = new FindFilterSortList( data, { searchKeys: [ 'array' ] } );
-      ffs.setSearchTerm( 'foo 1' )
+      ffs.updateSearchTerm( 'foo 1' )
       const results = ffs.getResults();
 
       // We dont want to test the searching library, we just want to make sure
@@ -80,7 +80,7 @@ describe('FilterSortSearchList', () => {
 
     test('Filtering for a simple value works', () => {
       const ffs = new FindFilterSortList( data );
-      ffs.setFilter( 'filter', '1337' );
+      ffs.updateFilter( 'filter', '1337' );
       const results = ffs.getResults();
 
       // Make sure the order matches
@@ -92,7 +92,7 @@ describe('FilterSortSearchList', () => {
 
     test('Filtering for an array value works', () => {
       const ffs = new FindFilterSortList( data );
-      ffs.setFilter( 'filter', '1337' );
+      ffs.updateFilter( 'filter', '1337' );
       const results = ffs.getResults();
 
       // Make sure the order matches
@@ -104,8 +104,8 @@ describe('FilterSortSearchList', () => {
 
     test('Resetting a filter works', () => {
       const ffs = new FindFilterSortList( data );
-      ffs.setFilter( 'filter', '1337' );
-      ffs.setFilter( 'filter', '' );
+      ffs.updateFilter( 'filter', '1337' );
+      ffs.updateFilter( 'filter', '' );
       const results = ffs.getResults();
 
       // Make sure the order matches

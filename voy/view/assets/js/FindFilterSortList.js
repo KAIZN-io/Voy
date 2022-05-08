@@ -98,22 +98,44 @@ export default class FindFilterSortList {
   }
 
   setSearchTerm( searchTerm ) {
-    console.assert( isString(searchTerm) || isUndefined(searchTerm) );
+    console.assert( isString(searchTerm) );
 
+    this._searchTerm = searchTerm;
+  }
+
+  removeSearchTerm() {
+    this._searchTerm = undefined;
+  }
+
+  updateSearchTerm( searchTerm ) {
     if( isEmpty(searchTerm) ) {
-      this._searchTerm = undefined;
+      this.removeSearchTerm();
     } else {
-      this._searchTerm = searchTerm;
+      this.setSearchTerm( searchTerm );
     }
   }
 
   setFilter( key, value ) {
-    console.assert( isString(key) && key.length > 0 );
+    console.assert( isString(key) );
+    console.assert( !isEmpty(key) );
+    console.assert( isString(value) );
+    console.assert( !isEmpty(value) );
 
+    this._filters[key] = FindFilterSortList.getSet( value );
+  }
+
+  removeFilter( key ) {
+    console.assert( isString(key) );
+    console.assert( !isEmpty(key) );
+
+    delete this._filters[key];
+  }
+
+  updateFilter( key, value ) {
     if( isEmpty(value) ) {
-      delete this._filters[key];
+      this.removeFilter( key );
     } else {
-      this._filters[key] = FindFilterSortList.getSet( value );
+      this.setFilter( key, value );
     }
   }
 
