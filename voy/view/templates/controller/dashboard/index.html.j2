@@ -417,7 +417,10 @@
 
           <div class="block content">
             <div class="title is-6 mb-1">Created at</div>
-            <p data-ffs-field="created_at" data-ffs-value="{{ ticket.created_at.timestamp }}">
+            <p
+              title="{{ ticket.created_at.format('YYYY-MM-DD HH:mm:ss') }}"
+              data-ffs-field="created_at"
+              data-ffs-value="{{ ticket.created_at.timestamp }}">
               {{ ticket.created_at.humanize() }}
             </p>
           </div>
