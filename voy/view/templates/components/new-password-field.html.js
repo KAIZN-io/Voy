@@ -76,7 +76,6 @@ Alpine.data('new_password_field', () => ({
   },
 
   toggleVisibility() {
-    console.log('test')
     this.isVisible = !this.isVisible;
   },
 

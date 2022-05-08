@@ -183,8 +183,6 @@ export default class FindFilterSortList {
       key,
       direction: SORT_DIRECTION_MAP[direction.toLowerCase()],
     })
-
-    console.log(this._sortingOrder)
   }
 
 
