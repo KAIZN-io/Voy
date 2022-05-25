@@ -37,9 +37,13 @@ WORKDIR $VOY_HOME
 # Install system packages
 RUN apt-get update
 RUN apt-get -y install --no-install-recommends build-essential libpq-dev
+RUN pip install --no-cache-dir poetry
+
+# Generating the requirements.txt
+COPY pyproject.toml poetry.lock ./
+RUN poetry export --without-hashes -f requirements.txt --output requirements.txt
 
 # Install and build packages
-COPY requirements.txt setup.py ./
 RUN pip --use-feature=in-tree-build wheel gunicorn --wheel-dir=./wheels
 RUN pip --use-feature=in-tree-build wheel -r requirements.txt --wheel-dir=./wheels
 
@@ -64,8 +68,7 @@ COPY --from=packages $VOY_HOME ./
 
 # Install prepared dependencies and Voy
 RUN pip install --no-cache-dir --no-index --find-links=./wheels gunicorn && \
-    pip install --no-cache-dir --no-index --find-links=./wheels -r requirements.txt && \
-    pip install --no-cache-dir --no-index --find-links=./wheels -e .
+    pip install --no-cache-dir --no-index --find-links=./wheels -r requirements.txt
 
 # Copy over the bundled assets from the previous build step
 COPY --from=assets $VOY_HOME/voy/view/static ./voy/view/static

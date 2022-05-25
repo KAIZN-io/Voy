@@ -1,3 +1,0 @@
-graft voy/view/static
-graft voy/view/templates
-global-exclude *.pyc

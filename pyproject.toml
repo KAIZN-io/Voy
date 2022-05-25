@@ -1,0 +1,39 @@
+[tool.poetry]
+name = "voy"
+version = "0.1.0"
+description = ""
+authors = ["Jan-Luca Klees <email@janlucaklees.de>"]
+include = [
+  "voy/view/static/*",
+  "voy/view/static/**/*",
+  "voy/view/templates/*",
+  "voy/view/templates/**/*",
+]
+
+[tool.poetry.scripts]
+voy = "voy.commands:cli"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+arrow = "^0.17.0"
+Flask = "^1.1.4"
+Flask-Admin = "^1.6.0"
+Flask-Breadcrumbs = "^0.5.1"
+Flask-Login = "^0.6.1"
+Flask-Mail = "^0.9.1"
+Flask-Migrate = "^2.6.0"
+Flask-SQLAlchemy = "^2.4.4"
+MarkupSafe = "2.0.0"
+openpyxl = "^3.0.7"
+psycopg2 = "^2.8.6"
+python-dotenv = "^0.15.0"
+python-json-logger = "^2.0.2"
+PyYAML = "^5.4.1"
+uuid = "^1.30"
+
+[tool.poetry.dev-dependencies]
+pytest = "^7.1.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
