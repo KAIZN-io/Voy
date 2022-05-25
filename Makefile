@@ -9,24 +9,6 @@ export
 
 
 ########################################################################################################################
-# PYTHON                                                                                                             #
-########################################################################################################################
-
-# Setup the virtual environment. Recommended for development.
-.PHONY: venv
-venv:
-	python3 -m venv venv && \
-	source venv/bin/activate && \
-	pip3 install -e .
-
-# (Re-)installs python packages
-.PHONY: pip-install
-pip-install:
-	docker-compose exec voy pip3 install -r requirements.txt
-
-
-
-########################################################################################################################
 # ASSETS                                                                                                             #
 ########################################################################################################################
 
@@ -39,22 +21,6 @@ npm-install:
 .PHONY: assets
 assets: npm-install
 	docker-compose exec voy npm run build
-
-
-
-########################################################################################################################
-# MIGRATIONS                                                                                                           #
-########################################################################################################################
-
-# Creates migration for changes in the database
-.PHONY: db-revision
-db-revision:
-	@echo "Please run 'docker-compose exec p flask db revision' manually and specify a message with the '-m' parameter!"
-
-# Applies pending migrations to the database
-.PHONY: db-upgrade
-db-upgrade:
-	docker-compose exec voy flask db upgrade
 
 
 
