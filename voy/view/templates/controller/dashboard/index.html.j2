@@ -104,6 +104,30 @@
         </div>
 
         <div class="field">
+          <label class="label">Procedure</label>
+          <div class="control">
+            <div class="select is-fullwidth">
+              <select
+                x-data="choice_js"
+                @change="updateFilterFromChangeEvent('procedure', $event)"
+                multiple >
+
+                <option value="">
+                  Select a Procedure
+                </option>
+
+                {% for procedure in procedure_list %}
+                  <option value="{{ procedure }}">
+                    {{ procedure }}
+                  </option>
+                {% endfor %}
+
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
           <label class="label">Responsible</label>
           <div class="control">
             <div class="select is-fullwidth">

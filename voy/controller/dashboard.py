@@ -31,10 +31,12 @@ def index():
 
     tickets = get_tickets_for_user(current_user)
     source_number_list = set([ ticket.source_number for ticket in tickets ])
+    procedure_list = set([ ticket.procedure for ticket in tickets ])
 
     return render_template('controller/dashboard/index.html.j2',
                            study_list=Study.query.all(),
                            source_number_list=source_number_list,
+                           procedure_list=procedure_list,
                            ticket_tag_list=TicketTag.query.all(),
                            user_list=User.query.all(),
                            user_tickets=tickets,
