@@ -6,7 +6,7 @@ def parse_boolean(value='false'):
     return value.lower() in {"1", "t", "true", "y", "yes"}
 
 
-class Config(object):
+class Config:
     DEBUG   = parse_boolean(environ.get('DEBUG', default="false"))
     TESTING = parse_boolean(environ.get('TESTING', default="false"))
 

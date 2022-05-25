@@ -17,7 +17,7 @@ from .model import db, migrate, Study, StudyView, TicketTag, TicketTagView, Tick
 
 
 # Load logging configuration
-with open('config/logging.yaml', 'r') as stream:
+with open('voy/logging.yaml', 'r') as stream:
     yamld = yaml.safe_load(stream)
     logging.config.dictConfig(yamld)
 
@@ -33,7 +33,7 @@ def create_app():
     )
 
     # Import the configuration
-    app.config.from_object('config.default.Config')
+    app.config.from_object('voy.config.Config')
 
     # Attach the database to the app
     db.init_app(app)
