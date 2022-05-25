@@ -1,19 +1,4 @@
 [[package]]
-name = "alembic"
-version = "1.7.7"
-description = "A database migration tool for SQLAlchemy."
-category = "main"
-optional = false
-python-versions = ">=3.6"
-
-[package.dependencies]
-Mako = "*"
-SQLAlchemy = ">=1.3.0"
-
-[package.extras]
-tz = ["python-dateutil"]
-
-[[package]]
 name = "arrow"
 version = "0.17.0"
 description = "Better dates & times for Python"
@@ -174,19 +159,6 @@ docs = ["sphinx (>=1.3)"]
 tests = ["flask-classy (>=0.6.10)", "check-manifest (>=0.25)", "coverage (>=4.0)", "isort (>=4.2.2)", "pydocstyle (>=1.0.0)", "pytest (>=2.8.0)", "pytest-cache (>=1.0)", "pytest-cov (>=2.1.0)", "pytest-pep8 (>=1.0.6)"]
 
 [[package]]
-name = "flask-migrate"
-version = "2.7.0"
-description = "SQLAlchemy database migrations for Flask applications using Alembic"
-category = "main"
-optional = false
-python-versions = "*"
-
-[package.dependencies]
-alembic = ">=0.7"
-Flask = ">=0.9"
-Flask-SQLAlchemy = ">=1.0"
-
-[[package]]
 name = "flask-sqlalchemy"
 version = "2.5.1"
 description = "Adds SQLAlchemy support to your Flask application."
@@ -238,22 +210,6 @@ MarkupSafe = ">=0.23"
 
 [package.extras]
 i18n = ["Babel (>=0.8)"]
-
-[[package]]
-name = "mako"
-version = "1.2.0"
-description = "A super-fast templating language that borrows the best ideas from the existing templating languages."
-category = "main"
-optional = false
-python-versions = ">=3.7"
-
-[package.dependencies]
-MarkupSafe = ">=0.9.2"
-
-[package.extras]
-babel = ["babel"]
-lingua = ["lingua"]
-testing = ["pytest"]
 
 [[package]]
 name = "markupsafe"
@@ -468,13 +424,9 @@ email = ["email-validator"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "4652141412ce090d9c69b96552c6c494ae5541f1f232c1e23fe4047ffe4aa591"
+content-hash = "5015499d064eb4b5ee9cda21f202ebb5262321d0709a3e1e50ed6bbd054b108f"
 
 [metadata.files]
-alembic = [
-    {file = "alembic-1.7.7-py3-none-any.whl", hash = "sha256:29be0856ec7591c39f4e1cb10f198045d890e6e2274cf8da80cb5e721a09642b"},
-    {file = "alembic-1.7.7.tar.gz", hash = "sha256:4961248173ead7ce8a21efb3de378f13b8398e6630fab0eb258dc74a8af24c58"},
-]
 arrow = [
     {file = "arrow-0.17.0-py2.py3-none-any.whl", hash = "sha256:e098abbd9af3665aea81bdd6c869e93af4feb078e98468dd351c383af187aac5"},
     {file = "arrow-0.17.0.tar.gz", hash = "sha256:ff08d10cda1d36c68657d6ad20d74fbea493d980f8b2d45344e00d6ed2bf6ed4"},
@@ -523,10 +475,6 @@ flask-mail = [
 flask-menu = [
     {file = "Flask-Menu-0.7.2.tar.gz", hash = "sha256:6aef705e2b12d04a5a4d7eed89901e1e386bc1e6eda69cc1d9b8b594e95a5839"},
     {file = "Flask_Menu-0.7.2-py3-none-any.whl", hash = "sha256:adeb078a2c16ee63b63702b220de3f1be412920ad511a4ecb2c284f45c4026ee"},
-]
-flask-migrate = [
-    {file = "Flask-Migrate-2.7.0.tar.gz", hash = "sha256:ae2f05671588762dd83a21d8b18c51fe355e86783e24594995ff8d7380dffe38"},
-    {file = "Flask_Migrate-2.7.0-py2.py3-none-any.whl", hash = "sha256:26871836a4e46d2d590cf8e558c6d60039e1c003079b240689d845726b6b57c0"},
 ]
 flask-sqlalchemy = [
     {file = "Flask-SQLAlchemy-2.5.1.tar.gz", hash = "sha256:2bda44b43e7cacb15d4e05ff3cc1f8bc97936cc464623424102bfc2c35e95912"},
@@ -600,10 +548,6 @@ itsdangerous = [
 jinja2 = [
     {file = "Jinja2-2.11.3-py2.py3-none-any.whl", hash = "sha256:03e47ad063331dd6a3f04a43eddca8a966a26ba0c5b7207a9a9e4e08f1b29419"},
     {file = "Jinja2-2.11.3.tar.gz", hash = "sha256:a6d58433de0ae800347cab1fa3043cebbabe8baa9d29e668f1c768cb87a333c6"},
-]
-mako = [
-    {file = "Mako-1.2.0-py3-none-any.whl", hash = "sha256:23aab11fdbbb0f1051b93793a58323ff937e98e34aece1c4219675122e57e4ba"},
-    {file = "Mako-1.2.0.tar.gz", hash = "sha256:9a7c7e922b87db3686210cf49d5d767033a41d4010b284e747682c92bddd8b39"},
 ]
 markupsafe = [
     {file = "MarkupSafe-2.0.0-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:2efaeb1baff547063bad2b2893a8f5e9c459c4624e1a96644bbba08910ae34e0"},

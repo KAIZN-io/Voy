@@ -14,7 +14,7 @@ from .controller import authentication_blueprint, profile_blueprint, \
     dashboard_blueprint, home_blueprint, user_blueprint, study_blueprint, \
     ticket_blueprint, ticket_comment_blueprint
 from .mail import mail
-from .model import db, migrate, Study, StudyView, TicketTag, TicketTagView, \
+from .model import db, Study, StudyView, TicketTag, TicketTagView, \
     TicketTagColorScheme, TicketTagColorSchemeView, User, UserView
 
 
@@ -39,9 +39,6 @@ def create_app():
 
     # Attach the database to the app
     db.init_app(app)
-
-    # Init Flask-Migrate
-    migrate.init_app(app, db)
 
     # Attach the mailing service to the app
     mail.init_app(app)

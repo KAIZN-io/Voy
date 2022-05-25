@@ -1,8 +1,6 @@
-from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
-migrate = Migrate()
 
 from voy.model.user import User, UserView
 from voy.model.study import Study, StudyView
