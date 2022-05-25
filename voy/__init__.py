@@ -10,14 +10,16 @@ from flask_admin import Admin
 
 from .commands import database_cli, user_cli
 from .constants import FLASH_TYPE_WARNING
-from .controller import authentication_blueprint, profile_blueprint, dashboard_blueprint, home_blueprint, \
-    user_blueprint, study_blueprint, ticket_blueprint, ticket_comment_blueprint
+from .controller import authentication_blueprint, profile_blueprint, \
+    dashboard_blueprint, home_blueprint, user_blueprint, study_blueprint, \
+    ticket_blueprint, ticket_comment_blueprint
 from .mail import mail
-from .model import db, migrate, Study, StudyView, TicketTag, TicketTagView, TicketTagColorScheme, TicketTagColorSchemeView, User, UserView
+from .model import db, migrate, Study, StudyView, TicketTag, TicketTagView, \
+    TicketTagColorScheme, TicketTagColorSchemeView, User, UserView
 
 
 # Load logging configuration
-with open('voy/logging.yaml', 'r') as stream:
+with open('voy/logging.yaml', mode='r', encoding='UTF-8') as stream:
     yamld = yaml.safe_load(stream)
     logging.config.dictConfig(yamld)
 
@@ -55,7 +57,8 @@ def create_app():
 
     @login_manager.user_loader
     def load_user(user_uuid):
-        # since the user_uuid is just the primary key of our user table, use it in the query for the user
+        # since the user_uuid is just the primary key of our user table, use it
+        # in the query for the user
         return User.query.get(user_uuid)
 
 
@@ -97,7 +100,7 @@ def create_app():
 
 def create_resolve_asset_path_function(asset_manifest_path):
     def resolve_asset_path(asset_name):
-        with open(asset_manifest_path, 'r') as asset_manifest_handle:
+        with open(asset_manifest_path, mode='r', encoding='UTF-8') as asset_manifest_handle:
             asset_manifest_data = asset_manifest_handle.read()
             asset_manifest = json.loads(asset_manifest_data)
 
