@@ -61,7 +61,7 @@
             <div class="select is-fullwidth">
               <select
                 x-data="choice_js"
-                @change="setFilterFromChangeEvent('study_id', $event)"
+                @change="updateFilterFromChangeEvent('study_id', $event)"
                 multiple >
 
                 <option value="">
@@ -85,7 +85,7 @@
             <div class="select is-fullwidth">
               <select
                 x-data="choice_js"
-                @change="setFilterFromChangeEvent('source_number', $event)"
+                @change="updateFilterFromChangeEvent('source_number', $event)"
                 multiple >
 
                 <option value="">
@@ -109,7 +109,7 @@
             <div class="select is-fullwidth">
               <select
                 x-data="choice_js"
-                @change="setFilterFromChangeEvent('assignee_uuid', $event)"
+                @change="updateFilterFromChangeEvent('assignee_uuid', $event)"
                 multiple >
 
                 <option value="">
@@ -133,7 +133,7 @@
             <div class="select is-fullwidth">
                <select
                 x-data="choice_js"
-                @change="setFilterFromChangeEvent('tag_uuids', $event)"
+                @change="updateFilterFromChangeEvent('tag_uuids', $event)"
                 multiple >
 
                 <option value="">
@@ -154,7 +154,7 @@
         <div class="field">
           <label class="label">Search</label>
           <div class="control">
-            <input class="input" type="search" @input="setSearchFromInputEvent($event)" />
+            <input class="input" type="search" @input="updateSearchFromInputEvent($event)" />
           </div>
         </div>
 

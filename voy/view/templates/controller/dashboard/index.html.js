@@ -17,22 +17,22 @@ Alpine.data('item_list', ({ search, sort }) => ({
     this.items = this.ffs.getResults();
   },
 
-  setSearch(input) {
-    this.ffs.setSearchTerm(input);
+  updateSearchTerm(input) {
+    this.ffs.updateSearchTerm(input);
     this.update();
   },
 
-  setSearchFromInputEvent(event) {
-    this.setSearch(event.target.value)
+  updateSearchFromInputEvent(event) {
+    this.updateSearchTerm(event.target.value)
   },
 
-  setFilter(key, value) {
-    this.ffs.setFilter(key, value);
+  updateFilter(key, value) {
+    this.ffs.updateFilter(key, value);
     this.update();
   },
 
-  setFilterFromChangeEvent(key, event) {
-    this.setFilter(key, event.detail.value)
+  updateFilterFromChangeEvent(key, event) {
+    this.updateFilter(key, event.detail.value)
   },
 
   setSortFromChangeEvent(event) {
