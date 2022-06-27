@@ -231,121 +231,6 @@
 {# MACROS                                                                    #}
 {#############################################################################}
 
-{% macro render_ticket_old(ticket) %}
-   <tr class="ticket">
-
-    {# Status #}
-    {# TODO: Make some kind of ticket status #}
-    {% if ticket.is_corrected and not ticket.is_closed %}
-      <td>
-        <span class="tag is-warning">Requery</span>
-      </td>
-    {% elif ticket.is_closed %}
-      <td>
-        <span class="tag is-success">Closed</span>
-      </td>
-    {% else %}
-      <td>
-        <span class="tag is-danger">Open</span>
-      </td>
-    {% endif %}
-
-    {# Internal Id #}
-    <td class="is-family-monospace">
-      {{ ticket.study.internal_id }}
-    </td>
-
-    {# Source number #}
-    <td>
-      {{ ticket.source_number }}
-    </td>
-
-      {# Type #}
-    <td>
-      {% if ticket.type == "ICF" %}
-        <span class="tag is-info is-light">
-          ICF
-        </span>
-      {% elif ticket.type == "Source" %}
-        <span class="tag is-secondary is-light">
-          Source
-        </span>
-      {% else %}
-        {{ ticket.type }}
-      {% endif %}
-    </td>
-
-    <td>
-      {{ ticket.visit }}
-    </td>
-
-    <td>
-      {{ ticket.page }}
-    </td>
-
-    <td>
-      {{ ticket.procedure }}
-    </td>
-
-    <td class="ticket__description">
-      {{ ticket.description }}
-    </td>
-
-    <td>
-      {{ ticket.created_at.humanize()}}
-    </td>
-
-    {# Actions #}
-    <td class="ticket__action">
-
-      <button x-data
-        class="button is-info is-light"
-        title="Show Comments"
-
-        @click="$dispatch('show-ticket-comments', { ticketId: '{{ ticket.uuid }}' })">
-        <span class="icon">
-          <i class="far fa-comments"></i>
-        </span>
-      </button>
-
-      {% if current_user.role == "MedOps" %}
-        <a
-          href="{{ url_for( 'ticket_controller.mark_as_corrected', ticket_uuid=ticket.uuid ) }}"
-          class="button is-success"
-          title="Mark as Corrected">
-          <span class="icon">
-            <i class="far fa-check"></i>
-          </span>
-        </a>
-      {% endif %}
-
-      <!-- close the query if you have the right role permission -->
-      {% if (current_user.role == "Admin" or current_user.role == "Data Entry" or current_user.role == "Data Manager") %}
-
-        <a
-          href="{{ url_for( 'ticket_controller.edit', ticket_uuid=ticket.uuid ) }}"
-          class="button is-warning is-light"
-          title="Edit Query">
-          <span class="icon">
-            <i class="far fa-edit"></i>
-          </span>
-        </a>
-
-        <a
-          href="{{ url_for( 'ticket_controller.close', ticket_uuid=ticket.uuid ) }}"
-          class="button is-success"
-          title="Makr as Done">
-          <span class="icon">
-            <i class="fas fa-check"></i>
-          </span>
-        </a>
-
-      {% endif %}
-
-    </td>
-  </tr>
-{% endmacro %}
-
 {% macro render_ticket(ticket) %}
   <li
     class="ticket card mb-2"
@@ -486,6 +371,40 @@
           </div>
 
         </div>
+      </div>
+
+      <div class="is-flex is-justify-content-flex-end">
+
+        {# <button
+          class="button is-info is-light"
+          title="Show Comments"
+
+          x-data
+
+          @click="$dispatch('show-ticket-comments', { ticketId: '{{ ticket.uuid }}' })">
+          <span class="icon">
+            <i class="far fa-comments"></i>
+          </span>
+        </button> #}
+
+        {# <a
+          href="{{ url_for( 'ticket_controller.edit', ticket_uuid=ticket.uuid ) }}"
+          class="button is-warning is-light"
+          title="Edit Query">
+          <span class="icon">
+            <i class="far fa-edit"></i>
+          </span>
+        </a> #}
+
+        <a
+          href="{{ url_for( 'ticket_controller.close', ticket_uuid=ticket.uuid ) }}"
+          class="button is-success"
+          title="Makr as Done">
+          <span class="icon">
+            <i class="fas fa-check"></i>
+          </span>
+        </a>
+
       </div>
 
     </div>

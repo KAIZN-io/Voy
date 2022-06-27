@@ -7,7 +7,7 @@ from flask_breadcrumbs import register_breadcrumb, default_breadcrumb_root
 from flask_login import login_required, current_user
 
 from voy.constants import FILE_TYPE_PDF, FILE_TYPE_XLSX, EXPORT_FOLDER
-from voy.model import Study, TicketTag, User
+from voy.model import Study, TicketTag, User, Ticket
 from voy.repositories.user import get_tickets_for_user
 # from voy.services.file_export import export_dict_list
 
@@ -29,7 +29,11 @@ def index():
         FILE_TYPE_PDF:  'PDF (.pdf)',
     }
 
-    tickets = get_tickets_for_user(current_user)
+    tickets = Ticket.query \
+        .order_by(Ticket.created_at) \
+        .filter_by(is_closed=False) \
+        .all()
+
     source_number_list = set([ ticket.source_number for ticket in tickets ])
     procedure_list = set([ ticket.procedure for ticket in tickets ])
 
