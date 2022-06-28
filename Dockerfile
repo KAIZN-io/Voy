@@ -26,32 +26,9 @@ RUN yarn build
 
 
 ########################################################################################################################
-# Installing Packages                                                                                                  #
-########################################################################################################################
-FROM python:3.10-slim-buster AS packages
-
-ARG DEBIAN_FRONTEND=noninteractive
-ARG VOY_HOME
-WORKDIR $VOY_HOME
-
-# Install system packages
-RUN apt-get update
-RUN apt-get -y install --no-install-recommends build-essential libpq-dev
-RUN pip install --no-cache-dir poetry
-
-# Generating the requirements.txt
-COPY pyproject.toml poetry.lock ./
-RUN poetry export --without-hashes -f requirements.txt --output requirements.txt
-
-# Install and build packages
-RUN pip --use-feature=in-tree-build wheel gunicorn --wheel-dir=./wheels
-RUN pip --use-feature=in-tree-build wheel -r requirements.txt --wheel-dir=./wheels
-
-
-########################################################################################################################
 # Putting it all together                                                                                              #
 ########################################################################################################################
-FROM python:3.10-slim-buster
+FROM python:3.10-slim-buster AS voy
 
 ARG DEBIAN_FRONTEND=noninteractive
 ARG VOY_HOME
@@ -59,22 +36,22 @@ WORKDIR $VOY_HOME
 
 # Install system packages
 RUN apt-get update && \
-    apt-get -y install --no-install-recommends python-psycopg2 wkhtmltopdf && \
+    apt-get -y install --no-install-recommends build-essential libpq-dev python-psycopg2 wkhtmltopdf && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Copy over preinstalled packages from the previous build step
-COPY --from=packages $VOY_HOME ./
-
-# Install prepared dependencies and Voy
-RUN pip install --no-cache-dir --no-index --find-links=./wheels gunicorn && \
-    pip install --no-cache-dir --no-index --find-links=./wheels -r requirements.txt
+# Install and setup Poetry
+RUN pip install --no-cache-dir poetry && \
+    poetry config virtualenvs.create false
 
 # Copy over the bundled assets from the previous build step
 COPY --from=assets $VOY_HOME/voy/view/static ./voy/view/static
 
 # Copy over code
 COPY . .
+
+# Install Python dependencies as well as voy itself
+RUN poetry install --no-dev --no-interaction --extras production
 
 # Set default start command
 CMD [ "gunicorn", "-b 0.0.0.0:5000", "voy:create_app()" ]
