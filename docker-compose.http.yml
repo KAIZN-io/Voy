@@ -1,0 +1,90 @@
+version: '3'
+
+services:
+
+  traefik:
+    image: traefik:v2.5
+    command:
+      # - "--log.level=DEBUG"
+      # - "--api.insecure=true"
+      - "--providers.docker"
+      - "--providers.docker.exposedbydefault=false"
+
+      - "--entrypoints.http.address=:80"
+    ports:
+      - "80:80"
+      # - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    networks:
+      - traefik_network
+
+  # TODO: Remove this service as this is something that should only be used in
+  #       development
+  mailhog:
+    image: mailhog/mailhog
+    networks:
+      - internal_network
+
+  db:
+    image: postgres:13.1-alpine
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "${DB_USERNAME}", "-d", "${DB_NAME}" ]
+      interval: 15s
+      timeout: 3s
+      retries: 8
+    volumes:
+      - db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    networks:
+      - internal_network
+
+  voy:
+    image: project-p/voy
+    build:
+      context: .
+    environment:
+      - DB_HOST
+      - DB_PORT
+      - DB_NAME
+      - DB_USERNAME
+      - DB_PASSWORD
+      - MAIL_HOST
+      - MAIL_PORT
+      - MAIL_USE_TLS
+      - MAIL_USE_SSL
+      - MAIL_DEBUG
+      - MAIL_USERNAME
+      - MAIL_PASSWORD
+      - SECRET_KEY
+      - FLASK_APP
+      - FLASK_ENV
+      - DEBUG
+      - TESTING
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik_network"
+
+      - "traefik.http.routers.voy.entrypoints=http"
+      - "traefik.http.routers.voy.rule=Host(`${VOY_HOST}`)"
+
+      - "traefik.http.services.voy.loadbalancer.server.port=5000"
+    networks:
+      - internal_network
+      - traefik_network
+    depends_on:
+      - db
+      - mailhog
+      - traefik
+
+volumes:
+  db:
+
+networks:
+  traefik_network:
+    # Need to explicitly set the name, so that docker-compose does not prefix it.
+    name: traefik_network
+  internal_network:

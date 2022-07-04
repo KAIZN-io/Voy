@@ -51,14 +51,14 @@ db-restore:
 # Build the production image
 .PHONY: bild-production
 bild-production:
-	docker-compose -f docker-compose.production.yml build voy
+	docker-compose -f docker-compose.https.yml build voy
 
 # Starts the production setup
 .PHONY: init-production
 init-production: start-production
-	docker-compose -f docker-compose.production.yml exec voy voy database init
+	docker-compose -f docker-compose.https.yml exec voy voy database init
 
 # Starts the production setup
 .PHONY: start-production
 start-production:
-	docker-compose -f docker-compose.production.yml up -d
+	docker-compose -f docker-compose.https.yml up -d

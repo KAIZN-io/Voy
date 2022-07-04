@@ -26,27 +26,12 @@ services:
     networks:
       - traefik_network
 
+  # TODO: Remove this service as this is something that should only be used in
+  #       development
   mailhog:
     image: mailhog/mailhog
-#    labels:
-#      - "traefik.enable=true"
-#      - "traefik.docker.network=traefik_network"
-#
-#      - "traefik.http.routers.mailhog.entrypoints=http"
-#      - "traefik.http.routers.mailhog.rule=Host(`mailhog.demo.kaizn.io`)"
-#      - "traefik.http.routers.mailhog.middlewares=mailhog@docker"
-#      - "traefik.http.middlewares.mailhog.redirectscheme.scheme=https"
-#
-#      - "traefik.http.routers.mailhog_https.entrypoints=https"
-#      - "traefik.http.routers.mailhog_https.rule=Host(`mailhog.demo.kaizn.io`)"
-#      - "traefik.http.routers.mailhog_https.tls.certresolver=letsencrypt"
-#
-#      - "traefik.http.services.mailhog.loadbalancer.server.port=8025"
     networks:
       - internal_network
-#      - traefik_network
-#    depends_on:
-#      - traefik
 
   db:
     image: postgres:13.1-alpine
