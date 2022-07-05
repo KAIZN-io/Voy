@@ -3,7 +3,7 @@ import Choices from 'choices.js';
 import FindFilterSortList from '~/assets/js/FindFilterSortList';
 
 
-Alpine.data('item_list', ({ search, sort }) => ({
+Alpine.data('ffs_list', ({ search, sort }) => ({
 
   items: [],
 
@@ -54,6 +54,20 @@ Alpine.data('item_list', ({ search, sort }) => ({
   },
 
 }));
+
+
+Alpine.data('ffs_item', ({ uuid }) => ({
+
+  uuid,
+
+  isExpanded: false,
+
+  toggleIsExpanded() {
+    this.isExpanded = !this.isExpanded;
+  },
+
+}));
+
 
 function generateListDataArray(rootElement) {
   return Array.from(
