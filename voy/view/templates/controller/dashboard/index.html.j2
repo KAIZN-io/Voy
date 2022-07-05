@@ -236,9 +236,9 @@
     class="ticket card mb-2"
 
     x-data="ffs_item({ uuid: '{{ ticket.uuid }}' })"
-    x-show="items.find( item => item.uuid === uuid)"
 
-    :style="{ order: items.findIndex( item => item.uuid === uuid) }"
+    x-show="uuid in itemMap"
+    :style="{ order: itemMap[uuid]?.ordinal }"
 
     data-ffs-item-uuid="{{ ticket.uuid }}">
 
