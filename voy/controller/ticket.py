@@ -156,4 +156,4 @@ def close(ticket_uuid: str):
 
     db.session.commit()
 
-    return redirect(url_for('dashboard_controller.index'))
+    return '', 204

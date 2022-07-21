@@ -235,9 +235,9 @@
   <li
     class="ticket card mb-2"
 
-    x-data="ffs_item({ uuid: '{{ ticket.uuid }}' })"
+    x-data="ffs_item({ uuid: '{{ ticket.uuid }}', endpoints: { close: '{{ url_for( 'ticket_controller.close', ticket_uuid=ticket.uuid ) }}' } })"
 
-    x-show="uuid in itemMap"
+    x-show="!isClosed && uuid in itemMap"
     :style="{ order: itemMap[uuid]?.ordinal }"
 
     data-ffs-item-uuid="{{ ticket.uuid }}">
@@ -396,14 +396,14 @@
           </span>
         </a> #}
 
-        <a
-          href="{{ url_for( 'ticket_controller.close', ticket_uuid=ticket.uuid ) }}"
+        <button
           class="button is-success"
-          title="Makr as Done">
+          title="Makr as Done"
+          @click="close()">
           <span class="icon">
             <i class="fas fa-check"></i>
           </span>
-        </a>
+        </button>
 
       </div>
 

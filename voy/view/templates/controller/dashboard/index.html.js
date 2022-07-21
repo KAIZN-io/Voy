@@ -75,15 +75,21 @@ Alpine.data('ffs_list', ({ search, sort }) => ({
 }));
 
 
-Alpine.data('ffs_item', ({ uuid }) => ({
+Alpine.data('ffs_item', ({ uuid, endpoints }) => ({
 
   uuid,
 
   isExpanded: false,
+  isClosed: false,
 
   toggleIsExpanded() {
     this.isExpanded = !this.isExpanded;
   },
+
+  close() {
+    fetch( endpoints.close )
+      .then( () => this.isClosed = true );
+  }
 
 }));
 
