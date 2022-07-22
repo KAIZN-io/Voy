@@ -24,6 +24,7 @@
     "bulma": "^0.9.3",
     "choices.js": "^10.1.0",
     "core-js": "^3.19.1",
+    "excellentexport": "^3.8.0",
     "fuse.js": "^6.5.3",
     "regenerator-runtime": "^0.13.9",
     "spinkit": "^2.0.1",
