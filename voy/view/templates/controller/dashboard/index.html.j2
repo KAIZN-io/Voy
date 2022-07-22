@@ -203,6 +203,10 @@
           </div>
         </div>
 
+        <button @click='downloadCurrentListAsXlsx()'>
+          export
+        </button>
+
         {% if user_tickets|length > 0 %}
           <ul class="is-flex is-flex-direction-column mt-6">
             {% for ticket in user_tickets %}
@@ -301,8 +305,15 @@
         <div class="column is-5">
 
           <div class="block content">
-            <div class="title is-6 mb-1">Tags</div>
-            <p data-ffs-field="tag_uuids" data-ffs-value='{{ ticket.tags | map(attribute='uuid') | list | tojson | escape }}'>
+            <div
+              class="title is-6 mb-1"
+              data-ffs-field="tags"
+              data-ffs-value='{{ ticket.tags | map(attribute='title') | list | tojson | escape }}'>
+              Tags
+            </div>
+            <p
+              data-ffs-field="tag_uuids"
+              data-ffs-value='{{ ticket.tags | map(attribute='uuid') | list | tojson | escape }}'>
               {{ render_tags(ticket.tags) }}
             </p>
           </div>
@@ -313,7 +324,9 @@
           <div class="block content">
             <div class="title is-6 mb-1">Responsible</div>
             <p data-ffs-field="assignee_uuid" data-ffs-value="{{ ticket.assignee.uuid }}">
-              {{ ticket.assignee.abbreviation or 'JNP' }}
+              <span data-ffs-field="assignee">
+                {{ ticket.assignee.abbreviation or 'JNP' }}
+              </span>
             </p>
           </div>
 
@@ -323,7 +336,9 @@
           <div class="block content">
             <div class="title is-6 mb-1">Reporter</div>
             <p data-ffs-field="reporter_uuid" data-ffs-value="{{ ticket.reporter.uuid }}">
-              {{ ticket.reporter.abbreviation }}
+              <span data-ffs-field="reporter">
+                {{ ticket.reporter.abbreviation }}
+              </span>
             </p>
           </div>
 
@@ -331,7 +346,12 @@
         <div class="column is-2">
 
           <div class="block content">
-            <div class="title is-6 mb-1">Created at</div>
+            <div
+              class="title is-6 mb-1"
+              data-ffs-field="created_at_formatted"
+              data-ffs-value="{{ ticket.created_at.format('YYYY-MM-DD HH:mm:ss') }}">>
+              Created at
+            </div>
             <p
               title="{{ ticket.created_at.format('YYYY-MM-DD HH:mm:ss') }}"
               data-ffs-field="created_at"

@@ -2,6 +2,8 @@ import Alpine from 'alpinejs';
 import Choices from 'choices.js';
 import FindFilterSortList from '~/assets/js/FindFilterSortList';
 
+import downloadObjectsAsCSV from '../../../assets/js/helper/downloadObjectsAsCSV';
+
 
 Alpine.data('ffs_list', ({ search, sort }) => ({
 
@@ -71,6 +73,48 @@ Alpine.data('ffs_list', ({ search, sort }) => ({
     this.items = newItems;
     this.itemMap = newItemMap;
   },
+
+  downloadCurrentListAsXlsx() {
+    const header = {
+      internal_id: 'Query ID',
+
+      working_days_open: 'Open in Days',
+      study_id: 'Study',
+      source_number: 'Screening Number',
+
+      visit: 'Visit',
+      page: 'Page',
+      procedure: 'Procedure',
+      description: 'Description',
+
+      tags: 'Tags',
+
+      created_at: 'Open since',
+      assignee: 'Assignee',
+      reporter: 'Reporter',
+    };
+
+    const tickets = this.items.map( item => ({
+      internal_id:       item.internal_id,
+
+      working_days_open: item.working_days_open,
+      study_id:          item.study_id,
+      source_number:     item.source_number,
+
+      visit:             item.visit,
+      page:              item.page,
+      procedure:         item.procedure,
+      description:       item.description,
+
+      tags:              item.tags,
+
+      created_at:        item.created_at_formatted,
+      assignee:          item.assignee,
+      reporter:          item.reporter,
+    }) );
+
+    downloadObjectsAsCSV( header, tickets );
+  }
 
 }));
 
