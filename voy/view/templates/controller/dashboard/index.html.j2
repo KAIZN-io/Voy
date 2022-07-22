@@ -373,19 +373,17 @@
         </div>
       </div>
 
-      <div class="is-flex is-justify-content-flex-end">
+      <div class="buttons is-justify-content-flex-end">
 
-        {# <button
+        <button
           class="button is-info is-light"
           title="Show Comments"
-
-          x-data
 
           @click="$dispatch('show-ticket-comments', { ticketId: '{{ ticket.uuid }}' })">
           <span class="icon">
             <i class="far fa-comments"></i>
           </span>
-        </button> #}
+        </button>
 
         {# <a
           href="{{ url_for( 'ticket_controller.edit', ticket_uuid=ticket.uuid ) }}"
