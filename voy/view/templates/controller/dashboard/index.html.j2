@@ -26,7 +26,7 @@
 
     {% call render_section() %}
       <script>
-        window.ffs = {
+        const ffs = {
           options: {
             search: {
               keys: [
@@ -53,7 +53,7 @@
         };
       </script>
 
-      <div class="dashboard__tickets" x-data="item_list( window.ffs.options )">
+      <div class="dashboard__tickets" x-data="ffs_list( ffs.options )">
 
         <div class="field">
           <label class="label">Study</label>
@@ -235,14 +235,14 @@
   <li
     class="ticket card mb-2"
 
-    x-data="{ uuid: '{{ ticket.uuid }}', open: false }"
-    x-show="items.find( item => item.uuid === uuid)"
+    x-data="ffs_item({ uuid: '{{ ticket.uuid }}', endpoints: { close: '{{ url_for( 'ticket_controller.close', ticket_uuid=ticket.uuid ) }}' } })"
 
-    :style="{ order: items.findIndex( item => item.uuid === uuid) }"
+    x-show="!isClosed && uuid in itemMap"
+    :style="{ order: itemMap[uuid]?.ordinal }"
 
     data-ffs-item-uuid="{{ ticket.uuid }}">
 
-    <header class="ticket__header card-header is-align-items-center" @click="open=!open">
+    <header class="ticket__header card-header is-align-items-center" @click="toggleIsExpanded()">
 
       <div class="ticket__header__id tag is-medium is-white has-text-weight-bold is-family-monospace">
         <i class="fa-solid fa-fingerprint mr-1"></i>
@@ -267,15 +267,15 @@
         </span>
       </div>
 
-      <div class="ticket__header__description has-text-weight-normal is-single-line ml-3" x-show="!open">
+      <div class="ticket__header__description has-text-weight-normal is-single-line ml-3" x-show="!isExpanded">
         {{ ticket.description }}
       </div>
 
-      <div class="has-text-weight-normal ml-3" x-show="!open">
+      <div class="has-text-weight-normal ml-3" x-show="!isExpanded">
         {{ render_tags(ticket.tags, limit=3, show_empty_message=false) }}
       </div>
 
-      <div class="ticket__header__spacer" x-show="open"></div>
+      <div class="ticket__header__spacer" x-show="isExpanded"></div>
 
       <button class="card-header-icon" aria-label="more options">
         <span class="icon">
@@ -285,7 +285,7 @@
 
     </header>
 
-    <div class="card-content" x-show="open">
+    <div class="card-content" x-show="isExpanded">
 
       <div class="columns is-multiline">
         <div class="column is-7">
@@ -373,37 +373,35 @@
         </div>
       </div>
 
-      <div class="is-flex is-justify-content-flex-end">
+      <div class="buttons is-justify-content-flex-end">
 
-        {# <button
-          class="button is-info is-light"
-          title="Show Comments"
-
-          x-data
-
-          @click="$dispatch('show-ticket-comments', { ticketId: '{{ ticket.uuid }}' })">
-          <span class="icon">
-            <i class="far fa-comments"></i>
-          </span>
-        </button> #}
-
-        {# <a
+        <a
           href="{{ url_for( 'ticket_controller.edit', ticket_uuid=ticket.uuid ) }}"
           class="button is-warning is-light"
           title="Edit Query">
           <span class="icon">
             <i class="far fa-edit"></i>
           </span>
-        </a> #}
+        </a>
 
-        <a
-          href="{{ url_for( 'ticket_controller.close', ticket_uuid=ticket.uuid ) }}"
+        <button
+          class="button is-info is-light"
+          title="Show Comments"
+
+          @click="$dispatch('show-ticket-comments', { ticketId: '{{ ticket.uuid }}', internalId: '{{ ticket.internal_id }}' })">
+          <span class="icon">
+            <i class="far fa-comments"></i>
+          </span>
+        </button>
+
+        <button
           class="button is-success"
-          title="Makr as Done">
+          title="Mark as Done"
+          @click="close()">
           <span class="icon">
             <i class="fas fa-check"></i>
           </span>
-        </a>
+        </button>
 
       </div>
 

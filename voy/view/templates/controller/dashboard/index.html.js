@@ -3,9 +3,10 @@ import Choices from 'choices.js';
 import FindFilterSortList from '~/assets/js/FindFilterSortList';
 
 
-Alpine.data('item_list', ({ search, sort }) => ({
+Alpine.data('ffs_list', ({ search, sort }) => ({
 
   items: [],
+  itemMap: {},
 
   ffs: undefined,
 
@@ -14,7 +15,7 @@ Alpine.data('item_list', ({ search, sort }) => ({
 
     this.ffs = new FindFilterSortList( items, { searchKeys: search.keys } );
     sort.forEach(({ key, direction }) =>  this.ffs.addSortingKey( key, direction ) )
-    this.items = this.ffs.getResults();
+    this.update();
   },
 
   updateSearchTerm(input) {
@@ -50,10 +51,48 @@ Alpine.data('item_list', ({ search, sort }) => ({
   },
 
   update() {
-    this.items = this.ffs.getResults();
+    const rawItems = this.ffs.getResults();
+
+    const newItems = [];
+    const newItemMap = {};
+
+    rawItems.forEach( ( rawItem, index ) => {
+
+      const newItem = {
+        ordinal: index,
+        ...rawItem
+      };
+
+      newItems.push(newItem);
+      newItemMap[newItem.uuid] = newItem;
+
+    });
+
+    this.items = newItems;
+    this.itemMap = newItemMap;
   },
 
 }));
+
+
+Alpine.data('ffs_item', ({ uuid, endpoints }) => ({
+
+  uuid,
+
+  isExpanded: false,
+  isClosed: false,
+
+  toggleIsExpanded() {
+    this.isExpanded = !this.isExpanded;
+  },
+
+  close() {
+    fetch( endpoints.close )
+      .then( () => this.isClosed = true );
+  }
+
+}));
+
 
 function generateListDataArray(rootElement) {
   return Array.from(
