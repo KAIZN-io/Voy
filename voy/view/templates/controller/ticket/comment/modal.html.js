@@ -13,6 +13,7 @@ Alpine.data('modal_ticket_comments', () => ({
   isAddingComment: false,
 
   ticketId: undefined,
+  internalId: undefined,
   renderedComments: undefined,
 
   _requestAbortController: undefined,
@@ -27,6 +28,7 @@ Alpine.data('modal_ticket_comments', () => ({
     this.isAddingComment = false;
 
     this.ticketId         = undefined;
+    this.internalId       = undefined;
     this.renderedComments = undefined;
   },
 
@@ -189,6 +191,7 @@ Alpine.data('modal_ticket_comments', () => ({
 
     // Setting inital values
     this.ticketId = event.detail.ticketId;
+    this.internalId = event.detail.internalId;
 
     this.isOpen         = true;
     this.isInitializing = true;

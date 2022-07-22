@@ -16,9 +16,18 @@
   <div class="modal-ticket-comments__content modal-card">
 
     <header class="modal-card-head">
-      <p
-        class="modal-card-title"
-        x-text="`Comments for Query #${ticketId}`"></p>
+      <p class="modal-card-title">
+
+        <span class="tag is-large has-text-weight-bold is-family-monospace">
+          <i class="fa-solid fa-fingerprint mr-1"></i>
+          <span
+            x-text="internalId">
+          </span>
+        </span>
+
+         | Comments
+
+      </p>
     </header>
 
     <section
