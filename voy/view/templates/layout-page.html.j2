@@ -1,6 +1,9 @@
 {% extends 'layout-plain.html.j2' %}
 
 
+{% from "components/content.html.j2" import render_content %}
+
+
 {% block layout_class %}layout--page{% endblock %}
 
 {% block navigation %}
@@ -16,7 +19,7 @@
 
   </div> #}
   <nav class="navbar layout__navigation" role="navigation" aria-label="main navigation">
-    <div class="container px-6">
+    {% call render_content(column_class="is-flex") %}
 
       <div class="navbar-brand">
         <a class="navbar-item is-size-3 has-text-weight-bold" href="{{ url_for('home_controller.index') }}">
@@ -102,38 +105,38 @@
 
       </div>
 
-    </div>
+    {% endcall %}
   </nav>
 {% endblock %}
 
 {% block main %}
-  <div class="container">
-    <div class="columns is-gapless is-justify-content-center">
-      <div class="column {% block page_column_class %}is-full{% endblock %}">
 
-        {% include "utilities/_flash.html.j2" %}
+  {% call render_content(class='flashes') %}
 
-        <section class="hero">
+    {% include "utilities/_flash.html.j2" %}
 
-          <div class="hero-body pb-0">
+  {% endcall %}
 
-            <h1 class="title is-size-1">
-              {% block page_title %}{% endblock %}
-            </h1>
+  {% call render_content() %}
 
-            {% if self.navigation() %}
-              <p class="subtitle">
-                {% block page_sub_title %}{% endblock %}
-              </p>
-            {% endif %}
+    <div class="hero mb-5">
 
-          </div>
+        <h1 class="title is-size-1">
+          {% block page_title %}{% endblock %}
+        </h1>
 
-        </section>
-
-        {% block content %}{% endblock %}
+        {% if self.navigation() %}
+          <p class="subtitle">
+            {% block page_sub_title %}{% endblock %}
+          </p>
+        {% endif %}
 
       </div>
+
     </div>
-  </div>
+
+  {% endcall %}
+
+  {% block content %}{% endblock %}
+
 {% endblock %}

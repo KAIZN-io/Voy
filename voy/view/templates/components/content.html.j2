@@ -1,0 +1,9 @@
+{% macro render_content(class=none, column_class=none) %}
+  <div class="container {{ class if class is not none }}">
+    <div class="columns is-gapless is-justify-content-center">
+      <div class="column is-two-thirds {{ column_class if column_class is not none }}">
+        {{ caller() }}
+      </div>
+    </div>
+  </div>
+{% endmacro %}

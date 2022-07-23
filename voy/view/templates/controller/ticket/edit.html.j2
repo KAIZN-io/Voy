@@ -2,6 +2,7 @@
 
 
 {% from "components/section.html.j2" import render_section %}
+{% from "components/content.html.j2" import render_content %}
 
 {% from "utilities/_errors.html.j2" import render_errors %}
 
@@ -30,208 +31,210 @@
           <i class="fa-solid fa-fingerprint mr-1"></i>' ~ ticket.internal_id ~ '
         </span>',
       sub_title='Made an error? No worries, fix it here.') %}
-      <form
-        action="{{ url_for('ticket_controller.edit_post', ticket_uuid=ticket.uuid) }}"
-        method="POST">
+      {% call render_content() %}
+        <form
+          action="{{ url_for('ticket_controller.edit_post', ticket_uuid=ticket.uuid) }}"
+          method="POST">
 
-        {{ render_errors(errors) }}
-
-
-        <h2 class="title is-4">General Information</h2>
-
-        <div class="columns">
-
-          <div class="column">
-            <div class="field">
-              <label class="label" for="study_uuid">
-                Study
-              </label>
-              <div class="control">
-                <div class="select is-medium is-fullwidth">
-                  <select
-                    x-data="choice_js"
-                    name="study_uuid"
-                    required >
-
-                    {% for study in study_list %}
-                      <option
-                        value="{{ study.uuid }}"
-                        {{ "selected" if study.uuid == ticket.study_uuid }}>
-                        {{ study.internal_id }}
-                      </option>
-                    {% endfor %}
-
-                  </select>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="column">
-            <div class="field mb-5">
-              <label class="label" for="source_number">
-                Source Number
-              </label>
-              <div class="control">
-                <input
-                  name="source_number"
-                  class="input is-medium"
-                  value="{{ ticket.source_number }}"
-                  type="number"
-                  min="0"
-                  required />
-              </div>
-            </div>
-          </div>
-
-        </div>
+          {{ render_errors(errors) }}
 
 
-        <h2 class="title is-4">Query Information</h2>
+          <h2 class="title is-4">General Information</h2>
 
-        <div class="card mb-6">
+          <div class="columns">
 
-          <div class="card-content">
+            <div class="column">
+              <div class="field">
+                <label class="label" for="study_uuid">
+                  Study
+                </label>
+                <div class="control">
+                  <div class="select is-medium is-fullwidth">
+                    <select
+                      x-data="choice_js"
+                      name="study_uuid"
+                      required >
 
-            <div class="field">
-              <label class="label">Description</label>
-              <div class="control">
-                <textarea
-                  name="description"
-                  placeholder="What's the matter?"
-                  maxlength="100"
-                  class="textarea">{{ ticket.description }}</textarea>
-              </div>
-            </div>
+                      {% for study in study_list %}
+                        <option
+                          value="{{ study.uuid }}"
+                          {{ "selected" if study.uuid == ticket.study_uuid }}>
+                          {{ study.internal_id }}
+                        </option>
+                      {% endfor %}
 
-            <div class="field">
-              <label class="label">Responsible</label>
-              <div class="control">
-                <div class="select is-fullwidth">
-                  <select
-                    x-data="choice_js"
-                    name="assignee_uuid"
-                    required >
-
-                    <option value="">
-                      Select Someone
-                    </option>
-
-                    {% for user in staff_list_medops %}
-                      <option
-                        value="{{ user.uuid }}"
-                        {{ "selected" if user.uuid == ticket.assignee_uuid }}>
-                        {{ user.abbreviation }}
-                      </option>
-                    {% endfor %}
-
-                  </select>
-                </div>
-              </div>
-            </div>
-
-            <div class="columns mb-0">
-              <div class="column">
-
-                <div class="field">
-                  <label class="label">Visit</label>
-                  <div class="control">
-                    <input
-                      name="visit"
-                      class="input"
-                      type="text"
-                      maxlength="10"
-                      value="{{ ticket.visit }}"
-                      required />
+                    </select>
                   </div>
                 </div>
-
-              </div>
-              <div class="column">
-
-                <div class="field">
-                  <label class="label">Page</label>
-                  <div class="control">
-                    <input
-                      name="page"
-                      class="input"
-                      type="text"
-                      maxlength="10"
-                      value="{{ ticket.page }}"
-                      required />
-                  </div>
-                </div>
-
-              </div>
-              <div class="column">
-
-                <div class="field">
-                  <label class="label">Procedure</label>
-                  <div class="control">
-                    <input
-                      name="procedure"
-                      class="input"
-                      type="text"
-                      maxlength="20"
-                      value="{{ ticket.procedure }}"
-                      required />
-                  </div>
-                </div>
-
               </div>
             </div>
 
-            <div class="field">
-              <label class="label">Tags</label>
-              <div class="control">
-                <div class="select is-fullwidth">
-                  <select
-                    x-data="choice_js"
-                    name="tags"
-                    multiple >
+            <div class="column">
+              <div class="field mb-5">
+                <label class="label" for="source_number">
+                  Source Number
+                </label>
+                <div class="control">
+                  <input
+                    name="source_number"
+                    class="input is-medium"
+                    value="{{ ticket.source_number }}"
+                    type="number"
+                    min="0"
+                    required />
+                </div>
+              </div>
+            </div>
 
-                    <option value="">
-                      Add some Tags
-                    </option>
+          </div>
 
-                    {% for tag in ticket_tags %}
-                      <option
-                        value="{{ tag.uuid }}"
-                        {{ "selected" if tag in ticket.tags }}>
-                        {{ tag.title }}
+
+          <h2 class="title is-4">Query Information</h2>
+
+          <div class="card mb-6">
+
+            <div class="card-content">
+
+              <div class="field">
+                <label class="label">Description</label>
+                <div class="control">
+                  <textarea
+                    name="description"
+                    placeholder="What's the matter?"
+                    maxlength="100"
+                    class="textarea">{{ ticket.description }}</textarea>
+                </div>
+              </div>
+
+              <div class="field">
+                <label class="label">Responsible</label>
+                <div class="control">
+                  <div class="select is-fullwidth">
+                    <select
+                      x-data="choice_js"
+                      name="assignee_uuid"
+                      required >
+
+                      <option value="">
+                        Select Someone
                       </option>
-                    {% endfor %}
 
-                  </select>
+                      {% for user in staff_list_medops %}
+                        <option
+                          value="{{ user.uuid }}"
+                          {{ "selected" if user.uuid == ticket.assignee_uuid }}>
+                          {{ user.abbreviation }}
+                        </option>
+                      {% endfor %}
+
+                    </select>
+                  </div>
                 </div>
               </div>
+
+              <div class="columns mb-0">
+                <div class="column">
+
+                  <div class="field">
+                    <label class="label">Visit</label>
+                    <div class="control">
+                      <input
+                        name="visit"
+                        class="input"
+                        type="text"
+                        maxlength="10"
+                        value="{{ ticket.visit }}"
+                        required />
+                    </div>
+                  </div>
+
+                </div>
+                <div class="column">
+
+                  <div class="field">
+                    <label class="label">Page</label>
+                    <div class="control">
+                      <input
+                        name="page"
+                        class="input"
+                        type="text"
+                        maxlength="10"
+                        value="{{ ticket.page }}"
+                        required />
+                    </div>
+                  </div>
+
+                </div>
+                <div class="column">
+
+                  <div class="field">
+                    <label class="label">Procedure</label>
+                    <div class="control">
+                      <input
+                        name="procedure"
+                        class="input"
+                        type="text"
+                        maxlength="20"
+                        value="{{ ticket.procedure }}"
+                        required />
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+              <div class="field">
+                <label class="label">Tags</label>
+                <div class="control">
+                  <div class="select is-fullwidth">
+                    <select
+                      x-data="choice_js"
+                      name="tags"
+                      multiple >
+
+                      <option value="">
+                        Add some Tags
+                      </option>
+
+                      {% for tag in ticket_tags %}
+                        <option
+                          value="{{ tag.uuid }}"
+                          {{ "selected" if tag in ticket.tags }}>
+                          {{ tag.title }}
+                        </option>
+                      {% endfor %}
+
+                    </select>
+                  </div>
+                </div>
+              </div>
+
             </div>
 
           </div>
 
-        </div>
+          <div class="field is-grouped is-grouped-right">
 
-        <div class="field is-grouped is-grouped-right">
+            <div class="control">
+              <a
+                class="button is-danger is-medium is-light mr-3"
+                href="{{ url_for('dashboard_controller.index') }}">
+                Abort
+              </a>
+            </div>
 
-          <div class="control">
-            <a
-              class="button is-danger is-medium is-light mr-3"
-              href="{{ url_for('dashboard_controller.index') }}">
-              Abort
-            </a>
+            <div class="control">
+              <button
+                class="button is-primary is-medium"
+                type="submit">
+                Save
+              </button>
+            </div>
+
           </div>
 
-          <div class="control">
-            <button
-              class="button is-primary is-medium"
-              type="submit">
-              Save
-            </button>
-          </div>
-
-        </div>
-
-      </form>
+        </form>
+      {% endcall %}
     {% endcall %}
 
   {% endwith %}

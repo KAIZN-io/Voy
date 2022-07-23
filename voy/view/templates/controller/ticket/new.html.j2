@@ -1,6 +1,7 @@
 {% extends 'layout-page.html.j2' %}
 
 {% from "components/section.html.j2" import render_section %}
+{% from "components/content.html.j2" import render_content %}
 
 {% from "utilities/_errors.html.j2" import render_errors %}
 
@@ -27,95 +28,39 @@
     {% call render_section(
       title='Add Queries',
       sub_title='What needs to be done?') %}
-      <form
-        x-data="ticket_new"
+      {% call render_content() %}
+        <form
+          x-data="ticket_new"
 
-        action="{{ url_for('ticket_controller.new_post') }}"
-        method="POST">
+          action="{{ url_for('ticket_controller.new_post') }}"
+          method="POST">
 
-        {{ render_errors(errors) }}
-
-
-        <h2 class="title is-4">General Information</h2>
-
-        <div class="columns">
-
-          <div class="column">
-            <div class="field">
-              <label class="label" for="study_uuid">
-                Study
-              </label>
-              <div class="control">
-                <div class="select is-medium is-fullwidth">
-                  <select
-                    x-data="choice_js"
-                    name="study_uuid"
-                    required autofocus >
-
-                    <option value="">
-                      Select a Study
-                    </option>
-
-                    {% for study in study_list %}
-                      <option value="{{ study.uuid }}">
-                        {{ study.internal_id }}
-                      </option>
-                    {% endfor %}
-
-                  </select>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="column">
-            <div class="field mb-5">
-              <label class="label" for="source_number">
-                Source Number
-              </label>
-              <div class="control">
-                <input type="number" min="0" class="input is-medium" name="source_number" required />
-              </div>
-            </div>
-          </div>
-
-        </div>
+          {{ render_errors(errors) }}
 
 
-        <h2 class="title is-4">Queries</h2>
+          <h2 class="title is-4">General Information</h2>
 
-        <template x-for="(ticket, index) in tickets" :key="ticket.uuid">
-          <div class="card mb-6">
+          <div class="columns">
 
-            <div class="card-content">
-
+            <div class="column">
               <div class="field">
-                <label class="label">Description</label>
+                <label class="label" for="study_uuid">
+                  Study
+                </label>
                 <div class="control">
-                  <textarea
-                    x-bind:name="`ticket[${index}][description]`"
-                    placeholder="What's the matter?"
-                    maxlength="100"
-                    class="textarea"></textarea>
-                </div>
-              </div>
-
-              <div class="field">
-                <label class="label">Responsible</label>
-                <div class="control">
-                  <div class="select is-fullwidth">
+                  <div class="select is-medium is-fullwidth">
                     <select
                       x-data="choice_js"
-                      x-bind:name="`ticket[${index}][assignee_uuid]`"
-                      required >
+                      name="study_uuid"
+                      required autofocus >
 
                       <option value="">
-                        Select Someone
+                        Select a Study
                       </option>
 
-                      {% for user in staff_list_medops %}
-                        <option value="{{ user.uuid }}">
-                          {{ user.abbreviation }}
+                      {% for study in study_list %}
+                        <option value="{{ study.uuid }}">
+                          {{ study.internal_id }}
                         </option>
                       {% endfor %}
 
@@ -123,128 +68,186 @@
                   </div>
                 </div>
               </div>
-
-              <div class="columns mb-0">
-                <div class="column">
-
-                  <div class="field">
-                    <label class="label">Visit</label>
-                    <div class="control">
-                      <input
-                        x-bind:name="`ticket[${index}][visit]`"
-                        class="input"
-                        type="text"
-                        maxlength="10"
-                        required />
-                    </div>
-                  </div>
-
-                </div>
-                <div class="column">
-
-                  <div class="field">
-                    <label class="label">Page</label>
-                    <div class="control">
-                      <input
-                        x-bind:name="`ticket[${index}][page]`"
-                        class="input"
-                        type="text"
-                        maxlength="10"
-                        required />
-                    </div>
-                  </div>
-
-                </div>
-                <div class="column">
-
-                  <div class="field">
-                    <label class="label">Procedure</label>
-                    <div class="control">
-                      <input
-                        x-bind:name="`ticket[${index}][procedure]`"
-                        class="input"
-                        type="text"
-                        maxlength="20"
-                        required />
-                    </div>
-                  </div>
-
-                </div>
-              </div>
-
-              <div class="field">
-                <label class="label">Tags</label>
-                <div class="control">
-                  <div class="select is-fullwidth">
-                    <select
-                      x-data="choice_js"
-                      x-bind:name="`ticket[${index}][tags]`"
-                      multiple >
-
-                      <option value="">
-                        Add some Tags
-                      </option>
-
-                      {% for tag in ticket_tags %}
-                        <option value="{{ tag.uuid }}">
-                          {{ tag.title }}
-                        </option>
-                      {% endfor %}
-
-                    </select>
-                  </div>
-                </div>
-              </div>
-
-              <div class="field mt-5">
-
-                <div class="control">
-                  <button
-                    class="button is-danger is-light"
-                    type="button"
-
-                    @click="removeTicketByUuid(ticket.uuid)">
-                    <span class="icon is-small">
-                      <i class="far fa-times-circle"></i>
-                    </span>
-                    <span>Remove</span>
-                  </button>
-                </div>
-
-              </div>
-
             </div>
-          </div>
-        </template>
 
-        <div class="field is-grouped is-grouped-right">
+            <div class="column">
+              <div class="field mb-5">
+                <label class="label" for="source_number">
+                  Source Number
+                </label>
+                <div class="control">
+                  <input type="number" min="0" class="input is-medium" name="source_number" required />
+                </div>
+              </div>
+            </div>
 
-          <div class="control">
-            <button
-              class="button is-success is-medium is-light mr-3"
-              type="button"
-
-              @click="addTicket()">
-              <span class="icon">
-                <i class="fas fa-plus"></i>
-              </span>
-              <span>
-                Add Query
-              </span>
-            </button>
           </div>
 
-          <div class="control">
-            <button
-              class="button is-primary is-medium"
-              type="submit">
-              Save all
-            </button>
+
+          <h2 class="title is-4">Queries</h2>
+
+          <template x-for="(ticket, index) in tickets" :key="ticket.uuid">
+            <div class="card mb-6">
+
+              <div class="card-content">
+
+                <div class="field">
+                  <label class="label">Description</label>
+                  <div class="control">
+                    <textarea
+                      x-bind:name="`ticket[${index}][description]`"
+                      placeholder="What's the matter?"
+                      maxlength="100"
+                      class="textarea"></textarea>
+                  </div>
+                </div>
+
+                <div class="field">
+                  <label class="label">Responsible</label>
+                  <div class="control">
+                    <div class="select is-fullwidth">
+                      <select
+                        x-data="choice_js"
+                        x-bind:name="`ticket[${index}][assignee_uuid]`"
+                        required >
+
+                        <option value="">
+                          Select Someone
+                        </option>
+
+                        {% for user in staff_list_medops %}
+                          <option value="{{ user.uuid }}">
+                            {{ user.abbreviation }}
+                          </option>
+                        {% endfor %}
+
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="columns mb-0">
+                  <div class="column">
+
+                    <div class="field">
+                      <label class="label">Visit</label>
+                      <div class="control">
+                        <input
+                          x-bind:name="`ticket[${index}][visit]`"
+                          class="input"
+                          type="text"
+                          maxlength="10"
+                          required />
+                      </div>
+                    </div>
+
+                  </div>
+                  <div class="column">
+
+                    <div class="field">
+                      <label class="label">Page</label>
+                      <div class="control">
+                        <input
+                          x-bind:name="`ticket[${index}][page]`"
+                          class="input"
+                          type="text"
+                          maxlength="10"
+                          required />
+                      </div>
+                    </div>
+
+                  </div>
+                  <div class="column">
+
+                    <div class="field">
+                      <label class="label">Procedure</label>
+                      <div class="control">
+                        <input
+                          x-bind:name="`ticket[${index}][procedure]`"
+                          class="input"
+                          type="text"
+                          maxlength="20"
+                          required />
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+
+                <div class="field">
+                  <label class="label">Tags</label>
+                  <div class="control">
+                    <div class="select is-fullwidth">
+                      <select
+                        x-data="choice_js"
+                        x-bind:name="`ticket[${index}][tags]`"
+                        multiple >
+
+                        <option value="">
+                          Add some Tags
+                        </option>
+
+                        {% for tag in ticket_tags %}
+                          <option value="{{ tag.uuid }}">
+                            {{ tag.title }}
+                          </option>
+                        {% endfor %}
+
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="field mt-5">
+
+                  <div class="control">
+                    <button
+                      class="button is-danger is-light"
+                      type="button"
+
+                      @click="removeTicketByUuid(ticket.uuid)">
+                      <span class="icon is-small">
+                        <i class="far fa-times-circle"></i>
+                      </span>
+                      <span>Remove</span>
+                    </button>
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+          </template>
+
+          <div class="field is-grouped is-grouped-right">
+
+            <div class="control">
+              <button
+                class="button is-success is-medium is-light mr-3"
+                type="button"
+
+                @click="addTicket()">
+                <span class="icon">
+                  <i class="fas fa-plus"></i>
+                </span>
+                <span>
+                  Add Query
+                </span>
+              </button>
+            </div>
+
+            <div class="control">
+              <button
+                class="button is-primary is-medium"
+                type="submit">
+                Save all
+              </button>
+            </div>
+
           </div>
 
-        </div>
-
-      </form>
+        </form>
+      {% endcall %}
     {% endcall %}
 
   {% endwith %}

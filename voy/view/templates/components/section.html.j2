@@ -1,5 +1,10 @@
+{% from "components/content.html.j2" import render_content %}
+
+
 {% macro render_section(title=none, sub_title=none, actions=none, class=none) %}
-  <section class="section {{ class }}">
+  <section class="mb-6 {{ class if class is not none }}">
+
+    {% call render_content() %}
 
       {% if title is not none %}
         <div class="is-flex is-align-items-flex-end is-justify-content-space-between mb-6">
@@ -27,7 +32,9 @@
         </div>
       {% endif %}
 
-      {{ caller() }}
+    {% endcall %}
+
+    {{ caller() }}
 
   </section>
 {% endmacro %}

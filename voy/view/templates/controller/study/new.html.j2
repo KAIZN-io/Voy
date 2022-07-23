@@ -2,6 +2,7 @@
 
 
 {% from "components/section.html.j2" import render_section %}
+{% from "components/content.html.j2" import render_content %}
 
 {% from "utilities/_errors.html.j2" import render_errors %}
 
@@ -26,26 +27,28 @@
     {% call render_section(
       title='New Study',
       sub_title='Got a new Study you are working on?') %}
-      <form action="{{ url_for('study_controller.new_post') }}" method="POST">
+      {% call render_content() %}
+        <form action="{{ url_for('study_controller.new_post') }}" method="POST">
 
-        {{ render_errors(errors) }}
+          {{ render_errors(errors) }}
 
-        <div class="field mb-5">
-          <label class="label">
-            Study Identifier
-          </label>
-          <div class="control">
-            <input type="number" class="input is-medium" name="internal_id" autofocus required />
+          <div class="field mb-5">
+            <label class="label">
+              Study Identifier
+            </label>
+            <div class="control">
+              <input type="number" class="input is-medium" name="internal_id" autofocus required />
+            </div>
           </div>
-        </div>
 
-        <div class="field mb-5">
-          <div class="control">
-            <button class="button is-primary is-medium">Add Study</button>
+          <div class="field mb-5">
+            <div class="control">
+              <button class="button is-primary is-medium">Add Study</button>
+            </div>
           </div>
-        </div>
 
-      </form>
+        </form>
+      {% endcall %}
     {% endcall %}
 
   {% endwith %}

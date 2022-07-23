@@ -2,6 +2,7 @@
 
 
 {% from "components/section.html.j2" import render_section %}
+{% from "components/content.html.j2" import render_content %}
 {% from "components/new-password-field.html.j2" import render_new_password_field %}
 {% from "components/password-field.html.j2" import render_password_field %}
 
@@ -30,33 +31,36 @@
     {% call render_section(
       title='Password',
       sub_title='Stay safe, change your password here') %}
-      <form action="{{ url_for('profile_controller.profile_post') }}" method="POST">
+      {% call render_content() %}
 
-        {{ render_errors(errors) }}
+        <form action="{{ url_for('profile_controller.profile_post') }}" method="POST">
 
-        {{ render_password_field('Your old Password', 'password_old', {
-          'classes': 'mb-5',
-          'input_classes': 'is-medium',
-          'has_autofocus': true,
-        }) }}
+          {{ render_errors(errors) }}
 
-        {{ render_new_password_field('Your new Password', 'password_new', {
-          'classes': 'mb-5',
-          'input_classes': 'is-medium',
-        }) }}
+          {{ render_password_field('Your old Password', 'password_old', {
+            'classes': 'mb-5',
+            'input_classes': 'is-medium',
+            'has_autofocus': true,
+          }) }}
 
-        {{ render_password_field('Your new Password, again', 'password_new_repetition', {
-          'classes': 'mb-5',
-          'input_classes': 'is-medium',
-        }) }}
+          {{ render_new_password_field('Your new Password', 'password_new', {
+            'classes': 'mb-5',
+            'input_classes': 'is-medium',
+          }) }}
 
-        <div class="field is-grouped is-grouped-right mb-5">
-          <div class="control">
-            <button class="button is-primary is-medium">Change Password</button>
+          {{ render_password_field('Your new Password, again', 'password_new_repetition', {
+            'classes': 'mb-5',
+            'input_classes': 'is-medium',
+          }) }}
+
+          <div class="field is-grouped is-grouped-right mb-5">
+            <div class="control">
+              <button class="button is-primary is-medium">Change Password</button>
+            </div>
           </div>
-        </div>
 
-      </form>
+        </form>
+      {% endcall %}
     {% endcall %}
 
   {% endwith %}

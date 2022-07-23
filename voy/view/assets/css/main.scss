@@ -3,6 +3,7 @@
 // Bulma
 @import "vendor/bulma/form/shared.scss";
 @import "bulma/bulma";
+@import "vendor/bulma/overrides.scss";
 // Spinkit
 @import "spinkit/spinkit.css";
 // Fontawesome
@@ -21,7 +22,7 @@
 
 //
 // Component Styles
-@import "./components/prompt";
+@import "./components/prompt.scss";
 
 
 //

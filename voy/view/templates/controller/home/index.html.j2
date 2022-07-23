@@ -2,6 +2,7 @@
 
 
 {% from "components/section.html.j2" import render_section %}
+{% from "components/content.html.j2" import render_content %}
 
 
 {#############################################################################}
@@ -23,47 +24,50 @@
 
   {% call render_section(
     title='Welcome back!',
-    sub_title='What are you up to today?') %}
+    sub_title='What are you up to?') %}
 
-    <nav class="columns">
+    {% call render_content() %}
+      <nav class="columns">
 
-      <div class="column is-3">
-        <a href="{{ url_for('ticket_controller.new') }}">
-          <div class="card is-square has-background-primary has-text-white">
+        <div class="column is-4">
+          <a href="{{ url_for('ticket_controller.new') }}">
+            <div class="card is-square has-background-primary has-text-white">
 
-            <div class="card-image px-5 pt-5">
-              <figure class="image is-4by3">
-                <img src="{{ asset('static/images/icons/source-check.png') }}" class="is-object-fit-contain" alt="Source-Check">
-              </figure>
+              <div class="card-image px-5 pt-5">
+                <figure class="image is-4by3">
+                  <img src="{{ asset('static/images/icons/source-check.png') }}" class="is-object-fit-contain" alt="Source-Check">
+                </figure>
+              </div>
+
+              <div class="card-content is-size-4 has-text-weight-semibold">
+                Source-Check
+              </div>
+
             </div>
+          </a>
+        </div>
 
-            <div class="card-content is-size-4 has-text-weight-semibold">
-              Source-Check
+        <div class="column is-4">
+          <a href="{{ url_for('dashboard_controller.index') }}">
+            <div class="card is-square has-background-info has-text-white">
+
+              <div class="card-image px-5 pt-5">
+                <figure class="image is-4by3">
+                  <img src="{{ asset('static/images/icons/re-check.png') }}" class="is-object-fit-contain" alt="Placeholder image">
+                </figure>
+              </div>
+
+              <div class="card-content is-size-4 has-text-weight-semibold">
+                Re-Check
+              </div>
+
             </div>
+          </a>
+        </div>
 
-          </div>
-        </a>
-      </div>
+      </nav>
+    {% endcall %}
 
-      <div class="column is-3">
-        <a href="{{ url_for('dashboard_controller.index') }}">
-          <div class="card is-square has-background-info has-text-white">
-
-            <div class="card-image px-5 pt-5">
-              <figure class="image is-4by3">
-                <img src="{{ asset('static/images/icons/re-check.png') }}" class="is-object-fit-contain" alt="Placeholder image">
-              </figure>
-            </div>
-
-            <div class="card-content is-size-4 has-text-weight-semibold">
-              Re-Check
-            </div>
-
-          </div>
-        </a>
-      </div>
-
-    </nav>
   {% endcall %}
 
 {% endblock %}
