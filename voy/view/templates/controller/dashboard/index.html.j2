@@ -53,7 +53,7 @@
         };
       </script>
 
-      <div class="dashboard__tickets" x-data="ffs_list( ffs.options )">
+      <div class="dashboard__tickets" x-data="ffs_list( ffs.options )" @ticket-closed='onTicketClosed'>
 
         <div class="field">
           <label class="label">Study</label>
@@ -203,9 +203,16 @@
           </div>
         </div>
 
-        <button @click='downloadCurrentListAsXlsx()'>
-          export
-        </button>
+        <div class="field">
+          <label class="label">Export the current list</label>
+          <div class="control">
+            <button
+              class="button is-link"
+              @click='downloadCurrentListAsXlsx()'>
+              Download as .xlsx
+            </button>
+          </div>
+        </div>
 
         {% if user_tickets|length > 0 %}
           <ul class="is-flex is-flex-direction-column mt-6">
