@@ -24,7 +24,9 @@
 
   {% with %}
 
-    {% call render_section() %}
+    {% call render_section(
+      title='Add Queries',
+      sub_title='What needs to be done?') %}
       <form
         x-data="ticket_new"
 
@@ -84,20 +86,6 @@
 
         <template x-for="(ticket, index) in tickets" :key="ticket.uuid">
           <div class="card mb-6">
-
-            {# <header class="card-header is-align-items-center">
-
-              <p class="card-header-title">
-                Query
-              </p>
-
-              <button class="card-header-icon">
-                <span class="icon">
-                  <i class="fas fa-angle-down"></i>
-                </span>
-              </button>
-
-            </header> #}
 
             <div class="card-content">
 
