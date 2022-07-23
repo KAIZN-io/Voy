@@ -49,8 +49,8 @@ db-restore:
 ########################################################################################################################
 
 # Build the production image
-.PHONY: bild-production
-bild-production:
+.PHONY: build-production
+build-production:
 	docker-compose -f docker-compose.https.yml build voy
 
 # Starts the production setup
