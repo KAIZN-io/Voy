@@ -120,7 +120,10 @@ Alpine.data('ffs_list', ({ search, sort }) => ({
         reporter:          item.reporter,
       }) );
 
-    downloadObjectsAsCSV( header, tickets );
+    downloadObjectsAsCSV( header, tickets, {
+      filename: `Queries Export`,
+      sheetname: `Open Queries`,
+    } );
   }
 
 }));
