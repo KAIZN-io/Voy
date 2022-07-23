@@ -53,178 +53,192 @@
         };
       </script>
 
-      <div class="dashboard__tickets" x-data="ffs_list( ffs.options )" @ticket-closed='onTicketClosed'>
+      <div class="dashboard__tickets columns" x-data="ffs_list( ffs.options )" @ticket-closed='onTicketClosed'>
 
-        <div class="field">
-          <label class="label">Study</label>
-          <div class="control">
-            <div class="select is-fullwidth">
-              <select
-                x-data="choice_js"
-                @change="updateFilterFromChangeEvent('study_id', $event)"
-                multiple >
+        <div class="column is-three-quarters">
 
-                <option value="">
-                  Select a Study
-                </option>
+          {% if user_tickets|length > 0 %}
+            <ul class="is-flex is-flex-direction-column">
+              {% for ticket in user_tickets %}
+                {{ render_ticket(ticket) }}
+              {% endfor %}
+            </ul>
+          {% else %}
+            <div class="notification">
+              There are no queries here. Go to Source-Check to add some queries!
+            </div>
+          {% endif %}
 
-                {% for study in study_list %}
-                  <option value="{{ study.internal_id }}">
-                    {{ study.internal_id }}
+        </div>
+
+        <div class="column is-one-quarter">
+
+          <div class="field">
+            <label class="label">Search</label>
+            <div class="control">
+              <input class="input" type="search" @input="updateSearchFromInputEvent($event)" />
+            </div>
+          </div>
+
+          <hr />
+
+          <div class="field">
+            <label class="label">Study</label>
+            <div class="control">
+              <div class="select is-fullwidth">
+                <select
+                  x-data="choice_js"
+                  @change="updateFilterFromChangeEvent('study_id', $event)"
+                  multiple >
+
+                  <option value="">
+                    Select a Study
                   </option>
-                {% endfor %}
 
-              </select>
+                  {% for study in study_list %}
+                    <option value="{{ study.internal_id }}">
+                      {{ study.internal_id }}
+                    </option>
+                  {% endfor %}
+
+                </select>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="field">
-          <label class="label">Source Number</label>
-          <div class="control">
-            <div class="select is-fullwidth">
-              <select
-                x-data="choice_js"
-                @change="updateFilterFromChangeEvent('source_number', $event)"
-                multiple >
+          <div class="field">
+            <label class="label">Source Number</label>
+            <div class="control">
+              <div class="select is-fullwidth">
+                <select
+                  x-data="choice_js"
+                  @change="updateFilterFromChangeEvent('source_number', $event)"
+                  multiple >
 
-                <option value="">
-                  Select a Source Number
-                </option>
-
-                {% for source_number in source_number_list %}
-                  <option value="{{ source_number }}">
-                    {{ source_number }}
+                  <option value="">
+                    Select a Source Number
                   </option>
-                {% endfor %}
 
-              </select>
+                  {% for source_number in source_number_list %}
+                    <option value="{{ source_number }}">
+                      {{ source_number }}
+                    </option>
+                  {% endfor %}
+
+                </select>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="field">
-          <label class="label">Procedure</label>
-          <div class="control">
-            <div class="select is-fullwidth">
-              <select
-                x-data="choice_js"
-                @change="updateFilterFromChangeEvent('procedure', $event)"
-                multiple >
+          <div class="field">
+            <label class="label">Procedure</label>
+            <div class="control">
+              <div class="select is-fullwidth">
+                <select
+                  x-data="choice_js"
+                  @change="updateFilterFromChangeEvent('procedure', $event)"
+                  multiple >
 
-                <option value="">
-                  Select a Procedure
-                </option>
-
-                {% for procedure in procedure_list %}
-                  <option value="{{ procedure }}">
-                    {{ procedure }}
+                  <option value="">
+                    Select a Procedure
                   </option>
-                {% endfor %}
 
-              </select>
+                  {% for procedure in procedure_list %}
+                    <option value="{{ procedure }}">
+                      {{ procedure }}
+                    </option>
+                  {% endfor %}
+
+                </select>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="field">
-          <label class="label">Responsible</label>
-          <div class="control">
-            <div class="select is-fullwidth">
-              <select
-                x-data="choice_js"
-                @change="updateFilterFromChangeEvent('assignee_uuid', $event)"
-                multiple >
+          <div class="field">
+            <label class="label">Responsible</label>
+            <div class="control">
+              <div class="select is-fullwidth">
+                <select
+                  x-data="choice_js"
+                  @change="updateFilterFromChangeEvent('assignee_uuid', $event)"
+                  multiple >
 
-                <option value="">
-                  Select Someone
-                </option>
-
-                {% for user in user_list %}
-                  <option value="{{ user.uuid }}">
-                    {{ user.abbreviation }}
+                  <option value="">
+                    Select Someone
                   </option>
-                {% endfor %}
 
-              </select>
+                  {% for user in user_list %}
+                    <option value="{{ user.uuid }}">
+                      {{ user.abbreviation }}
+                    </option>
+                  {% endfor %}
+
+                </select>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="field">
-          <label class="label">Tags</label>
-          <div class="control">
-            <div class="select is-fullwidth">
-               <select
-                x-data="choice_js"
-                @change="updateFilterFromChangeEvent('tag_uuids', $event)"
-                multiple >
+          <div class="field">
+            <label class="label">Tags</label>
+            <div class="control">
+              <div class="select is-fullwidth">
+                <select
+                  x-data="choice_js"
+                  @change="updateFilterFromChangeEvent('tag_uuids', $event)"
+                  multiple >
 
-                <option value="">
-                  Select some Tags
-                </option>
-
-                {% for tag in ticket_tag_list %}
-                  <option value="{{ tag.uuid }}">
-                    {{ tag.title }}
+                  <option value="">
+                    Select some Tags
                   </option>
-                {% endfor %}
 
-              </select>
+                  {% for tag in ticket_tag_list %}
+                    <option value="{{ tag.uuid }}">
+                      {{ tag.title }}
+                    </option>
+                  {% endfor %}
+
+                </select>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="field">
-          <label class="label">Search</label>
-          <div class="control">
-            <input class="input" type="search" @input="updateSearchFromInputEvent($event)" />
-          </div>
-        </div>
+          <hr />
 
-        <div class="field">
-          <label class="label">Sort by</label>
-          <div class="control">
-            <div class="select is-fullwidth">
-               <select
-                x-data="choice_js"
-                @change="setSortFromChangeEvent($event)" >
+          <div class="field">
+            <label class="label">Sort by</label>
+            <div class="control">
+              <div class="select is-fullwidth">
+                <select
+                  x-data="choice_js"
+                  @change="setSortFromChangeEvent($event)" >
 
-                <option value="working_days_open|asc, created_at|asc">
-                  Newest
-                </option>
+                  <option value="working_days_open|asc, created_at|asc">
+                    Newest
+                  </option>
 
-                <option value="working_days_open|desc, created_at|desc">
-                  Oldest
-                </option>
+                  <option value="working_days_open|desc, created_at|desc">
+                    Oldest
+                  </option>
 
-              </select>
+                </select>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="field">
-          <label class="label">Export the current list</label>
-          <div class="control">
-            <button
-              class="button is-link"
-              @click='downloadCurrentListAsXlsx()'>
-              Download as .xlsx
-            </button>
-          </div>
-        </div>
+          <hr />
 
-        {% if user_tickets|length > 0 %}
-          <ul class="is-flex is-flex-direction-column mt-6">
-            {% for ticket in user_tickets %}
-              {{ render_ticket(ticket) }}
-            {% endfor %}
-          </ul>
-        {% else %}
-          <div class="notification">
-            There are no queries here. Go to Source-Check to add some queries!
+          <div class="field">
+            <label class="label">Export the current list</label>
+            <div class="control">
+              <button
+                class="button is-link"
+                @click='downloadCurrentListAsXlsx()'>
+                Download as .xlsx
+              </button>
+            </div>
           </div>
-        {% endif %}
+
+        </div>
 
       </div>
     {% endcall %}
@@ -326,7 +340,37 @@
           </div>
 
         </div>
-        <div class="column is-2">
+        <div class="column is-4">
+
+          <div class="block content">
+            <div class="title is-6 mb-1">Visit</div>
+            <p data-ffs-field="visit">
+              {{ ticket.visit }}
+            </p>
+          </div>
+
+        </div>
+        <div class="column is-4">
+
+          <div class="block content">
+            <div class="title is-6 mb-1">Page</div>
+            <p data-ffs-field="page">
+              {{ ticket.page }}
+            </p>
+          </div>
+
+        </div>
+        <div class="column is-4">
+
+          <div class="block content">
+            <div class="title is-6 mb-1">Procedure</div>
+            <p data-ffs-field="procedure">
+              {{ ticket.procedure }}
+            </p>
+          </div>
+
+        </div>
+        <div class="column is-4">
 
           <div class="block content">
             <div class="title is-6 mb-1">Responsible</div>
@@ -338,7 +382,7 @@
           </div>
 
         </div>
-        <div class="column is-2">
+        <div class="column is-4">
 
           <div class="block content">
             <div class="title is-6 mb-1">Reporter</div>
@@ -350,13 +394,13 @@
           </div>
 
         </div>
-        <div class="column is-2">
+        <div class="column is-4">
 
           <div class="block content">
             <div
               class="title is-6 mb-1"
               data-ffs-field="created_at_formatted"
-              data-ffs-value="{{ ticket.created_at.format('YYYY-MM-DD HH:mm:ss') }}">>
+              data-ffs-value="{{ ticket.created_at.format('YYYY-MM-DD HH:mm:ss') }}">
               Created at
             </div>
             <p
@@ -364,36 +408,6 @@
               data-ffs-field="created_at"
               data-ffs-value="{{ ticket.created_at.timestamp }}">
               {{ ticket.created_at.humanize() }}
-            </p>
-          </div>
-
-        </div>
-        <div class="column is-2">
-
-          <div class="block content">
-            <div class="title is-6 mb-1">Visit</div>
-            <p data-ffs-field="visit">
-              {{ ticket.visit }}
-            </p>
-          </div>
-
-        </div>
-        <div class="column is-2">
-
-          <div class="block content">
-            <div class="title is-6 mb-1">Page</div>
-            <p data-ffs-field="page">
-              {{ ticket.page }}
-            </p>
-          </div>
-
-        </div>
-        <div class="column is-2">
-
-          <div class="block content">
-            <div class="title is-6 mb-1">Procedure</div>
-            <p data-ffs-field="procedure">
-              {{ ticket.procedure }}
             </p>
           </div>
 
