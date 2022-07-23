@@ -110,22 +110,26 @@ def edit(ticket_uuid: str):
 @ticket_blueprint.route('/tickets/<string:ticket_uuid>/edit', methods=['POST'])
 @login_required
 def edit_post(ticket_uuid: str):
+    # Get form data
+    form_data = request.form.to_dict()
+
     # Get the ticket
     ticket = Ticket.query.get(ticket_uuid)
 
-    # Get the old ticket data. We need this alter for checking what has changed
-    ticket_data_old = ticket.__dict__
+    # Add general data
+    ticket.study = Study.query.get(form_data['study_uuid'])
+    ticket.source_number = form_data['source_number']
 
-    # Get data from the form and sanitize it
-    ticket_data_new = request.form.to_dict()
-    ticket_data_new['study_uuid'] = ticket_data_new['study_uuid']
-    ticket_data_new['assignee_uuid'] = ticket_data_new['assignee_uuid']
+    ticket.description = form_data['description']
+    ticket.visit = form_data['visit']
+    ticket.page = form_data['page']
+    ticket.procedure = form_data['procedure']
 
-    # Update the ticket
-    Ticket.query.filter_by(uuid=ticket_uuid).update(ticket_data_new)
+    ticket.assignee = User.query.get(form_data['assignee_uuid'])
 
-    # Reset the is_corrected status.
-    ticket.is_corrected = False
+    ticket.tags = []
+    for tag_uuid in request.form.getlist('tags'):
+        ticket.tags.append(TicketTag.query.get(tag_uuid))
 
     db.session.commit()
 
