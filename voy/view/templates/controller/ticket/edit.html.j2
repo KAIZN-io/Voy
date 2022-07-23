@@ -14,6 +14,7 @@
 
 {% block page_title %}Queries{% endblock %}
 
+{% block page_column_class %}is-two-thirds{% endblock %}
 
 {#############################################################################}
 {# CONTENT                                                                   #}
@@ -24,26 +25,33 @@
   {% with %}
 
     {% call render_section(
-      title='Edit Query ' ~ ticket.uuid,
-      sub_title='Made an error? No worries, fix it here. I\'ll keep track of the changes for you') %}
+      title='Edit Query
+        <span class="has-text-weight-bold is-family-monospace pl-1">
+          <i class="fa-solid fa-fingerprint mr-1"></i>' ~ ticket.internal_id ~ '
+        </span>',
+      sub_title='Made an error? No worries, fix it here.') %}
       <form
         action="{{ url_for('ticket_controller.edit_post', ticket_uuid=ticket.uuid) }}"
         method="POST">
 
         {{ render_errors(errors) }}
 
+
         <h2 class="title is-4">General Information</h2>
 
         <div class="columns">
 
           <div class="column">
-            <div class="field mb-5">
+            <div class="field">
               <label class="label" for="study_uuid">
                 Study
               </label>
               <div class="control">
                 <div class="select is-medium is-fullwidth">
-                  <select name="study_uuid" required>
+                  <select
+                    x-data="choice_js"
+                    name="study_uuid"
+                    required >
 
                     {% for study in study_list %}
                       <option
@@ -76,120 +84,152 @@
             </div>
           </div>
 
-          <div class="column">
-            <div class="field mb-5">
-              <div class="label">
-                Document-Type
-              </div>
+        </div>
+
+
+        <h2 class="title is-4">Query Information</h2>
+
+        <div class="card mb-6">
+
+          <div class="card-content">
+
+            <div class="field">
+              <label class="label">Description</label>
               <div class="control">
-                {% for source_type in available_source_types %}
-                  <label class="radio button is-medium is-info is-light">
-                    <input
-                      name="type"
-                      value="{{ source_type }}"
-                      type="radio"
-                      required
-                      {{ "checked" if source_type == ticket.type }}/>
-                    {{ source_type }}
-                  </label>
-                {% endfor %}
+                <textarea
+                  name="description"
+                  placeholder="What's the matter?"
+                  maxlength="100"
+                  class="textarea">{{ ticket.description }}</textarea>
               </div>
             </div>
+
+            <div class="field">
+              <label class="label">Responsible</label>
+              <div class="control">
+                <div class="select is-fullwidth">
+                  <select
+                    x-data="choice_js"
+                    name="assignee_uuid"
+                    required >
+
+                    <option value="">
+                      Select Someone
+                    </option>
+
+                    {% for user in staff_list_medops %}
+                      <option
+                        value="{{ user.uuid }}"
+                        {{ "selected" if user.uuid == ticket.assignee_uuid }}>
+                        {{ user.abbreviation }}
+                      </option>
+                    {% endfor %}
+
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="columns mb-0">
+              <div class="column">
+
+                <div class="field">
+                  <label class="label">Visit</label>
+                  <div class="control">
+                    <input
+                      name="visit"
+                      class="input"
+                      type="text"
+                      maxlength="10"
+                      value="{{ ticket.visit }}"
+                      required />
+                  </div>
+                </div>
+
+              </div>
+              <div class="column">
+
+                <div class="field">
+                  <label class="label">Page</label>
+                  <div class="control">
+                    <input
+                      name="page"
+                      class="input"
+                      type="text"
+                      maxlength="10"
+                      value="{{ ticket.page }}"
+                      required />
+                  </div>
+                </div>
+
+              </div>
+              <div class="column">
+
+                <div class="field">
+                  <label class="label">Procedure</label>
+                  <div class="control">
+                    <input
+                      name="procedure"
+                      class="input"
+                      type="text"
+                      maxlength="20"
+                      value="{{ ticket.procedure }}"
+                      required />
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label">Tags</label>
+              <div class="control">
+                <div class="select is-fullwidth">
+                  <select
+                    x-data="choice_js"
+                    name="tags"
+                    multiple >
+
+                    <option value="">
+                      Add some Tags
+                    </option>
+
+                    {% for tag in ticket_tags %}
+                      <option
+                        value="{{ tag.uuid }}"
+                        {{ "selected" if tag in ticket.tags }}>
+                        {{ tag.title }}
+                      </option>
+                    {% endfor %}
+
+                  </select>
+                </div>
+              </div>
+            </div>
+
           </div>
 
         </div>
 
-        <h2 class="title is-4">Query Information</h2>
+        <div class="field is-grouped is-grouped-right">
 
-        <table class="table is-striped is-hoverable is-fullwidth mb-6">
-          <thead class="thead-light">
-            <tr>
-              <th scope="col">Visit</th>
-              <th scope="col">Page</th>
-              <th scope="col">Procedure</th>
-              <th scope="col">Description</th>
-              <th scope="col">Responsible</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
+          <div class="control">
+            <a
+              class="button is-danger is-medium is-light mr-3"
+              href="{{ url_for('dashboard_controller.index') }}">
+              Abort
+            </a>
+          </div>
 
-              <td>
-                <div class="control">
-                  <input
-                    name="visit"
-                    class="input"
-                    value="{{ ticket.visit }}"
-                    type="text"
-                    maxlength="10"
-                    required />
-                </div>
-              </td>
+          <div class="control">
+            <button
+              class="button is-primary is-medium"
+              type="submit">
+              Save
+            </button>
+          </div>
 
-              <td>
-                <div class="control">
-                  <input
-                    name="page"
-                    class="input"
-                    value="{{ ticket.page }}"
-                    type="text"
-                    maxlength="10"
-                    required />
-                </div>
-              </td>
-
-              <td>
-                <div class="control">
-                  <input
-                    name="procedure"
-                    class="input"
-                    value="{{ ticket.procedure }}"
-                    type="text"
-                    maxlength="20"
-                    required />
-                </div>
-              </td>
-
-              <td>
-                <textarea
-                  name="description"
-                  maxlength="100"
-                  class="textarea">{{ ticket.description }}</textarea>
-              </td>
-
-              <td>
-                <div class="control">
-                  <div class="select is-fullwidth">
-                    <select name="assignee_uuid" required>
-
-                      {% for user in staff_list_medops %}
-                        <option
-                          value="{{ user.uuid }}"
-                          {{ "selected" if user.uuid == ticket.assignee_uuid }}>
-                          {{ user.abbreviation }}
-                        </option>
-                      {% endfor %}
-
-                    </select>
-                  </div>
-                </div>
-              </td>
-
-            </tr>
-          </tbody>
-        </table>
-
-        <button
-          class="button is-primary is-medium mr-3"
-          type="submit">
-          Save
-        </button>
-
-        <a
-          href="{{ url_for('dashboard_controller.index') }}"
-          class="button is-danger is-light is-medium">
-          Abort
-        </a>
+        </div>
 
       </form>
     {% endcall %}

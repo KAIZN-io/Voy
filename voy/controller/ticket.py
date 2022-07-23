@@ -100,10 +100,11 @@ def new_post():
 @login_required
 def edit(ticket_uuid: str):
     return render_template('controller/ticket/edit.html.j2',
-                           study_list=Study.query.all(),
-                           staff_list_medops=User.query.filter_by(role=ROLE_MEDOPS).all(),
                            available_source_types=AVAILABLE_SOURCE_TYPES,
-                           ticket=Ticket.query.get(ticket_uuid))
+                           staff_list_medops=User.query.filter_by(role=ROLE_MEDOPS).all(),
+                           study_list=Study.query.all(),
+                           ticket_tags=TicketTag.query.all(),
+                           ticket = Ticket.query.get(ticket_uuid))
 
 
 @ticket_blueprint.route('/tickets/<string:ticket_uuid>/edit', methods=['POST'])
