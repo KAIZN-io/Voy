@@ -9,6 +9,7 @@ Alpine.data('ffs_list', ({ search, sort }) => ({
 
   items: [],
   itemMap: {},
+  closedItems: new Set(),
 
   ffs: undefined,
 
@@ -74,6 +75,10 @@ Alpine.data('ffs_list', ({ search, sort }) => ({
     this.itemMap = newItemMap;
   },
 
+  onTicketClosed( event ) {
+    this.closedItems.add( event.detail.uuid );
+  },
+
   downloadCurrentListAsXlsx() {
     const header = {
       internal_id: 'Query ID',
@@ -94,24 +99,26 @@ Alpine.data('ffs_list', ({ search, sort }) => ({
       reporter: 'Reporter',
     };
 
-    const tickets = this.items.map( item => ({
-      internal_id:       item.internal_id,
+    const tickets = this.items
+      .filter( item => !this.closedItems.has( item.uuid ) )
+      .map( item => ({
+        internal_id:       item.internal_id,
 
-      working_days_open: item.working_days_open,
-      study_id:          item.study_id,
-      source_number:     item.source_number,
+        working_days_open: item.working_days_open,
+        study_id:          item.study_id,
+        source_number:     item.source_number,
 
-      visit:             item.visit,
-      page:              item.page,
-      procedure:         item.procedure,
-      description:       item.description,
+        visit:             item.visit,
+        page:              item.page,
+        procedure:         item.procedure,
+        description:       item.description,
 
-      tags:              item.tags,
+        tags:              item.tags,
 
-      created_at:        item.created_at_formatted,
-      assignee:          item.assignee,
-      reporter:          item.reporter,
-    }) );
+        created_at:        item.created_at_formatted,
+        assignee:          item.assignee,
+        reporter:          item.reporter,
+      }) );
 
     downloadObjectsAsCSV( header, tickets );
   }
