@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+
+  traefik:
+    command:
+      - "--providers.docker"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.http.address=:${VOY_HTTP_PORT}"
+    ports:
+      - "${VOY_HTTP_PORT}:80"
+
+  voy:
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik_network"
+
+      - "traefik.http.routers.voy.entrypoints=http"
+      - "traefik.http.routers.voy.rule=Host(`${VOY_HOST}`)"
+
+      - "traefik.http.services.voy.loadbalancer.server.port=5000"

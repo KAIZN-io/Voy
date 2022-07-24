@@ -1,27 +1,15 @@
 version: '3'
 
+
 services:
 
   traefik:
     image: traefik:v2.5
+    restart: unless-stopped
     command:
-      # - "--log.level=DEBUG"
-      # - "--api.insecure=true"
       - "--providers.docker"
       - "--providers.docker.exposedbydefault=false"
-
-      - "--entrypoints.http.address=:80"
-      - "--entrypoints.https.address=:443"
-
-      - "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"
-      - "--certificatesresolvers.letsencrypt.acme.email=${LETSENCRYPT_EMAIL}"
-      - "--certificatesresolvers.letsencrypt.acme.storage=/.letsencrypt/acme.json"
-    ports:
-      - "80:80"
-      - "443:443"
-      # - "8080:8080"
     volumes:
-      - "./.letsencrypt:/.letsencrypt"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
     networks:
       - traefik_network
@@ -30,11 +18,13 @@ services:
   #       development
   mailhog:
     image: mailhog/mailhog
+    restart: unless-stopped
     networks:
       - internal_network
 
   db:
     image: postgres:13.1-alpine
+    restart: unless-stopped
     healthcheck:
       test: [ "CMD", "pg_isready", "-U", "${DB_USERNAME}", "-d", "${DB_NAME}" ]
       interval: 15s
@@ -53,6 +43,7 @@ services:
     image: project-p/voy
     build:
       context: .
+    restart: unless-stopped
     environment:
       - DB_HOST
       - DB_PORT
@@ -71,20 +62,6 @@ services:
       - FLASK_ENV
       - DEBUG
       - TESTING
-    labels:
-      - "traefik.enable=true"
-      - "traefik.docker.network=traefik_network"
-
-      - "traefik.http.routers.voy.entrypoints=http"
-      - "traefik.http.routers.voy.rule=Host(`${VOY_HOST}`)"
-      - "traefik.http.routers.voy.middlewares=voy@docker"
-      - "traefik.http.middlewares.voy.redirectscheme.scheme=https"
-
-      - "traefik.http.routers.voy_https.entrypoints=https"
-      - "traefik.http.routers.voy_https.rule=Host(`${VOY_HOST}`)"
-      - "traefik.http.routers.voy_https.tls.certresolver=letsencrypt"
-
-      - "traefik.http.services.voy.loadbalancer.server.port=5000"
     networks:
       - internal_network
       - traefik_network
