@@ -7,6 +7,9 @@ include .env
 export
 
 
+# The base command to start the docker setup.
+DOCKER_COMPOSE = docker compose
+
 
 ########################################################################################################################
 # ASSETS                                                                                                               #
@@ -15,12 +18,12 @@ export
 # Installs node packages
 .PHONY: npm-install
 npm-install:
-	docker-compose exec voy npm install
+	$(DOCKER_COMPOSE) exec voy npm install
 
 # builds the frontend assets
 .PHONY: assets
 assets: npm-install
-	docker-compose exec voy npm run build
+	$(DOCKER_COMPOSE) exec voy npm run build
 
 
 
@@ -31,34 +34,14 @@ assets: npm-install
 # Initializes an empty database with the basic structure needed for the application to run.
 .PHONY: db-init
 db-init:
-	docker-compose exec voy voy database init
+	$(DOCKER_COMPOSE) exec voy voy database init
 
 # Creates a simple backup of the database; Useful for development purposes.
 .PHONY: db-snapshot
 db-snapshot:
-	docker-compose exec db pg_dump -Fp --username=$(DB_USERNAME) --dbname=$(DB_NAME) > ./backups/snapshot.sql
+	$(DOCKER_COMPOSE) exec db pg_dump -Fp --username=$(DB_USERNAME) --dbname=$(DB_NAME) > ./backups/snapshot.sql
 
 # Restores a previously created backup of the database.
 .PHONY: db-restore
 db-restore:
-	docker-compose exec -T db psql --username=$(DB_USERNAME) --dbname=$(DB_NAME) < ./backups/snapshot.sql
-
-
-########################################################################################################################
-# PRODUCTION                                                                                                           #
-########################################################################################################################
-
-# Build the production image
-.PHONY: build-production
-build-production:
-	docker-compose -f docker-compose.https.yml build voy
-
-# Starts the production setup
-.PHONY: init-production
-init-production: start-production
-	docker-compose -f docker-compose.https.yml exec voy voy database init
-
-# Starts the production setup
-.PHONY: start-production
-start-production:
-	docker-compose -f docker-compose.https.yml up -d
+	$(DOCKER_COMPOSE) exec -T db psql --username=$(DB_USERNAME) --dbname=$(DB_NAME) < ./backups/snapshot.sql
