@@ -15,6 +15,7 @@
   "scripts": {
     "start": "encore dev-server --port 5002",
     "test": "jest --watch",
+    "build:dev": "encore dev",
     "build": "encore production"
   },
   "dependencies": {

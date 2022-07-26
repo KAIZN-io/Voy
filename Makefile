@@ -7,21 +7,48 @@ include .env
 export
 
 
+DOCKER_COMPOSE = docker compose
+
 
 ########################################################################################################################
-# ASSETS                                                                                                               #
+# DEPENDENCIES                                                                                                               #
 ########################################################################################################################
 
-# Installs node packages
-.PHONY: npm-install
-npm-install:
-	docker-compose exec voy npm install
+# Install all python packages
+.PHONY: venv
+venv:
+	poetry install
+
+# Install all node modules
+.PHONY: node_modules
+node_modules:
+	yarn install
 
 # builds the frontend assets
 .PHONY: assets
-assets: npm-install
-	docker-compose exec voy npm run build
+assets: node_modules
+	yarn build:dev
 
+
+########################################################################################################################
+# DOCKER                                                                                                               #
+########################################################################################################################
+
+# Builds and starts or updates all Docker services up in the background
+.PHONY: daemon
+daemon:
+	$(DOCKER_COMPOSE) up -d voy
+
+# Stops all Docker services
+.PHONY: stop
+stop:
+	$(DOCKER_COMPOSE) stop
+
+# Starts all Docker services and the Webpack dev-server for frontend development
+.PHONY: start
+start:
+	$(DOCKER_COMPOSE) start
+	yarn start
 
 
 ########################################################################################################################
@@ -31,34 +58,47 @@ assets: npm-install
 # Initializes an empty database with the basic structure needed for the application to run.
 .PHONY: db-init
 db-init:
-	docker-compose exec voy voy database init
+	$(DOCKER_COMPOSE) exec voy voy database init
 
 # Creates a simple backup of the database; Useful for development purposes.
 .PHONY: db-snapshot
 db-snapshot:
-	docker-compose exec db pg_dump -Fp --username=$(DB_USERNAME) --dbname=$(DB_NAME) > ./backups/snapshot.sql
+	$(DOCKER_COMPOSE) exec db pg_dump -Fp --username=$(DB_USERNAME) --dbname=$(DB_NAME) > ./backups/snapshot.sql
 
 # Restores a previously created backup of the database.
 .PHONY: db-restore
 db-restore:
-	docker-compose exec -T db psql --username=$(DB_USERNAME) --dbname=$(DB_NAME) < ./backups/snapshot.sql
+	$(DOCKER_COMPOSE) exec -T db psql --username=$(DB_USERNAME) --dbname=$(DB_NAME) < ./backups/snapshot.sql
 
 
 ########################################################################################################################
-# PRODUCTION                                                                                                           #
+# SETUP                                                                                                                #
 ########################################################################################################################
 
-# Build the production image
-.PHONY: build-production
-build-production:
-	docker-compose -f docker-compose.https.yml build voy
+# Initially setup everything for development
+.PHONY: init
+init: venv assets
+	$(MAKE) daemon
+	$(MAKE) permissions
 
-# Starts the production setup
-.PHONY: init-production
-init-production: start-production
-	docker-compose -f docker-compose.https.yml exec voy voy database init
+	@echo
+	@echo "Waiting 10s for the databasae to be ready..."
+	@echo
+	@sleep 10
 
-# Starts the production setup
-.PHONY: start-production
-start-production:
-	docker-compose -f docker-compose.https.yml up -d
+	@$(MAKE) db-init
+
+	$(MAKE) start
+
+# Fix permissions inside the Docker container of Voy
+.PHONY: permissions
+permissions:
+	$(DOCKER_COMPOSE) exec --user root voy chown -R $(USER_ID):$(GROUP_ID) /usr/src/voy
+
+# Removes everything
+.PHONY: clear
+clear:
+	$(DOCKER_COMPOSE) down -v
+	rm -rf node_modules
+	rm -rf venv
+	rm -rf voy.egg-info
