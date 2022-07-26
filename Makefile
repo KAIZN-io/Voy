@@ -50,6 +50,11 @@ start:
 	$(DOCKER_COMPOSE) start
 	yarn start
 
+# Restarts all running Docker services
+.PHONY: restart
+restart:
+	$(DOCKER_COMPOSE) restart
+
 
 ########################################################################################################################
 # DATABASE                                                                                                             #
