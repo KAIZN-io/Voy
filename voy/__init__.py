@@ -62,11 +62,27 @@ def create_app():
 
     app.config['FLASK_ADMIN_SWATCH'] = 'flatly'
 
-    admin = Admin(name='Voy Admin', template_mode='bootstrap4', index_view=ProtectedIndexView())
-    admin.add_view(UserView(User, db.session, endpoint='users'))
-    admin.add_view(StudyView(Study, db.session, endpoint='studies'))
-    admin.add_view(TicketTagView(TicketTag, db.session, endpoint='tags', name='Tags'))
-    admin.add_view(TicketTagColorSchemeView(TicketTagColorScheme, db.session, endpoint='tag-colors', name='Tag Colors'))
+    admin = Admin(
+        name='Voy Admin',
+        template_mode='bootstrap4',
+        index_view=ProtectedIndexView()
+    )
+    admin.add_view(UserView(User, db.session,
+        name='Users',
+        endpoint='users'
+    ))
+    admin.add_view(StudyView(Study, db.session,
+        name='Studies',
+        endpoint='studies'
+    ))
+    admin.add_view(TicketTagView(TicketTag, db.session,
+        name='Tags',
+        endpoint='tags'
+    ))
+    admin.add_view(TicketTagColorSchemeView(TicketTagColorScheme, db.session,
+        name='Tag Colors',
+        endpoint='tag-colors'
+    ))
     admin.init_app(app)
 
     # Register routing blueprints
