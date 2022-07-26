@@ -62,10 +62,10 @@ def create_app():
     app.config['FLASK_ADMIN_SWATCH'] = 'flatly'
 
     admin = Admin(name='Voy Admin', template_mode='bootstrap4')
-    admin.add_view(UserView(User, db.session))
-    admin.add_view(StudyView(Study, db.session))
-    admin.add_view(TicketTagView(TicketTag, db.session))
-    admin.add_view(TicketTagColorSchemeView(TicketTagColorScheme, db.session))
+    admin.add_view(UserView(User, db.session, endpoint='users'))
+    admin.add_view(StudyView(Study, db.session, endpoint='studies'))
+    admin.add_view(TicketTagView(TicketTag, db.session, endpoint='tags', name='Tags'))
+    admin.add_view(TicketTagColorSchemeView(TicketTagColorScheme, db.session, endpoint='tag-colors', name='Tag Colors'))
     admin.init_app(app)
 
     # Register routing blueprints
@@ -80,7 +80,7 @@ def create_app():
 
     # Register CLI blueprints
     app.register_blueprint(database_cli)
-    # app.register_blueprint(user_cli)
+    app.register_blueprint(user_cli)
 
     # Inject current user into each template
     @app.context_processor
