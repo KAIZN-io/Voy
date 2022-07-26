@@ -16,6 +16,7 @@ from .controller import authentication_blueprint, profile_blueprint, \
 from .mail import mail
 from .model import db, Study, StudyView, TicketTag, TicketTagView, \
     TicketTagColorScheme, TicketTagColorSchemeView, User, UserView
+from .model.flask_admin import ProtectedIndexView
 
 
 # Load logging configuration
@@ -61,11 +62,27 @@ def create_app():
 
     app.config['FLASK_ADMIN_SWATCH'] = 'flatly'
 
-    admin = Admin(name='Voy Admin', template_mode='bootstrap4')
-    admin.add_view(UserView(User, db.session))
-    admin.add_view(StudyView(Study, db.session))
-    admin.add_view(TicketTagView(TicketTag, db.session))
-    admin.add_view(TicketTagColorSchemeView(TicketTagColorScheme, db.session))
+    admin = Admin(
+        name='Voy Admin',
+        template_mode='bootstrap4',
+        index_view=ProtectedIndexView()
+    )
+    admin.add_view(UserView(User, db.session,
+        name='Users',
+        endpoint='users'
+    ))
+    admin.add_view(StudyView(Study, db.session,
+        name='Studies',
+        endpoint='studies'
+    ))
+    admin.add_view(TicketTagView(TicketTag, db.session,
+        name='Tags',
+        endpoint='tags'
+    ))
+    admin.add_view(TicketTagColorSchemeView(TicketTagColorScheme, db.session,
+        name='Tag Colors',
+        endpoint='tag-colors'
+    ))
     admin.init_app(app)
 
     # Register routing blueprints
@@ -80,7 +97,7 @@ def create_app():
 
     # Register CLI blueprints
     app.register_blueprint(database_cli)
-    # app.register_blueprint(user_cli)
+    app.register_blueprint(user_cli)
 
     # Inject current user into each template
     @app.context_processor

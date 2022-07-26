@@ -13,7 +13,7 @@ from voy.model.utilities import is_database_empty
 to_user_file = logging.getLogger('to_user_file')
 
 # Create the Blueprint
-database_blueprint = Blueprint('database', __name__)
+database_blueprint = Blueprint('database_cli', __name__, cli_group='database')
 
 
 @database_blueprint.cli.command('init')
