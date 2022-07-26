@@ -16,6 +16,7 @@ from .controller import authentication_blueprint, profile_blueprint, \
 from .mail import mail
 from .model import db, Study, StudyView, TicketTag, TicketTagView, \
     TicketTagColorScheme, TicketTagColorSchemeView, User, UserView
+from .model.flask_admin import ProtectedIndexView
 
 
 # Load logging configuration
@@ -61,7 +62,7 @@ def create_app():
 
     app.config['FLASK_ADMIN_SWATCH'] = 'flatly'
 
-    admin = Admin(name='Voy Admin', template_mode='bootstrap4')
+    admin = Admin(name='Voy Admin', template_mode='bootstrap4', index_view=ProtectedIndexView())
     admin.add_view(UserView(User, db.session, endpoint='users'))
     admin.add_view(StudyView(Study, db.session, endpoint='studies'))
     admin.add_view(TicketTagView(TicketTag, db.session, endpoint='tags', name='Tags'))

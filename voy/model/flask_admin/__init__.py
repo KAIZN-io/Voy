@@ -1,1 +1,2 @@
 from voy.model.flask_admin.protected_model_view import ProtectedModelView
+from voy.model.flask_admin.protected_index_view import ProtectedIndexView
