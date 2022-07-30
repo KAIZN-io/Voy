@@ -297,6 +297,35 @@ case $1 in
 
   'clear')
     echo
+    echo -e "${RED}Attention! Proceed an all data will be lost.${NC}"
+
+    echo
+    while true; do
+      read -p "Do you want to stop Voy and remove all of its data? (yes/no): " -r
+
+      case $REPLY in
+        yes | Yes | YES)
+          break
+          ;;
+        y | Y)
+          echo -e "Please type \"yes\"."
+          ;;
+        n | N | no | No | NO)
+          echo
+          echo -e "Aborting."
+
+          exit 41
+          ;;
+        *)
+          echo
+          echo -e "Invalid answer \"${REPLY}\". Aborting."
+
+          exit 42
+          ;;
+      esac
+    done
+
+    echo
     echo ">" $DOCKER_COMPOSE "down -v"
     eval $DOCKER_COMPOSE "down -v"
 
