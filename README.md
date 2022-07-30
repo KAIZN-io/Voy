@@ -8,7 +8,7 @@ Clinical trials.
 Voy comes with configuration for running in Docker. Currently we support plain
 http hosting and https with Let's Encrypt.
 
-Detailed instrutions can be found here: [Hosting Voy](docs/Hosting Voy.md)
+Detailed instrutions can be found here: [Hosting Voy](docs/Hosting%20Voy.md)
 
 ## Development
 
