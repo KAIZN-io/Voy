@@ -249,7 +249,7 @@ fi
 
 #
 # Set the Docker Compose command with a dynamic file as defined by the env file
-DOCKER_COMPOSE="docker compose --env-file ${ENV_FILE} -f docker-compose.prod.base.yml -f docker-compose.prod.${VOY_HOSTING_TYPE}.yml"
+DOCKER_COMPOSE="docker-compose --env-file ${ENV_FILE} -f docker-compose.prod.base.yml -f docker-compose.prod.${VOY_HOSTING_TYPE}.yml"
 
 #
 # Continue setup
