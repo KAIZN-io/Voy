@@ -151,7 +151,7 @@ create_configuration () {
         # Setting the hosting type
         configuration+="VOY_HOSTING_TYPE=${hosting_type_option_http_value}"$'\n'
         # Configuring ports
-        configuration+="VOY_HTTP_PORT=8080"$'\n'
+        configuration+="VOY_HTTP_PORT=80"$'\n'
 
         break
         ;;
@@ -160,8 +160,8 @@ create_configuration () {
         # Setting the hosting type
         configuration+="VOY_HOSTING_TYPE=${hosting_type_option_https_letsencrypt_value}"$'\n'
         # Configuring ports
-        configuration+="VOY_HTTP_PORT=8080"$'\n'
-        configuration+="VOY_HTTPS_PORT=4043"$'\n'
+        configuration+="VOY_HTTP_PORT=80"$'\n'
+        configuration+="VOY_HTTPS_PORT=443"$'\n'
         # Asking for an email address for Let's Encrypt
         echo
         echo -e "Please enter an email address to use for Let's Encrypt."
