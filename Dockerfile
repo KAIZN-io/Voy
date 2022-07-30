@@ -44,14 +44,14 @@ RUN apt-get update && \
 RUN pip install --no-cache-dir poetry && \
     poetry config virtualenvs.create false
 
-# Copy over the bundled assets from the previous build step
-COPY --from=assets $VOY_HOME/voy/view/static ./voy/view/static
-
 # Copy over code
 COPY . .
 
 # Install Python dependencies as well as voy itself
 RUN poetry install --no-dev --no-interaction --extras production
+
+# Copy over the bundled assets from the previous build step
+COPY --from=assets $VOY_HOME/voy/view/static ./voy/view/static
 
 # Set default start command
 CMD [ "gunicorn", "-b 0.0.0.0:5000", "voy:create_app()" ]
