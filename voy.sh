@@ -20,7 +20,7 @@ NC='\033[0m'
 # Functions                                                                    #
 ################################################################################
 
-function display_help() {
+display_help () {
   echo
   echo -e "Usage: voy.sh [command]"
   echo
@@ -33,7 +33,7 @@ function display_help() {
   echo
 }
 
-function warn_and_exit_if_no_argument_were_supplied {
+warn_and_exit_if_no_argument_were_supplied () {
   if [[ $# -eq 0 ]]; then
     echo
     echo -e "${RED}Error. No argument supplied.${NC}"
@@ -42,7 +42,7 @@ function warn_and_exit_if_no_argument_were_supplied {
   fi
 }
 
-function warn_and_exit_if_too_many_arguments_were_supplied {
+warn_and_exit_if_too_many_arguments_were_supplied () {
   if [[ $# -gt 1 ]]; then
     echo
     echo -e "${RED}Error. Too many arguments supplied.${NC}"
@@ -51,7 +51,7 @@ function warn_and_exit_if_too_many_arguments_were_supplied {
   fi
 }
 
-function warn_and_exit_if_pre_requisites_are_missing {
+warn_and_exit_if_pre_requisites_are_missing () {
   pre_requisite_missing=false
 
   # Checking for Docker
@@ -72,7 +72,7 @@ function warn_and_exit_if_pre_requisites_are_missing {
   fi
 }
 
-function does_configuration_exist() {
+does_configuration_exist () {
   if test -f "${ENV_FILE}"; then
     true
   else
@@ -80,7 +80,7 @@ function does_configuration_exist() {
   fi
 }
 
-function create_configuration() {
+create_configuration () {
 
   #
   # Confirm overwriting existing configuration
