@@ -7,6 +7,7 @@ include .env
 export
 
 
+# The base command to start the docker setup.
 DOCKER_COMPOSE = docker compose
 
 
