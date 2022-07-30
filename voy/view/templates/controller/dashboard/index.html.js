@@ -113,7 +113,7 @@ Alpine.data('ffs_list', ({ search, sort }) => ({
         procedure:         item.procedure,
         description:       item.description,
 
-        tags:              item.tags,
+        tags:              item.tags.join(', '),
 
         created_at:        item.created_at_formatted,
         assignee:          item.assignee,
