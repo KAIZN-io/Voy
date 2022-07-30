@@ -217,8 +217,6 @@ warn_and_exit_if_no_argument_were_supplied $@
 
 warn_and_exit_if_too_many_arguments_were_supplied $@
 
-echo $0
-echo $@
 
 #
 # Check whether or not to start the setup
