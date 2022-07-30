@@ -1,30 +1,46 @@
-# OS Files
-.DS_Store
-
-# IDE
+# Repo files
+.cache/
+.github/
 .idea/
+.letsencrypt/
+.pytest_cache/
 .vscode/
+backups/
+data-exports/
+docker/
+docs/
+logs/*
+node_modules/
+venv/
+/voy/view/static
+.dockerignore
+.editorconfig
+.env
+*.env
+.gitignore
+babel.config.json
+Dockerfile
+Makefile
+notes.md
+notes.txt
+ofelia.example.ini
+ofelia.ini
+project_overview.png
+voy.sh
+yarn-error.log
 
-# Docker
-/docker
-/docker-compose.yml
-/.dockerignore
-
-# Sensible files
+# General ignores
+.DS_Store
 *.log
 *.sqlite
 *.sql
 *.xlsx
+*.env
 .env
 .flaskenv
-backups/*
-logs/*
 env/
 env*
 !/migrations/env.py
-ofelia.ini
-/data-exports
-/.letsencrypt
 
 # Build, Test and Cache files
 *,cover
@@ -37,17 +53,9 @@ ofelia.ini
 .coverage
 .coverage.*
 .parcel-cache/
-.pytest_cache/
 .tox/
 _mailinglist
 build
 docs/_build/
 htmlcov/
 instance/
-node_modules/
-venv/
-/voy/view/static
-
-# Custom
-c_test/
-notes.txt
