@@ -13,7 +13,7 @@ from .constants import FLASH_TYPE_WARNING
 from .controller import authentication_blueprint, profile_blueprint, \
     dashboard_blueprint, home_blueprint, user_blueprint, study_blueprint, \
     ticket_blueprint, ticket_comment_blueprint
-from .mail import mail
+# from .mail import mail
 from .model import db, Study, StudyView, TicketTag, TicketTagView, \
     TicketTagColorScheme, TicketTagColorSchemeView, User, UserView
 from .model.flask_admin import ProtectedIndexView
@@ -42,7 +42,7 @@ def create_app():
     db.init_app(app)
 
     # Attach the mailing service to the app
-    mail.init_app(app)
+    # mail.init_app(app)
 
     # Initialize Flask-Breadcrumbs
     Breadcrumbs(app=app)

@@ -22,12 +22,12 @@ class Config:
     )
 
     # E-Mail settings
-    MAIL_SERVER   = environ.get('MAIL_HOST')
-    MAIL_PORT     = int(environ.get('MAIL_PORT'))
-    MAIL_USERNAME = environ.get('MAIL_USERNAME')
-    MAIL_PASSWORD = environ.get('MAIL_PASSWORD')
-    MAIL_USE_TLS  = parse_boolean(environ.get('MAIL_USE_TLS', default="false"))
-    MAIL_USE_SSL  = parse_boolean(environ.get('MAIL_USE_SSL', default="false"))
+    # MAIL_SERVER   = environ.get('MAIL_HOST')
+    # MAIL_PORT     = int(environ.get('MAIL_PORT'))
+    # MAIL_USERNAME = environ.get('MAIL_USERNAME')
+    # MAIL_PASSWORD = environ.get('MAIL_PASSWORD')
+    # MAIL_USE_TLS  = parse_boolean(environ.get('MAIL_USE_TLS', default="false"))
+    # MAIL_USE_SSL  = parse_boolean(environ.get('MAIL_USE_SSL', default="false"))
 
     PERMANENT_SESSION_LIFETIME = timedelta(minutes=60)
     SECRET_KEY   = environ.get('SECRET_KEY')
