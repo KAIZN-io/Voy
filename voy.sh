@@ -137,19 +137,14 @@ create_configuration () {
 
   IFS=''
 
-  hosting_type_option_http_label="HTTP only"
-  hosting_type_option_http_value="http"
-  hosting_type_option_https_letsencrypt_label="HTTPS with Letsencrypt"
-  hosting_type_option_https_letsencrypt_value="https-letsencrypt"
-
-  hosting_types=(
-    $hosting_type_option_http_label
-    $hosting_type_option_https_letsencrypt_label
-  )
+  hosting_type_option_http_label='HTTP only'
+  hosting_type_option_http_value='http'
+  hosting_type_option_https_letsencrypt_label='HTTPS with Letsencrypt'
+  hosting_type_option_https_letsencrypt_value='https-letsencrypt'
 
   PS3="Enter a number: "
 
-  select choice in ${hosting_types[@]}; do
+  select choice in $hosting_type_option_http_label $hosting_type_option_https_letsencrypt_label; do
     case $choice in
 
       $hosting_type_option_http_label)
