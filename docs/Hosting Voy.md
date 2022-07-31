@@ -116,6 +116,8 @@ and secure manner.
 
 ### Do I need to use the included hosting setup?
 
+No. But it is probably the easiest way of getting started.
+
 The included hosting setup is just one way of hosting Voy. As it is built
 in Python, there is no need to run it inside of Docker. In theory it should run
 on any machine that has Python installed. However, there might be caveats on
