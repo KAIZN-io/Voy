@@ -14,7 +14,9 @@ operating Linux on the terminal is assumed.
 
 ### Required Software
 
+- a recent [GNU/Linux distribution](https://www.gnu.org/gnu/linux-and-gnu.en.html)
 - [Docker](https://docs.docker.com/get-docker/) version >= 20.0.0
+- [Docker Compose](https://docs.docker.com/compose/install/) version >= 2.0.0
 - [Git](https://git-scm.com/downloads) version >= 2.0.0
 
 
