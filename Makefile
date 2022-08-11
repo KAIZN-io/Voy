@@ -85,7 +85,6 @@ db-restore:
 .PHONY: init
 init: venv assets
 	$(MAKE) daemon
-	$(MAKE) permissions
 
 	@echo
 	@echo "Waiting 10s for the databasae to be ready..."
@@ -95,11 +94,6 @@ init: venv assets
 	@$(MAKE) db-init
 
 	$(MAKE) start
-
-# Fix permissions inside the Docker container of Voy
-.PHONY: permissions
-permissions:
-	$(DOCKER_COMPOSE) exec --user root voy chown -R $(USER_ID):$(GROUP_ID) /usr/src/voy
 
 # Removes everything
 .PHONY: clear
