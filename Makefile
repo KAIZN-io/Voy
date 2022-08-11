@@ -96,8 +96,8 @@ init: venv assets
 	$(MAKE) start
 
 # Removes everything
-.PHONY: clear
-clear:
+.PHONY: clean
+clean:
 	$(DOCKER_COMPOSE) down -v
 	rm -rf node_modules
 	rm -rf venv
